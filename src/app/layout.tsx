@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import "./globals.css";
+import ScrollHandler from "@/components/ScrollHandler";
 
 export const metadata: Metadata = {
   title: "BBLF",
@@ -17,8 +18,9 @@ export default async function RootLayout({
   const theme = cookieStore.get("theme")?.value || "light";
 
   return (
-    <html lang="en" className={theme}>
+    <html lang="en" className={`${theme} group`}>
       <body>
+        <ScrollHandler />
         {children}
       </body>
     </html>

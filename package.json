@@ -10,6 +10,7 @@
     "icons": "svgr --out-dir src/components/icons --typescript --icon --replace-attr-values \"#000=currentColor\" public/svg-icons"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.91.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.26.2",
     "js-cookie": "^3.0.5",

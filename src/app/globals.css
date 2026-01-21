@@ -20,22 +20,55 @@
 }
 
 :root {
-
   --duration-fast: 300ms;
+  --nav-padding-x: 2svh;
+  --layout-padding-x: 20svw;
 
-  /* text colors */
   --color-text: #18181b;
   --theme-bg: #ffffff;
+  --theme-border: transparent;
+  --nav-bg: transparent;
+}
+
+html.dark {
+  --color-text: #f4f4f5;
+  --theme-bg: #09090b;
+  --theme-border: transparent;
+  --nav-bg: transparent;
+}
+
+html[data-scrolled="true"] {
+  --nav-padding-x: var(--layout-padding-x);
+
   --nav-bg: #f4f4f5;
   --theme-border: #e4e4e7;
 }
 
-html.dark {
-  /* text colors */
-  --color-text: #f4f4f5;
-  --theme-bg: #09090b;
+html.dark[data-scrolled="true"] {
   --nav-bg: #18181b;
   --theme-border: #27272a;
 }
 
+html[data-home="false"] {
+  --nav-padding-x: var(--layout-padding-x);
+  --theme-border: #e4e4e7;
+}
+
+html.dark[data-home="false"] {
+  --theme-border: #27272a;
+}
 @variant dark (&:where(.dark, .dark *));
+
+/* globals.css */
+@keyframes nav-morph {
+  from {
+    background-color: transparent;
+    border-color: transparent;
+  }
+  to {
+    background-color: var(--nav-bg);
+    border-color: var(--theme-border);
+    padding: 0 20svh;
+    backdrop-filter: blur(8px);
+  }
+}
