@@ -182,9 +182,6 @@ const FooterSection = (
 );
 
 export default function HomePage() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  useAnimate(canvasRef);
-
   const [currentText, setCurrentText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
