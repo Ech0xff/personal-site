@@ -1,0 +1,28 @@
+/* globals.css */
+@layer base {
+  :root {
+    --color-text: #18181b;
+    --theme-bg: #ffffff;
+    /* 定义网格线的颜色：使用文字颜色的低透明度 */
+    --grid-main: rgba(24, 24, 27, 0.1);
+    --grid-sub: rgba(24, 24, 27, 0.04);
+  }
+
+  html.dark {
+    --color-text: #f4f4f5;
+    --theme-bg: #09090b;
+    /* 深色模式下网格线可以使用浅色或带点青色 */
+    --grid-main: rgba(244, 244, 245, 0.1);
+    --grid-sub: rgba(244, 244, 245, 0.03);
+  }
+}
+
+@keyframes scroll-grid {
+  0% { background-position: 0 0; }
+  /* 使用变量控制位移距离 */
+  100% { background-position: 0 var(--grid-offset); }
+}
+
+.animate-grid-scroll {
+  animation: scroll-grid 15s linear infinite;
+}
