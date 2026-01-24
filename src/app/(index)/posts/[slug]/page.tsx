@@ -74,16 +74,7 @@ export default async function PostPage({ params }: PageProps) {
   };
 
   return (
-    <article className="w-full mx-auto pt-10 pb-20">
-      {/* Return to list */}
-      <Link
-        href="/posts"
-        className="inline-flex items-center gap-2 mb-8 text-sm text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back to Posts
-      </Link>
-
+    <article className="w-full mx-auto pt-10 pb-20 px-4">
       {/* Header */}
       <header className="mb-8">
         <h1 className="text-4xl font-bold leading-tight mb-4">{post.title}</h1>

@@ -58,6 +58,7 @@ html[data-home="false"] {
 html.dark[data-home="false"] {
   --theme-border: #27272a;
 }
+
 @variant dark (&:where(.dark, .dark *));
 
 /* globals.css */
