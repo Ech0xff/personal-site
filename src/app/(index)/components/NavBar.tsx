@@ -1,6 +1,6 @@
 import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
-import { cn, gd } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 export default function NavBar() {
   const navItems = [
@@ -14,8 +14,8 @@ export default function NavBar() {
       <div
         className={cn(
           "relative w-full duration-(--duration-fast) px-(--nav-padding-x)",
-          gd("home", true, "bg-(--nav-bg)"),
-          gd("home", false, "backdrop-blur-md"),
+          "group-data-[home=true]:bg-(--nav-bg)",
+          "group-data-[home=false]:bg-(--nav-bg-blur) ",
         )}
       >
         <div className={cn("py-2 mx-auto flex w-full px-4")}>
@@ -42,7 +42,7 @@ export default function NavBar() {
         <div
           className={cn(
             "absolute bottom-0 left-0 right-0 h-px bg-(--theme-border)",
-            gd("home", false, "inset-x-(--nav-padding-x)"),
+            "group-data-[home=false]:inset-x-(--nav-padding-x)",
           )}
         />
       </div>
