@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import CollectionBody from "../components/CollectionBody";
 import { cn } from "@/lib/utils";
+import { QueryData } from "@supabase/supabase-js";
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -11,18 +12,13 @@ export const metadata: Metadata = {
   title: "Thoughts",
 };
 
-interface ThoughtListItem {
-  id: string;
-  content: string;
-  images: string[] | null;
-  created_at: string;
-}
-
 export default async function ThoughtsPage() {
-  const { data: thoughts } = await supabase
+  const thoughtsQuery = supabase
     .from("thoughts")
     .select("id, content, images, created_at")
     .order("created_at", { ascending: false });
+  type ThoughtListItem = QueryData<typeof thoughtsQuery>[number];
+  const { data: thoughts } = await thoughtsQuery;
 
   const safeThoughts: ThoughtListItem[] = (thoughts || []).map((t) => ({
     ...t,
@@ -36,7 +32,8 @@ export default async function ThoughtsPage() {
   );
 
   // Format date detail
-  const formatDateDetail = (dateStr: string) => {
+  const formatDateDetail = (dateStr: string | null) => {
+    if (!dateStr) return "Unknown Date";
     return new Date(dateStr).toLocaleDateString("en-US", {
       month: "2-digit",
       day: "2-digit",

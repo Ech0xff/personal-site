@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import CollectionBody from "../components/CollectionBody";
+import { QueryData } from "@supabase/supabase-js";
 
 export const revalidate = 60;
 
@@ -10,21 +11,13 @@ export const metadata: Metadata = {
   title: "Events",
 };
 
-interface EventListItem {
-  id: string;
-  title: string;
-  description: string | null;
-  event_date: string;
-  tags: string[] | null;
-  color: string | null;
-  created_at: string;
-}
-
 export default async function EventsPage() {
-  const { data: events } = await supabase
+  const eventsQuery = supabase
     .from("events")
     .select("id, title, description, event_date, tags, color, created_at")
     .order("event_date", { ascending: false });
+  type EventListItem = QueryData<typeof eventsQuery>[number];
+  const { data: events } = await eventsQuery;
 
   const safeEvents: EventListItem[] = (events || []).map((e) => ({
     ...e,

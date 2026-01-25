@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Metadata } from "next";
 import { supabase } from "@/lib/supabase";
 import CollectionBody from "../components/CollectionBody";
+import { QueryData } from "@supabase/supabase-js";
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -9,20 +10,14 @@ export const metadata: Metadata = {
   title: "Posts",
 };
 
-interface PostListItem {
-  id: string;
-  title: string;
-  published_at?: string;
-  created_at: string;
-  content: string;
-}
-
 export default async function PostsPage() {
-  const { data: posts } = await supabase
+  const postsQuery = supabase
     .from("posts")
     .select("id, title, published_at, created_at, content")
     .eq("status", "published")
     .order("published_at", { ascending: false });
+  type PostListItem = QueryData<typeof postsQuery>[number];
+  const { data: posts } = await postsQuery;
 
   const safePosts: PostListItem[] = posts || [];
   const totalPosts = safePosts.length;
@@ -34,7 +29,7 @@ export default async function PostsPage() {
   const groupedPosts: Record<string, PostListItem[]> = {};
 
   safePosts.forEach((post) => {
-    const dateStr = post.published_at || post.created_at;
+    const dateStr = post.published_at || post.created_at || "";
     const date = new Date(dateStr);
     const year = date.getFullYear().toString();
 
@@ -50,7 +45,8 @@ export default async function PostsPage() {
   );
 
   // Format date as Month Day, Year
-  const formatDate = (dateStr: string): string => {
+  const formatDate = (dateStr: string | null): string => {
+    if (!dateStr) return "Unknown Date";
     return new Date(dateStr).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
