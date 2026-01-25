@@ -165,11 +165,11 @@ function StatsCard() {
 
 export default function IntroductionSection() {
   return (
-    <>
+    <div className="px-4 flex flex-col">
       <AboutMeCard />
       <FindMeCard />
       <PostsCard />
       <StatsCard />
-    </>
+    </div>
   );
 }

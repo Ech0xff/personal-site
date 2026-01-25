@@ -1,6 +1,6 @@
 import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
-import { cn } from "@/lib/utils";
+import { cn, gd } from "@/lib/utils";
 
 export default function NavBar() {
   const navItems = [
@@ -10,19 +10,15 @@ export default function NavBar() {
   ];
 
   return (
-    <nav
-      className={cn(
-        "z-100 top-0 left-0 px fixed w-screen transition-all duration-(--duration-fast)",
-        "group-data-[home=false]:sticky group-data-[home=false]:px-(--nav-padding-x)",
-      )}
-    >
+    <nav className={cn("z-100 top-0 left-0 px fixed w-screen")}>
       <div
         className={cn(
-          "relative w-full border-b border-solid bg-(--nav-bg) border-(--theme-border)",
-          "duration-(--duration-fast) group-data-[home=true]:px-(--nav-padding-x) px-4",
+          "relative w-full duration-(--duration-fast) px-(--nav-padding-x)",
+          gd("home", true, "bg-(--nav-bg)"),
+          gd("home", false, "backdrop-blur-md"),
         )}
       >
-        <div className={cn("mx-auto flex w-full py-4 transition-all")}>
+        <div className={cn("py-2 mx-auto flex w-full px-4")}>
           {/* Navbar Main */}
           <div className="flex-1 flex items-center justify-between">
             <Link href="/" className="flex flex-col">
@@ -42,6 +38,13 @@ export default function NavBar() {
             </div>
           </div>
         </div>
+        {/* Bottom Border */}
+        <div
+          className={cn(
+            "absolute bottom-0 left-0 right-0 h-px bg-(--theme-border)",
+            gd("home", false, "inset-x-(--nav-padding-x)"),
+          )}
+        />
       </div>
     </nav>
   );

@@ -10,7 +10,7 @@ export default function Layout({ children }: Props) {
     <>
       <div className="flex relative flex-col duration-300">
         <NavBar />
-        <main className="flex-1 overflow-y-auto overflow-x-hidden px-(--layout-padding-x)">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden px-(--layout-padding-x) pt-12">
           {children}
         </main>
       </div>
