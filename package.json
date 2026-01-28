@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "format": "prettier --write .",
     "gen:types": "source .env && bunx supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > src/types/supabase.ts",
     "icons": "svgr --out-dir src/components/icons --typescript --icon --replace-attr-values \"#000=currentColor\" public/svg-icons"
   },
@@ -32,13 +33,17 @@
   "devDependencies": {
     "@svgr/cli": "^8.1.0",
     "@tailwindcss/postcss": "^4",
+    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.3",
+    "eslint-config-prettier": "^10.1.8",
     "postcss-scss": "^4.0.9",
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
