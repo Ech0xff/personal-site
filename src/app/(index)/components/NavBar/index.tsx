@@ -29,13 +29,20 @@ export default function NavBar() {
               <Link href="/" className="flex flex-col">
                 <div className="font-black">BBLF&#39;s Reef</div>
 
-                <div className="text-sm">A corner for my thoughts.</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  A corner for my thoughts.
+                </div>
               </Link>
               {/* Nav Items - Right aligned */}
               <div className="flex items-center gap-6">
                 {navItems.map((item) => (
-                  <Link key={item.path} href={item.path}>
+                  <Link
+                    key={item.path}
+                    href={item.path}
+                    className="group/nav-item relative"
+                  >
                     {item.name}
+                    <div className="absolute bottom-0 left-1/2 h-px w-px -translate-x-1/2 bg-current opacity-0 transition-all duration-300 group-hover/nav-item:w-full group-hover/nav-item:opacity-100" />
                   </Link>
                 ))}
                 {/* Dark Mode Toggle */}

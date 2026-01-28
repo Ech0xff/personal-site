@@ -12,17 +12,17 @@
   &[data-scrolled="true"][data-home="true"] {
     --nav-padding-x: var(--layout-padding-x);
     --nav-bg: #f4f4f5;
-    --nav-button-line-bg: #adadb2;
+    --nav-button-line-bg: #d4d4d8;
     @include theme-controller {
       --nav-bg: #1a1a1b;
-      --nav-button-line-bg: #5c5c60;
+      --nav-button-line-bg: #52525b;
     }
   }
   &[data-home="false"] {
     --nav-padding-x: var(--layout-padding-x);
-    --nav-button-line-bg: #adadb2;
+    --nav-button-line-bg: #d4d4d8;
     @include theme-controller {
-      --nav-button-line-bg: #5c5c60;
+      --nav-button-line-bg: #52525b;
     }
   }
 }
