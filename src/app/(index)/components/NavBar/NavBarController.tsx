@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
+
 import { usePathname } from "next/navigation";
 
 export default function NavBarController() {
@@ -33,7 +34,7 @@ export default function NavBarController() {
     <div
       ref={sentinelRef}
       id="scroll-sentinel"
-      className="absolute top-0 h-px left-0 right-0 -z-100 pointer-events-none"
+      className="pointer-events-none absolute top-0 right-0 left-0 -z-100 h-px"
     />
   );
 }

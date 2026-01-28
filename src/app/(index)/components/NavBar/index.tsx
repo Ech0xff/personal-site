@@ -1,8 +1,10 @@
 import Link from "next/link";
+
 import ThemeToggle from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
-import "./index.scss";
+
 import NavBarController from "./NavBarController";
+import "./index.scss";
 
 export default function NavBar() {
   const navItems = [
@@ -14,16 +16,16 @@ export default function NavBar() {
   return (
     <>
       <NavBarController />
-      <nav className={cn("z-100 top-0 left-0 px fixed w-screen")}>
+      <nav className={cn("px fixed top-0 left-0 z-100 w-screen")}>
         <div
           className={cn(
-            "relative w-full duration-(--duration-fast) px-(--nav-padding-x) bg-(--nav-bg)",
+            "relative w-full bg-(--nav-bg) px-(--nav-padding-x) duration-(--duration-fast)",
             "group-data-[home=false]:backdrop-blur-md",
           )}
         >
-          <div className={cn("py-2 mx-auto flex w-full px-4")}>
+          <div className={cn("mx-auto flex w-full px-4 py-2")}>
             {/* Navbar Main */}
-            <div className="flex-1 flex items-center justify-between">
+            <div className="flex flex-1 items-center justify-between">
               <Link href="/" className="flex flex-col">
                 <div className="font-black">BBLF&#39;s Reef</div>
 
@@ -44,7 +46,7 @@ export default function NavBar() {
           {/* Bottom Border */}
           <div
             className={cn(
-              "absolute bottom-0 left-0 right-0 h-px bg-(--nav-button-line-bg)",
+              "absolute right-0 bottom-0 left-0 h-px bg-(--nav-button-line-bg)",
               "group-data-[home=false]:inset-x-(--nav-padding-x)",
             )}
           />

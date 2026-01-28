@@ -1,10 +1,14 @@
-import { Metadata } from "next";
-import { supabase } from "@/lib/supabase";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import CollectionBody from "../components/CollectionBody";
-import { cn } from "@/lib/utils";
+
+import { Metadata } from "next";
+
 import { QueryData } from "@supabase/supabase-js";
+import remarkGfm from "remark-gfm";
+
+import { supabase } from "@/lib/supabase";
+import { cn } from "@/lib/utils";
+
+import CollectionBody from "../components/CollectionBody";
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -49,22 +53,22 @@ export default async function ThoughtsPage() {
       description={
         <>
           A corner for my random thoughts and life fragments. Total{" "}
-          <span className="text-zinc-900 dark:text-zinc-100 font-bold">
+          <span className="font-bold text-zinc-900 dark:text-zinc-100">
             {totalThoughts}
           </span>{" "}
           entries, approx{" "}
-          <span className="text-zinc-900 dark:text-zinc-100 font-bold">
+          <span className="font-bold text-zinc-900 dark:text-zinc-100">
             {totalCharacters}
           </span>{" "}
           characters.
         </>
       }
     >
-      <div className="space-y-12 mt-4 pt-1 border-l border-zinc-200 dark:border-zinc-800 pl-6">
+      <div className="mt-4 space-y-12 border-l border-zinc-200 pt-1 pl-6 dark:border-zinc-800">
         {safeThoughts.map((thought, index) => (
           <div key={thought.id} className="group">
             {/* Meta Row */}
-            <div className="flex items-center gap-3 text-xs text-zinc-400 dark:text-zinc-500 font-mono mb-3">
+            <div className="mb-3 flex items-center gap-3 font-mono text-xs text-zinc-400 dark:text-zinc-500">
               <span className="font-bold text-zinc-500 dark:text-zinc-400">
                 #{totalThoughts - index}
               </span>
@@ -73,7 +77,7 @@ export default async function ThoughtsPage() {
             </div>
 
             {/* Content */}
-            <div className="prose prose-zinc dark:prose-invert max-w-none text-zinc-800 dark:text-zinc-200 text-base leading-relaxed mb-4">
+            <div className="prose prose-zinc dark:prose-invert mb-4 max-w-none text-base leading-relaxed text-zinc-800 dark:text-zinc-200">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {thought.content}
               </ReactMarkdown>
@@ -82,22 +86,22 @@ export default async function ThoughtsPage() {
             {/* Images Grid */}
             {thought.images && thought.images.length > 0 && (
               <div
-                className={`grid gap-2 mt-4 ${
+                className={`mt-4 grid gap-2 ${
                   thought.images.length === 1
-                    ? "grid-cols-1 max-w-md"
+                    ? "max-w-md grid-cols-1"
                     : "grid-cols-2 md:grid-cols-3"
                 }`}
               >
                 {thought.images.map((img, idx) => (
                   <div
                     key={idx}
-                    className="relative rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700/50 aspect-[4/3]"
+                    className="relative aspect-[4/3] overflow-hidden rounded-lg border border-zinc-200 bg-zinc-100 dark:border-zinc-700/50 dark:bg-zinc-800"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={img}
                       alt={`Thought image ${idx + 1}`}
-                      className="object-cover w-full h-full"
+                      className="h-full w-full object-cover"
                       loading="lazy"
                     />
                   </div>
@@ -108,7 +112,7 @@ export default async function ThoughtsPage() {
             {/* Divider */}
             <div
               className={cn(
-                "h-px bg-zinc-100 dark:bg-zinc-800/60 w-full mt-12",
+                "mt-12 h-px w-full bg-zinc-100 dark:bg-zinc-800/60",
                 index === safeThoughts.length - 1 && "hidden",
               )}
             ></div>

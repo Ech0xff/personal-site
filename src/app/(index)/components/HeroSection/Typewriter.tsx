@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function HeroTypewriter() {
   const [currentText, setCurrentText] = useState("");
@@ -37,8 +37,8 @@ export default function HeroTypewriter() {
   }, [currentText, isDeleting, currentIndex, typingSpeed]);
 
   return (
-    <div className="flex flex-col items-center font-mono text-xs tracking-widest text-gray-500 dark:text-gray-500 space-y-2">
-      <div className="flex items-center gap-1 font-black text-xl">
+    <div className="flex flex-col items-center space-y-2 font-mono text-xs tracking-widest text-gray-500 dark:text-gray-500">
+      <div className="flex items-center gap-1 text-xl font-black">
         {currentText}
         <span className="typing-cursor">▋</span>
       </div>

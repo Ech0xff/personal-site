@@ -1,4 +1,5 @@
 import React from "react";
+
 import NavBar from "./components/NavBar";
 
 interface Props {
@@ -8,9 +9,9 @@ interface Props {
 export default function Layout({ children }: Props) {
   return (
     <>
-      <div className="flex relative flex-col duration-300">
+      <div className="relative flex flex-col duration-300">
         <NavBar />
-        <main className="flex-1 overflow-y-auto overflow-x-hidden px-(--layout-padding-x) pt-12">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto px-(--layout-padding-x) pt-12">
           {children}
         </main>
       </div>

@@ -5,7 +5,7 @@ import { defineConfig, globalIgnores } from "eslint/config";
 
 const eslintConfig = defineConfig([
   ...nextVitals,
-  ...nextTs,  
+  ...nextTs,
   prettierConfig,
   // Override default ignores of eslint-config-next.
   globalIgnores([

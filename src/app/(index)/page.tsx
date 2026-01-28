@@ -1,7 +1,8 @@
-import { cn } from "@/lib/utils";
 import FooterSection from "@/components/FooterSection";
+import { Bilibili, Email, Github, Qq } from "@/components/icons";
+import { cn } from "@/lib/utils";
+
 import HeroSection from "./components/HeroSection";
-import { Bilibili, Github, Email, Qq } from "@/components/icons";
 
 function Card({
   title,
@@ -11,9 +12,9 @@ function Card({
   children: React.ReactNode;
 }) {
   return (
-    <div className="z-1 w-full flex flex-col">
-      <h3 className="flex items-center gap-2 text-xl font-bold mb-4">
-        <div className="w-1 h-5 bg-gray-600 rounded-full" />
+    <div className="z-1 flex w-full flex-col">
+      <h3 className="mb-4 flex items-center gap-2 text-xl font-bold">
+        <div className="h-5 w-1 rounded-full bg-gray-600" />
         {title}
       </h3>
       {children}
@@ -24,7 +25,7 @@ function Card({
 function AboutMeCard() {
   return (
     <Card title="Hi there 👋">
-      <div className="space-y-4 leading-relaxed mb-8 text-sm sm:text-base">
+      <div className="mb-8 space-y-4 text-sm leading-relaxed sm:text-base">
         <p style={{ textIndent: "2em" }}>
           I am <span className="font-bold">BBLF</span>, a Junior Software
           Engineering student and a{" "}
@@ -75,7 +76,7 @@ function FindMeCard() {
   ];
   return (
     <Card title="Find me on">
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+      <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
         {socialLinks.map((item) => (
           <a
             key={item.name}
@@ -85,17 +86,17 @@ function FindMeCard() {
               item.link.startsWith("mailto") ? undefined : "noopener noreferrer"
             }
             className={cn(
-              "group relative flex flex-col justify-between p-4 h-24 rounded-2xl overflow-hidden transition-all duration-300",
-              "bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10",
+              "group relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl p-4 transition-all duration-300",
+              "bg-slate-50 hover:bg-slate-100 dark:bg-white/5 dark:hover:bg-white/10",
             )}
           >
-            <div className="z-10 relative flex flex-col h-full justify-between">
-              <div className="text-xs text-slate-400 font-medium">
+            <div className="relative z-10 flex h-full flex-col justify-between">
+              <div className="text-xs font-medium text-slate-400">
                 {item.name}
               </div>
               <div
                 className={cn(
-                  "text-base font-bold text-slate-700 dark:text-slate-200 transition-colors",
+                  "text-base font-bold text-slate-700 transition-colors dark:text-slate-200",
                 )}
               >
                 {item.value}
@@ -103,7 +104,7 @@ function FindMeCard() {
             </div>
             <item.icon
               className={cn(
-                "absolute right-5 top-[50%] translate-y-[-50%] w-20 h-20 transition-transform duration-300 group-hover:scale-110 opacity-50",
+                "absolute top-[50%] right-5 h-20 w-20 translate-y-[-50%] opacity-50 transition-transform duration-300 group-hover:scale-110",
                 "text-slate-400 dark:text-slate-500",
               )}
             />
@@ -117,7 +118,7 @@ function FindMeCard() {
 function PostsCard() {
   return (
     <Card title="Latest Posts">
-      <div className="space-y-4 text-slate-600 leading-relaxed mb-8 text-sm sm:text-base">
+      <div className="mb-8 space-y-4 text-sm leading-relaxed text-slate-600 sm:text-base">
         <p style={{ textIndent: "2em" }}>Coming Soon...</p>
       </div>
     </Card>
@@ -127,36 +128,36 @@ function PostsCard() {
 function StatsCard() {
   return (
     <Card title="Statistics">
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-        <div className="flex flex-col p-4 rounded-2xl bg-slate-50 dark:bg-white/5 hover:scale-105 transition-transform duration-300">
-          <span className="text-slate-400 text-xs font-medium uppercase tracking-wider">
+      <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="flex flex-col rounded-2xl bg-slate-50 p-4 transition-transform duration-300 hover:scale-105 dark:bg-white/5">
+          <span className="text-xs font-medium tracking-wider text-slate-400 uppercase">
             Days Online
           </span>
-          <span className="text-2xl font-bold text-slate-700 dark:text-slate-200 mt-1">
+          <span className="mt-1 text-2xl font-bold text-slate-700 dark:text-slate-200">
             None
           </span>
         </div>
-        <div className="flex flex-col p-4 rounded-2xl bg-slate-50 dark:bg-white/5 hover:scale-105 transition-transform duration-300">
-          <span className="text-slate-400 text-xs font-medium uppercase tracking-wider">
+        <div className="flex flex-col rounded-2xl bg-slate-50 p-4 transition-transform duration-300 hover:scale-105 dark:bg-white/5">
+          <span className="text-xs font-medium tracking-wider text-slate-400 uppercase">
             Total Visits
           </span>
-          <span className="text-2xl font-bold text-slate-700 dark:text-slate-200 mt-1">
+          <span className="mt-1 text-2xl font-bold text-slate-700 dark:text-slate-200">
             None
           </span>
         </div>
-        <div className="flex flex-col p-4 rounded-2xl bg-slate-50 dark:bg-white/5 hover:scale-105 transition-transform duration-300">
-          <span className="text-slate-400 text-xs font-medium uppercase tracking-wider">
+        <div className="flex flex-col rounded-2xl bg-slate-50 p-4 transition-transform duration-300 hover:scale-105 dark:bg-white/5">
+          <span className="text-xs font-medium tracking-wider text-slate-400 uppercase">
             Articles
           </span>
-          <span className="text-2xl font-bold text-slate-700 dark:text-slate-200 mt-1">
+          <span className="mt-1 text-2xl font-bold text-slate-700 dark:text-slate-200">
             None
           </span>
         </div>
-        <div className="flex flex-col p-4 rounded-2xl bg-slate-50 dark:bg-white/5 hover:scale-105 transition-transform duration-300">
-          <span className="text-slate-400 text-xs font-medium uppercase tracking-wider">
+        <div className="flex flex-col rounded-2xl bg-slate-50 p-4 transition-transform duration-300 hover:scale-105 dark:bg-white/5">
+          <span className="text-xs font-medium tracking-wider text-slate-400 uppercase">
             Words
           </span>
-          <span className="text-2xl font-bold text-slate-700 dark:text-slate-200 mt-1">
+          <span className="mt-1 text-2xl font-bold text-slate-700 dark:text-slate-200">
             None
           </span>
         </div>
@@ -167,7 +168,7 @@ function StatsCard() {
 
 function IntroductionSection() {
   return (
-    <div className="px-4 flex flex-col">
+    <div className="flex flex-col px-4">
       <AboutMeCard />
       <FindMeCard />
       <PostsCard />
@@ -176,16 +177,15 @@ function IntroductionSection() {
   );
 }
 
-
 export default async function HomePage() {
   return (
     <>
       <HeroSection />
-      <div className="relative flex flex-col w-full gap-3 pt-[10svh]">
+      <div className="relative flex w-full flex-col gap-3 pt-[10svh]">
         {/* background */}
         <div
           className={cn(
-            "absolute w-screen left-1/2 -translate-x-1/2 bottom-0 top-0 transition-all duration-(--duration-fast)",
+            "absolute top-0 bottom-0 left-1/2 w-screen -translate-x-1/2 transition-all duration-(--duration-fast)",
             "bg-linear-to-b from-(--theme-bg)/0 to-(--theme-bg) to-[18svh]",
             "group-data-[scrolled=true]:top-[-18svh]",
           )}

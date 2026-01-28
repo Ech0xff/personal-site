@@ -20,15 +20,14 @@
 
 .grid-background {
   animation: scroll-grid 15s linear infinite;
-  background-image: linear-gradient(
-      to bottom,
-      var(--grid-main) 2px,
-      transparent 2px
-    ),
+  background-image:
+    linear-gradient(to bottom, var(--grid-main) 2px, transparent 2px),
     linear-gradient(to right, var(--grid-main) 2px, transparent 2px),
     linear-gradient(to bottom, var(--grid-sub) 1px, transparent 1px),
     linear-gradient(to right, var(--grid-sub) 1px, transparent 1px);
-  background-size: var(--large-size) var(--large-size),
-    var(--large-size) var(--large-size), var(--small-size) var(--small-size),
+  background-size:
+    var(--large-size) var(--large-size),
+    var(--large-size) var(--large-size),
+    var(--small-size) var(--small-size),
     var(--small-size) var(--small-size);
 }

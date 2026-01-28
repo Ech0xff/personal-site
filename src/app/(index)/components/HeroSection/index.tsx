@@ -1,5 +1,7 @@
 import React from "react";
+
 import { cn } from "@/lib/utils";
+
 import HeroTypewriter from "./Typewriter";
 import "./index.scss";
 
@@ -16,8 +18,8 @@ function AnimatedGridBackground({
   } as React.CSSProperties;
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <div className="absolute inset-0 grid-background" style={gridStyles} />
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="grid-background absolute inset-0" style={gridStyles} />
     </div>
   );
 }
@@ -27,22 +29,22 @@ export default function HeroSection() {
     <>
       <div
         className={cn(
-          "w-screen absolute inset-0 flex items-center justify-center snap-start flex-col overflow-hidden bg-brand-gradient transition-all h-screen",
+          "bg-brand-gradient absolute inset-0 flex h-screen w-screen snap-start flex-col items-center justify-center overflow-hidden transition-all",
           "duration-(--duration-fast) group-data-[scrolled=true]:h-[60svh]",
         )}
       >
         <AnimatedGridBackground />
-        <div className="relative flex-1 flex flex-col justify-center items-center">
+        <div className="relative flex flex-1 flex-col items-center justify-center">
           <div className="flex flex-col items-center">
             <h1
-              className="text-6xl text-center"
+              className="text-center text-6xl"
               style={{ fontFamily: '"Titan One", cursive' }}
             >
               BBLF
             </h1>
-            <div className="w-full h-px bg-linear-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent my-2" />
+            <div className="my-2 h-px w-full bg-linear-to-r from-transparent via-gray-300 to-transparent dark:via-gray-700" />
             <HeroTypewriter />
-            <div className="w-full h-px bg-linear-to-r from-transparentmy-2" />
+            <div className="from-transparentmy-2 h-px w-full bg-linear-to-r" />
             <div
               className="mt-8 text-9xl font-black"
               style={{

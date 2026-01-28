@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
+
 import "@/styles/globals.css";
 import "@/styles/tailwind.css";
 import "@/styles/variables.scss";

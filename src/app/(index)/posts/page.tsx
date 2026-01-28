@@ -1,8 +1,11 @@
-import Link from "next/link";
 import { Metadata } from "next";
-import { supabase } from "@/lib/supabase";
-import CollectionBody from "../components/CollectionBody";
+import Link from "next/link";
+
 import { QueryData } from "@supabase/supabase-js";
+
+import { supabase } from "@/lib/supabase";
+
+import CollectionBody from "../components/CollectionBody";
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -61,11 +64,11 @@ export default async function PostsPage() {
         <>
           Writings and articles about tech, life, and everything in between.
           Total{" "}
-          <span className="text-zinc-900 dark:text-zinc-100 font-bold">
+          <span className="font-bold text-zinc-900 dark:text-zinc-100">
             {totalPosts}
           </span>{" "}
           posts, approx{" "}
-          <span className="text-zinc-900 dark:text-zinc-100 font-bold">
+          <span className="font-bold text-zinc-900 dark:text-zinc-100">
             {totalCharacters}
           </span>{" "}
           characters.
@@ -76,7 +79,7 @@ export default async function PostsPage() {
         {sortedYears.map((year) => (
           <section key={year}>
             {/* Year Title */}
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-gray-800 dark:text-gray-200">
+            <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-gray-800 dark:text-gray-200">
               {year}
               <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
                 ({groupedPosts[year]?.length})
@@ -89,12 +92,12 @@ export default async function PostsPage() {
                 <Link
                   key={post.id}
                   href={`/posts/${post.id}`}
-                  className="group flex items-center py-2 border-l-2 pl-6 border-gray-200 dark:border-gray-800 hover:border-blue-500 hover:bg-gray-50 dark:hover:bg-zinc-900/50 rounded-r-lg"
+                  className="group flex items-center rounded-r-lg border-l-2 border-gray-200 py-2 pl-6 hover:border-blue-500 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-zinc-900/50"
                 >
                   {/* Title */}
-                  <span className="flex-1 mx-4">{post.title}</span>
+                  <span className="mx-4 flex-1">{post.title}</span>
                   {/* Date */}
-                  <span className="w-28 shrink-0 text-gray-400 text-sm">
+                  <span className="w-28 shrink-0 text-sm text-gray-400">
                     {formatDate(post.published_at || post.created_at)}
                   </span>
                 </Link>
