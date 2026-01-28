@@ -1,0 +1,15 @@
+@use "@/styles/mixins" as *;
+
+:root {
+  --duration-fast: 300ms;
+  --layout-padding-x: 20svw;
+  --color-text: #18181b;
+  --theme-bg: #ffffff;
+  --theme-border: transparent;
+
+  @include theme-controller {
+    --color-text: #f4f4f5;
+    --theme-bg: #09090b;
+    --theme-border: transparent;
+  }
+}

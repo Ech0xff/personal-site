@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import "./globals.css";
-import ScrollHandler from "@/components/ScrollHandler";
+import "@/styles/globals.css";
+import "@/styles/tailwind.css";
+import "@/styles/variables.scss";
 
 export const metadata: Metadata = {
   title: "BBLF",
@@ -18,11 +19,21 @@ export default async function RootLayout({
   const styles = `group ${theme}`;
 
   return (
-    <html lang="en" className={styles}>
-      <body>
-        <ScrollHandler />
-        {children}
-      </body>
+    <html lang="en" className={styles} suppressHydrationWarning>
+      <head>
+        {/* BLOCKING SCRIPT: Prevents Flash of Unstyled Content (FOUC) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                const isHome = window.location.pathname === '/';
+                document.documentElement.dataset.home = isHome;
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body>{children}</body>
     </html>
   );
 }

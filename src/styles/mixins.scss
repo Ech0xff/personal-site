@@ -1,0 +1,11 @@
+@mixin theme-controller {
+  &.dark {
+    @content;
+  }
+
+  &.system {
+    @media (prefers-color-scheme: dark) {
+      @content;
+    }
+  }
+}

@@ -1,0 +1,28 @@
+@use "@/styles/mixins" as *;
+
+:root {
+  --nav-bg: transparent;
+  --nav-button-line-bg: transparent;
+  --nav-padding-x: 0;
+
+  &[data-scrolled="false"] [data-home="true"] {
+    --nav-padding-x: 0;
+    --nav-button-line-bg: transparent;
+  }
+  &[data-scrolled="true"][data-home="true"] {
+    --nav-padding-x: var(--layout-padding-x);
+    --nav-bg: #f4f4f5;
+    --nav-button-line-bg: #adadb2;
+    @include theme-controller {
+      --nav-bg: #1a1a1b;
+      --nav-button-line-bg: #5c5c60;
+    }
+  }
+  &[data-home="false"] {
+    --nav-padding-x: var(--layout-padding-x);
+    --nav-button-line-bg: #adadb2;
+    @include theme-controller {
+      --nav-button-line-bg: #5c5c60;
+    }
+  }
+}

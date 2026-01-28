@@ -21,11 +21,6 @@ export default function ThemeToggle() {
 
     html.classList.remove("light", "dark", "system");
     html.classList.add(nextTheme);
-    if (nextTheme === "system") {
-      const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      html.classList.add(isDark ? "dark" : "light");
-    }
-
     Cookies.set("theme", nextTheme, { expires: 365 });
   };
 
@@ -34,8 +29,8 @@ export default function ThemeToggle() {
       onClick={toggleTheme}
       className="p-2 rounded-lg hover:bg-theme-hover transition-colors"
     >
-      <Sun className="w-5 h-5 hidden group-[.light]:block group-[.system]:hidden" />
-      <Moon className="w-5 h-5 hidden group-[.dark]:block group-[.system]:hidden" />
+      <Sun className="w-5 h-5 hidden group-[.light]:block" />
+      <Moon className="w-5 h-5 hidden group-[.dark]:block" />
       <Monitor className="w-5 h-5 hidden group-[.system]:block" />
     </button>
   );

@@ -1,0 +1,34 @@
+@use "@/styles/mixins" as *;
+
+:root {
+  --grid-main: rgba(24, 24, 27, 0.1);
+  --grid-sub: rgba(24, 24, 27, 0.04);
+  @include theme-controller {
+    --grid-main: rgba(244, 244, 245, 0.1);
+    --grid-sub: rgba(244, 244, 245, 0.03);
+  }
+}
+
+@keyframes scroll-grid {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 var(--grid-offset);
+  }
+}
+
+.grid-background {
+  animation: scroll-grid 15s linear infinite;
+  background-image: linear-gradient(
+      to bottom,
+      var(--grid-main) 2px,
+      transparent 2px
+    ),
+    linear-gradient(to right, var(--grid-main) 2px, transparent 2px),
+    linear-gradient(to bottom, var(--grid-sub) 1px, transparent 1px),
+    linear-gradient(to right, var(--grid-sub) 1px, transparent 1px);
+  background-size: var(--large-size) var(--large-size),
+    var(--large-size) var(--large-size), var(--small-size) var(--small-size),
+    var(--small-size) var(--small-size);
+}

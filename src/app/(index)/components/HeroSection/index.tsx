@@ -1,6 +1,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import HeroTypewriter from "./Typewriter";
+import "./index.scss";
 
 function AnimatedGridBackground({
   smallGridSize = 30,
@@ -16,48 +17,7 @@ function AnimatedGridBackground({
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-        :root {
-          --grid-main: rgba(24, 24, 27, 0.1);
-          --grid-sub: rgba(24, 24, 27, 0.04);
-        }
-
-        html.dark {
-          --grid-main: rgba(244, 244, 245, 0.1);
-          --grid-sub: rgba(244, 244, 245, 0.03);
-        }
-
-        @keyframes scroll-grid {
-          0% { background-position: 0 0; }
-          100% { background-position: 0 var(--grid-offset); }
-        }
-
-        .animate-grid-scroll {
-          animation: scroll-grid 15s linear infinite;
-        }
-      `,
-        }}
-      />
-      <div
-        className="absolute inset-0 animate-grid-scroll"
-        style={{
-          ...gridStyles,
-          backgroundImage: `
-            linear-gradient(to bottom, var(--grid-main) 2px, transparent 2px),
-            linear-gradient(to right, var(--grid-main) 2px, transparent 2px),
-            linear-gradient(to bottom, var(--grid-sub) 1px, transparent 1px),
-            linear-gradient(to right, var(--grid-sub) 1px, transparent 1px)
-          `,
-          backgroundSize: `
-            var(--large-size) var(--large-size), 
-            var(--large-size) var(--large-size),
-            var(--small-size) var(--small-size), 
-            var(--small-size) var(--small-size)
-          `,
-        }}
-      />
+      <div className="absolute inset-0 grid-background" style={gridStyles} />
     </div>
   );
 }
