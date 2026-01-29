@@ -21,7 +21,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={styles} suppressHydrationWarning>
-      <head>
+      <head suppressHydrationWarning>
         {/* BLOCKING SCRIPT: Prevents Flash of Unstyled Content (FOUC) */}
         <script
           dangerouslySetInnerHTML={{
