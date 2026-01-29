@@ -2,9 +2,11 @@
 import Cookies from "js-cookie";
 import { Monitor, Moon, Sun } from "lucide-react";
 
+import { cn } from "@/lib/utils";
+
 type Theme = "light" | "dark" | "system";
 
-export default function ThemeToggle() {
+export default function ThemeToggle({ className }: { className?: string }) {
   const toggleTheme = () => {
     const html = document.documentElement;
     const currentTheme: Theme = html.classList.contains("system")
@@ -27,7 +29,10 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="hover:bg-theme-hover rounded-lg p-2 transition-colors"
+      className={cn(
+        "hover:bg-theme-hover rounded-lg p-2 transition-colors",
+        className,
+      )}
     >
       <Sun className="hidden h-5 w-5 group-[.light]:block" />
       <Moon className="hidden h-5 w-5 group-[.dark]:block" />
