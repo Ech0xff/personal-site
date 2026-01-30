@@ -4,27 +4,17 @@ import { useEffect, useState, useTransition } from "react";
 
 import { Eye, X } from "lucide-react";
 
+import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import MarkdownPreview from "@/components/MarkdownPreview";
 import Button from "@/components/ui/Button";
 
 import { getPost, savePost } from "../actions";
 
-interface PostEditorProps {
-  postId: string | null; // null for new post
-  onClose: () => void;
-  onSaved: () => void;
-}
-
 type ViewMode = "edit" | "preview" | "split";
 type PostStatus = "draft" | "published";
 
-export default function PostEditor({
-  postId,
-  onClose,
-  onSaved,
-}: PostEditorProps) {
-  const isNewMode = postId === null;
-
+export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
+  const isNewMode = id === null;
   const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(!isNewMode);
   const [errorMessage, setErrorMessage] = useState("");
@@ -46,7 +36,7 @@ export default function PostEditor({
 
     const loadPost = async () => {
       setIsLoading(true);
-      const post = await getPost(postId);
+      const post = await getPost(id);
       if (post) {
         setTitle(post.title);
         setContent(post.content);
@@ -60,7 +50,7 @@ export default function PostEditor({
     };
 
     loadPost();
-  }, [postId, isNewMode]);
+  }, [id, isNewMode]);
 
   const addTag = () => {
     const tag = tagInput.trim();
@@ -88,7 +78,7 @@ export default function PostEditor({
 
     startTransition(async () => {
       const result = await savePost({
-        id: postId || undefined,
+        id: id || undefined,
         title: title.trim(),
         content: content.trim(),
         author: author.trim() || null,

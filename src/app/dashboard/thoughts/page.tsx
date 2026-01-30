@@ -3,10 +3,11 @@ import { QueryData } from "@supabase/supabase-js";
 import ThoughtTimeline from "@/components/ThoughtTimeline";
 import { supabase } from "@/lib/supabase";
 
+import EditorProvider from "../components/EditorProvider";
 import HeaderSection from "../components/HeaderSection";
-import { EditorProvider } from "./components/EditorProvider";
 import NewThoughtButton from "./components/NewThoughtButton";
 import ThoughtActions from "./components/ThoughtActions";
+import ThoughtEditor from "./components/ThoughtEditor";
 
 const thoughtsQuery = supabase
   .from("thoughts")
@@ -28,7 +29,7 @@ export default async function ThoughtsPage() {
   }));
 
   return (
-    <EditorProvider>
+    <EditorProvider editorComponent={ThoughtEditor}>
       <div className="space-y-6">
         <HeaderSection title="Thoughts">
           <NewThoughtButton />

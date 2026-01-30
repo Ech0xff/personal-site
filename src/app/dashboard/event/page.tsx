@@ -3,9 +3,10 @@ import { QueryData } from "@supabase/supabase-js";
 import EventTimeline from "@/components/EventTimeline";
 import { supabase } from "@/lib/supabase";
 
+import EditorProvider from "../components/EditorProvider";
 import HeaderSection from "../components/HeaderSection";
-import { EditorProvider } from "./components/EditorProvider";
 import EventActions from "./components/EventActions";
+import EventEditor from "./components/EventEditor";
 import NewEventButton from "./components/NewEventButton";
 
 const eventsQuery = supabase
@@ -28,7 +29,7 @@ export default async function EventsPage() {
   }));
 
   return (
-    <EditorProvider>
+    <EditorProvider editorComponent={EventEditor}>
       <div className="space-y-6">
         <HeaderSection title="Events">
           <NewEventButton />

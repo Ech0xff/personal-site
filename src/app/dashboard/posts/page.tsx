@@ -1,10 +1,11 @@
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 
+import EditorProvider from "../components/EditorProvider";
 import HeaderSection from "../components/HeaderSection";
-import { EditorProvider } from "./components/EditorProvider";
 import NewPostButton from "./components/NewPostButton";
 import PostActions from "./components/PostActions";
+import PostEditor from "./components/PostEditor";
 
 function StatusBadge({ status }: { status: string | null }) {
   const styles = {
@@ -109,7 +110,7 @@ export default async function PostsPage() {
   }
 
   return (
-    <EditorProvider>
+    <EditorProvider editorComponent={PostEditor}>
       <div className="relative space-y-6">
         {/* Header */}
         <HeaderSection title="Posts">

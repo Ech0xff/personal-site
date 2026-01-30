@@ -4,15 +4,10 @@ import { useEffect, useState, useTransition } from "react";
 
 import { X } from "lucide-react";
 
+import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import Button from "@/components/ui/Button";
 
 import { getEvent, saveEvent } from "../actions";
-
-interface EventEditorProps {
-  eventId: string | null;
-  onClose: () => void;
-  onSaved: () => void;
-}
 
 const COLOR_OPTIONS = [
   { value: "blue", label: "Blue", class: "bg-blue-500" },
@@ -25,12 +20,8 @@ const COLOR_OPTIONS = [
   { value: "gray", label: "Gray", class: "bg-gray-500" },
 ];
 
-export default function EventEditor({
-  eventId,
-  onClose,
-  onSaved,
-}: EventEditorProps) {
-  const isNewMode = eventId === null;
+export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
+  const isNewMode = id === null;
 
   const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(!isNewMode);
@@ -50,7 +41,7 @@ export default function EventEditor({
 
     const loadEvent = async () => {
       setIsLoading(true);
-      const event = await getEvent(eventId);
+      const event = await getEvent(id);
       if (event) {
         setTitle(event.title);
         setDescription(event.description || "");
@@ -64,7 +55,7 @@ export default function EventEditor({
     };
 
     loadEvent();
-  }, [eventId, isNewMode]);
+  }, [id, isNewMode]);
 
   const addTag = () => {
     const tag = tagInput.trim();
@@ -92,7 +83,7 @@ export default function EventEditor({
 
     startTransition(async () => {
       const result = await saveEvent({
-        id: eventId || undefined,
+        id: id || undefined,
         title: title.trim(),
         description: description.trim() || null,
         event_date: eventDate,

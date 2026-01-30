@@ -2,9 +2,8 @@
 
 import { Plus } from "lucide-react";
 
+import { useEditor } from "@/app/dashboard/components/EditorProvider";
 import Button from "@/components/ui/Button";
-
-import { useEditor } from "./EditorProvider";
 
 export default function NewThoughtButton() {
   const { openEditor } = useEditor();

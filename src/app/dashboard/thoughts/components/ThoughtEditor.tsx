@@ -4,22 +4,17 @@ import { useEffect, useState, useTransition } from "react";
 
 import { X } from "lucide-react";
 
+import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import Button from "@/components/ui/Button";
 
 import { getThought, saveThought } from "../actions";
 
-interface ThoughtEditorProps {
-  thoughtId: string | null;
-  onClose: () => void;
-  onSaved: () => void;
-}
-
 export default function ThoughtEditor({
-  thoughtId,
+  id,
   onClose,
   onSaved,
-}: ThoughtEditorProps) {
-  const isNewMode = thoughtId === null;
+}: BaseEditorProps) {
+  const isNewMode = id === null;
 
   const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(!isNewMode);
@@ -36,7 +31,7 @@ export default function ThoughtEditor({
 
     const loadThought = async () => {
       setIsLoading(true);
-      const thought = await getThought(thoughtId);
+      const thought = await getThought(id);
       if (thought) {
         setContent(thought.content);
         setImages(thought.images || []);
@@ -47,7 +42,7 @@ export default function ThoughtEditor({
     };
 
     loadThought();
-  }, [thoughtId, isNewMode]);
+  }, [id, isNewMode]);
 
   const addImage = () => {
     const url = imageInput.trim();
@@ -71,7 +66,7 @@ export default function ThoughtEditor({
 
     startTransition(async () => {
       const result = await saveThought({
-        id: thoughtId || undefined,
+        id: id || undefined,
         content: content.trim(),
         images: images.length > 0 ? images : null,
       });
