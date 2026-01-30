@@ -99,21 +99,25 @@ export default function ThoughtEditor({
       {/* Top Toolbar */}
       <div className="flex shrink-0 items-center justify-between border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
         <div className="flex items-center gap-4">
-          <button
-            onClick={onClose}
-            className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
-          >
-            <X className="h-4 w-4" />
-            Back
-          </button>
           <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
             {pageTitle}
           </h1>
         </div>
 
-        <Button onClick={handleSubmit} disabled={isPending}>
+        <Button
+          onClick={handleSubmit}
+          className="mr-3 ml-auto"
+          disabled={isPending}
+        >
           {submitButtonText}
         </Button>
+
+        <button
+          onClick={onClose}
+          className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
+        >
+          <X className="h-8 w-8" />
+        </button>
       </div>
 
       {/* Error Message */}
@@ -149,7 +153,7 @@ export default function ThoughtEditor({
                 key={index}
                 className="flex items-center gap-2 rounded bg-zinc-100 px-3 py-1.5 text-sm dark:bg-zinc-800"
               >
-                <span className="max-w-[200px] truncate text-zinc-600 dark:text-zinc-400">
+                <span className="max-w-50 truncate text-zinc-600 dark:text-zinc-400">
                   {url}
                 </span>
                 <button

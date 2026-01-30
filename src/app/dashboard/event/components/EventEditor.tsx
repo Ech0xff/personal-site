@@ -119,21 +119,21 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
       {/* Top Toolbar */}
       <div className="flex shrink-0 items-center justify-between border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
         <div className="flex items-center gap-4">
-          <button
-            onClick={onClose}
-            className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
-          >
-            <X className="h-4 w-4" />
-            Back
-          </button>
           <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
             {pageTitle}
           </h1>
         </div>
 
-        <Button onClick={handleSubmit} disabled={isPending}>
+        <Button onClick={handleSubmit} className="ml-auto mr-3" disabled={isPending}>
           {submitButtonText}
         </Button>
+
+        <button
+          onClick={onClose}
+          className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
+        >
+          <X className="h-8 w-8" />
+        </button>
       </div>
 
       {/* Error Message */}
