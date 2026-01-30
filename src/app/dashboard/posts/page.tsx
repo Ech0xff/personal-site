@@ -1,29 +1,27 @@
-import Link from "next/link";
-
-import { QueryData } from "@supabase/supabase-js";
-import { Edit, Eye, Plus, Trash2 } from "lucide-react";
-
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 
 import HeaderSection from "../components/HeaderSection";
+import { EditorProvider } from "./components/EditorProvider";
+import NewPostButton from "./components/NewPostButton";
+import PostActions from "./components/PostActions";
 
 function StatusBadge({ status }: { status: string | null }) {
   const styles = {
     published:
       "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-    hidden:
+    draft:
       "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
   };
-  const statusKey = (status || "hidden") as keyof typeof styles;
+  const statusKey = (status || "draft") as keyof typeof styles;
   return (
     <span
       className={cn(
         "rounded-full px-2 py-0.5 text-xs font-medium",
-        styles[statusKey] || styles.hidden,
+        styles[statusKey] || styles.draft,
       )}
     >
-      {status || "None"}
+      {status || "draft"}
     </span>
   );
 }
@@ -66,194 +64,99 @@ function TagsList({
   );
 }
 
-interface Column<T> {
-  key: string;
-  header: string;
-  align?: "left" | "right" | "center";
-  render: (item: T) => React.ReactNode;
-}
-
-function Table<T>({
-  data,
-  columns,
-  emptyMessage = "No data available",
-  keyExtractor,
-}: {
-  data: T[] | null;
-  columns: Column<T>[];
-  emptyMessage?: string;
-  keyExtractor: (item: T) => string;
-}) {
-  const getAlignClass = (align?: "left" | "right" | "center") => {
-    switch (align) {
-      case "right":
-        return "text-right";
-      case "center":
-        return "text-center";
-      default:
-        return "text-left";
-    }
-  };
-
-  return (
-    <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-      <table className="w-full table-auto">
-        <thead>
-          <tr className="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
-            {columns.map((col) => (
-              <th
-                key={col.key}
-                className={cn(
-                  "px-6 py-3 text-xs font-medium tracking-wider whitespace-nowrap text-zinc-500 uppercase dark:text-zinc-400",
-                  getAlignClass(col.align),
-                )}
-              >
-                {col.header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
-          {data && data.length > 0 ? (
-            data.map((item) => (
-              <tr
-                key={keyExtractor(item)}
-                className="transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-              >
-                {columns.map((col) => (
-                  <td
-                    key={col.key}
-                    className={cn("px-6 py-4", getAlignClass(col.align))}
-                  >
-                    {col.render(item)}
-                  </td>
-                ))}
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td
-                colSpan={columns.length}
-                className="px-6 py-12 text-center text-zinc-500 dark:text-zinc-400"
-              >
-                {emptyMessage}
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  );
+function formatDate(dateString: string | null) {
+  if (!dateString) return "—";
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 }
 
 export default async function PostsPage() {
-  const postsQuery = supabase.from("posts").select("*");
-  const { data: posts, error } = await postsQuery.order("created_at", {
-    ascending: false,
-  });
-  type Post = QueryData<typeof postsQuery>[number];
+  const { data: posts, error } = await supabase
+    .from("posts")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  const th = (title: string[]) => {
+    return (
+      <tr className="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
+        {title.map((item) => (
+          <th
+            key={item}
+            className="px-6 py-3 text-center text-xs font-medium tracking-wider whitespace-nowrap text-zinc-500 uppercase dark:text-zinc-400"
+          >
+            {item}
+          </th>
+        ))}
+      </tr>
+    );
+  };
+
+  const td = (children: React.ReactNode, className?: string) => {
+    return (
+      <td className="px-6 py-4">
+        <div className={cn("flex items-center justify-center", className)}>
+          {children}
+        </div>
+      </td>
+    );
+  };
+
   if (error) {
     console.error("Error fetching posts:", error);
   }
 
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return "—";
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  const columns: Column<Post>[] = [
-    {
-      key: "title",
-      header: "Title",
-      render: (post) => (
-        <div className="font-medium text-zinc-900 dark:text-zinc-100">
-          {post.title}
-        </div>
-      ),
-    },
-    {
-      key: "tags",
-      header: "Tags",
-      render: (post) => <TagsList tags={post.tags} maxVisible={3} />,
-    },
-    {
-      key: "status",
-      header: "Status",
-      render: (post) => <StatusBadge status={post.status} />,
-    },
-    {
-      key: "views",
-      header: "Views",
-      render: (post) => (
-        <span className="text-sm text-zinc-500 dark:text-zinc-400">
-          {post.view_count || 0}
-        </span>
-      ),
-    },
-    {
-      key: "created",
-      header: "Created",
-      render: (post) => (
-        <span className="text-sm text-zinc-500 dark:text-zinc-400">
-          {formatDate(post.created_at)}
-        </span>
-      ),
-    },
-    {
-      key: "actions",
-      header: "Actions",
-      align: "right",
-      render: (post) => (
-        <div className="flex items-center justify-end gap-2">
-          <Link
-            href={`/posts/${post.id}`}
-            className="rounded p-1.5 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
-            title="View"
-          >
-            <Eye className="h-4 w-4" />
-          </Link>
-          <Link
-            href={`/dashboard/posts/${post.id}`}
-            className="rounded p-1.5 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
-            title="Edit"
-          >
-            <Edit className="h-4 w-4" />
-          </Link>
-          <button
-            className="rounded p-1.5 text-zinc-400 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
-            title="Delete"
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
-        </div>
-      ),
-    },
-  ];
-
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <HeaderSection title="Posts">
-        <Link
-          href="/dashboard/posts/new"
-          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
-        >
-          <Plus className="h-4 w-4" />
-          New Post
-        </Link>
-      </HeaderSection>
+    <EditorProvider>
+      <div className="relative space-y-6">
+        {/* Header */}
+        <HeaderSection title="Posts">
+          <NewPostButton />
+        </HeaderSection>
 
-      {/* Posts Table */}
-      <Table
-        data={posts}
-        columns={columns}
-        keyExtractor={(post) => post.id}
-        emptyMessage="No posts yet. Create your first post!"
-      />
-    </div>
+        {/* Posts Table */}
+        <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+          <table className="w-full table-auto">
+            <thead>
+              {th([
+                "Title",
+                "Tags",
+                "Status",
+                "Views",
+                "Created At",
+                "Actions",
+              ])}
+            </thead>
+            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
+              {posts &&
+                posts.map((post) => (
+                  <tr
+                    key={post.id}
+                    className="transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+                  >
+                    {td(
+                      post.title,
+                      "font-medium text-zinc-900 dark:text-zinc-100",
+                    )}
+                    {td(<TagsList tags={post.tags} maxVisible={3} />)}
+                    {td(<StatusBadge status={post.status} />)}
+                    {td(
+                      post.view_count || 0,
+                      "text-sm text-zinc-500 dark:text-zinc-400",
+                    )}
+                    {td(
+                      formatDate(post.created_at),
+                      "text-sm text-zinc-500 dark:text-zinc-400",
+                    )}
+                    {td(<PostActions postId={post.id} />, "gap-2")}
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </EditorProvider>
   );
 }

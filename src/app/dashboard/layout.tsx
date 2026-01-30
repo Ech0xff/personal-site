@@ -25,7 +25,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {/* Sidebar */}
       <aside className="top-0 left-0 z-40 flex h-screen w-auto flex-col border-r border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
         {/* Header */}
-        <div className="flex gap-2 border-b border-zinc-200 p-4 dark:border-zinc-800">
+        <div className="flex gap-2 p-4">
           <Link
             href="/"
             className="flex items-center gap-2 text-lg font-semibold text-zinc-900 transition-colors hover:text-blue-600 dark:text-zinc-100 dark:hover:text-blue-400"
@@ -65,7 +65,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-8">{children}</main>
+      <main className="relative flex-1 p-8">{children}</main>
     </div>
   );
 }
