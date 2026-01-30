@@ -3,14 +3,87 @@
 import { revalidatePath } from "next/cache";
 
 import { supabase } from "@/lib/supabase";
+import { Event, EventInsert } from "@/types";
 
-export async function deleteEvent(eventId: string) {
-  const { error } = await supabase.from("events").delete().eq("id", eventId);
+export async function getEvent(id: string): Promise<Event | null> {
+  const { data, error } = await supabase
+    .from("events")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error("Error fetching event:", error);
+    return null;
+  }
+
+  return data;
+}
+
+export async function saveEvent(
+  event: Omit<EventInsert, "created_at" | "updated_at"> & { id?: string },
+): Promise<{ success: boolean; id?: string; error?: string }> {
+  const isUpdate = !!event.id;
+
+  if (isUpdate) {
+    const { error } = await supabase
+      .from("events")
+      .update({
+        title: event.title,
+        description: event.description,
+        event_date: event.event_date,
+        tags: event.tags,
+        color: event.color,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", event.id!);
+
+    if (error) {
+      console.error("Error updating event:", error);
+      return { success: false, error: error.message };
+    }
+
+    revalidatePath("/dashboard/event");
+    revalidatePath("/events");
+
+    return { success: true, id: event.id };
+  } else {
+    const { data, error } = await supabase
+      .from("events")
+      .insert({
+        title: event.title,
+        description: event.description,
+        event_date: event.event_date,
+        tags: event.tags,
+        color: event.color,
+      })
+      .select("id")
+      .single();
+
+    if (error) {
+      console.error("Error creating event:", error);
+      return { success: false, error: error.message };
+    }
+
+    revalidatePath("/dashboard/event");
+    revalidatePath("/events");
+
+    return { success: true, id: data.id };
+  }
+}
+
+export async function deleteEvent(
+  id: string,
+): Promise<{ success: boolean; error?: string }> {
+  const { error } = await supabase.from("events").delete().eq("id", id);
 
   if (error) {
     console.error("Error deleting event:", error);
+    return { success: false, error: error.message };
   }
 
   revalidatePath("/dashboard/event");
-  revalidatePath("/(index)/events");
+  revalidatePath("/events");
+
+  return { success: true };
 }
