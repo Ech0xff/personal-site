@@ -4,6 +4,8 @@ import { useEffect, useState, useTransition } from "react";
 
 import { X } from "lucide-react";
 
+import Button from "@/components/ui/Button";
+
 import { getThought, saveThought } from "../actions";
 
 interface ThoughtEditorProps {
@@ -114,13 +116,9 @@ export default function ThoughtEditor({
           </h1>
         </div>
 
-        <button
-          onClick={handleSubmit}
-          disabled={isPending}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
-        >
+        <Button onClick={handleSubmit} disabled={isPending}>
           {submitButtonText}
-        </button>
+        </Button>
       </div>
 
       {/* Error Message */}

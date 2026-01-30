@@ -5,6 +5,7 @@ import { useEffect, useState, useTransition } from "react";
 import { Eye, X } from "lucide-react";
 
 import MarkdownPreview from "@/components/MarkdownPreview";
+import Button from "@/components/ui/Button";
 
 import { getPost, savePost } from "../actions";
 
@@ -188,13 +189,9 @@ export default function PostEditor({
           </div>
 
           {/* Save Button */}
-          <button
-            onClick={handleSubmit}
-            disabled={isPending}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
-          >
+          <Button onClick={handleSubmit} disabled={isPending}>
             {submitButtonText}
-          </button>
+          </Button>
 
           <button
             onClick={onClose}
