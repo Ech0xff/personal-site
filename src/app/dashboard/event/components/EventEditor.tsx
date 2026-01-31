@@ -124,7 +124,11 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
           </h1>
         </div>
 
-        <Button onClick={handleSubmit} className="ml-auto mr-3" disabled={isPending}>
+        <Button
+          onClick={handleSubmit}
+          className="mr-3 ml-auto"
+          disabled={isPending}
+        >
           {submitButtonText}
         </Button>
 

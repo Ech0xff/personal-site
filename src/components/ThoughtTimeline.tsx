@@ -1,7 +1,4 @@
-import ReactMarkdown from "react-markdown";
-
-import remarkGfm from "remark-gfm";
-
+import { ThoughtMarkdown } from "@/components/markdown";
 import { cn } from "@/lib/utils";
 
 export interface ThoughtItem {
@@ -56,11 +53,7 @@ export default function ThoughtTimeline({
           </div>
 
           {/* Content */}
-          <div className="prose prose-zinc dark:prose-invert mb-4 max-w-none text-base leading-relaxed text-zinc-800 dark:text-zinc-200">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {thought.content}
-            </ReactMarkdown>
-          </div>
+          <ThoughtMarkdown content={thought.content} className="mb-4" />
 
           {/* Images Grid */}
           {thought.images && thought.images.length > 0 && (

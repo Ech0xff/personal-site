@@ -5,7 +5,7 @@ import { useEffect, useState, useTransition } from "react";
 import { Eye, X } from "lucide-react";
 
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
-import MarkdownPreview from "@/components/MarkdownPreview";
+import { PostMarkdown } from "@/components/markdown";
 import Button from "@/components/ui/Button";
 
 import { getPost, savePost } from "../actions";
@@ -332,7 +332,7 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
 
             {/* Markdown Content Preview */}
             {content ? (
-              <MarkdownPreview content={content} />
+              <PostMarkdown content={content} />
             ) : (
               <p className="text-sm text-zinc-400 italic">
                 Start writing and the preview will appear here...

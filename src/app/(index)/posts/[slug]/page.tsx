@@ -1,14 +1,10 @@
-import ReactMarkdown from "react-markdown";
-
 import { Metadata } from "next";
 import Link from "next/link";
 
-import "highlight.js/styles/github-dark.css";
 import { ArrowLeft, Calendar, User } from "lucide-react";
-import rehypeHighlight from "rehype-highlight";
-import remarkGfm from "remark-gfm";
 
 import ScrollToTopButton from "@/components/ScrollToTopButton";
+import { PostMarkdown } from "@/components/markdown";
 import { supabase } from "@/lib/supabase";
 
 export const revalidate = 60;
@@ -115,14 +111,7 @@ export default async function PostPage({ params }: PageProps) {
       <hr className="my-8 border-gray-200 dark:border-gray-800" />
 
       {/* Content */}
-      <div className="prose prose-lg dark:prose-invert prose-headings:font-bold prose-h1:text-3xl prose-a:text-blue-600 dark:prose-a:text-blue-400 hover:prose-a:underline max-w-none">
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          rehypePlugins={[rehypeHighlight]}
-        >
-          {post.content || ""}
-        </ReactMarkdown>
-      </div>
+      <PostMarkdown content={post.content || ""} />
 
       <hr className="my-8 border-gray-200 dark:border-gray-800" />
 

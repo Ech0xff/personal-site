@@ -1,6 +1,4 @@
-import ReactMarkdown from "react-markdown";
-
-import remarkGfm from "remark-gfm";
+import { EventMarkdown } from "@/components/markdown";
 
 export interface EventItem {
   id: string;
@@ -103,11 +101,7 @@ export default function EventTimeline({
 
                     {/* Description */}
                     {event.description && (
-                      <div className="prose prose-sm dark:prose-invert max-w-none text-zinc-600 dark:text-zinc-300">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                          {event.description}
-                        </ReactMarkdown>
-                      </div>
+                      <EventMarkdown content={event.description} />
                     )}
 
                     {/* Tags */}
