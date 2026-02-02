@@ -359,7 +359,7 @@ export default function ThoughtEditor({
                         e.stopPropagation();
                         removeImage(index);
                       }}
-                      className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-all hover:bg-red-600 group-hover/lightbox:opacity-100"
+                      className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-all group-hover/lightbox:opacity-100 hover:bg-red-600"
                     >
                       <X className="h-3 w-3" />
                     </button>

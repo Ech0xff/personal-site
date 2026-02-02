@@ -14,7 +14,7 @@ import {
 
 import LightboxImage from "@/components/LightboxImage";
 
-import { deleteImage, getImages, ImageFile } from "../actions";
+import { ImageFile, deleteImage, getImages } from "../actions";
 
 type SortField = "createdAt" | "size";
 type SortOrder = "asc" | "desc";
