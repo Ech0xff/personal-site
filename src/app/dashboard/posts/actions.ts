@@ -2,10 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 import { Post, PostInsert } from "@/types";
 
 export async function getPost(id: string): Promise<Post | null> {
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("posts")
     .select("*")
@@ -23,6 +24,7 @@ export async function getPost(id: string): Promise<Post | null> {
 export async function savePost(
   post: Omit<PostInsert, "created_at" | "updated_at"> & { id?: string },
 ): Promise<{ success: boolean; id?: string; error?: string }> {
+  const supabase = await createClient();
   const isUpdate = !!post.id;
 
   if (isUpdate) {
@@ -78,6 +80,7 @@ export async function savePost(
 export async function deletePost(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
+  const supabase = await createClient();
   const { error } = await supabase.from("posts").delete().eq("id", id);
 
   if (error) {

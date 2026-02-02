@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { QueryData } from "@supabase/supabase-js";
 
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 
 import CollectionBody from "../components/CollectionBody";
 
@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function PostsPage() {
+  const supabase = await createClient();
   const postsQuery = supabase
     .from("posts")
     .select("id, title, published_at, created_at, content")

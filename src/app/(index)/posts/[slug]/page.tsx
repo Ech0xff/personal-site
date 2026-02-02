@@ -5,7 +5,7 @@ import { ArrowLeft, Calendar, User } from "lucide-react";
 
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { PostMarkdown } from "@/components/markdown";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 
 export const revalidate = 60;
 
@@ -16,6 +16,7 @@ interface PageProps {
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
+  const supabase = await createClient();
   const { slug } = await params;
   const { data: post } = await supabase
     .from("posts")
@@ -36,6 +37,7 @@ export async function generateMetadata({
 }
 
 export default async function PostPage({ params }: PageProps) {
+  const supabase = await createClient();
   const { slug } = await params;
 
   const { data: post } = await supabase

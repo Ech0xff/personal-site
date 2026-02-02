@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import { QueryData } from "@supabase/supabase-js";
 
 import ThoughtTimeline from "@/components/ThoughtTimeline";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 
 import CollectionBody from "../components/CollectionBody";
 
@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ThoughtsPage() {
+  const supabase = await createClient();
   const thoughtsQuery = supabase
     .from("thoughts")
     .select("id, content, images, created_at")

@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import { QueryData } from "@supabase/supabase-js";
 
 import EventTimeline from "@/components/EventTimeline";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 
 import CollectionBody from "../components/CollectionBody";
 
@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function EventsPage() {
+  const supabase = await createClient();
   const eventsQuery = supabase
     .from("events")
     .select("id, title, description, event_date, tags, color, created_at")

@@ -2,10 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 import { Thought, ThoughtInsert } from "@/types";
 
 export async function getThought(id: string): Promise<Thought | null> {
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("thoughts")
     .select("*")
@@ -23,6 +24,7 @@ export async function getThought(id: string): Promise<Thought | null> {
 export async function saveThought(
   thought: Omit<ThoughtInsert, "created_at" | "updated_at"> & { id?: string },
 ): Promise<{ success: boolean; id?: string; error?: string }> {
+  const supabase = await createClient();
   const isUpdate = !!thought.id;
 
   if (isUpdate) {
@@ -69,6 +71,7 @@ export async function saveThought(
 export async function deleteThought(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
+  const supabase = await createClient();
   const { error } = await supabase.from("thoughts").delete().eq("id", id);
 
   if (error) {

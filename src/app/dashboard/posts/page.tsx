@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 
 import EditorProvider from "../components/EditorProvider";
@@ -75,6 +75,7 @@ function formatDate(dateString: string | null) {
 }
 
 export default async function PostsPage() {
+  const supabase = await createClient();
   const { data: posts, error } = await supabase
     .from("posts")
     .select("*")

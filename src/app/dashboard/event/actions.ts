@@ -2,10 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 import { Event, EventInsert } from "@/types";
 
 export async function getEvent(id: string): Promise<Event | null> {
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("events")
     .select("*")
@@ -23,6 +24,7 @@ export async function getEvent(id: string): Promise<Event | null> {
 export async function saveEvent(
   event: Omit<EventInsert, "created_at" | "updated_at"> & { id?: string },
 ): Promise<{ success: boolean; id?: string; error?: string }> {
+  const supabase = await createClient();
   const isUpdate = !!event.id;
 
   if (isUpdate) {
@@ -75,6 +77,7 @@ export async function saveEvent(
 export async function deleteEvent(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
+  const supabase = await createClient();
   const { error } = await supabase.from("events").delete().eq("id", id);
 
   if (error) {
