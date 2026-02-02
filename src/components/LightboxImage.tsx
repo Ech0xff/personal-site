@@ -20,25 +20,21 @@ export default function LightboxImage({
   return (
     <>
       {/* Thumbnail */}
-      <div className="group relative aspect-square w-full overflow-hidden rounded-lg border border-zinc-200 bg-zinc-100 transition-all hover:border-zinc-300 dark:border-zinc-700/50 dark:bg-zinc-800 dark:hover:border-zinc-600">
+      <div className="group/lightbox relative aspect-square w-full overflow-hidden rounded-lg border border-zinc-200 bg-zinc-100 transition-all hover:border-zinc-300 dark:border-zinc-700/50 dark:bg-zinc-800 dark:hover:border-zinc-600">
         <button onClick={() => setIsOpen(true)} className="h-full w-full">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={src}
             alt={alt}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover/lightbox:scale-105"
             loading="lazy"
           />
           {/* Hover overlay */}
-          <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/10" />
+          <div className="absolute inset-0 bg-black/0 transition-colors group-hover/lightbox:bg-black/10" />
         </button>
 
         {/* Action button */}
-        {actionRender && (
-          <div className="absolute top-1 right-1 opacity-0 transition-opacity group-hover:opacity-100">
-            {actionRender()}
-          </div>
-        )}
+        {actionRender && actionRender()}
       </div>
 
       {/* Lightbox Modal */}

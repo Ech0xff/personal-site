@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   Calendar,
   FileText,
+  Image,
   LayoutDashboard,
   LogOut,
   MessageCircle,
@@ -17,6 +18,7 @@ const navItems = [
   { name: "Posts", path: "/dashboard/posts", icon: FileText },
   { name: "Thoughts", path: "/dashboard/thoughts", icon: MessageCircle },
   { name: "Events", path: "/dashboard/event", icon: Calendar },
+  { name: "Images", path: "/dashboard/images", icon: Image },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
