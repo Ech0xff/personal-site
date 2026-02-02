@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 
-import { ImagePlus, Link as LinkIcon, Upload, X } from "lucide-react";
+import { Link as LinkIcon, Upload, X } from "lucide-react";
 
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
+import LightboxImage from "@/components/LightboxImage";
 import Button from "@/components/ui/Button";
 import {
   isValidImageFile,
@@ -229,37 +230,29 @@ export default function ThoughtEditor({
       )}
 
       {/* Main Editor Area */}
-      <div className="flex min-h-0 flex-1 flex-col gap-4 p-6">
-        {/* Content */}
-        <div className="flex flex-1 flex-col">
-          <label className="mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            Content
-          </label>
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="What's on your mind..."
-            className="flex-1 resize-none rounded-lg border border-zinc-200 bg-transparent p-4 text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
-          />
-        </div>
+      <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-6">
+        {/* Content and Upload Button Row */}
+        <div className="grid grid-cols-4 gap-4">
+          {/* Content - Left Half */}
+          <div className="col-span-3 flex grid-cols-3 flex-col">
+            <label className="mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              Content
+            </label>
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="What's on your mind..."
+              className="h-64 resize-none rounded-lg border border-zinc-200 bg-transparent p-4 text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
+            />
+          </div>
 
-        {/* Images */}
-        <div>
-          <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            Images (optional)
-          </label>
+          {/* Upload Button - Right Half */}
+          <div className="flex flex-col">
+            <label className="mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              Add Images
+            </label>
 
-          {/* Drag and drop upload area */}
-          <div
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            className={`relative mb-3 rounded-lg border-2 border-dashed p-4 transition-colors ${
-              isDragging
-                ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                : "border-zinc-300 dark:border-zinc-700"
-            }`}
-          >
+            {/* Hidden file input */}
             <input
               ref={fileInputRef}
               type="file"
@@ -274,109 +267,108 @@ export default function ThoughtEditor({
               className="hidden"
             />
 
-            <div className="flex flex-col items-center gap-2 text-center">
-              {isUploading ? (
-                <div className="flex items-center gap-2 text-zinc-500">
-                  <div className="h-5 w-5 animate-spin rounded-full border-2 border-zinc-300 border-t-blue-500" />
-                  <span>Uploading...</span>
-                </div>
-              ) : (
-                <>
-                  <Upload className="h-8 w-8 text-zinc-400" />
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Drag and drop images here, or
-                  </p>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="inline-flex items-center gap-1.5 rounded-md bg-blue-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-600"
-                    >
-                      <ImagePlus className="h-4 w-4" />
-                      Browse Files
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowUrlInput(!showUrlInput)}
-                      className="inline-flex items-center gap-1.5 rounded-md bg-zinc-100 px-3 py-1.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
-                    >
-                      <LinkIcon className="h-4 w-4" />
-                      Add from URL
-                    </button>
+            <div
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              className={`relative h-64 w-full ${
+                isDragging
+                  ? "rounded-lg bg-blue-50 p-2 dark:bg-blue-900/20"
+                  : ""
+              }`}
+            >
+              <button
+                type="button"
+                onClick={() => setShowUrlInput(!showUrlInput)}
+                className="group flex h-full w-full flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-zinc-300 bg-zinc-50 transition-all hover:border-blue-500 hover:bg-blue-50 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-blue-500 dark:hover:bg-blue-900/20"
+              >
+                {isUploading ? (
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="h-8 w-8 animate-spin rounded-full border-2 border-zinc-300 border-t-blue-500" />
+                    <span className="text-sm text-zinc-500">Uploading...</span>
                   </div>
-                </>
-              )}
+                ) : (
+                  <>
+                    <div className="space-y-2">
+                      {/* Browse Files Button */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          fileInputRef.current?.click();
+                          setShowUrlInput(false);
+                        }}
+                        className="flex w-full items-center gap-2 rounded-md bg-blue-500 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600"
+                      >
+                        <Upload className="h-4 w-4" />
+                        Browse Files
+                      </button>
+
+                      {/* URL Input */}
+                      <div className="border-t border-zinc-200 pt-2 dark:border-zinc-700">
+                        <input
+                          value={imageInput}
+                          onChange={(e) => setImageInput(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              handleUrlUpload();
+                            }
+                            if (e.key === "Escape") {
+                              setShowUrlInput(false);
+                              setImageInput("");
+                            }
+                          }}
+                          type="text"
+                          placeholder="Or paste image URL..."
+                          className="mb-2 w-full rounded border border-zinc-200 bg-transparent px-3 py-1.5 text-sm text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleUrlUpload}
+                          disabled={!imageInput.trim()}
+                          className="w-full rounded bg-zinc-100 px-3 py-1.5 text-sm text-zinc-700 transition-colors hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-600"
+                        >
+                          <LinkIcon className="mr-1.5 inline-block h-3.5 w-3.5" />
+                          Add from URL
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </button>
             </div>
-
-            {/* URL Input */}
-            {showUrlInput && (
-              <div className="mt-3 flex gap-2 border-t border-zinc-200 pt-3 dark:border-zinc-700">
-                <input
-                  value={imageInput}
-                  onChange={(e) => setImageInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      handleUrlUpload();
-                    }
-                    if (e.key === "Escape") {
-                      setShowUrlInput(false);
-                      setImageInput("");
-                    }
-                  }}
-                  type="text"
-                  placeholder="Paste image URL here..."
-                  className="flex-1 rounded border border-zinc-200 bg-transparent px-3 py-1.5 text-sm text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
-                  autoFocus
-                />
-                <button
-                  type="button"
-                  onClick={handleUrlUpload}
-                  disabled={isUploading || !imageInput.trim()}
-                  className="rounded bg-blue-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Add
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowUrlInput(false);
-                    setImageInput("");
-                  }}
-                  className="rounded bg-zinc-100 px-3 py-1.5 text-sm text-zinc-600 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
-                >
-                  Cancel
-                </button>
-              </div>
-            )}
           </div>
+        </div>
 
-          {/* Image Preview */}
-          {images.length > 0 && (
-            <div className="flex flex-wrap gap-3">
+        {/* Images Grid - Full Width Below */}
+        {images.length > 0 && (
+          <div>
+            <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              Uploaded Images ({images.length})
+            </label>
+            <div className="grid grid-cols-6 gap-2 md:grid-cols-8 lg:grid-cols-10">
               {images.map((url, index) => (
-                <div
+                <LightboxImage
                   key={index}
-                  className="group relative h-24 w-24 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={url}
-                    alt={`Image ${index + 1}`}
-                    className="h-full w-full object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeImage(index)}
-                    className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-red-500"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                </div>
+                  src={url}
+                  alt={`Image ${index + 1}`}
+                  actionRender={() => (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeImage(index);
+                      }}
+                      className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white transition-colors hover:bg-red-600"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  )}
+                />
               ))}
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

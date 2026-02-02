@@ -1,3 +1,4 @@
+import LightboxImage from "@/components/LightboxImage";
 import { ThoughtMarkdown } from "@/components/markdown";
 import { cn } from "@/lib/utils";
 
@@ -58,25 +59,17 @@ export default function ThoughtTimeline({
           {/* Images Grid */}
           {thought.images && thought.images.length > 0 && (
             <div
-              className={`mt-4 grid gap-2 ${
-                thought.images.length === 1
-                  ? "max-w-md grid-cols-1"
-                  : "grid-cols-2 md:grid-cols-3"
-              }`}
+              className={cn(
+                "mt-4 grid gap-2",
+                "grid-cols-6 gap-2 md:grid-cols-8 lg:grid-cols-10",
+              )}
             >
               {thought.images.map((img, idx) => (
-                <div
+                <LightboxImage
                   key={idx}
-                  className="relative aspect-4/3 overflow-hidden rounded-lg border border-zinc-200 bg-zinc-100 dark:border-zinc-700/50 dark:bg-zinc-800"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={img}
-                    alt={`Thought image ${idx + 1}`}
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                  />
-                </div>
+                  src={img}
+                  alt={`Thought image ${idx + 1}`}
+                />
               ))}
             </div>
           )}
