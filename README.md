@@ -1,36 +1,157 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BBLF - Personal Blog Platform
 
-## Getting Started
+A modern, full-featured personal blog platform built with Next.js 16, React 19, Supabase, and Tailwind CSS.
 
-First, run the development server:
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js 16](https://nextjs.org/) with App Router
+- **UI Library**: [React 19](https://react.dev/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Database & Storage**: [Supabase](https://supabase.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Markdown**: [react-markdown](https://github.com/remarkjs/react-markdown)
+- **Syntax Highlighting**: [highlight.js](https://highlightjs.org/)
+- **Image Compression**: [browser-image-compression](https://github.com/Donaldcwl/browser-image-compression)
+- **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
+
+## 📋 Prerequisites
+
+- Node.js 18+ (recommended: Node.js 24)
+- npm, yarn, pnpm, or bun
+- Supabase account ([sign up here](https://supabase.com/))
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/yuzi-beep/BBLF.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Using bun (recommended)
+bun install
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Or using npm
+npm install
 
-## Learn More
+# Or using yarn
+yarn install
 
-To learn more about Next.js, take a look at the following resources:
+# Or using pnpm
+pnpm install
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 3. Set up Supabase
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Create a new project on [Supabase](https://app.supabase.com/)
+2. Go to Project Settings > API to get your credentials
+3. Run the SQL commands in `supabase/table.sql` to create required tables
+4. Create a storage bucket named `images` with public access
 
-## Deploy on Vercel
+### 4. Configure environment variables
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+# Copy the example file
+cp .env.example .env.local
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Edit .env.local with your actual values
+```
+
+Required environment variables:
+- `SUPABASE_URL`: Your Supabase project URL
+- `SUPABASE_ANON_KEY`: Your Supabase anonymous key
+- `SUPABASE_PROJECT_ID`: Your Supabase project ID (for type generation)
+- `DASHBOARD_SECRET_KEY`: A secure secret key for dashboard authentication
+
+### 5. Generate TypeScript types (optional)
+
+```bash
+bun run gen:types
+```
+
+### 6. Run the development server
+
+```bash
+bun run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to view the site.
+
+### 7. Access the dashboard
+
+Navigate to [http://localhost:3000/auth](http://localhost:3000/auth) and enter your `DASHBOARD_SECRET_KEY` to access the admin dashboard.
+
+## 📦 Build for Production
+
+```bash
+bun run build
+bun run start
+```
+
+## 🚢 Deploy to Vercel
+
+### Quick Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yuzi-beep/BBLF.git)
+
+### Manual Deploy
+
+1. Push your code to GitHub/GitLab/Bitbucket
+2. Go to [Vercel](https://vercel.com/) and sign in
+3. Click "New Project" and import your repository
+4. Configure environment variables:
+   - Add all variables from `.env.example`
+5. Click "Deploy"
+
+### Environment Variables for Vercel
+
+Make sure to add these in your Vercel project settings:
+
+```
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+SUPABASE_PROJECT_ID=your_supabase_project_id
+DASHBOARD_SECRET_KEY=your_secure_secret_key_here
+```
+
+## 📁 Project Structure
+
+```
+BBLF/
+├── src/
+│   ├── app/                   # Next.js App Router pages
+│   │   ├── (index)/           # Public facing pages
+│   │   ├── auth/              # Authentication page
+│   │   └── dashboard/         # Admin dashboard
+│   │       ├── posts/         # Posts management
+│   │       ├── thoughts/      # Thoughts management
+│   │       ├── event/         # Events management
+│   │       └── images/        # Image gallery management
+│   ├── components/            # Reusable components
+│   ├── lib/                   # Utility functions
+│   ├── store/                 # Zustand stores
+│   ├── styles/                # Global styles
+│   └── types/                 # TypeScript types
+├── public/                    # Static assets
+├── supabase/                  # Supabase SQL schemas
+└── ...config files
+```
+
+## 🎨 Available Scripts
+
+- `bun run dev` - Start development server
+- `bun run build` - Build for production
+- `bun run start` - Start production server
+- `bun run lint` - Run ESLint
+- `bun run format` - Format code with Prettier
+- `bun run gen:types` - Generate TypeScript types from Supabase
+- `bun run icons` - Generate icon components from SVGs
+
+## 📝 License
+
+This project is open source and available under the [MIT License](LICENSE).
