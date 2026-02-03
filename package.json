@@ -12,7 +12,8 @@
     "icons": "svgr --out-dir src/components/icons --typescript --icon --replace-attr-values \"#000=currentColor\" public/svg-icons"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.91.0",
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.93.3",
     "@tailwindcss/typography": "^0.5.19",
     "browser-image-compression": "^2.0.2",
     "clsx": "^2.1.1",
