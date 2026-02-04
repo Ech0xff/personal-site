@@ -22,6 +22,7 @@ export async function generateMetadata({
     .from("posts")
     .select("title, content")
     .eq("id", slug)
+    .eq("status", "show")
     .single();
 
   if (!post) {
@@ -44,6 +45,7 @@ export default async function PostPage({ params }: PageProps) {
     .from("posts")
     .select("*")
     .eq("id", slug)
+    .eq("status", "show")
     .single();
 
   // Handle 404

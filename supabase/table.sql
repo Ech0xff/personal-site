@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS public.posts (
   title VARCHAR(500) NOT NULL,
   content TEXT NOT NULL,
   author VARCHAR(100),
-  status VARCHAR(20) DEFAULT 'draft' CHECK (status IN ('draft', 'published')),
+  status VARCHAR(20) DEFAULT 'hide' CHECK (status IN ('hide', 'show')),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   published_at TIMESTAMPTZ,
@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS public.thoughts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   content TEXT NOT NULL,
   images TEXT[] DEFAULT '{}',
+  status VARCHAR(20) DEFAULT 'hide' CHECK (status IN ('hide', 'show')),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -29,6 +30,7 @@ CREATE TABLE IF NOT EXISTS public.events (
   event_date DATE NOT NULL,
   tags TEXT[] DEFAULT '{}',
   color VARCHAR(50),
+  status VARCHAR(20) DEFAULT 'hide' CHECK (status IN ('hide', 'show')),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -41,9 +43,11 @@ CREATE INDEX IF NOT EXISTS idx_posts_created_at ON public.posts(created_at DESC)
 CREATE INDEX IF NOT EXISTS idx_posts_tags ON public.posts USING GIN(tags);
 
 -- Thoughts indexes
+CREATE INDEX IF NOT EXISTS idx_thoughts_status ON public.thoughts(status);
 CREATE INDEX IF NOT EXISTS idx_thoughts_created_at ON public.thoughts(created_at DESC);
 
 -- Events indexes
+CREATE INDEX IF NOT EXISTS idx_events_status ON public.events(status);
 CREATE INDEX IF NOT EXISTS idx_events_event_date ON public.events(event_date DESC);
 CREATE INDEX IF NOT EXISTS idx_events_tags ON public.events USING GIN(tags);
 
@@ -64,24 +68,26 @@ This is the first post of the blog to mark the beginning of this journey. All fu
 - 🎨 **[Tailwind CSS](https://tailwindcss.com/)** - A utility-first CSS framework
 - 📝 **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript',
   'BBLF Admin',
-  'published',
+  'show',
   NOW(),
   ARRAY['Blog', 'Tech', 'Next.js', 'React']
 );
 
 -- Initial Thought
-INSERT INTO public.thoughts (content, images) VALUES
+INSERT INTO public.thoughts (content, images, status) VALUES
 (
   'The blog is finally live! 🎉 After a period of development and debugging, I have completed the setup. Using Next.js and Supabase has made the development experience incredibly smooth. I will gradually start filling it with content.',
-  ARRAY[]::TEXT[]
+  ARRAY[]::TEXT[],
+  'show'
 );
 
 -- Initial Event
-INSERT INTO public.events (title, description, event_date, tags, color) VALUES
+INSERT INTO public.events (title, description, event_date, tags, color, status) VALUES
 (
   'Blog Officially Launched',
   'After careful design and development, BBLF has officially gone live! This is a brand new start, and I look forward to recording more exciting content here.',
   CURRENT_DATE,
   ARRAY['Milestone', 'Blog'],
-  '#3B82F6'
+  '#3B82F6',
+  'show'
 );

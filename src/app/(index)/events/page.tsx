@@ -18,6 +18,7 @@ export default async function EventsPage() {
   const eventsQuery = supabase
     .from("events")
     .select("id, title, description, event_date, tags, color, created_at")
+    .eq("status", "show")
     .order("event_date", { ascending: false });
   type EventListItem = QueryData<typeof eventsQuery>[number];
   const { data: events } = await eventsQuery;

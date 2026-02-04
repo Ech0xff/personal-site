@@ -18,6 +18,7 @@ export default async function ThoughtsPage() {
   const thoughtsQuery = supabase
     .from("thoughts")
     .select("id, content, images, created_at")
+    .eq("status", "show")
     .order("created_at", { ascending: false });
   type ThoughtListItem = QueryData<typeof thoughtsQuery>[number];
   const { data: thoughts } = await thoughtsQuery;

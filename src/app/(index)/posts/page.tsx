@@ -18,7 +18,7 @@ export default async function PostsPage() {
   const postsQuery = supabase
     .from("posts")
     .select("id, title, published_at, created_at, content")
-    .eq("status", "published")
+    .eq("status", "show")
     .order("published_at", { ascending: false });
   type PostListItem = QueryData<typeof postsQuery>[number];
   const { data: posts } = await postsQuery;
