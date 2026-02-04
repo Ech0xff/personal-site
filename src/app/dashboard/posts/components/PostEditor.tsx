@@ -5,6 +5,7 @@ import { useEffect, useState, useTransition } from "react";
 import { Eye, X } from "lucide-react";
 
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
+import SegmentedToggle from "@/app/dashboard/components/SegmentedToggle";
 import { PostMarkdown } from "@/components/markdown";
 import Button from "@/components/ui/Button";
 import { Status } from "@/types";
@@ -121,62 +122,25 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
 
         <div className="flex items-center gap-3">
           {/* View Mode Toggle */}
-          <div className="flex items-center rounded-lg bg-zinc-100 p-1 dark:bg-zinc-800">
-            <button
-              onClick={() => setViewMode("edit")}
-              className={`rounded-md px-3 py-1.5 text-sm transition-all ${
-                viewMode === "edit"
-                  ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
-                  : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
-              }`}
-            >
-              Edit
-            </button>
-            <button
-              onClick={() => setViewMode("split")}
-              className={`rounded-md px-3 py-1.5 text-sm transition-all ${
-                viewMode === "split"
-                  ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
-                  : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
-              }`}
-            >
-              Split
-            </button>
-            <button
-              onClick={() => setViewMode("preview")}
-              className={`rounded-md px-3 py-1.5 text-sm transition-all ${
-                viewMode === "preview"
-                  ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
-                  : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
-              }`}
-            >
-              Preview
-            </button>
-          </div>
+          <SegmentedToggle
+            value={viewMode}
+            onChange={setViewMode}
+            options={[
+              { value: "edit", label: "Edit" },
+              { value: "split", label: "Split" },
+              { value: "preview", label: "Preview" },
+            ]}
+          />
 
           {/* Status Toggle */}
-          <div className="flex items-center rounded-lg bg-zinc-100 p-1 dark:bg-zinc-800">
-            <button
-              onClick={() => setStatus("hide")}
-              className={`rounded-md px-3 py-1.5 text-sm transition-all ${
-                status === "hide"
-                  ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
-                  : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
-              }`}
-            >
-              Hide
-            </button>
-            <button
-              onClick={() => setStatus("show")}
-              className={`rounded-md px-3 py-1.5 text-sm transition-all ${
-                status === "show"
-                  ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
-                  : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
-              }`}
-            >
-              Show
-            </button>
-          </div>
+          <SegmentedToggle
+            value={status}
+            onChange={setStatus}
+            options={[
+              { value: "hide", label: "Hide" },
+              { value: "show", label: "Show" },
+            ]}
+          />
 
           {/* Save Button */}
           <Button onClick={handleSubmit} disabled={isPending}>

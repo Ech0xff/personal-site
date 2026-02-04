@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { Link as LinkIcon, Upload, X } from "lucide-react";
 
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
+import SegmentedToggle from "@/app/dashboard/components/SegmentedToggle";
 import LightboxImage from "@/components/LightboxImage";
 import Button from "@/components/ui/Button";
 import {
@@ -211,28 +212,14 @@ export default function ThoughtEditor({
         </div>
 
         <div className="ml-auto flex items-center gap-3">
-          <div className="flex items-center rounded-lg bg-zinc-100 p-1 dark:bg-zinc-800">
-            <button
-              onClick={() => setStatus("hide")}
-              className={`rounded-md px-3 py-1.5 text-sm transition-all ${
-                status === "hide"
-                  ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
-                  : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
-              }`}
-            >
-              Hide
-            </button>
-            <button
-              onClick={() => setStatus("show")}
-              className={`rounded-md px-3 py-1.5 text-sm transition-all ${
-                status === "show"
-                  ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
-                  : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
-              }`}
-            >
-              Show
-            </button>
-          </div>
+          <SegmentedToggle
+            value={status}
+            onChange={setStatus}
+            options={[
+              { value: "hide", label: "Hide" },
+              { value: "show", label: "Show" },
+            ]}
+          />
           <Button onClick={handleSubmit} disabled={isPending}>
             {submitButtonText}
           </Button>
