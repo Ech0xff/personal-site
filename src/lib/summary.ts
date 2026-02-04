@@ -4,7 +4,7 @@ import { createClient } from "./supabase/server";
 
 export async function getSummary(
   recentLimit: number = 5,
-  queryStatus: Status,
+  queryStatus?: Status,
 ): Promise<BlogSummaryData | null> {
   const supabase = await createClient();
 

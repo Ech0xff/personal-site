@@ -9,6 +9,8 @@ import {
   Plus,
 } from "lucide-react";
 
+import { getSummary } from "@/lib/summary";
+
 const quickActions = [
   {
     title: "New Post",
@@ -33,14 +35,46 @@ const quickActions = [
   },
 ];
 
-const stats = [
-  { label: "Total Posts", value: "—", icon: FileText },
-  { label: "Total Thoughts", value: "—", icon: MessageCircle },
-  { label: "Total Events", value: "—", icon: Calendar },
-  { label: "Total Views", value: "—", icon: Eye },
-];
+export default async function DashboardPage() {
+  const summaryData = await getSummary(5);
 
-export default function DashboardPage() {
+  const stats = [
+    {
+      label: "Total Posts",
+      value:
+        (summaryData?.statistics.posts.show.count ?? 0) +
+          (summaryData?.statistics.posts.hide.count ?? 0) || "—",
+      icon: FileText,
+    },
+    {
+      label: "Total Thoughts",
+      value:
+        (summaryData?.statistics.thoughts.show.count ?? 0) +
+          (summaryData?.statistics.thoughts.hide.count ?? 0) || "—",
+      icon: MessageCircle,
+    },
+    {
+      label: "Total Events",
+      value:
+        (summaryData?.statistics.events.show.count ?? 0) +
+          (summaryData?.statistics.events.hide.count ?? 0) || "—",
+      icon: Calendar,
+    },
+    {
+      label: "Total Characters",
+      value:
+        (
+          (summaryData?.statistics.posts.show.characters ?? 0) +
+          (summaryData?.statistics.posts.hide.characters ?? 0) +
+          (summaryData?.statistics.thoughts.show.characters ?? 0) +
+          (summaryData?.statistics.thoughts.hide.characters ?? 0) +
+          (summaryData?.statistics.events.show.characters ?? 0) +
+          (summaryData?.statistics.events.hide.characters ?? 0)
+        ).toLocaleString() || "—",
+      icon: Eye,
+    },
+  ];
+
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
