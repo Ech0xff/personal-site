@@ -6,6 +6,7 @@ import { X } from "lucide-react";
 
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import Button from "@/components/ui/Button";
+import { Status } from "@/types";
 
 import { getEvent, saveEvent } from "../actions";
 
@@ -32,10 +33,10 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
   const [description, setDescription] = useState("");
   const [eventDate, setEventDate] = useState("");
   const [color, setColor] = useState("blue");
+  const [status, setStatus] = useState<Status>("hide");
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
 
-  // Load event data for edit mode
   useEffect(() => {
     if (isNewMode) return;
 
@@ -47,6 +48,7 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
         setDescription(event.description || "");
         setEventDate(event.event_date);
         setColor(event.color || "blue");
+        setStatus(event.status ?? "hide");
         setTags(event.tags || []);
       } else {
         setErrorMessage("Failed to load event");
@@ -88,6 +90,7 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
         description: description.trim() || null,
         event_date: eventDate,
         color,
+        status,
         tags: tags.length > 0 ? tags : null,
       });
 
@@ -124,20 +127,39 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
           </h1>
         </div>
 
-        <Button
-          onClick={handleSubmit}
-          className="mr-3 ml-auto"
-          disabled={isPending}
-        >
-          {submitButtonText}
-        </Button>
-
-        <button
-          onClick={onClose}
-          className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
-        >
-          <X className="h-8 w-8" />
-        </button>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center rounded-lg bg-zinc-100 p-1 dark:bg-zinc-800">
+            <button
+              onClick={() => setStatus("hide")}
+              className={`rounded-md px-3 py-1.5 text-sm transition-all ${
+                status === "hide"
+                  ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
+                  : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
+              }`}
+            >
+              Hide
+            </button>
+            <button
+              onClick={() => setStatus("show")}
+              className={`rounded-md px-3 py-1.5 text-sm transition-all ${
+                status === "show"
+                  ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
+                  : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
+              }`}
+            >
+              Show
+            </button>
+          </div>
+          <Button onClick={handleSubmit} disabled={isPending}>
+            {submitButtonText}
+          </Button>
+          <button
+            onClick={onClose}
+            className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
+          >
+            <X className="h-8 w-8" />
+          </button>
+        </div>
       </div>
 
       {/* Error Message */}

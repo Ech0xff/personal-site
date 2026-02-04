@@ -36,6 +36,7 @@ export async function saveEvent(
         event_date: event.event_date,
         tags: event.tags,
         color: event.color,
+        status: event.status,
         updated_at: new Date().toISOString(),
       })
       .eq("id", event.id!);
@@ -58,6 +59,7 @@ export async function saveEvent(
         event_date: event.event_date,
         tags: event.tags,
         color: event.color,
+        status: event.status,
       })
       .select("id")
       .single();

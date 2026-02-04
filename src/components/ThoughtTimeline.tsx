@@ -7,11 +7,13 @@ export interface ThoughtItem {
   content: string;
   images: string[] | null;
   created_at: string | null;
+  status?: string | null;
 }
 
 interface ThoughtTimelineProps {
   thoughts: ThoughtItem[];
   totalCount?: number;
+  renderMetaRight?: (thought: ThoughtItem) => React.ReactNode;
   renderActions?: (thought: ThoughtItem) => React.ReactNode;
 }
 
@@ -29,6 +31,7 @@ function formatDateDetail(dateStr: string | null) {
 export default function ThoughtTimeline({
   thoughts,
   totalCount,
+  renderMetaRight,
   renderActions,
 }: ThoughtTimelineProps) {
   const total = totalCount ?? thoughts.length;
@@ -46,11 +49,14 @@ export default function ThoughtTimeline({
               <span>•</span>
               <span>{formatDateDetail(thought.created_at)}</span>
             </div>
-            {renderActions && (
-              <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-                {renderActions(thought)}
-              </div>
-            )}
+            <div className="flex items-center gap-2">
+              {renderMetaRight && renderMetaRight(thought)}
+              {renderActions && (
+                <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                  {renderActions(thought)}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Content */}

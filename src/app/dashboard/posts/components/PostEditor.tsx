@@ -7,11 +7,11 @@ import { Eye, X } from "lucide-react";
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import { PostMarkdown } from "@/components/markdown";
 import Button from "@/components/ui/Button";
+import { Status } from "@/types";
 
 import { getPost, savePost } from "../actions";
 
 type ViewMode = "edit" | "preview" | "split";
-type PostStatus = "draft" | "published";
 
 export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
   const isNewMode = id === null;
@@ -23,7 +23,7 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
-  const [status, setStatus] = useState<PostStatus>("draft");
+  const [status, setStatus] = useState<Status>("hide");
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
 
@@ -41,7 +41,7 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
         setTitle(post.title);
         setContent(post.content);
         setAuthor(post.author || "");
-        setStatus((post.status as PostStatus) || "draft");
+        setStatus(post.status ?? "hide");
         setTags(post.tags || []);
       } else {
         setErrorMessage("Failed to load post");
@@ -157,24 +157,24 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
           {/* Status Toggle */}
           <div className="flex items-center rounded-lg bg-zinc-100 p-1 dark:bg-zinc-800">
             <button
-              onClick={() => setStatus("draft")}
+              onClick={() => setStatus("hide")}
               className={`rounded-md px-3 py-1.5 text-sm transition-all ${
-                status === "draft"
+                status === "hide"
                   ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
                   : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
               }`}
             >
-              Draft
+              Hide
             </button>
             <button
-              onClick={() => setStatus("published")}
+              onClick={() => setStatus("show")}
               className={`rounded-md px-3 py-1.5 text-sm transition-all ${
-                status === "published"
+                status === "show"
                   ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
                   : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
               }`}
             >
-              Published
+              Show
             </button>
           </div>
 

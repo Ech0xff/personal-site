@@ -13,6 +13,7 @@ import {
   uploadImage,
   uploadImageFromUrl,
 } from "@/lib/upload";
+import { Status } from "@/types";
 
 import { getThought, saveThought } from "../actions";
 
@@ -35,6 +36,7 @@ export default function ThoughtEditor({
   const [content, setContent] = useState("");
   const [images, setImages] = useState<string[]>([]);
   const [imageInput, setImageInput] = useState("");
+  const [status, setStatus] = useState<Status>("hide");
 
   // Load thought data for edit mode
   useEffect(() => {
@@ -46,6 +48,7 @@ export default function ThoughtEditor({
       if (thought) {
         setContent(thought.content);
         setImages(thought.images || []);
+        setStatus(thought.status ?? "hide");
       } else {
         setErrorMessage("Failed to load thought");
       }
@@ -171,6 +174,7 @@ export default function ThoughtEditor({
         id: id || undefined,
         content: content.trim(),
         images: images.length > 0 ? images : null,
+        status,
       });
 
       if (result.success) {
@@ -206,20 +210,39 @@ export default function ThoughtEditor({
           </h1>
         </div>
 
-        <Button
-          onClick={handleSubmit}
-          className="mr-3 ml-auto"
-          disabled={isPending}
-        >
-          {submitButtonText}
-        </Button>
-
-        <button
-          onClick={onClose}
-          className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
-        >
-          <X className="h-8 w-8" />
-        </button>
+        <div className="ml-auto flex items-center gap-3">
+          <div className="flex items-center rounded-lg bg-zinc-100 p-1 dark:bg-zinc-800">
+            <button
+              onClick={() => setStatus("hide")}
+              className={`rounded-md px-3 py-1.5 text-sm transition-all ${
+                status === "hide"
+                  ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
+                  : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
+              }`}
+            >
+              Hide
+            </button>
+            <button
+              onClick={() => setStatus("show")}
+              className={`rounded-md px-3 py-1.5 text-sm transition-all ${
+                status === "show"
+                  ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
+                  : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
+              }`}
+            >
+              Show
+            </button>
+          </div>
+          <Button onClick={handleSubmit} disabled={isPending}>
+            {submitButtonText}
+          </Button>
+          <button
+            onClick={onClose}
+            className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
+          >
+            <X className="h-8 w-8" />
+          </button>
+        </div>
       </div>
 
       {/* Error Message */}
@@ -277,10 +300,9 @@ export default function ThoughtEditor({
                   : ""
               }`}
             >
-              <button
-                type="button"
+              <div
                 onClick={() => setShowUrlInput(!showUrlInput)}
-                className="group flex h-full w-full flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-zinc-300 bg-zinc-50 transition-all hover:border-blue-500 hover:bg-blue-50 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-blue-500 dark:hover:bg-blue-900/20"
+                className="group flex h-full w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-zinc-300 bg-zinc-50 transition-all hover:border-blue-500 hover:bg-blue-50 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-blue-500 dark:hover:bg-blue-900/20"
               >
                 {isUploading ? (
                   <div className="flex flex-col items-center gap-2">
@@ -293,7 +315,8 @@ export default function ThoughtEditor({
                       {/* Browse Files Button */}
                       <button
                         type="button"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           fileInputRef.current?.click();
                           setShowUrlInput(false);
                         }}
@@ -308,6 +331,7 @@ export default function ThoughtEditor({
                         <input
                           value={imageInput}
                           onChange={(e) => setImageInput(e.target.value)}
+                          onClick={(e) => e.stopPropagation()}
                           onKeyDown={(e) => {
                             if (e.key === "Enter") {
                               e.preventDefault();
@@ -324,7 +348,10 @@ export default function ThoughtEditor({
                         />
                         <button
                           type="button"
-                          onClick={handleUrlUpload}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleUrlUpload();
+                          }}
                           disabled={!imageInput.trim()}
                           className="w-full rounded bg-zinc-100 px-3 py-1.5 text-sm text-zinc-700 transition-colors hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-600"
                         >
@@ -335,7 +362,7 @@ export default function ThoughtEditor({
                     </div>
                   </>
                 )}
-              </button>
+              </div>
             </div>
           </div>
         </div>

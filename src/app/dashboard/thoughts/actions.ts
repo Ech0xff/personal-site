@@ -33,6 +33,7 @@ export async function saveThought(
       .update({
         content: thought.content,
         images: thought.images,
+        status: thought.status,
         updated_at: new Date().toISOString(),
       })
       .eq("id", thought.id!);
@@ -52,6 +53,7 @@ export async function saveThought(
       .insert({
         content: thought.content,
         images: thought.images,
+        status: thought.status,
       })
       .select("id")
       .single();

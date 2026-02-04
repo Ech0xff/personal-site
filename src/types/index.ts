@@ -24,7 +24,7 @@ interface StatsItem {
   };
 }
 
-export type Status = "show" | "hide";
+export type Status = "show" | "hide" | string;
 
 export interface BlogSummaryData {
   statistics: {

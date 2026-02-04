@@ -8,15 +8,18 @@ export interface EventItem {
   tags: string[] | null;
   color: string | null;
   created_at: string | null;
+  status?: string | null;
 }
 
 interface EventTimelineProps {
   events: EventItem[];
+  renderMetaRight?: (event: EventItem) => React.ReactNode;
   renderActions?: (event: EventItem) => React.ReactNode;
 }
 
 export default function EventTimeline({
   events,
+  renderMetaRight,
   renderActions,
 }: EventTimelineProps) {
   // Format date helper
@@ -87,11 +90,14 @@ export default function EventTimeline({
                       <div className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
                         {formatEventDate(event.event_date)}
                       </div>
-                      {renderActions && (
-                        <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-                          {renderActions(event)}
-                        </div>
-                      )}
+                      <div className="flex items-center gap-2">
+                        {renderMetaRight && renderMetaRight(event)}
+                        {renderActions && (
+                          <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                            {renderActions(event)}
+                          </div>
+                        )}
+                      </div>
                     </div>
 
                     {/* Title */}
