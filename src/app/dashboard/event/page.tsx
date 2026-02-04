@@ -2,32 +2,13 @@ import { QueryData } from "@supabase/supabase-js";
 
 import EventTimeline from "@/components/EventTimeline";
 import { createClient } from "@/lib/supabase/server";
-import { cn } from "@/lib/utils";
-import { Status } from "@/types";
 
 import EditorProvider from "../components/EditorProvider";
 import HeaderSection from "../components/HeaderSection";
 import EventActions from "./components/EventActions";
 import EventEditor from "./components/EventEditor";
 import NewEventButton from "./components/NewEventButton";
-
-function StatusBadge({ status }: { status: Status | null }) {
-  const styles = {
-    show: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-    hide: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
-  };
-  const statusKey = status as keyof typeof styles;
-  return (
-    <span
-      className={cn(
-        "rounded-full px-2 py-0.5 text-xs font-medium",
-        styles[statusKey] || styles.hide,
-      )}
-    >
-      {statusKey === "show" ? "Show" : "Hide"}
-    </span>
-  );
-}
+import StatusToggle from "./components/StatusToggle";
 
 export default async function EventsPage() {
   const supabase = await createClient();
@@ -60,7 +41,7 @@ export default async function EventsPage() {
         <EventTimeline
           events={safeEvents}
           renderMetaRight={(event) => (
-            <StatusBadge status={event.status ?? null} />
+            <StatusToggle eventId={event.id} status={event.status ?? null} />
           )}
           renderActions={(event) => <EventActions eventId={event.id} />}
         />

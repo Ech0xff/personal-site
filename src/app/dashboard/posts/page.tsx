@@ -1,30 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
-import { Status } from "@/types";
 
 import EditorProvider from "../components/EditorProvider";
 import HeaderSection from "../components/HeaderSection";
 import NewPostButton from "./components/NewPostButton";
 import PostActions from "./components/PostActions";
 import PostEditor from "./components/PostEditor";
-
-function StatusBadge({ status }: { status: Status | null }) {
-  const styles = {
-    show: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-    hide: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
-  };
-  const statusKey = status as keyof typeof styles;
-  return (
-    <span
-      className={cn(
-        "rounded-full px-2 py-0.5 text-xs font-medium",
-        styles[statusKey] || styles.hide,
-      )}
-    >
-      {statusKey === "show" ? "Show" : "Hide"}
-    </span>
-  );
-}
+import StatusToggle from "./components/StatusToggle";
 
 function TagsList({
   tags,
@@ -142,7 +124,7 @@ export default async function PostsPage() {
                       "font-medium text-zinc-900 dark:text-zinc-100",
                     )}
                     {td(<TagsList tags={post.tags} maxVisible={3} />)}
-                    {td(<StatusBadge status={post.status} />)}
+                    {td(<StatusToggle postId={post.id} status={post.status} />)}
                     {td(
                       post.view_count || 0,
                       "text-sm text-zinc-500 dark:text-zinc-400",

@@ -93,3 +93,25 @@ export async function deletePost(
 
   return { success: true };
 }
+
+export async function updatePostStatus(
+  id: string,
+  status: string,
+): Promise<{ success: boolean; error?: string }> {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("posts")
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error updating post status:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/posts");
+  revalidatePath("/posts");
+  revalidatePath(`/posts/${id}`);
+
+  return { success: true };
+}

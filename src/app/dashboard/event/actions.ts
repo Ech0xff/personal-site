@@ -92,3 +92,24 @@ export async function deleteEvent(
 
   return { success: true };
 }
+
+export async function updateEventStatus(
+  id: string,
+  status: string,
+): Promise<{ success: boolean; error?: string }> {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("events")
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error updating event status:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/event");
+  revalidatePath("/events");
+
+  return { success: true };
+}
