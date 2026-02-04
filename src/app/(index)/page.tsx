@@ -1,8 +1,11 @@
 import FooterSection from "@/components/FooterSection";
 import { Bilibili, Email, Github, Qq } from "@/components/icons";
+import { getSummary } from "@/lib/summary";
 import { cn } from "@/lib/utils";
+import { BlogSummaryData } from "@/types";
 
 import HeroSection from "./components/HeroSection";
+import PostListItem from "./components/PostListItem";
 
 function Card({
   title,
@@ -115,34 +118,66 @@ function FindMeCard() {
   );
 }
 
-function PostsCard() {
+function PostsCard({
+  posts,
+}: {
+  posts?: BlogSummaryData["recently"]["posts"];
+}) {
+  if (!posts || posts.length === 0) {
+    return (
+      <Card title="Latest Posts">
+        <div className="mb-8 space-y-4 text-sm leading-relaxed text-slate-600 sm:text-base">
+          <p style={{ textIndent: "2em" }}>No posts yet...</p>
+        </div>
+      </Card>
+    );
+  }
+
   return (
     <Card title="Latest Posts">
-      <div className="mb-8 space-y-4 text-sm leading-relaxed text-slate-600 sm:text-base">
-        <p style={{ textIndent: "2em" }}>Coming Soon...</p>
+      <div className="mb-8 space-y-1">
+        {posts.map((post) => (
+          <PostListItem
+            key={post.id}
+            id={post.id}
+            title={post.title}
+            publishedAt={post.published_at}
+            createdAt={post.created_at}
+          />
+        ))}
       </div>
     </Card>
   );
 }
 
-function StatsCard() {
+function StatsCard({
+  statistics,
+}: {
+  statistics?: BlogSummaryData["statistics"];
+}) {
+  const totalCharacters = statistics
+    ? statistics.posts.show.characters +
+      statistics.thoughts.show.characters +
+      statistics.events.show.characters
+    : 0;
+
   return (
     <Card title="Statistics">
       <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <div className="flex flex-col rounded-2xl bg-slate-50 p-4 transition-transform duration-300 hover:scale-105 dark:bg-white/5">
           <span className="text-xs font-medium tracking-wider text-slate-400 uppercase">
-            Days Online
+            Posts
           </span>
           <span className="mt-1 text-2xl font-bold text-slate-700 dark:text-slate-200">
-            None
+            {statistics?.posts.show.count ?? 0}
           </span>
         </div>
         <div className="flex flex-col rounded-2xl bg-slate-50 p-4 transition-transform duration-300 hover:scale-105 dark:bg-white/5">
           <span className="text-xs font-medium tracking-wider text-slate-400 uppercase">
-            Total Visits
+            Thoughts
           </span>
           <span className="mt-1 text-2xl font-bold text-slate-700 dark:text-slate-200">
-            None
+            {statistics?.thoughts.show.count ?? 0}
           </span>
         </div>
         <div className="flex flex-col rounded-2xl bg-slate-50 p-4 transition-transform duration-300 hover:scale-105 dark:bg-white/5">
@@ -150,15 +185,15 @@ function StatsCard() {
             Articles
           </span>
           <span className="mt-1 text-2xl font-bold text-slate-700 dark:text-slate-200">
-            None
+            {statistics ? statistics.posts.show.count : 0}
           </span>
         </div>
         <div className="flex flex-col rounded-2xl bg-slate-50 p-4 transition-transform duration-300 hover:scale-105 dark:bg-white/5">
           <span className="text-xs font-medium tracking-wider text-slate-400 uppercase">
-            Words
+            Characters
           </span>
           <span className="mt-1 text-2xl font-bold text-slate-700 dark:text-slate-200">
-            None
+            {totalCharacters.toLocaleString()}
           </span>
         </div>
       </div>
@@ -166,18 +201,21 @@ function StatsCard() {
   );
 }
 
-function IntroductionSection() {
+function IntroductionSection({ stats }: { stats?: BlogSummaryData }) {
   return (
     <div className="flex flex-col px-4">
       <AboutMeCard />
       <FindMeCard />
-      <PostsCard />
-      <StatsCard />
+      <PostsCard posts={stats?.recently.posts} />
+      <StatsCard statistics={stats?.statistics} />
     </div>
   );
 }
 
 export default async function HomePage() {
+  // 获取统计数据，只查询状态为 'show' 的内容
+  const stats = await getSummary(5, "show");
+
   return (
     <>
       <HeroSection />
@@ -190,7 +228,7 @@ export default async function HomePage() {
             "group-data-[scrolled=true]:top-[-18svh]",
           )}
         />
-        <IntroductionSection />
+        <IntroductionSection stats={stats ?? undefined} />
         <FooterSection />
       </div>
     </>

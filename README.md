@@ -62,6 +62,7 @@ cp .env.example .env.local
 ```
 
 Required environment variables:
+
 - `SUPABASE_URL`: Your Supabase project URL
 - `SUPABASE_ANON_KEY`: Your Supabase anonymous key
 - `SUPABASE_PROJECT_ID`: Your Supabase project ID (for type generation)

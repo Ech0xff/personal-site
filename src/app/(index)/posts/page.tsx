@@ -1,11 +1,11 @@
 import { Metadata } from "next";
-import Link from "next/link";
 
 import { QueryData } from "@supabase/supabase-js";
 
 import { createClient } from "@/lib/supabase/server";
 
 import CollectionBody from "../components/CollectionBody";
+import PostListItem from "../components/PostListItem";
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -48,16 +48,6 @@ export default async function PostsPage() {
     (a, b) => Number(b) - Number(a),
   );
 
-  // Format date as Month Day, Year
-  const formatDate = (dateStr: string | null): string => {
-    if (!dateStr) return "Unknown Date";
-    return new Date(dateStr).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
   return (
     <CollectionBody
       title="Posts"
@@ -90,18 +80,13 @@ export default async function PostsPage() {
             {/* List of posts for the year */}
             <div className="space-y-1">
               {groupedPosts[year]?.map((post) => (
-                <Link
+                <PostListItem
                   key={post.id}
-                  href={`/posts/${post.id}`}
-                  className="group flex items-center rounded-r-lg border-l-2 border-gray-200 py-2 pl-6 hover:border-blue-500 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-zinc-900/50"
-                >
-                  {/* Title */}
-                  <span className="mx-4 flex-1">{post.title}</span>
-                  {/* Date */}
-                  <span className="w-28 shrink-0 text-sm text-gray-400">
-                    {formatDate(post.published_at || post.created_at)}
-                  </span>
-                </Link>
+                  id={post.id}
+                  title={post.title}
+                  publishedAt={post.published_at}
+                  createdAt={post.created_at}
+                />
               ))}
             </div>
           </section>
