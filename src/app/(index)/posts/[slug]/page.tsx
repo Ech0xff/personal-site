@@ -5,9 +5,10 @@ import { ArrowLeft, Calendar, User } from "lucide-react";
 
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { PostMarkdown } from "@/components/markdown";
-import { createClient } from "@/lib/supabase/server";
+import { REVALIDATE_CONFIG } from "@/lib/cache";
+import { getCachedPost } from "@/lib/cache/posts";
 
-export const revalidate = 60;
+export const revalidate = REVALIDATE_CONFIG.DETAIL;
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -16,14 +17,8 @@ interface PageProps {
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const supabase = await createClient();
   const { slug } = await params;
-  const { data: post } = await supabase
-    .from("posts")
-    .select("title, content")
-    .eq("id", slug)
-    .eq("status", "show")
-    .single();
+  const post = await getCachedPost(slug);
 
   if (!post) {
     return {
@@ -38,15 +33,8 @@ export async function generateMetadata({
 }
 
 export default async function PostPage({ params }: PageProps) {
-  const supabase = await createClient();
   const { slug } = await params;
-
-  const { data: post } = await supabase
-    .from("posts")
-    .select("*")
-    .eq("id", slug)
-    .eq("status", "show")
-    .single();
+  const post = await getCachedPost(slug);
 
   // Handle 404
   if (!post) {

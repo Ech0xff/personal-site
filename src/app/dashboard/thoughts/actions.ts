@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 
+import { CACHE_TAGS, revalidateTag } from "@/lib/cache";
+import { ROUTES } from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
 import { Thought, ThoughtInsert } from "@/types";
 
@@ -43,8 +45,11 @@ export async function saveThought(
       return { success: false, error: error.message };
     }
 
-    revalidatePath("/dashboard/thoughts");
-    revalidatePath("/thoughts");
+    revalidateTag(CACHE_TAGS.THOUGHTS);
+    revalidateTag(CACHE_TAGS.SUMMARY);
+    revalidatePath(ROUTES.HOME);
+    revalidatePath(ROUTES.DASHBOARD.THOUGHTS);
+    revalidatePath(ROUTES.THOUGHTS);
 
     return { success: true, id: thought.id };
   } else {
@@ -63,8 +68,11 @@ export async function saveThought(
       return { success: false, error: error.message };
     }
 
-    revalidatePath("/dashboard/thoughts");
-    revalidatePath("/thoughts");
+    revalidateTag(CACHE_TAGS.THOUGHTS);
+    revalidateTag(CACHE_TAGS.SUMMARY);
+    revalidatePath(ROUTES.HOME);
+    revalidatePath(ROUTES.DASHBOARD.THOUGHTS);
+    revalidatePath(ROUTES.THOUGHTS);
 
     return { success: true, id: data.id };
   }
@@ -81,8 +89,11 @@ export async function deleteThought(
     return { success: false, error: error.message };
   }
 
-  revalidatePath("/dashboard/thoughts");
-  revalidatePath("/thoughts");
+  revalidateTag(CACHE_TAGS.THOUGHTS);
+  revalidateTag(CACHE_TAGS.SUMMARY);
+  revalidatePath(ROUTES.HOME);
+  revalidatePath(ROUTES.DASHBOARD.THOUGHTS);
+  revalidatePath(ROUTES.THOUGHTS);
 
   return { success: true };
 }
@@ -102,8 +113,12 @@ export async function updateThoughtStatus(
     return { success: false, error: error.message };
   }
 
-  revalidatePath("/dashboard/thoughts");
-  revalidatePath("/thoughts");
+  revalidateTag(CACHE_TAGS.THOUGHTS);
+  revalidateTag(CACHE_TAGS.SUMMARY);
+  revalidatePath(ROUTES.HOME);
+  revalidatePath(ROUTES.DASHBOARD.HOME);
+  revalidatePath(ROUTES.DASHBOARD.THOUGHTS);
+  revalidatePath(ROUTES.THOUGHTS);
 
   return { success: true };
 }

@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 
+import { CACHE_TAGS, revalidateTag } from "@/lib/cache";
+import { ROUTES } from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
 import { Post, PostInsert } from "@/types";
 
@@ -46,9 +48,12 @@ export async function savePost(
       return { success: false, error: error.message };
     }
 
-    revalidatePath("/dashboard/posts");
-    revalidatePath("/posts");
-    revalidatePath(`/posts/${post.id}`);
+    revalidateTag(CACHE_TAGS.POSTS);
+    revalidateTag(CACHE_TAGS.SUMMARY);
+    revalidatePath(ROUTES.HOME);
+    revalidatePath(ROUTES.DASHBOARD.POSTS);
+    revalidatePath(ROUTES.POSTS);
+    revalidatePath(ROUTES.POST(post.id!));
 
     return { success: true, id: post.id };
   } else {
@@ -70,8 +75,11 @@ export async function savePost(
       return { success: false, error: error.message };
     }
 
-    revalidatePath("/dashboard/posts");
-    revalidatePath("/posts");
+    revalidateTag(CACHE_TAGS.POSTS);
+    revalidateTag(CACHE_TAGS.SUMMARY);
+    revalidatePath(ROUTES.HOME);
+    revalidatePath(ROUTES.DASHBOARD.POSTS);
+    revalidatePath(ROUTES.POSTS);
 
     return { success: true, id: data.id };
   }
@@ -88,8 +96,11 @@ export async function deletePost(
     return { success: false, error: error.message };
   }
 
-  revalidatePath("/dashboard/posts");
-  revalidatePath("/posts");
+  revalidateTag(CACHE_TAGS.POSTS);
+  revalidateTag(CACHE_TAGS.SUMMARY);
+  revalidatePath(ROUTES.HOME);
+  revalidatePath(ROUTES.DASHBOARD.POSTS);
+  revalidatePath(ROUTES.POSTS);
 
   return { success: true };
 }
@@ -109,9 +120,13 @@ export async function updatePostStatus(
     return { success: false, error: error.message };
   }
 
-  revalidatePath("/dashboard/posts");
-  revalidatePath("/posts");
-  revalidatePath(`/posts/${id}`);
+  revalidateTag(CACHE_TAGS.POSTS);
+  revalidateTag(CACHE_TAGS.SUMMARY);
+  revalidatePath(ROUTES.HOME);
+  revalidatePath(ROUTES.DASHBOARD.HOME);
+  revalidatePath(ROUTES.DASHBOARD.POSTS);
+  revalidatePath(ROUTES.POSTS);
+  revalidatePath(ROUTES.POST(id));
 
   return { success: true };
 }

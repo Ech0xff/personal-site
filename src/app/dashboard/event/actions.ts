@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 
+import { CACHE_TAGS, revalidateTag } from "@/lib/cache";
+import { ROUTES } from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
 import { Event, EventInsert } from "@/types";
 
@@ -46,8 +48,11 @@ export async function saveEvent(
       return { success: false, error: error.message };
     }
 
-    revalidatePath("/dashboard/event");
-    revalidatePath("/events");
+    revalidateTag(CACHE_TAGS.EVENTS);
+    revalidateTag(CACHE_TAGS.SUMMARY);
+    revalidatePath(ROUTES.HOME);
+    revalidatePath(ROUTES.DASHBOARD.EVENT);
+    revalidatePath(ROUTES.EVENTS);
 
     return { success: true, id: event.id };
   } else {
@@ -69,8 +74,11 @@ export async function saveEvent(
       return { success: false, error: error.message };
     }
 
-    revalidatePath("/dashboard/event");
-    revalidatePath("/events");
+    revalidateTag(CACHE_TAGS.EVENTS);
+    revalidateTag(CACHE_TAGS.SUMMARY);
+    revalidatePath(ROUTES.HOME);
+    revalidatePath(ROUTES.DASHBOARD.EVENT);
+    revalidatePath(ROUTES.EVENTS);
 
     return { success: true, id: data.id };
   }
@@ -87,8 +95,11 @@ export async function deleteEvent(
     return { success: false, error: error.message };
   }
 
-  revalidatePath("/dashboard/event");
-  revalidatePath("/events");
+  revalidateTag(CACHE_TAGS.EVENTS);
+  revalidateTag(CACHE_TAGS.SUMMARY);
+  revalidatePath(ROUTES.HOME);
+  revalidatePath(ROUTES.DASHBOARD.EVENT);
+  revalidatePath(ROUTES.EVENTS);
 
   return { success: true };
 }
@@ -108,8 +119,12 @@ export async function updateEventStatus(
     return { success: false, error: error.message };
   }
 
-  revalidatePath("/dashboard/event");
-  revalidatePath("/events");
+  revalidateTag(CACHE_TAGS.EVENTS);
+  revalidateTag(CACHE_TAGS.SUMMARY);
+  revalidatePath(ROUTES.HOME);
+  revalidatePath(ROUTES.DASHBOARD.HOME);
+  revalidatePath(ROUTES.DASHBOARD.EVENT);
+  revalidatePath(ROUTES.EVENTS);
 
   return { success: true };
 }

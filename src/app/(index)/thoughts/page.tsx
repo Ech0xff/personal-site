@@ -1,32 +1,21 @@
 import { Metadata } from "next";
 
-import { QueryData } from "@supabase/supabase-js";
-
 import ThoughtTimeline from "@/components/ThoughtTimeline";
-import { createClient } from "@/lib/supabase/server";
+import { REVALIDATE_CONFIG } from "@/lib/cache";
+import { getCachedThoughts } from "@/lib/cache/thoughts";
 
 import CollectionBody from "../components/CollectionBody";
 
-export const revalidate = 60; // Revalidate every 60 seconds
+export const revalidate = REVALIDATE_CONFIG.LIST;
 
 export const metadata: Metadata = {
   title: "Thoughts",
 };
 
 export default async function ThoughtsPage() {
-  const supabase = await createClient();
-  const thoughtsQuery = supabase
-    .from("thoughts")
-    .select("id, content, images, created_at")
-    .eq("status", "show")
-    .order("created_at", { ascending: false });
-  type ThoughtListItem = QueryData<typeof thoughtsQuery>[number];
-  const { data: thoughts } = await thoughtsQuery;
+  const thoughts = await getCachedThoughts();
 
-  const safeThoughts: ThoughtListItem[] = (thoughts || []).map((t) => ({
-    ...t,
-    images: t.images || [],
-  }));
+  const safeThoughts = thoughts;
 
   const totalThoughts = safeThoughts.length;
   const totalCharacters = safeThoughts.reduce(

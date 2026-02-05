@@ -1,32 +1,21 @@
 import { Metadata } from "next";
 
-import { QueryData } from "@supabase/supabase-js";
-
 import EventTimeline from "@/components/EventTimeline";
-import { createClient } from "@/lib/supabase/server";
+import { REVALIDATE_CONFIG } from "@/lib/cache";
+import { getCachedEvents } from "@/lib/cache/events";
 
 import CollectionBody from "../components/CollectionBody";
 
-export const revalidate = 60;
+export const revalidate = REVALIDATE_CONFIG.LIST;
 
 export const metadata: Metadata = {
   title: "Events",
 };
 
 export default async function EventsPage() {
-  const supabase = await createClient();
-  const eventsQuery = supabase
-    .from("events")
-    .select("id, title, description, event_date, tags, color, created_at")
-    .eq("status", "show")
-    .order("event_date", { ascending: false });
-  type EventListItem = QueryData<typeof eventsQuery>[number];
-  const { data: events } = await eventsQuery;
+  const events = await getCachedEvents();
 
-  const safeEvents: EventListItem[] = (events || []).map((e) => ({
-    ...e,
-    tags: e.tags || [],
-  }));
+  const safeEvents = events;
 
   const totalEvents = safeEvents.length;
 

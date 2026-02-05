@@ -1,6 +1,10 @@
 import Link from "next/link";
 
+import { REVALIDATE_CONFIG } from "@/lib/cache";
+
 import { login } from "./actions";
+
+export const revalidate = REVALIDATE_CONFIG.LIST;
 
 const errorMessages: Record<string, string> = {
   config: "Server configuration error",

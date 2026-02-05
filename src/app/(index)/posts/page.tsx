@@ -1,36 +1,28 @@
 import { Metadata } from "next";
 
-import { QueryData } from "@supabase/supabase-js";
-
-import { createClient } from "@/lib/supabase/server";
+import { REVALIDATE_CONFIG } from "@/lib/cache";
+import { getCachedPosts } from "@/lib/cache/posts";
 
 import CollectionBody from "../components/CollectionBody";
 import PostListItem from "../components/PostListItem";
 
-export const revalidate = 60; // Revalidate every 60 seconds
+export const revalidate = REVALIDATE_CONFIG.LIST;
 
 export const metadata: Metadata = {
   title: "Posts",
 };
 
 export default async function PostsPage() {
-  const supabase = await createClient();
-  const postsQuery = supabase
-    .from("posts")
-    .select("id, title, published_at, created_at, content")
-    .eq("status", "show")
-    .order("published_at", { ascending: false });
-  type PostListItem = QueryData<typeof postsQuery>[number];
-  const { data: posts } = await postsQuery;
+  const posts = await getCachedPosts();
 
-  const safePosts: PostListItem[] = posts || [];
+  const safePosts = posts;
   const totalPosts = safePosts.length;
   const totalCharacters = safePosts.reduce(
     (acc, p) => acc + p.content.length,
     0,
   );
 
-  const groupedPosts: Record<string, PostListItem[]> = {};
+  const groupedPosts: Record<string, (typeof safePosts)[number][]> = {};
 
   safePosts.forEach((post) => {
     const dateStr = post.published_at || post.created_at || "";

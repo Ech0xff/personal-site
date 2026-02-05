@@ -1,11 +1,14 @@
 import FooterSection from "@/components/FooterSection";
 import { Bilibili, Email, Github, Qq } from "@/components/icons";
-import { getSummary } from "@/lib/summary";
+import { REVALIDATE_CONFIG } from "@/lib/cache";
+import { getCachedSummary } from "@/lib/cache/summary";
 import { cn } from "@/lib/utils";
 import { BlogSummaryData } from "@/types";
 
 import HeroSection from "./components/HeroSection";
 import PostListItem from "./components/PostListItem";
+
+export const revalidate = REVALIDATE_CONFIG.HOME;
 
 function Card({
   title,
@@ -213,8 +216,7 @@ function IntroductionSection({ stats }: { stats?: BlogSummaryData }) {
 }
 
 export default async function HomePage() {
-  // 获取统计数据，只查询状态为 'show' 的内容
-  const stats = await getSummary(5, "show");
+  const stats = await getCachedSummary(5, "show");
 
   return (
     <>
