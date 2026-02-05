@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 
 import "@/styles/globals.css";
 import "@/styles/tailwind.css";
@@ -10,29 +9,32 @@ export const metadata: Metadata = {
   description: "BBLF's reef",
 };
 
-export default async function RootLayout({
+// Blocking script to prevent FOUC - reads cookie and sets theme before paint
+const themeInitScript = `
+(function() {
+  var cookies = document.cookie.split('; ');
+  var theme = 'system';
+  for (var i = 0; i < cookies.length; i++) {
+    var parts = cookies[i].split('=');
+    if (parts[0] === 'theme') {
+      theme = parts[1];
+      break;
+    }
+  }
+  document.documentElement.classList.add('group', theme);
+  document.documentElement.dataset.home = window.location.pathname === '/';
+})();
+`;
+
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const theme = cookieStore.get("theme")?.value || "system";
-  const styles = `group ${theme}`;
-
   return (
-    <html lang="en" className={styles} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head suppressHydrationWarning>
-        {/* BLOCKING SCRIPT: Prevents Flash of Unstyled Content (FOUC) */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                const isHome = window.location.pathname === '/';
-                document.documentElement.dataset.home = isHome;
-              })();
-            `,
-          }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body>{children}</body>
     </html>
