@@ -1,12 +1,11 @@
 import { Metadata } from "next";
 
 import EventTimeline from "@/components/EventTimeline";
-import { REVALIDATE_CONFIG } from "@/lib/cache";
 import { getCachedEvents } from "@/lib/cache/events";
 
 import CollectionBody from "../components/CollectionBody";
 
-export const revalidate = REVALIDATE_CONFIG.LIST;
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: "Events",

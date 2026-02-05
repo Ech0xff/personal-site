@@ -1,6 +1,5 @@
 import FooterSection from "@/components/FooterSection";
 import { Bilibili, Email, Github, Qq } from "@/components/icons";
-import { REVALIDATE_CONFIG } from "@/lib/cache";
 import { getCachedSummary } from "@/lib/cache/summary";
 import { cn } from "@/lib/utils";
 import { BlogSummaryData } from "@/types";
@@ -8,7 +7,7 @@ import { BlogSummaryData } from "@/types";
 import HeroSection from "./components/HeroSection";
 import PostListItem from "./components/PostListItem";
 
-export const revalidate = REVALIDATE_CONFIG.HOME;
+export const revalidate = 86400;
 
 function Card({
   title,

@@ -1,12 +1,11 @@
 import { Metadata } from "next";
 
-import { REVALIDATE_CONFIG } from "@/lib/cache";
 import { getCachedPosts } from "@/lib/cache/posts";
 
 import CollectionBody from "../components/CollectionBody";
 import PostListItem from "../components/PostListItem";
 
-export const revalidate = REVALIDATE_CONFIG.LIST;
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: "Posts",

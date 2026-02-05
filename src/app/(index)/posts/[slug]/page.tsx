@@ -5,10 +5,9 @@ import { ArrowLeft, Calendar, User } from "lucide-react";
 
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { PostMarkdown } from "@/components/markdown";
-import { REVALIDATE_CONFIG } from "@/lib/cache";
 import { getCachedPost } from "@/lib/cache/posts";
 
-export const revalidate = REVALIDATE_CONFIG.DETAIL;
+export const revalidate = 3600;
 
 interface PageProps {
   params: Promise<{ slug: string }>;

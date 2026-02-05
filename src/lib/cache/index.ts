@@ -18,13 +18,6 @@ export const CACHE_TIMES = {
   EVENTS: 600,
 } as const;
 
-// Revalidation Configurations
-export const REVALIDATE_CONFIG = {
-  HOME: 86400,
-  LIST: 86400,
-  DETAIL: 3600,
-} as const;
-
 export function revalidateTag(tag: string) {
   return nextRevalidateTag(tag, {});
 }

@@ -1,12 +1,11 @@
 import { Metadata } from "next";
 
 import ThoughtTimeline from "@/components/ThoughtTimeline";
-import { REVALIDATE_CONFIG } from "@/lib/cache";
 import { getCachedThoughts } from "@/lib/cache/thoughts";
 
 import CollectionBody from "../components/CollectionBody";
 
-export const revalidate = REVALIDATE_CONFIG.LIST;
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: "Thoughts",
