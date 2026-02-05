@@ -12,9 +12,8 @@ import {
   Trash2,
 } from "lucide-react";
 
+import { ImageFile, deleteImage, getImages } from "@/actions";
 import LightboxImage from "@/components/LightboxImage";
-
-import { ImageFile, deleteImage, getImages } from "../actions";
 
 type SortField = "createdAt" | "size";
 type SortOrder = "asc" | "desc";

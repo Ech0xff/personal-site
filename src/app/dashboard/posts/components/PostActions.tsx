@@ -5,9 +5,8 @@ import { useRouter } from "next/navigation";
 
 import { Edit, Eye, Trash2 } from "lucide-react";
 
+import { deletePost } from "@/actions";
 import { useEditor } from "@/app/dashboard/components/EditorProvider";
-
-import { deletePost } from "../actions";
 
 interface PostActionsProps {
   postId: string;

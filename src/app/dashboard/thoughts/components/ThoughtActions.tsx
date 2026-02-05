@@ -2,9 +2,8 @@
 
 import { Edit, Trash2 } from "lucide-react";
 
+import { deleteThought } from "@/actions";
 import { useEditor } from "@/app/dashboard/components/EditorProvider";
-
-import { deleteThought } from "../actions";
 
 interface ThoughtActionsProps {
   thoughtId: string;

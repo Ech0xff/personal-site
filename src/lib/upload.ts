@@ -1,9 +1,6 @@
 import imageCompression from "browser-image-compression";
 
-import {
-  uploadImageAction,
-  uploadImageFromUrlAction,
-} from "@/app/dashboard/actions/upload";
+import { uploadImageAction, uploadImageFromUrlAction } from "@/actions";
 
 /** Convert image to WebP format and compress it */
 async function convertToWebP(file: File | Blob): Promise<Blob> {

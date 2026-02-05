@@ -2,9 +2,8 @@
 
 import { Edit, Trash2 } from "lucide-react";
 
+import { deleteEvent } from "@/actions";
 import { useEditor } from "@/app/dashboard/components/EditorProvider";
-
-import { deleteEvent } from "../actions";
 
 interface EventActionsProps {
   eventId: string;

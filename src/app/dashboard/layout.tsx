@@ -10,7 +10,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 
-import { logout } from "@/app/auth/actions";
+import { logout } from "@/actions";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const navItems = [

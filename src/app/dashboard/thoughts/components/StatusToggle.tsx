@@ -4,10 +4,9 @@ import { useTransition } from "react";
 
 import { useRouter } from "next/navigation";
 
+import { updateThoughtStatus } from "@/actions";
 import SegmentedToggle from "@/app/dashboard/components/SegmentedToggle";
 import { Status } from "@/types";
-
-import { updateThoughtStatus } from "../actions";
 
 interface StatusToggleProps {
   thoughtId: string;

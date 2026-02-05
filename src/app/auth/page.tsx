@@ -1,8 +1,7 @@
 import Link from "next/link";
 
+import { login } from "@/actions";
 import { REVALIDATE_CONFIG } from "@/lib/cache";
-
-import { login } from "./actions";
 
 export const revalidate = REVALIDATE_CONFIG.LIST;
 
