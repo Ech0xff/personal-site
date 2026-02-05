@@ -9,8 +9,7 @@ export const getCachedEvents = unstable_cache(
     const supabase = createClient();
     const { data } = await supabase
       .from("events")
-      .select("id, title, description, event_date, tags, color, created_at")
-      .eq("status", "show")
+      .select("*")
       .order("event_date", { ascending: false });
     return (data || []).map((e) => ({ ...e, tags: e.tags || [] }));
   },

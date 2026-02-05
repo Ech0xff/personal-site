@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default async function ThoughtsPage() {
   const thoughts = await getCachedThoughts();
 
-  const safeThoughts = thoughts;
+  const safeThoughts = thoughts.filter((t) => t.status === "show");
 
   const totalThoughts = safeThoughts.length;
   const totalCharacters = safeThoughts.reduce(

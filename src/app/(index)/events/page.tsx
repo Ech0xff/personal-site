@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default async function EventsPage() {
   const events = await getCachedEvents();
 
-  const safeEvents = events;
+  const safeEvents = events.filter((e) => e.status === "show");
 
   const totalEvents = safeEvents.length;
 

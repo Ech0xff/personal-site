@@ -1,7 +1,5 @@
-import { QueryData } from "@supabase/supabase-js";
-
 import EventTimeline from "@/components/EventTimeline";
-import { createClient } from "@/lib/supabase/server";
+import { getCachedEvents } from "@/lib/cache/events";
 
 import EditorProvider from "../components/EditorProvider";
 import HeaderSection from "../components/HeaderSection";
@@ -11,25 +9,7 @@ import NewEventButton from "./components/NewEventButton";
 import StatusToggle from "./components/StatusToggle";
 
 export default async function EventsPage() {
-  const supabase = await createClient();
-  const eventsQuery = supabase
-    .from("events")
-    .select(
-      "id, title, description, event_date, tags, color, created_at, status",
-    );
-  type Event = QueryData<typeof eventsQuery>[number];
-  const { data: events, error } = await eventsQuery.order("event_date", {
-    ascending: false,
-  });
-
-  if (error) {
-    console.error("Error fetching events:", error);
-  }
-
-  const safeEvents: Event[] = (events || []).map((e) => ({
-    ...e,
-    tags: e.tags || [],
-  }));
+  const events = await getCachedEvents();
 
   return (
     <EditorProvider editorComponent={EventEditor}>
@@ -39,7 +19,7 @@ export default async function EventsPage() {
         </HeaderSection>
 
         <EventTimeline
-          events={safeEvents}
+          events={events}
           renderMetaRight={(event) => (
             <StatusToggle eventId={event.id} status={event.status ?? null} />
           )}

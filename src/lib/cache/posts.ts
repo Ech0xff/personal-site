@@ -9,9 +9,8 @@ export const getCachedPosts = unstable_cache(
     const supabase = createClient();
     const { data } = await supabase
       .from("posts")
-      .select("id, title, published_at, created_at, content")
-      .eq("status", "show")
-      .order("published_at", { ascending: false });
+      .select("*")
+      .order("created_at", { ascending: false });
     return data || [];
   },
   ["posts-list"],
@@ -25,7 +24,6 @@ export const getCachedPost = unstable_cache(
       .from("posts")
       .select("*")
       .eq("id", id)
-      .eq("status", "show")
       .single();
     return data;
   },

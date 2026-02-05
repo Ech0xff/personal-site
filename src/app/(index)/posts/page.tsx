@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default async function PostsPage() {
   const posts = await getCachedPosts();
 
-  const safePosts = posts;
+  const safePosts = posts.filter((p) => p.status === "show");
   const totalPosts = safePosts.length;
   const totalCharacters = safePosts.reduce(
     (acc, p) => acc + p.content.length,

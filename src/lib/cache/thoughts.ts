@@ -9,8 +9,7 @@ export const getCachedThoughts = unstable_cache(
     const supabase = createClient();
     const { data } = await supabase
       .from("thoughts")
-      .select("id, content, images, created_at")
-      .eq("status", "show")
+      .select("*")
       .order("created_at", { ascending: false });
     return (data || []).map((t) => ({ ...t, images: t.images || [] }));
   },

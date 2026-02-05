@@ -19,7 +19,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = await getCachedPost(slug);
 
-  if (!post) {
+  if (!post || post.status !== "show") {
     return {
       title: "Post Not Found",
     };
@@ -35,8 +35,8 @@ export default async function PostPage({ params }: PageProps) {
   const { slug } = await params;
   const post = await getCachedPost(slug);
 
-  // Handle 404
-  if (!post) {
+  // Handle 404 - also hide non-show posts
+  if (!post || post.status !== "show") {
     return (
       <div className="py-20 text-center">
         <h1 className="mb-4 text-3xl font-bold">Post Not Found</h1>

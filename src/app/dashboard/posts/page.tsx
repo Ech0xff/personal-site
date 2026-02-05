@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { getCachedPosts } from "@/lib/cache/posts";
 import { cn } from "@/lib/utils";
 
 import EditorProvider from "../components/EditorProvider";
@@ -56,11 +56,7 @@ function formatDate(dateString: string | null) {
 }
 
 export default async function PostsPage() {
-  const supabase = await createClient();
-  const { data: posts, error } = await supabase
-    .from("posts")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const posts = await getCachedPosts();
 
   const th = (title: string[]) => {
     return (
@@ -86,10 +82,6 @@ export default async function PostsPage() {
       </td>
     );
   };
-
-  if (error) {
-    console.error("Error fetching posts:", error);
-  }
 
   return (
     <EditorProvider editorComponent={PostEditor}>
