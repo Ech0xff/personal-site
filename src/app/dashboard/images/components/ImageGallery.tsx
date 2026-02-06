@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 
 import {
   ArrowDownAZ,
@@ -12,62 +12,22 @@ import {
   Trash2,
 } from "lucide-react";
 
-import { ImageFile, deleteImage, getImages } from "@/actions";
+import { ImageFile, deleteImage } from "@/actions";
 import LightboxImage from "@/components/LightboxImage";
 
 type SortField = "createdAt" | "size";
 type SortOrder = "asc" | "desc";
 
-export default function ImageGallery() {
-  const [images, setImages] = useState<ImageFile[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+export default function ImageGallery({
+  images,
+}: {
+  images: ImageFile[];
+}) {
   const [error, setError] = useState("");
   const [sortField, setSortField] = useState<SortField>("createdAt");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [isPending, startTransition] = useTransition();
   const [copiedId, setCopiedId] = useState<string | null>(null);
-
-  const loadImages = useCallback(async () => {
-    setIsLoading(true);
-    setError("");
-
-    const result = await getImages();
-
-    if (result.success && result.images) {
-      setImages(result.images);
-    } else {
-      setError(result.error || "Failed to load images");
-    }
-
-    setIsLoading(false);
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const fetchData = async () => {
-      setIsLoading(true);
-      setError("");
-
-      const result = await getImages();
-
-      if (cancelled) return;
-
-      if (result.success && result.images) {
-        setImages(result.images);
-      } else {
-        setError(result.error || "Failed to load images");
-      }
-
-      setIsLoading(false);
-    };
-
-    fetchData();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   // Sort images
   const sortedImages = [...images].sort((a, b) => {
@@ -135,14 +95,6 @@ export default function ImageGallery() {
 
   const SortIcon = sortOrder === "asc" ? ArrowUpAZ : ArrowDownAZ;
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-zinc-500">Loading images...</div>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-4">
       {/* Toolbar */}
@@ -174,16 +126,6 @@ export default function ImageGallery() {
             {sortField === "size" && <SortIcon className="h-3.5 w-3.5" />}
           </button>
         </div>
-
-        {/* Refresh button */}
-        <button
-          onClick={loadImages}
-          disabled={isLoading}
-          className="flex items-center gap-1.5 rounded-lg border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
-        >
-          <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
-          Refresh
-        </button>
 
         {/* Image count */}
         <div className="ml-auto text-sm text-zinc-500 dark:text-zinc-400">
