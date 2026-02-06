@@ -1,16 +1,9 @@
 "use client";
 import { useEffect, useRef } from "react";
 
-import { usePathname } from "next/navigation";
-
 export default function NavBarController() {
-  const pathname = usePathname();
   const sentinelRef = useRef<HTMLDivElement>(null);
   const isScrolledRef = useRef(false);
-
-  useEffect(() => {
-    document.documentElement.dataset.home = (pathname === "/").toString();
-  }, [pathname]);
 
   useEffect(() => {
     if (!sentinelRef.current) return;

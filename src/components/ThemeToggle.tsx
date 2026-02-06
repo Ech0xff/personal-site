@@ -1,29 +1,19 @@
 "use client";
-import Cookies from "js-cookie";
 import { Monitor, Moon, Sun } from "lucide-react";
 
+import { useAppUI } from "@/app/AppProvider";
 import { cn } from "@/lib/utils";
 
-type Theme = "light" | "dark" | "system";
-
 export default function ThemeToggle({ className }: { className?: string }) {
+  const { theme, setTheme } = useAppUI();
+
   const toggleTheme = () => {
-    const html = document.documentElement;
-    const currentTheme: Theme = html.classList.contains("system")
-      ? "system"
-      : html.classList.contains("dark")
-        ? "dark"
-        : "light";
-
     // system -> light -> dark
-    let nextTheme: Theme;
-    if (currentTheme === "light") nextTheme = "dark";
-    else if (currentTheme === "dark") nextTheme = "system";
+    let nextTheme: typeof theme;
+    if (theme === "light") nextTheme = "dark";
+    else if (theme === "dark") nextTheme = "system";
     else nextTheme = "light";
-
-    html.classList.remove("light", "dark", "system");
-    html.classList.add(nextTheme);
-    Cookies.set("theme", nextTheme, { expires: 365 });
+    setTheme(nextTheme);
   };
 
   return (

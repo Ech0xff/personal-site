@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 
+import { themeInitScript } from "@/lib/themeInitScript";
 import "@/styles/globals.css";
 import "@/styles/tailwind.css";
 import "@/styles/variables.scss";
 
-import { themeInitScript } from "@/lib/themeInitScript";
+import AppProvider from "./AppProvider";
 
 export const metadata: Metadata = {
   title: "BBLF",
@@ -21,7 +22,9 @@ export default function RootLayout({
       <head suppressHydrationWarning>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body>{children}</body>
+      <body>
+        <AppProvider>{children}</AppProvider>
+      </body>
     </html>
   );
 }
