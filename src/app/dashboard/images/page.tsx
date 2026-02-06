@@ -1,4 +1,4 @@
-import { getImages } from "@/actions";
+import { getImages } from "@/lib/data/dashboard";
 
 import HeaderSection from "../components/HeaderSection";
 import ImageGallery from "./components/ImageGallery";

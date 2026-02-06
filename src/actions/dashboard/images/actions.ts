@@ -15,50 +15,6 @@ export interface ImageFile {
   createdAt: string;
 }
 
-/** Get all images from storage bucket */
-export async function getImages(): Promise<{
-  success: boolean;
-  images?: ImageFile[];
-  error?: string;
-}> {
-  try {
-    const supabase = makeStaticClient();
-
-    const { data, error } = await supabase.storage.from(BUCKET_NAME).list("", {
-      limit: 1000,
-      sortBy: { column: "created_at", order: "desc" },
-    });
-
-    if (error) {
-      return { success: false, error: error.message };
-    }
-
-    // Filter out folders and get public URLs
-    const images: ImageFile[] = (data || [])
-      .filter((file) => file.name && !file.name.endsWith("/"))
-      .map((file) => {
-        const {
-          data: { publicUrl },
-        } = supabase.storage.from(BUCKET_NAME).getPublicUrl(file.name);
-
-        return {
-          id: file.id,
-          name: file.name,
-          url: publicUrl,
-          size: file.metadata?.size || 0,
-          createdAt: file.created_at,
-        };
-      });
-
-    return { success: true, images };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Failed to fetch images",
-    };
-  }
-}
-
 /** Delete an image from storage bucket */
 export async function deleteImage(
   fileName: string,
