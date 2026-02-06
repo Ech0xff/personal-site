@@ -4,11 +4,12 @@ import { revalidatePath } from "next/cache";
 
 import { CACHE_TAGS, revalidateTag } from "@/lib/cache";
 import { ROUTES } from "@/lib/routes";
-import { createClient } from "@/lib/supabase/server";
+import { makeServerClient } from "@/lib/supabase";
 import { Event, EventInsert } from "@/types";
 
+
 export async function getEvent(id: string): Promise<Event | null> {
-  const supabase = await createClient();
+  const supabase = await makeServerClient();
   const { data, error } = await supabase
     .from("events")
     .select("*")
@@ -26,7 +27,7 @@ export async function getEvent(id: string): Promise<Event | null> {
 export async function saveEvent(
   event: Omit<EventInsert, "created_at" | "updated_at"> & { id?: string },
 ): Promise<{ success: boolean; id?: string; error?: string }> {
-  const supabase = await createClient();
+  const supabase = await makeServerClient();
   const isUpdate = !!event.id;
 
   if (isUpdate) {
@@ -87,7 +88,7 @@ export async function saveEvent(
 export async function deleteEvent(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
-  const supabase = await createClient();
+  const supabase = await makeServerClient();
   const { error } = await supabase.from("events").delete().eq("id", id);
 
   if (error) {
@@ -108,7 +109,7 @@ export async function updateEventStatus(
   id: string,
   status: string,
 ): Promise<{ success: boolean; error?: string }> {
-  const supabase = await createClient();
+  const supabase = await makeServerClient();
   const { error } = await supabase
     .from("events")
     .update({ status, updated_at: new Date().toISOString() })

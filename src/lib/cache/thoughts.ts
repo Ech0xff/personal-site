@@ -1,12 +1,12 @@
 import { unstable_cache } from "next/cache";
 
-import { createClient } from "@/lib/supabase/client";
+import { makeStaticClient } from "@/lib/supabase";
 
 import { CACHE_TAGS, CACHE_TIMES } from "./index";
 
 export const getCachedThoughts = unstable_cache(
   async () => {
-    const supabase = createClient();
+    const supabase = makeStaticClient();
     const { data } = await supabase
       .from("thoughts")
       .select("*")

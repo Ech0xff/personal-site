@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { makeServerClient } from "@/lib/supabase";
 
 const BUCKET_NAME = "images";
 
@@ -13,7 +13,7 @@ async function computeHash(buffer: ArrayBuffer): Promise<string> {
 
 /** Check if file already exists in storage */
 async function checkFileExists(hash: string): Promise<string | null> {
-  const supabase = await createClient();
+  const supabase = await makeServerClient();
   const filePath = `${hash}.webp`;
 
   const { data } = await supabase.storage.from(BUCKET_NAME).list("", {
@@ -57,7 +57,7 @@ export async function uploadImageAction(
     }
 
     // Upload new file
-    const supabase = await createClient();
+    const supabase = await makeServerClient();
     const filePath = `${hash}.webp`;
 
     const { error } = await supabase.storage
@@ -123,7 +123,7 @@ export async function uploadImageFromUrlAction(
     }
 
     // Upload new file
-    const supabase = await createClient();
+    const supabase = await makeServerClient();
     const filePath = `${hash}.webp`;
 
     const { error } = await supabase.storage

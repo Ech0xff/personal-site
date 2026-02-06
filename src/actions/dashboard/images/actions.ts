@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { makeStaticClient } from "@/lib/supabase";
 
 const BUCKET_NAME = "images";
 
@@ -19,7 +19,7 @@ export async function getImages(): Promise<{
   error?: string;
 }> {
   try {
-    const supabase = await createClient();
+    const supabase = makeStaticClient();
 
     const { data, error } = await supabase.storage.from(BUCKET_NAME).list("", {
       limit: 1000,
@@ -61,7 +61,7 @@ export async function deleteImage(
   fileName: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const supabase = await createClient();
+    const supabase = makeStaticClient();
 
     const { error } = await supabase.storage
       .from(BUCKET_NAME)

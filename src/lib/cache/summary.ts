@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
 
-import { createClient } from "@/lib/supabase/client";
+import { makeStaticClient } from "@/lib/supabase";
 import { BlogSummaryData, Status } from "@/types";
 
 import { CACHE_TAGS, CACHE_TIMES } from "./index";
@@ -10,7 +10,7 @@ export const getCachedSummary = unstable_cache(
     recentLimit: number = 5,
     queryStatus?: Status,
   ): Promise<BlogSummaryData | null> => {
-    const supabase = createClient();
+    const supabase = makeStaticClient();
     const { data, error } = await supabase.rpc("get_summary", {
       recent_limit: recentLimit,
       query_status: queryStatus,
