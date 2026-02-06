@@ -29,8 +29,7 @@
     "remark-gfm": "^4.0.1",
     "sass": "^1.97.3",
     "supabase": "^2.72.8",
-    "tailwind-merge": "^3.4.0",
-    "zustand": "^5.0.10"
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@svgr/cli": "^8.1.0",
