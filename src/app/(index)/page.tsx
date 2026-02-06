@@ -215,7 +215,7 @@ function IntroductionSection({ stats }: { stats?: BlogSummaryData }) {
 }
 
 export default async function HomePage() {
-  const stats = await getCachedSummary(5, "show");
+  const stats = await getCachedSummary(5);
 
   return (
     <>

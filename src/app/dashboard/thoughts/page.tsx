@@ -1,5 +1,5 @@
 import ThoughtTimeline from "@/components/ThoughtTimeline";
-import { getCachedThoughts } from "@/lib/cache/thoughts";
+import { getDashboardThoughts } from "@/lib/data/dashboard";
 
 import EditorProvider from "../components/EditorProvider";
 import HeaderSection from "../components/HeaderSection";
@@ -9,7 +9,7 @@ import ThoughtActions from "./components/ThoughtActions";
 import ThoughtEditor from "./components/ThoughtEditor";
 
 export default async function ThoughtsPage() {
-  const thoughts = await getCachedThoughts();
+  const thoughts = await getDashboardThoughts();
 
   return (
     <EditorProvider editorComponent={ThoughtEditor}>

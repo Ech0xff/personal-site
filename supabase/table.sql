@@ -35,6 +35,49 @@ CREATE TABLE IF NOT EXISTS public.events (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- ==================== Row Level Security (Fixed) ====================
+ALTER TABLE public.posts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.thoughts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.events ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public select" ON public.posts;
+DROP POLICY IF EXISTS "Admin all" ON public.posts;
+DROP POLICY IF EXISTS posts_select ON public.posts;
+DROP POLICY IF EXISTS posts_write ON public.posts;
+DROP POLICY IF EXISTS "Public select" ON public.thoughts;
+DROP POLICY IF EXISTS "Admin all" ON public.thoughts;
+DROP POLICY IF EXISTS thoughts_select ON public.thoughts;
+DROP POLICY IF EXISTS thoughts_write ON public.thoughts;
+DROP POLICY IF EXISTS "Public select" ON public.events;
+DROP POLICY IF EXISTS "Admin all" ON public.events;
+DROP POLICY IF EXISTS events_select ON public.events;
+DROP POLICY IF EXISTS events_write ON public.events;
+
+CREATE POLICY "Public select" ON public.posts
+  FOR SELECT
+  USING (status = 'show');
+CREATE POLICY "Admin all" ON public.posts
+  FOR ALL
+  USING (auth.role() = 'authenticated')
+  WITH CHECK (auth.role() = 'authenticated');
+
+CREATE POLICY "Public select" ON public.thoughts
+  FOR SELECT
+  USING (status = 'show');
+
+CREATE POLICY "Admin all" ON public.thoughts
+  FOR ALL
+  USING (auth.role() = 'authenticated')
+  WITH CHECK (auth.role() = 'authenticated');
+
+CREATE POLICY "Public select" ON public.events
+  FOR SELECT
+  USING (status = 'show');
+
+CREATE POLICY "Admin all" ON public.events
+  FOR ALL
+  USING (auth.role() = 'authenticated')
+  WITH CHECK (auth.role() = 'authenticated');
+
 -- ==================== Create Indexes ====================
 -- Posts indexes
 CREATE INDEX IF NOT EXISTS idx_posts_status ON public.posts(status);

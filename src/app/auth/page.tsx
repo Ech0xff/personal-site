@@ -6,7 +6,7 @@ export const revalidate = 86400;
 
 const errorMessages: Record<string, string> = {
   config: "Server configuration error",
-  invalid: "Invalid secret key",
+  invalid: "Invalid email or password",
 };
 
 export default async function Page({
@@ -26,26 +26,43 @@ export default async function Page({
               Dashboard
             </h1>
             <p className="text-zinc-500 dark:text-zinc-400">
-              Enter your secret key to continue
+              Enter your email and password to continue
             </p>
           </div>
 
           <form action={login} className="space-y-6">
             <div>
               <label
-                htmlFor="secretKey"
+                htmlFor="email"
                 className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
               >
-                Secret Key
+                Email
               </label>
               <input
-                id="secretKey"
-                name="secretKey"
-                type="password"
-                placeholder="Enter your secret key"
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Enter your email"
                 className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
                 required
                 autoFocus
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="password"
+                className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              >
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Enter your password"
+                className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
+                required
               />
             </div>
 

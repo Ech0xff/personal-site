@@ -1,5 +1,5 @@
 import EventTimeline from "@/components/EventTimeline";
-import { getCachedEvents } from "@/lib/cache/events";
+import { getDashboardEvents } from "@/lib/data/dashboard";
 
 import EditorProvider from "../components/EditorProvider";
 import HeaderSection from "../components/HeaderSection";
@@ -9,7 +9,7 @@ import NewEventButton from "./components/NewEventButton";
 import StatusToggle from "./components/StatusToggle";
 
 export default async function EventsPage() {
-  const events = await getCachedEvents();
+  const events = await getDashboardEvents();
 
   return (
     <EditorProvider editorComponent={EventEditor}>

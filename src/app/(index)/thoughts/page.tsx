@@ -13,11 +13,8 @@ export const metadata: Metadata = {
 
 export default async function ThoughtsPage() {
   const thoughts = await getCachedThoughts();
-
-  const safeThoughts = thoughts.filter((t) => t.status === "show");
-
-  const totalThoughts = safeThoughts.length;
-  const totalCharacters = safeThoughts.reduce(
+  const totalThoughts = thoughts.length;
+  const totalCharacters = thoughts.reduce(
     (acc, t) => acc + t.content.length,
     0,
   );
@@ -39,7 +36,7 @@ export default async function ThoughtsPage() {
         </>
       }
     >
-      <ThoughtTimeline thoughts={safeThoughts} totalCount={totalThoughts} />
+      <ThoughtTimeline thoughts={thoughts} totalCount={totalThoughts} />
     </CollectionBody>
   );
 }

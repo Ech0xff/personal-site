@@ -3,15 +3,22 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export async function login(formData: FormData) {
-  const secretKey = formData.get("secretKey") as string;
-  const validKey = process.env.DASHBOARD_SECRET_KEY;
+import { makeServerClient } from "@/lib/supabase";
 
-  if (!validKey) {
-    redirect("/auth?error=config");
+export async function login(formData: FormData) {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  const supabase = await makeServerClient();
+  if (!email || !password) {
+    redirect("/auth?error=invalid");
   }
 
-  if (secretKey !== validKey) {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error || !data.session) {
     redirect("/auth?error=invalid");
   }
 

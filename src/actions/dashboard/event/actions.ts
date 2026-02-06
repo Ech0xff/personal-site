@@ -7,7 +7,6 @@ import { ROUTES } from "@/lib/routes";
 import { makeServerClient } from "@/lib/supabase";
 import { Event, EventInsert } from "@/types";
 
-
 export async function getEvent(id: string): Promise<Event | null> {
   const supabase = await makeServerClient();
   const { data, error } = await supabase

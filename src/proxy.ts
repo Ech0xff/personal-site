@@ -1,19 +1,22 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-export function proxy(request: NextRequest) {
+import { makeServerClient } from "./lib/supabase";
+
+export async function proxy(request: NextRequest) {
+  const response = NextResponse.next();
+
   // only protect /dashboard routes
   if (request.nextUrl.pathname.startsWith("/dashboard")) {
-    // check Cookie
-    const adminSession = request.cookies.get("admin_session");
+    const supabase = await makeServerClient();
+    const { data, error } = await supabase.auth.getUser();
 
-    // if no Cookie or value is incorrect, redirect to login page
-    if (!adminSession || adminSession.value !== "true") {
+    if (error || !data.user) {
       return NextResponse.redirect(new URL("/auth", request.url));
     }
   }
 
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {

@@ -1,19 +1,15 @@
 import { unstable_cache } from "next/cache";
 
 import { makeStaticClient } from "@/lib/supabase";
-import { BlogSummaryData, Status } from "@/types";
+import { BlogSummaryData } from "@/types";
 
 import { CACHE_TAGS, CACHE_TIMES } from "./index";
 
 export const getCachedSummary = unstable_cache(
-  async (
-    recentLimit: number = 5,
-    queryStatus?: Status,
-  ): Promise<BlogSummaryData | null> => {
+  async (recentLimit: number = 5): Promise<BlogSummaryData | null> => {
     const supabase = makeStaticClient();
     const { data, error } = await supabase.rpc("get_summary", {
       recent_limit: recentLimit,
-      query_status: queryStatus,
     });
 
     if (error) {

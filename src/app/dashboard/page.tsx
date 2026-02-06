@@ -9,7 +9,7 @@ import {
   Plus,
 } from "lucide-react";
 
-import { getCachedSummary } from "@/lib/cache/summary";
+import { getDashboardSummary } from "@/lib/data/dashboard";
 
 const quickActions = [
   {
@@ -36,7 +36,7 @@ const quickActions = [
 ];
 
 export default async function DashboardPage() {
-  const summaryData = await getCachedSummary(5);
+  const summaryData = await getDashboardSummary(5);
 
   const stats = [
     {

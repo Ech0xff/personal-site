@@ -1,4 +1,4 @@
-import { getCachedPosts } from "@/lib/cache/posts";
+import { getDashboardPosts } from "@/lib/data/dashboard";
 import { cn } from "@/lib/utils";
 
 import EditorProvider from "../components/EditorProvider";
@@ -56,7 +56,7 @@ function formatDate(dateString: string | null) {
 }
 
 export default async function PostsPage() {
-  const posts = await getCachedPosts();
+  const posts = await getDashboardPosts();
 
   const th = (title: string[]) => {
     return (
