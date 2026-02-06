@@ -8,7 +8,6 @@ import {
   Calendar,
   Copy,
   HardDrive,
-  RefreshCw,
   Trash2,
 } from "lucide-react";
 
@@ -18,11 +17,7 @@ import LightboxImage from "@/components/LightboxImage";
 type SortField = "createdAt" | "size";
 type SortOrder = "asc" | "desc";
 
-export default function ImageGallery({
-  images,
-}: {
-  images: ImageFile[];
-}) {
+export default function ImageGallery({ images }: { images: ImageFile[] }) {
   const [error, setError] = useState("");
   const [sortField, setSortField] = useState<SortField>("createdAt");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
@@ -45,14 +40,11 @@ export default function ImageGallery({
 
   const handleDelete = (image: ImageFile) => {
     if (!confirm(`Delete "${image.name}"?`)) return;
-
     startTransition(async () => {
-      const result = await deleteImage(image.name);
+      const { error } = await deleteImage(image.name);
 
-      if (result.success) {
-        setImages((prev) => prev.filter((img) => img.id !== image.id));
-      } else {
-        setError(result.error || "Failed to delete image");
+      if (error) {
+        setError(error || "Failed to delete image");
       }
     });
   };

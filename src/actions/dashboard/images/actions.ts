@@ -1,5 +1,8 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+
+import { ROUTES } from "@/lib/routes";
 import { makeStaticClient } from "@/lib/supabase";
 
 const BUCKET_NAME = "images";
@@ -70,7 +73,7 @@ export async function deleteImage(
     if (error) {
       return { success: false, error: error.message };
     }
-
+    revalidatePath(ROUTES.DASHBOARD.IMAGES);
     return { success: true };
   } catch (error) {
     return {
