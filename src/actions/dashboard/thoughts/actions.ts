@@ -2,13 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 
-import { authGuard } from "@/lib/auth";
 import { CACHE_TAGS, revalidateTag } from "@/lib/cache";
 import { ROUTES } from "@/lib/routes";
+import { makeServerClient } from "@/lib/supabase";
 import { Thought, ThoughtInsert } from "@/types";
 
 export async function getThought(id: string): Promise<Thought | null> {
-  const { supabase } = await authGuard();
+  const supabase = await makeServerClient();
   const { data, error } = await supabase
     .from("thoughts")
     .select("*")
@@ -26,7 +26,7 @@ export async function getThought(id: string): Promise<Thought | null> {
 export async function saveThought(
   thought: Omit<ThoughtInsert, "created_at" | "updated_at"> & { id?: string },
 ): Promise<{ success: boolean; id?: string; error?: string }> {
-  const { supabase } = await authGuard();
+  const supabase = await makeServerClient();
   const isUpdate = !!thought.id;
 
   if (isUpdate) {
@@ -81,7 +81,7 @@ export async function saveThought(
 export async function deleteThought(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
-  const { supabase } = await authGuard();
+  const supabase = await makeServerClient();
   const { error } = await supabase.from("thoughts").delete().eq("id", id);
 
   if (error) {
@@ -102,7 +102,7 @@ export async function updateThoughtStatus(
   id: string,
   status: string,
 ): Promise<{ success: boolean; error?: string }> {
-  const { supabase } = await authGuard();
+  const supabase = await makeServerClient();
   const { error } = await supabase
     .from("thoughts")
     .update({ status, updated_at: new Date().toISOString() })

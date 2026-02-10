@@ -5,11 +5,10 @@ import { createClient } from "@supabase/supabase-js";
 
 import { Database } from "@/types/supabase";
 
-/** This feature is intended for future versions and is not currently in use. */
 export function makeBrowserClient() {
   return createBrowserClient<Database>(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
 }
 

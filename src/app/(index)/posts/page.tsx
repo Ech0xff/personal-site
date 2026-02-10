@@ -13,17 +13,15 @@ export const metadata: Metadata = {
 
 export default async function PostsPage() {
   const posts = await getCachedPosts();
-
-  const safePosts = posts.filter((p) => p.status === "show");
-  const totalPosts = safePosts.length;
-  const totalCharacters = safePosts.reduce(
+  const totalPosts = posts.length;
+  const totalCharacters = posts.reduce(
     (acc, p) => acc + p.content.length,
     0,
   );
 
-  const groupedPosts: Record<string, (typeof safePosts)[number][]> = {};
+  const groupedPosts: Record<string, (typeof posts)[number][]> = {};
 
-  safePosts.forEach((post) => {
+  posts.forEach((post) => {
     const dateStr = post.published_at || post.created_at || "";
     const date = new Date(dateStr);
     const year = date.getFullYear().toString();

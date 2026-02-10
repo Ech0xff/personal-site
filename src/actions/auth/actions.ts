@@ -1,6 +1,6 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { makeServerClient } from "@/lib/supabase";
@@ -9,9 +9,16 @@ export async function login(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const supabase = await makeServerClient();
+  
   if (!email || !password) {
     redirect("/auth?error=invalid");
   }
+
+  await supabase.auth.signInAnonymously();
+  await supabase.auth.signUp({
+    email,
+    password,
+  });
 
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
@@ -22,27 +29,61 @@ export async function login(formData: FormData) {
     redirect("/auth?error=invalid");
   }
 
-  const cookieStore = await cookies();
-  cookieStore.set("admin_session", "true", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", data.user.id)
+    .single();
+
+  if (profile?.role === "admin") {
+    redirect("/dashboard");
+  }
+
+  redirect("/");
+}
+
+export async function register(formData: FormData) {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  const supabase = await makeServerClient();
+
+  if (!email || !password) {
+    redirect("/auth?error=invalid");
+  }
+
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
   });
 
-  redirect("/dashboard");
+  if (error) {
+    redirect("/auth?error=register");
+  }
+
+  redirect("/");
+}
+
+export async function loginWithGithub() {
+  const supabase = await makeServerClient();
+  const origin = (await headers()).get("origin");
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "github",
+    options: {
+      redirectTo: `${origin}/auth/callback`,
+    },
+  });
+
+  if (error || !data.url) {
+    redirect("/auth?error=oauth");
+  }
+
+  redirect(data.url);
 }
 
 export async function logout() {
-  const cookieStore = await cookies();
-  cookieStore.set("admin_session", "", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 0,
-  });
+  const supabase = await makeServerClient();
+  await supabase.auth.signOut();
 
   redirect("/auth");
 }

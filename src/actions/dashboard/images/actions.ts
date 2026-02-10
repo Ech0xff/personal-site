@@ -2,8 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 
-import { authGuard } from "@/lib/auth";
 import { ROUTES } from "@/lib/routes";
+import { makeServerClient } from "@/lib/supabase";
 
 const BUCKET_NAME = "images";
 
@@ -20,7 +20,7 @@ export async function deleteImage(
   fileName: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const { supabase } = await authGuard();
+    const supabase = await makeServerClient();
 
     const { error } = await supabase.storage
       .from(BUCKET_NAME)

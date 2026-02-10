@@ -4,21 +4,31 @@ import { NextResponse } from "next/server";
 import { makeServerClient } from "./lib/supabase";
 
 export async function proxy(request: NextRequest) {
-  const response = NextResponse.next();
+  const response = NextResponse.next({ request });
 
-  // only protect /dashboard routes
-  if (request.nextUrl.pathname.startsWith("/dashboard")) {
-    const supabase = await makeServerClient();
-    const { data, error } = await supabase.auth.getUser();
+  const supabase = await makeServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-    if (error || !data.user) {
-      return NextResponse.redirect(new URL("/auth", request.url));
-    }
+  const isDashboard = request.nextUrl.pathname.startsWith("/dashboard");
+  const isAuth = request.nextUrl.pathname.startsWith("/auth");
+
+  if (isDashboard && !user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth";
+    return NextResponse.redirect(url);
+  }
+
+  if (isAuth && user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/";
+    return NextResponse.redirect(url);
   }
 
   return response;
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: ["/dashboard/:path*", "/auth"],
 };

@@ -2,13 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 
-import { authGuard } from "@/lib/auth";
 import { CACHE_TAGS, revalidateTag } from "@/lib/cache";
 import { ROUTES } from "@/lib/routes";
+import { makeServerClient } from "@/lib/supabase";
 import { Post, PostInsert } from "@/types";
 
 export async function getPost(id: string): Promise<Post | null> {
-  const { supabase } = await authGuard();
+  const supabase = await makeServerClient();
   const { data, error } = await supabase
     .from("posts")
     .select("*")
@@ -26,8 +26,13 @@ export async function getPost(id: string): Promise<Post | null> {
 export async function savePost(
   post: Omit<PostInsert, "created_at" | "updated_at"> & { id?: string },
 ): Promise<{ success: boolean; id?: string; error?: string }> {
-  const { supabase } = await authGuard();
+  const supabase = await makeServerClient();
   const isUpdate = !!post.id;
+
+    const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  console.log("Current user:", user);
 
   if (isUpdate) {
     // Update existing post
@@ -88,7 +93,7 @@ export async function savePost(
 export async function deletePost(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
-  const { supabase } = await authGuard();
+  const supabase = await makeServerClient();
   const { error } = await supabase.from("posts").delete().eq("id", id);
 
   if (error) {
@@ -109,7 +114,7 @@ export async function updatePostStatus(
   id: string,
   status: string,
 ): Promise<{ success: boolean; error?: string }> {
-  const { supabase } = await authGuard();
+  const supabase = await makeServerClient();
   const { error } = await supabase
     .from("posts")
     .update({ status, updated_at: new Date().toISOString() })
