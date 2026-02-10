@@ -2,6 +2,8 @@
 
 A modern, full-featured personal blog platform built with Next.js 16, React 19, Supabase, and Tailwind CSS.
 
+## 📋 Todo List
+
 ## 🛠️ Tech Stack
 
 - **Framework**: [Next.js 16](https://nextjs.org/) with App Router
@@ -135,7 +137,6 @@ BBLF/
 │   │       └── images/        # Image gallery management
 │   ├── components/            # Reusable components
 │   ├── lib/                   # Utility functions
-│   ├── store/                 # Zustand stores
 │   ├── styles/                # Global styles
 │   └── types/                 # TypeScript types
 ├── public/                    # Static assets
