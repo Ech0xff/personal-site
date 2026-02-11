@@ -12,7 +12,7 @@ import {
 
 import LogOutButton from "@/components/LogOutButton";
 import ThemeToggle from "@/components/ThemeToggle";
-import { makeServerClient } from "@/lib/supabase";
+import { makeServerClient } from "@/lib/server/supabase";
 
 const navItems = [
   {
