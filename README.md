@@ -4,6 +4,9 @@ A modern, full-featured personal blog platform built with Next.js 16, React 19, 
 
 ## 📋 Todo List
 
+- [ ] Optimize project structure.
+- [ ] Configure a webhook to refresh the cache.
+
 ## 🛠️ Tech Stack
 
 - **Framework**: [Next.js 16](https://nextjs.org/) with App Router
