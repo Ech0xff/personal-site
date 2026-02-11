@@ -5,8 +5,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
-import { login, loginWithGithub, register } from "@/actions";
 import SvgGithub from "@/components/icons/Github";
+import { useAuth } from "./hooks/useAuth";
 
 const errorMessages: Record<string, string> = {
   config: "Server configuration error",
@@ -23,6 +23,8 @@ export default function AuthPage() {
   const error = searchParams.get("error");
   const errorMessage = error ? errorMessages[error] : null;
   const [mode, setMode] = useState<Mode>("login");
+
+  const { handleLogin: login, handleRegister: register, handleLoginWithOauth: loginWithGithub } = useAuth();
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-(--theme-bg) p-4">

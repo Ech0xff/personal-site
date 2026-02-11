@@ -5,6 +5,7 @@ import "@/styles/globals.css";
 import "@/styles/tailwind.css";
 import "@/styles/variables.scss";
 
+import { Toaster } from "sonner";
 import AppProvider from "./AppProvider";
 
 export const metadata: Metadata = {
@@ -23,6 +24,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body>
+        <Toaster position="top-center" richColors />
         <AppProvider>{children}</AppProvider>
       </body>
     </html>

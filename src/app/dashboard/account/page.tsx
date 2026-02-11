@@ -1,44 +1,24 @@
 "use client";
 
 import {
-  Github,
-  Key,
   Loader2,
-  Mail,
   Shield,
-  User as UserIcon,
+  User as UserIcon
 } from "lucide-react";
 
-import { useAccount } from "./hooks/use-account";
+import { useAccount } from "./hooks/useAccount";
 
 import HeaderSection from "../components/HeaderSection";
 import IdentityCard from "./components/ui/IdentityCard";
 import InfoRow from "./components/ui/InfoRow";
 import SectionCard from "./components/ui/SectionCard";
-import StatusBadge from "./components/ui/StatusBadge";
-import SubmitButton from "./components/ui/SubmitButton";
 
-// -- Main page ----------------------------------------------------------------
 
 export default function AccountPage() {
   const {
     accountObj,
     loading,
-    username,
-    setUsername,
-    hasPassword,
-    linkedProviders,
-    canUnlink,
-    profileMsg,
-    profilePending,
-    handleProfileSubmit,
-    passwordMsg,
-    passwordPending,
-    handlePasswordSubmit,
-    oauthMsg,
-    linkPending,
     handleLink,
-    unlinkingId,
     handleUnlink,
   } = useAccount();
 
@@ -65,7 +45,7 @@ export default function AccountPage() {
       {/* Account Overview */}
       <SectionCard title="Account Information" icon={UserIcon}>
         <div className="space-y-3">
-          <InfoRow label="UserName" value={accountObj.username} />
+          <InfoRow label="Nickname" value={accountObj.nickname} />
           <InfoRow label="Role" value={accountObj.role} />
           <InfoRow
             label="Created"
@@ -99,9 +79,9 @@ export default function AccountPage() {
               <IdentityCard
                 key={identity.id}
                 identity={identity}
-                canUnlink={canUnlink}
+                canUnlink={identity.provider!=="email"}
                 onUnlink={handleUnlink}
-                unlinking={unlinkingId === identity.id}
+                unlinking={false}
               />
             ))}
           </div>
@@ -112,121 +92,27 @@ export default function AccountPage() {
               Link a new provider
             </p>
             <div className="flex flex-wrap gap-2">
-              {!linkedProviders.has("github") && (
+              {!accountObj.identities!.some(identity => identity.provider === "github") && (
                 <button
                   type="button"
-                  disabled={linkPending}
                   onClick={() => handleLink("github")}
                   className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-900 transition-all hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
                 >
-                  {linkPending ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Github className="h-4 w-4" />
-                  )}
                   Link GitHub
                 </button>
               )}
-              {!linkedProviders.has("google") && (
+              {!accountObj.identities!.some(identity => identity.provider === "google") && (
                 <button
                   type="button"
-                  disabled={linkPending}
                   onClick={() => handleLink("google")}
                   className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-900 transition-all hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
                 >
-                  {linkPending ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Mail className="h-4 w-4" />
-                  )}
                   Link Google
                 </button>
               )}
-              {linkedProviders.has("github") &&
-                linkedProviders.has("google") && (
-                  <p className="text-sm text-zinc-400 dark:text-zinc-500">
-                    All supported providers are linked.
-                  </p>
-                )}
             </div>
           </div>
-
-          {oauthMsg && (
-            <StatusBadge type={oauthMsg.type} message={oauthMsg.text} />
-          )}
         </div>
-      </SectionCard>
-
-      {/* Change Password */}
-      <SectionCard title="Change Password" icon={Key}>
-        <form action={handlePasswordSubmit} className="space-y-4">
-          {hasPassword && (
-            <div>
-              <label
-                htmlFor="currentPassword"
-                className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-              >
-                Current Password
-              </label>
-              <input
-                id="currentPassword"
-                name="currentPassword"
-                type="password"
-                placeholder="Enter current password"
-                className="w-full max-w-md rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
-              />
-            </div>
-          )}
-
-          <div>
-            <label
-              htmlFor="newPassword"
-              className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-            >
-              New Password
-            </label>
-            <input
-              id="newPassword"
-              name="newPassword"
-              type="password"
-              placeholder="At least 6 characters"
-              className="w-full max-w-md rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
-              required
-              minLength={6}
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="confirmPassword"
-              className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-            >
-              Confirm New Password
-            </label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              placeholder="Re-enter new password"
-              className="w-full max-w-md rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
-              required
-              minLength={6}
-            />
-          </div>
-
-          {!hasPassword && (
-            <p className="text-sm text-amber-600 dark:text-amber-400">
-              You signed up via OAuth. Setting a password will allow you to also
-              log in with email + password.
-            </p>
-          )}
-
-          {passwordMsg && (
-            <StatusBadge type={passwordMsg.type} message={passwordMsg.text} />
-          )}
-
-          <SubmitButton pending={passwordPending} label="Update Password" />
-        </form>
       </SectionCard>
     </div>
   );
