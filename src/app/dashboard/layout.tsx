@@ -45,7 +45,7 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const supabase = await makeServerClient();
-  const isAdmin = await supabase.rpc("is_admin").then((res) => res.data);
+  const isAdmin = (await supabase.auth.getSession()).data.session?.user.app_metadata.role==="admin"
   return (
     <div className="flex h-screen w-screen bg-(--theme-bg)">
       {/* Sidebar */}

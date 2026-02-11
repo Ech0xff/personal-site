@@ -13,7 +13,6 @@ import IdentityCard from "./components/ui/IdentityCard";
 import InfoRow from "./components/ui/InfoRow";
 import SectionCard from "./components/ui/SectionCard";
 
-
 export default function AccountPage() {
   const {
     accountObj,
