@@ -40,3 +40,11 @@ export interface BlogSummaryData {
     events: Event[];
   };
 }
+
+export type ImageFile = {
+  id: string;
+  name: string;
+  url: string;
+  size: number;
+  createdAt: string;
+};

@@ -2,8 +2,8 @@
 
 import { Edit, Trash2 } from "lucide-react";
 
-import { deleteEvent } from "@/actions";
 import { useEditor } from "@/app/dashboard/components/EditorProvider";
+import { deleteEventByBrowser } from "@/lib/client/services";
 
 interface EventActionsProps {
   eventId: string;
@@ -15,9 +15,10 @@ export default function EventActions({ eventId }: EventActionsProps) {
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this event?")) return;
 
-    const result = await deleteEvent(eventId);
-    if (!result.success) {
-      alert(result.error || "Failed to delete event");
+    try {
+      await deleteEventByBrowser(eventId);
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "Failed to delete event");
     }
   };
 

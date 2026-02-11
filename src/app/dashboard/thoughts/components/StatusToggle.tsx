@@ -4,8 +4,8 @@ import { useTransition } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { updateThoughtStatus } from "@/actions";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
+import { updateThoughtStatusByBrowser } from "@/lib/client/services";
 import { Status } from "@/types";
 
 interface StatusToggleProps {
@@ -22,12 +22,14 @@ export default function StatusToggle({ thoughtId, status }: StatusToggleProps) {
     if (nextStatus === currentStatus) return;
 
     startTransition(async () => {
-      const result = await updateThoughtStatus(thoughtId, nextStatus);
-      if (!result.success) {
-        alert(result.error || "Failed to update status");
-        return;
+      try {
+        await updateThoughtStatusByBrowser(thoughtId, nextStatus);
+        router.refresh();
+      } catch (error) {
+        alert(
+          error instanceof Error ? error.message : "Failed to update status",
+        );
       }
-      router.refresh();
     });
   };
 

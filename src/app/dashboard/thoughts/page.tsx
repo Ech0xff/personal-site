@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import ThoughtTimeline from "@/components/ThoughtTimeline";
-import { getDashboardThoughtsClient } from "@/lib/client/data";
+import { fetchThoughtsByBrowser } from "@/lib/client/services";
 import { Thought } from "@/types";
 
 import EditorProvider from "../components/EditorProvider";
@@ -23,7 +23,7 @@ export default function ThoughtsPage() {
 
     (async () => {
       try {
-        const data = await getDashboardThoughtsClient();
+        const data = await fetchThoughtsByBrowser();
         if (!isMounted) return;
         setThoughts(data);
         setError(false);

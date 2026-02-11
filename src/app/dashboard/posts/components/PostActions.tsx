@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 
 import { Edit, Eye, Trash2 } from "lucide-react";
 
-import { deletePost } from "@/actions";
 import { useEditor } from "@/app/dashboard/components/EditorProvider";
+import { deletePostByBrowser } from "@/lib/client/services";
 
 interface PostActionsProps {
   postId: string;
@@ -19,11 +19,11 @@ export default function PostActions({ postId }: PostActionsProps) {
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this post?")) return;
 
-    const result = await deletePost(postId);
-    if (result.success) {
+    try {
+      await deletePostByBrowser(postId);
       router.refresh();
-    } else {
-      alert(result.error || "Failed to delete post");
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "Failed to delete post");
     }
   };
 

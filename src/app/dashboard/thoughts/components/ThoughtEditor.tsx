@@ -4,17 +4,18 @@ import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 
 import { Link as LinkIcon, Upload, X } from "lucide-react";
 
-import { getThought, saveThought } from "@/actions";
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import LightboxImage from "@/components/LightboxImage";
 import Button from "@/components/ui/Button";
 import {
+  fetchThoughtByBrowser,
   isValidImageFile,
   isValidImageUrl,
-  uploadImage,
-  uploadImageFromUrl,
-} from "@/lib/upload";
+  saveThoughtByBrowser,
+  uploadImageByBrowser,
+  uploadImageFromUrlByBrowser,
+} from "@/lib/client/services";
 import { Status } from "@/types";
 
 export default function ThoughtEditor({
@@ -44,15 +45,20 @@ export default function ThoughtEditor({
 
     const loadThought = async () => {
       setIsLoading(true);
-      const thought = await getThought(id);
-      if (thought) {
-        setContent(thought.content);
-        setImages(thought.images || []);
-        setStatus(thought.status ?? "hide");
-      } else {
+      try {
+        const thought = await fetchThoughtByBrowser(id);
+        if (thought) {
+          setContent(thought.content);
+          setImages(thought.images || []);
+          setStatus(thought.status ?? "hide");
+        } else {
+          setErrorMessage("Failed to load thought");
+        }
+      } catch {
         setErrorMessage("Failed to load thought");
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     loadThought();
@@ -73,7 +79,9 @@ export default function ThoughtEditor({
       setErrorMessage("");
 
       try {
-        const uploadPromises = validFiles.map((file) => uploadImage(file));
+        const uploadPromises = validFiles.map((file) =>
+          uploadImageByBrowser(file),
+        );
         const results = await Promise.all(uploadPromises);
 
         const newUrls = results
@@ -115,7 +123,7 @@ export default function ThoughtEditor({
     setErrorMessage("");
 
     try {
-      const result = await uploadImageFromUrl(url);
+      const result = await uploadImageFromUrlByBrowser(url);
       if (!images.includes(result.url)) {
         setImages((prev) => [...prev, result.url]);
       }
@@ -170,17 +178,19 @@ export default function ThoughtEditor({
     setErrorMessage("");
 
     startTransition(async () => {
-      const result = await saveThought({
-        id: id || undefined,
-        content: content.trim(),
-        images: images.length > 0 ? images : null,
-        status,
-      });
+      try {
+        await saveThoughtByBrowser({
+          id: id || undefined,
+          content: content.trim(),
+          images: images.length > 0 ? images : null,
+          status,
+        });
 
-      if (result.success) {
         onSaved();
-      } else {
-        setErrorMessage(result.error || "Failed to save thought");
+      } catch (error) {
+        setErrorMessage(
+          error instanceof Error ? error.message : "Failed to save thought",
+        );
       }
     });
   };

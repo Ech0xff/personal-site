@@ -15,7 +15,7 @@ export const fetchCachedPosts = unstable_cache(
 );
 
 export const fetchCachedPost = unstable_cache(
-  async (id: string) => {
+  async (id) => {
     const client = makeStaticClient();
     return fetchPost(client, id);
   },

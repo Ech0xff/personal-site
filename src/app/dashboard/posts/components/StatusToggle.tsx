@@ -4,8 +4,8 @@ import { useTransition } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { updatePostStatus } from "@/actions";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
+import { updatePostStatusByBrowser } from "@/lib/client/services";
 import { Status } from "@/types";
 
 interface StatusToggleProps {
@@ -22,12 +22,14 @@ export default function StatusToggle({ postId, status }: StatusToggleProps) {
     if (nextStatus === currentStatus) return;
 
     startTransition(async () => {
-      const result = await updatePostStatus(postId, nextStatus);
-      if (!result.success) {
-        alert(result.error || "Failed to update status");
-        return;
+      try {
+        await updatePostStatusByBrowser(postId, nextStatus);
+        router.refresh();
+      } catch (error) {
+        alert(
+          error instanceof Error ? error.message : "Failed to update status",
+        );
       }
-      router.refresh();
     });
   };
 

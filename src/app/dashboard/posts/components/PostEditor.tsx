@@ -4,11 +4,11 @@ import { useEffect, useState, useTransition } from "react";
 
 import { Eye, X } from "lucide-react";
 
-import { getPost, savePost } from "@/actions";
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import { PostMarkdown } from "@/components/markdown";
 import Button from "@/components/ui/Button";
+import { fetchPostByBrowser, savePostByBrowser } from "@/lib/client/services";
 import { Status } from "@/types";
 
 type ViewMode = "edit" | "preview" | "split";
@@ -36,17 +36,22 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
 
     const loadPost = async () => {
       setIsLoading(true);
-      const post = await getPost(id);
-      if (post) {
-        setTitle(post.title);
-        setContent(post.content);
-        setAuthor(post.author || "");
-        setStatus(post.status ?? "hide");
-        setTags(post.tags || []);
-      } else {
+      try {
+        const post = await fetchPostByBrowser(id);
+        if (post) {
+          setTitle(post.title);
+          setContent(post.content);
+          setAuthor(post.author || "");
+          setStatus(post.status ?? "hide");
+          setTags(post.tags || []);
+        } else {
+          setErrorMessage("Failed to load post");
+        }
+      } catch {
         setErrorMessage("Failed to load post");
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     loadPost();
@@ -77,19 +82,21 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
     setErrorMessage("");
 
     startTransition(async () => {
-      const result = await savePost({
-        id: id || undefined,
-        title: title.trim(),
-        content: content.trim(),
-        author: author.trim() || null,
-        status,
-        tags: tags.length > 0 ? tags : null,
-      });
+      try {
+        await savePostByBrowser({
+          id: id || undefined,
+          title: title.trim(),
+          content: content.trim(),
+          author: author.trim() || null,
+          status,
+          tags: tags.length > 0 ? tags : null,
+        });
 
-      if (result.success) {
         onSaved();
-      } else {
-        setErrorMessage(result.error || "Failed to save post");
+      } catch (error) {
+        setErrorMessage(
+          error instanceof Error ? error.message : "Failed to save post",
+        );
       }
     });
   };

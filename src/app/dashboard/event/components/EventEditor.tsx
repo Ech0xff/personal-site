@@ -4,10 +4,10 @@ import { useEffect, useState, useTransition } from "react";
 
 import { X } from "lucide-react";
 
-import { getEvent, saveEvent } from "@/actions";
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import Button from "@/components/ui/Button";
+import { fetchEventByBrowser, saveEventByBrowser } from "@/lib/client/services";
 import { Status } from "@/types";
 
 const COLOR_OPTIONS = [
@@ -42,18 +42,23 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
 
     const loadEvent = async () => {
       setIsLoading(true);
-      const event = await getEvent(id);
-      if (event) {
-        setTitle(event.title);
-        setDescription(event.description || "");
-        setEventDate(event.event_date);
-        setColor(event.color || "blue");
-        setStatus(event.status ?? "hide");
-        setTags(event.tags || []);
-      } else {
+      try {
+        const event = await fetchEventByBrowser(id);
+        if (event) {
+          setTitle(event.title);
+          setDescription(event.description || "");
+          setEventDate(event.event_date);
+          setColor(event.color || "blue");
+          setStatus(event.status ?? "hide");
+          setTags(event.tags || []);
+        } else {
+          setErrorMessage("Failed to load event");
+        }
+      } catch {
         setErrorMessage("Failed to load event");
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     loadEvent();
@@ -84,20 +89,22 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
     setErrorMessage("");
 
     startTransition(async () => {
-      const result = await saveEvent({
-        id: id || undefined,
-        title: title.trim(),
-        description: description.trim() || null,
-        event_date: eventDate,
-        color,
-        status,
-        tags: tags.length > 0 ? tags : null,
-      });
+      try {
+        await saveEventByBrowser({
+          id: id || undefined,
+          title: title.trim(),
+          description: description.trim() || null,
+          event_date: eventDate,
+          color,
+          status,
+          tags: tags.length > 0 ? tags : null,
+        });
 
-      if (result.success) {
         onSaved();
-      } else {
-        setErrorMessage(result.error || "Failed to save event");
+      } catch (error) {
+        setErrorMessage(
+          error instanceof Error ? error.message : "Failed to save event",
+        );
       }
     });
   };

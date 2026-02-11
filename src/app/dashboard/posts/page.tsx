@@ -2,7 +2,7 @@
 
 import { type ReactNode, useEffect, useState } from "react";
 
-import { getDashboardPostsClient } from "@/lib/client/data";
+import { fetchPostsByBrowser } from "@/lib/client/services";
 import { cn } from "@/lib/shared/utils";
 import { Post } from "@/types";
 
@@ -70,7 +70,7 @@ export default function PostsPage() {
 
     (async () => {
       try {
-        const data = await getDashboardPostsClient();
+        const data = await fetchPostsByBrowser();
         if (!isMounted) return;
         setPosts(data);
         setError(false);

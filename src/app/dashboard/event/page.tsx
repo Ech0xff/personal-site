@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import EventTimeline from "@/components/EventTimeline";
-import { getDashboardEventsClient } from "@/lib/client/data";
+import { fetchEventsByBrowser } from "@/lib/client/services";
 import { Event as DashboardEvent } from "@/types";
 
 import EditorProvider from "../components/EditorProvider";
@@ -23,7 +23,7 @@ export default function EventsPage() {
 
     (async () => {
       try {
-        const data = await getDashboardEventsClient();
+        const data = await fetchEventsByBrowser();
         if (!isMounted) return;
         setEvents(data);
         setError(false);

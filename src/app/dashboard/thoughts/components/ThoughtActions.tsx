@@ -2,8 +2,8 @@
 
 import { Edit, Trash2 } from "lucide-react";
 
-import { deleteThought } from "@/actions";
 import { useEditor } from "@/app/dashboard/components/EditorProvider";
+import { deleteThoughtByBrowser } from "@/lib/client/services";
 
 interface ThoughtActionsProps {
   thoughtId: string;
@@ -15,9 +15,12 @@ export default function ThoughtActions({ thoughtId }: ThoughtActionsProps) {
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this thought?")) return;
 
-    const result = await deleteThought(thoughtId);
-    if (!result.success) {
-      alert(result.error || "Failed to delete thought");
+    try {
+      await deleteThoughtByBrowser(thoughtId);
+    } catch (error) {
+      alert(
+        error instanceof Error ? error.message : "Failed to delete thought",
+      );
     }
   };
 

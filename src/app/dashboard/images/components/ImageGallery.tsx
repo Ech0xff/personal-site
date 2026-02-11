@@ -12,7 +12,8 @@ import {
 } from "lucide-react";
 
 import LightboxImage from "@/components/LightboxImage";
-import { type ImageFile, deleteImageClient } from "@/lib/client/data";
+import { deleteImageByBrowser } from "@/lib/client/services";
+import { ImageFile } from "@/types";
 
 type SortField = "createdAt" | "size";
 type SortOrder = "asc" | "desc";
@@ -41,11 +42,7 @@ export default function ImageGallery({ images }: { images: ImageFile[] }) {
   const handleDelete = (image: ImageFile) => {
     if (!confirm(`Delete "${image.name}"?`)) return;
     startTransition(async () => {
-      const { error } = await deleteImageClient(image.name);
-
-      if (error) {
-        setError(error || "Failed to delete image");
-      }
+      await deleteImageByBrowser(image.name);
     });
   };
 

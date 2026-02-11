@@ -13,7 +13,7 @@ import {
   Plus,
 } from "lucide-react";
 
-import { getDashboardSummaryClient } from "@/lib/client/data";
+import { fetchSummaryByBrowser } from "@/lib/client/services";
 import { BlogSummaryData } from "@/types";
 
 import DashboardShell from "../components/ui/DashboardShell";
@@ -52,7 +52,7 @@ export default function DashboardPage() {
 
     (async () => {
       try {
-        const data = await getDashboardSummaryClient(5);
+        const data = await fetchSummaryByBrowser(5);
         if (!isMounted) return;
         setSummaryData(data);
         setError(false);
