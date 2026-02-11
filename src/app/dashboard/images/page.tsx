@@ -1,25 +1,50 @@
-import { getImages } from "@/lib/data/dashboard";
+"use client";
 
-import HeaderSection from "../components/HeaderSection";
+import { useEffect, useState } from "react";
+
+import { getImagesClient, type ImageFile } from "@/lib/data/dashboard-client";
+
+import DashboardShell from "../components/ui/DashboardShell";
 import ImageGallery from "./components/ImageGallery";
 
-export const dynamic = "force-dynamic";
+export default function ImagesPage() {
+  const [images, setImages] = useState<ImageFile[]>([]);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
-export default async function ImagesPage() {
-  const result = await getImages();
-  const errorMessage = result.success
-    ? ""
-    : result.error || "Failed to load images";
+  useEffect(() => {
+    let isMounted = true;
+
+    (async () => {
+      setLoading(true);
+      const result = await getImagesClient();
+
+      if (!isMounted) return;
+
+      if (result.success) {
+        setImages(result.images || []);
+        setErrorMessage("");
+      } else {
+        setImages([]);
+        setErrorMessage(result.error || "Failed to load images");
+      }
+
+      setLoading(false);
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
-    <div className="space-y-6">
-      <HeaderSection title="Image Gallery" />
+    <DashboardShell title="Image Gallery" loading={loading}>
       {errorMessage && (
         <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-400">
           {errorMessage}
         </div>
       )}
-      <ImageGallery images={result.success ? result.images || [] : []} />
-    </div>
+      <ImageGallery images={images} />
+    </DashboardShell>
   );
 }

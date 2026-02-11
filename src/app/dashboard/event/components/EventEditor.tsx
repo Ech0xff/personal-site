@@ -6,7 +6,7 @@ import { X } from "lucide-react";
 
 import { getEvent, saveEvent } from "@/actions";
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
-import SegmentedToggle from "@/app/dashboard/components/SegmentedToggle";
+import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import Button from "@/components/ui/Button";
 import { Status } from "@/types";
 

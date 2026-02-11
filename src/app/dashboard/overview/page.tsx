@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 import Link from "next/link";
 
 import {
@@ -9,7 +13,10 @@ import {
   Plus,
 } from "lucide-react";
 
-import { getDashboardSummary } from "@/lib/data/dashboard";
+import { getDashboardSummaryClient } from "@/lib/data/dashboard-client";
+import { BlogSummaryData } from "@/types";
+
+import DashboardShell from "../components/ui/DashboardShell";
 
 const quickActions = [
   {
@@ -35,8 +42,33 @@ const quickActions = [
   },
 ];
 
-export default async function DashboardPage() {
-  const summaryData = await getDashboardSummary(5);
+export default function DashboardPage() {
+  const [summaryData, setSummaryData] = useState<BlogSummaryData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    (async () => {
+      try {
+        const data = await getDashboardSummaryClient(5);
+        if (!isMounted) return;
+        setSummaryData(data);
+        setError(false);
+      } catch {
+        if (!isMounted) return;
+        setError(true);
+      } finally {
+        if (!isMounted) return;
+        setLoading(false);
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const stats = [
     {
@@ -76,7 +108,7 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <div className="space-y-8">
+    <DashboardShell title="Overview" loading={loading} error={error}>
       {/* Welcome Section */}
       <div>
         <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
@@ -148,6 +180,6 @@ export default async function DashboardPage() {
           </p>
         </div>
       </div>
-    </div>
+    </DashboardShell>
   );
 }

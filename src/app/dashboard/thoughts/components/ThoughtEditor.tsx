@@ -6,7 +6,7 @@ import { Link as LinkIcon, Upload, X } from "lucide-react";
 
 import { getThought, saveThought } from "@/actions";
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
-import SegmentedToggle from "@/app/dashboard/components/SegmentedToggle";
+import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import LightboxImage from "@/components/LightboxImage";
 import Button from "@/components/ui/Button";
 import {

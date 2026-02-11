@@ -6,7 +6,7 @@ import { Eye, X } from "lucide-react";
 
 import { getPost, savePost } from "@/actions";
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
-import SegmentedToggle from "@/app/dashboard/components/SegmentedToggle";
+import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import { PostMarkdown } from "@/components/markdown";
 import Button from "@/components/ui/Button";
 import { Status } from "@/types";

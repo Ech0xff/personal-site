@@ -1,8 +1,13 @@
-import { getDashboardPosts } from "@/lib/data/dashboard";
+"use client";
+
+import { useEffect, useState, type ReactNode } from "react";
+
+import { getDashboardPostsClient } from "@/lib/data/dashboard-client";
+import { Post } from "@/types";
 import { cn } from "@/lib/utils";
 
 import EditorProvider from "../components/EditorProvider";
-import HeaderSection from "../components/HeaderSection";
+import DashboardShell from "../components/ui/DashboardShell";
 import NewPostButton from "./components/NewPostButton";
 import PostActions from "./components/PostActions";
 import PostEditor from "./components/PostEditor";
@@ -55,8 +60,33 @@ function formatDate(dateString: string | null) {
   });
 }
 
-export default async function PostsPage() {
-  const posts = await getDashboardPosts();
+export default function PostsPage() {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    (async () => {
+      try {
+        const data = await getDashboardPostsClient();
+        if (!isMounted) return;
+        setPosts(data);
+        setError(false);
+      } catch {
+        if (!isMounted) return;
+        setError(true);
+      } finally {
+        if (!isMounted) return;
+        setLoading(false);
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const th = (title: string[]) => {
     return (
@@ -73,7 +103,7 @@ export default async function PostsPage() {
     );
   };
 
-  const td = (children: React.ReactNode, className?: string) => {
+  const td = (children: ReactNode, className?: string) => {
     return (
       <td className="px-6 py-4">
         <div className={cn("flex items-center justify-center", className)}>
@@ -85,12 +115,12 @@ export default async function PostsPage() {
 
   return (
     <EditorProvider editorComponent={PostEditor}>
-      <div className="relative space-y-6">
-        {/* Header */}
-        <HeaderSection title="Posts">
-          <NewPostButton />
-        </HeaderSection>
-
+      <DashboardShell
+        title="Posts"
+        optActions={<NewPostButton />}
+        loading={loading}
+        error={error}
+      >
         {/* Posts Table */}
         <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
           <table className="w-full table-auto">
@@ -105,33 +135,32 @@ export default async function PostsPage() {
               ])}
             </thead>
             <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
-              {posts &&
-                posts.map((post) => (
-                  <tr
-                    key={post.id}
-                    className="transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-                  >
-                    {td(
-                      post.title,
-                      "font-medium text-zinc-900 dark:text-zinc-100",
-                    )}
-                    {td(<TagsList tags={post.tags} maxVisible={3} />)}
-                    {td(<StatusToggle postId={post.id} status={post.status} />)}
-                    {td(
-                      post.view_count || 0,
-                      "text-sm text-zinc-500 dark:text-zinc-400",
-                    )}
-                    {td(
-                      formatDate(post.created_at),
-                      "text-sm text-zinc-500 dark:text-zinc-400",
-                    )}
-                    {td(<PostActions postId={post.id} />, "gap-2")}
-                  </tr>
-                ))}
+              {posts.map((post) => (
+                <tr
+                  key={post.id}
+                  className="transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+                >
+                  {td(
+                    post.title,
+                    "font-medium text-zinc-900 dark:text-zinc-100",
+                  )}
+                  {td(<TagsList tags={post.tags} maxVisible={3} />)}
+                  {td(<StatusToggle postId={post.id} status={post.status} />)}
+                  {td(
+                    post.view_count || 0,
+                    "text-sm text-zinc-500 dark:text-zinc-400",
+                  )}
+                  {td(
+                    formatDate(post.created_at),
+                    "text-sm text-zinc-500 dark:text-zinc-400",
+                  )}
+                  {td(<PostActions postId={post.id} />, "gap-2")}
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
-      </div>
+      </DashboardShell>
     </EditorProvider>
   );
 }

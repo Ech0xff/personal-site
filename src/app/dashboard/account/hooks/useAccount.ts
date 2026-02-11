@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { UserIdentity } from "@supabase/supabase-js";
 import { toast } from "sonner";
@@ -18,96 +18,60 @@ export type AccountObj = {
 export type StatusMsg = { type: "success" | "error"; text: string } | null;
 
 export function useAccount() {
-  const supabase = makeBrowserClient();
+  const supabase = useMemo(() => makeBrowserClient(), []);
 
   const [accountObj, setAccountObj] = useState<AccountObj>();
   const [loading, setLoading] = useState(true);
-  const [savingNickname, setSavingNickname] = useState(false);
-
-  // Profile
-  const [nickname, setNickname] = useState("");
 
   /** Fetch account info */
   const fetchAccountObj = useCallback(async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    // TODO: handle user not found
-    if (!user) {
-      setAccountObj(undefined);
-      setLoading(false);
-      return;
-    }
-
-    setAccountObj({
-      id: user.id,
-      avatar_url: user.user_metadata?.avatar_url || "",
-      nickname: user.user_metadata?.nickname || "",
-      role: user.app_metadata?.role || "",
-      createdAt: user.created_at,
-      lastSignInAt: user.last_sign_in_at,
-      identities: user.identities,
-    });
-    setLoading(false);
+    supabase.auth
+      .getSession()
+      .then(({ data: { session }, error }) => {
+        const user = session?.user;
+        if (error || !user) {
+          setAccountObj(undefined);
+          toast.error("Error fetching user data");
+          return;
+        }
+        setAccountObj({
+          id: user.id,
+          avatar_url: user.user_metadata?.avatar_url || "",
+          nickname: user.user_metadata?.nickname || "",
+          role: user.app_metadata?.role || "",
+          createdAt: user.created_at,
+          lastSignInAt: user.last_sign_in_at,
+          identities: user.identities,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [supabase]);
 
   useEffect(() => {
-    let isMounted = true;
-    (async () => {
-      await fetchAccountObj();
-      if (!isMounted) return;
-    })();
-    return () => {
-      isMounted = false;
-    };
+    fetchAccountObj();
   }, [fetchAccountObj]);
 
-  const handleSaveUserMeta = async () => {
-    const { error } = await supabase.auth.updateUser({
-      data: {
-        avatar_url: accountObj?.avatar_url,
-        nickname: accountObj?.nickname,
-      },
-    });
-    if (error) {
-      toast.error("Error updating profile");
-    } else {
-      toast.success("Profile updated successfully.");
-      fetchAccountObj();
-    }
-  };
-
-  const saveNickname = async (nextNickname: string) => {
-    if (!accountObj) return;
-
-    const previousNickname = accountObj.nickname;
-    setAccountObj({
-      ...accountObj,
-      nickname: nextNickname,
-    });
-    setSavingNickname(true);
-
-    const { error } = await supabase.auth.updateUser({
-      data: {
-        avatar_url: accountObj.avatar_url,
-        nickname: nextNickname,
-      },
-    });
-
-    setSavingNickname(false);
-
-    if (error) {
-      setAccountObj({
-        ...accountObj,
-        nickname: previousNickname,
+  const handleSaveNickname = async (nextNickname: string) => {
+    const toastId = toast.loading("Saving profile...");
+    setAccountObj((prev) =>
+      prev ? { ...prev, nickname: nextNickname } : prev,
+    );
+    supabase.auth
+      .updateUser({
+        data: {
+          nickname: nextNickname,
+        },
+      })
+      .then(async ({ error }) => {
+        if (error) {
+          toast.error("Error updating profile", { id: toastId });
+        } else {
+          toast.success("Profile updated successfully.", { id: toastId });
+          await fetchAccountObj();
+        }
       });
-      toast.error("Error updating nickname");
-      return;
-    }
-
-    toast.success("Nickname updated successfully.");
-    fetchAccountObj();
   };
 
   const handleLink = async (provider: "github" | "google") => {
@@ -152,11 +116,7 @@ export function useAccount() {
     // State
     accountObj,
     loading,
-    nickname,
-    setNickname,
-    handleSaveUserMeta,
-    saveNickname,
-    savingNickname,
+    handleSaveNickname,
     handleLink,
     handleUnlink,
   };
