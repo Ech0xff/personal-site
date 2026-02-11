@@ -13,7 +13,7 @@ import {
   Plus,
 } from "lucide-react";
 
-import { getDashboardSummaryClient } from "@/lib/data/dashboard-client";
+import { getDashboardSummaryClient } from "@/lib/client/data";
 import { BlogSummaryData } from "@/types";
 
 import DashboardShell from "../components/ui/DashboardShell";

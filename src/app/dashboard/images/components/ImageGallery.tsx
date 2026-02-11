@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 import LightboxImage from "@/components/LightboxImage";
-import { type ImageFile, deleteImageClient } from "@/lib/data/dashboard-client";
+import { type ImageFile, deleteImageClient } from "@/lib/client/data";
 
 type SortField = "createdAt" | "size";
 type SortOrder = "asc" | "desc";

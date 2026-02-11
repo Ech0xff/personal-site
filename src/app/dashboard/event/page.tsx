@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import EventTimeline from "@/components/EventTimeline";
-import { getDashboardEventsClient } from "@/lib/data/dashboard-client";
+import { getDashboardEventsClient } from "@/lib/client/data";
 import { Event as DashboardEvent } from "@/types";
 
 import EditorProvider from "../components/EditorProvider";

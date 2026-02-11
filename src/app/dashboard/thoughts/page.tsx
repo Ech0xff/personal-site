@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import ThoughtTimeline from "@/components/ThoughtTimeline";
-import { getDashboardThoughtsClient } from "@/lib/data/dashboard-client";
+import { getDashboardThoughtsClient } from "@/lib/client/data";
 import { Thought } from "@/types";
 
 import EditorProvider from "../components/EditorProvider";

@@ -2,7 +2,7 @@
 
 import { type ReactNode, useEffect, useState } from "react";
 
-import { getDashboardPostsClient } from "@/lib/data/dashboard-client";
+import { getDashboardPostsClient } from "@/lib/client/data";
 import { cn } from "@/lib/shared/utils";
 import { Post } from "@/types";
 
