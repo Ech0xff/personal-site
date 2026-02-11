@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 import ThoughtTimeline from "@/components/ThoughtTimeline";
-import { getCachedThoughts } from "@/lib/server/cache/thoughts";
+import { fetchCachedThoughts } from "@/lib/server/services-cache/thoughts";
 
 import CollectionBody from "../components/CollectionBody";
 
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ThoughtsPage() {
-  const thoughts = await getCachedThoughts();
+  const thoughts = await fetchCachedThoughts();
   const totalThoughts = thoughts.length;
   const totalCharacters = thoughts.reduce(
     (acc, t) => acc + t.content.length,

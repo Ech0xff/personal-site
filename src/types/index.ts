@@ -1,5 +1,7 @@
 import { Tables, TablesInsert, TablesUpdate } from "./supabase";
 
+export * from "./supabase";
+
 export type Post = Tables<"posts">;
 export type Thought = Tables<"thoughts">;
 export type Event = Tables<"events">;

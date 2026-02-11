@@ -1,6 +1,6 @@
 import FooterSection from "@/components/FooterSection";
 import { Bilibili, Email, Github, Qq } from "@/components/icons";
-import { getCachedSummary } from "@/lib/server/cache/summary";
+import { fetchCachedSummary } from "@/lib/server/services-cache/rpcs";
 import { cn } from "@/lib/shared/utils";
 import { BlogSummaryData } from "@/types";
 
@@ -215,7 +215,7 @@ function IntroductionSection({ stats }: { stats?: BlogSummaryData }) {
 }
 
 export default async function HomePage() {
-  const stats = await getCachedSummary(5);
+  const stats = await fetchCachedSummary(5);
 
   return (
     <>

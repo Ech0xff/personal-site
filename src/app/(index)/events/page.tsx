@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 import EventTimeline from "@/components/EventTimeline";
-import { getCachedEvents } from "@/lib/server/cache/events";
+import { fetchCachedEvents } from "@/lib/server/services-cache/events";
 
 import CollectionBody from "../components/CollectionBody";
 
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function EventsPage() {
-  const events = await getCachedEvents();
+  const events = await fetchCachedEvents();
 
   const totalEvents = events.length;
 

@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 
-import { getCachedPosts } from "@/lib/server/cache/posts";
+import { fetchCachedPosts } from "@/lib/server/services-cache/posts";
 
 import CollectionBody from "../components/CollectionBody";
 import PostListItem from "../components/PostListItem";
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function PostsPage() {
-  const posts = await getCachedPosts();
+  const posts = await fetchCachedPosts();
   const totalPosts = posts.length;
   const totalCharacters = posts.reduce((acc, p) => acc + p.content.length, 0);
 

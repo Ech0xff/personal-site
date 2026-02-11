@@ -5,7 +5,7 @@ import { ArrowLeft, Calendar, User } from "lucide-react";
 
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { PostMarkdown } from "@/components/markdown";
-import { getCachedPost } from "@/lib/server/cache/posts";
+import { fetchCachedPost } from "@/lib/server/services-cache/posts";
 
 export const revalidate = 3600;
 
@@ -17,7 +17,7 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getCachedPost(slug);
+  const post = await fetchCachedPost(slug);
 
   if (!post || post.status !== "show") {
     return {
@@ -33,7 +33,7 @@ export async function generateMetadata({
 
 export default async function PostPage({ params }: PageProps) {
   const { slug } = await params;
-  const post = await getCachedPost(slug);
+  const post = await fetchCachedPost(slug);
 
   // Handle 404 - also hide non-show posts
   if (!post || post.status !== "show") {
