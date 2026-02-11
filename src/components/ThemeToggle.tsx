@@ -1,8 +1,8 @@
 "use client";
 import { Monitor, Moon, Sun } from "lucide-react";
 
-import { useAppUI } from "@/app/AppProvider";
 import { cn } from "@/lib/shared/utils";
+import { useAppUI } from "@/providers/AppProvider";
 
 export default function ThemeToggle({ className }: { className?: string }) {
   const { theme, setTheme } = useAppUI();

@@ -7,7 +7,7 @@ import "@/styles/globals.css";
 import "@/styles/tailwind.css";
 import "@/styles/variables.scss";
 
-import AppProvider from "./AppProvider";
+import AppProvider from "../providers/AppProvider";
 
 export const metadata: Metadata = {
   title: "BBLF",
