@@ -5,7 +5,7 @@ import { ArrowLeft, Calendar, User } from "lucide-react";
 
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { PostMarkdown } from "@/components/markdown";
-import { getCachedPost } from "@/lib/cache/posts";
+import { getCachedPost } from "@/lib/server/cache/posts";
 
 export const revalidate = 3600;
 

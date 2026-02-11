@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 
-import { themeInitScript } from "@/lib/themeInitScript";
+import { Toaster } from "sonner";
+
+import { themeInitScript } from "@/lib/shared/themeInitScript";
 import "@/styles/globals.css";
 import "@/styles/tailwind.css";
 import "@/styles/variables.scss";
 
-import { Toaster } from "sonner";
 import AppProvider from "./AppProvider";
 
 export const metadata: Metadata = {

@@ -1,6 +1,5 @@
-import { Github, Link2, Link2Off, Loader2, Mail } from "lucide-react";
-
 import { UserIdentity } from "@supabase/supabase-js";
+import { Github, Link2, Link2Off, Loader2, Mail } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // Provider config

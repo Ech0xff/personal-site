@@ -1,6 +1,6 @@
 import React from "react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 
 import HeroTypewriter from "./Typewriter";
 import "./index.scss";

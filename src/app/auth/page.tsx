@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 import SvgGithub from "@/components/icons/Github";
+
 import { useAuth } from "./hooks/useAuth";
 
 const errorMessages: Record<string, string> = {
@@ -24,7 +25,11 @@ export default function AuthPage() {
   const errorMessage = error ? errorMessages[error] : null;
   const [mode, setMode] = useState<Mode>("login");
 
-  const { handleLogin: login, handleRegister: register, handleLoginWithOauth: loginWithGithub } = useAuth();
+  const {
+    handleLogin: login,
+    handleRegister: register,
+    handleLoginWithOauth: loginWithGithub,
+  } = useAuth();
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-(--theme-bg) p-4">

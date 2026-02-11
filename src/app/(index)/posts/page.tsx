@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 
-import { getCachedPosts } from "@/lib/cache/posts";
+import { getCachedPosts } from "@/lib/server/cache/posts";
 
 import CollectionBody from "../components/CollectionBody";
 import PostListItem from "../components/PostListItem";

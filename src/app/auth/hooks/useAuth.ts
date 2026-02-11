@@ -1,8 +1,9 @@
-import { SupabaseClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
-import { toast } from 'sonner';
 
-import { makeBrowserClient } from "@/lib/supabase/make-browser-client";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { toast } from "sonner";
+
+import { makeBrowserClient } from "@/lib/client/supabase";
 
 export function useAuth(supabase?: SupabaseClient) {
   if (!supabase) supabase = makeBrowserClient();

@@ -10,13 +10,8 @@ import SectionCard from "./components/ui/SectionCard";
 import { useAccount } from "./hooks/useAccount";
 
 export default function AccountPage() {
-  const {
-    accountObj,
-    loading,
-    handleSaveNickname,
-    handleLink,
-    handleUnlink,
-  } = useAccount();
+  const { accountObj, loading, handleSaveNickname, handleLink, handleUnlink } =
+    useAccount();
 
   return (
     <DashboardShell title="Account" error={!accountObj} loading={loading}>

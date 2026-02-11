@@ -1,6 +1,6 @@
 import LightboxImage from "@/components/LightboxImage";
 import { ThoughtMarkdown } from "@/components/markdown";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 
 export interface ThoughtItem {
   id: string;

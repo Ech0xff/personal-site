@@ -1,4 +1,3 @@
-
 export default function SectionCard({
   title,
   icon: Icon,

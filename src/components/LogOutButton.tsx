@@ -1,7 +1,7 @@
 "use client";
 import { LogOut } from "lucide-react";
 
-import { makeBrowserClient } from "@/lib/supabase/make-browser-client";
+import { makeBrowserClient } from "@/lib/client/supabase";
 
 export default function LogOutButton() {
   const supabase = makeBrowserClient();

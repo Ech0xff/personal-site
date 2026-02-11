@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
 
-import { makeStaticClient } from "@/lib/supabase";
+import { makeStaticClient } from "@/lib/shared/supabase";
 import { BlogSummaryData } from "@/types";
 
 import { CACHE_TAGS, CACHE_TIMES } from "./index";

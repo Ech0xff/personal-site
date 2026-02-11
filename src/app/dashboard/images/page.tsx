@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { getImagesClient, type ImageFile } from "@/lib/data/dashboard-client";
+import { type ImageFile, getImagesClient } from "@/lib/data/dashboard-client";
 
 import DashboardShell from "../components/ui/DashboardShell";
 import ImageGallery from "./components/ImageGallery";

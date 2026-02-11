@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { UserIdentity } from "@supabase/supabase-js";
 import { toast } from "sonner";
 
-import { makeBrowserClient } from "@/lib/supabase/make-browser-client";
+import { makeBrowserClient } from "@/lib/client/supabase";
 
 export type AccountObj = {
   id: string;

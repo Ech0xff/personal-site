@@ -1,3 +1,4 @@
+"server-only";
 import { revalidateTag as nextRevalidateTag } from "next/cache";
 
 // Cache Tags Definitions

@@ -4,7 +4,7 @@ import { ComponentPropsWithoutRef } from "react";
 
 import { Loader2 } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 
 interface Props extends ComponentPropsWithoutRef<"div"> {
   children: React.ReactNode;
@@ -34,16 +34,22 @@ export default function DashboardShell({
     );
   }
 
-  if(error) {
+  if (error) {
     return (
       <div className="flex h-full items-center justify-center">
-        {errorRender ? errorRender : <span className="text-zinc-500">An error occurred while loading data.</span>}
+        {errorRender ? (
+          errorRender
+        ) : (
+          <span className="text-zinc-500">
+            An error occurred while loading data.
+          </span>
+        )}
       </div>
     );
   }
 
   return (
-    <div {...props} className={cn("space-y-8 relative", className)}>
+    <div {...props} className={cn("relative space-y-8", className)}>
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">

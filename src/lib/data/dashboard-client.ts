@@ -1,4 +1,4 @@
-import { makeBrowserClient } from "@/lib/supabase/make-browser-client";
+import { makeBrowserClient } from "@/lib/client/supabase";
 import { BlogSummaryData, Event, Post, Thought } from "@/types";
 
 const BUCKET_NAME = "images";

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 import ThoughtTimeline from "@/components/ThoughtTimeline";
-import { getCachedThoughts } from "@/lib/cache/thoughts";
+import { getCachedThoughts } from "@/lib/server/cache/thoughts";
 
 import CollectionBody from "../components/CollectionBody";
 

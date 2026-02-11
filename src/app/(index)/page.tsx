@@ -1,7 +1,7 @@
 import FooterSection from "@/components/FooterSection";
 import { Bilibili, Email, Github, Qq } from "@/components/icons";
-import { getCachedSummary } from "@/lib/cache/summary";
-import { cn } from "@/lib/utils";
+import { getCachedSummary } from "@/lib/server/cache/summary";
+import { cn } from "@/lib/shared/utils";
 import { BlogSummaryData } from "@/types";
 
 import HeroSection from "./components/HeroSection";

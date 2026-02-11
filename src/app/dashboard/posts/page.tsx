@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 import { getDashboardPostsClient } from "@/lib/data/dashboard-client";
+import { cn } from "@/lib/shared/utils";
 import { Post } from "@/types";
-import { cn } from "@/lib/utils";
 
 import EditorProvider from "../components/EditorProvider";
 import DashboardShell from "../components/ui/DashboardShell";
