@@ -115,3 +115,26 @@ export async function getImagesClient(): Promise<{
     };
   }
 }
+
+export async function deleteImageClient(
+  fileName: string,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const supabase = makeBrowserClient();
+
+    const { error } = await supabase.storage
+      .from(BUCKET_NAME)
+      .remove([fileName]);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to delete image",
+    };
+  }
+}
