@@ -26,9 +26,8 @@ export function useAccount() {
   /** Fetch account info */
   const fetchAccountObj = useCallback(async () => {
     supabase.auth
-      .getSession()
-      .then(({ data: { session }, error }) => {
-        const user = session?.user;
+      .getUser()
+      .then(({ data: { user }, error }) => {
         if (error || !user) {
           setAccountObj(undefined);
           toast.error("Error fetching user data");
@@ -75,45 +74,37 @@ export function useAccount() {
   };
 
   const handleLink = async (provider: "github" | "google") => {
-    try {
-      const { data, error } = await supabase.auth.linkIdentity({
+    const toastId = toast.loading(`Linking ${provider}...`);
+    supabase.auth
+      .linkIdentity({
         provider,
         options: {
           redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
         },
+      })
+      .then(({ data, error }) => {
+        if (error) {
+          toast.error(error.message, { id: toastId });
+          return;
+        }
+        if (data.url) {
+          window.location.href = data.url;
+        }
       });
-      if (error) {
-        toast.error(error.message);
-        return;
-      }
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch {
-      toast.error(`Failed to link ${provider}.`);
-    }
   };
 
   const handleUnlink = async (identity: UserIdentity) => {
-    if ((accountObj!.identities?.length ?? 0) <= 1) {
-      toast.error(
-        "Cannot unlink your only login method. Add another method first.",
-      );
-      return;
-    }
-
-    const { error } = await supabase.auth.unlinkIdentity(identity);
-
-    if (error) {
-      toast.error("Error unlinking provider");
-    } else {
-      toast.success("Provider unlinked successfully.");
-      fetchAccountObj();
-    }
+    supabase.auth.unlinkIdentity(identity).then(({ error }) => {
+      if (error) {
+        toast.error("Error unlinking provider");
+      } else {
+        toast.success("Provider unlinked successfully.");
+        fetchAccountObj();
+      }
+    });
   };
 
   return {
-    // State
     accountObj,
     loading,
     handleSaveNickname,
