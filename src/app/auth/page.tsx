@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
+
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
 
 import { login, loginWithGithub, register } from "@/actions";
 import SvgGithub from "@/components/icons/Github";

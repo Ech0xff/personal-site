@@ -14,10 +14,7 @@ export const metadata: Metadata = {
 export default async function PostsPage() {
   const posts = await getCachedPosts();
   const totalPosts = posts.length;
-  const totalCharacters = posts.reduce(
-    (acc, p) => acc + p.content.length,
-    0,
-  );
+  const totalCharacters = posts.reduce((acc, p) => acc + p.content.length, 0);
 
   const groupedPosts: Record<string, (typeof posts)[number][]> = {};
 

@@ -9,7 +9,7 @@ export async function login(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const supabase = await makeServerClient();
-  
+
   if (!email || !password) {
     redirect("/auth?error=invalid");
   }

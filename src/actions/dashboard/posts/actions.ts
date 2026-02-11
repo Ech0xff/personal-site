@@ -29,7 +29,7 @@ export async function savePost(
   const supabase = await makeServerClient();
   const isUpdate = !!post.id;
 
-    const {
+  const {
     data: { user },
   } = await supabase.auth.getUser();
   console.log("Current user:", user);
@@ -128,7 +128,7 @@ export async function updatePostStatus(
   revalidateTag(CACHE_TAGS.POSTS);
   revalidateTag(CACHE_TAGS.SUMMARY);
   revalidatePath(ROUTES.HOME);
-  revalidatePath(ROUTES.DASHBOARD.HOME);
+  revalidatePath(ROUTES.DASHBOARD.OVERVIEW);
   revalidatePath(ROUTES.DASHBOARD.POSTS);
   revalidatePath(ROUTES.POSTS);
   revalidatePath(ROUTES.POST(id));

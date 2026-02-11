@@ -122,7 +122,7 @@ export async function updateEventStatus(
   revalidateTag(CACHE_TAGS.EVENTS);
   revalidateTag(CACHE_TAGS.SUMMARY);
   revalidatePath(ROUTES.HOME);
-  revalidatePath(ROUTES.DASHBOARD.HOME);
+  revalidatePath(ROUTES.DASHBOARD.OVERVIEW);
   revalidatePath(ROUTES.DASHBOARD.EVENT);
   revalidatePath(ROUTES.EVENTS);
 

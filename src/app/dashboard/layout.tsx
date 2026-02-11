@@ -8,20 +8,44 @@ import {
   LayoutDashboard,
   LogOut,
   MessageCircle,
+  UserCog,
 } from "lucide-react";
 
 import { logout } from "@/actions";
 import ThemeToggle from "@/components/ThemeToggle";
+import { makeServerClient } from "@/lib/supabase";
 
 const navItems = [
-  { name: "Overview", path: "/dashboard", icon: LayoutDashboard },
-  { name: "Posts", path: "/dashboard/posts", icon: FileText },
-  { name: "Thoughts", path: "/dashboard/thoughts", icon: MessageCircle },
-  { name: "Events", path: "/dashboard/event", icon: Calendar },
-  { name: "Images", path: "/dashboard/images", icon: Image },
+  {
+    isAdmin: false,
+    name: "Account",
+    path: "/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    isAdmin: true,
+    name: "Overview",
+    path: "/dashboard/overview",
+    icon: UserCog,
+  },
+  { isAdmin: true, name: "Posts", path: "/dashboard/posts", icon: FileText },
+  {
+    isAdmin: true,
+    name: "Thoughts",
+    path: "/dashboard/thoughts",
+    icon: MessageCircle,
+  },
+  { isAdmin: true, name: "Events", path: "/dashboard/event", icon: Calendar },
+  { isAdmin: true, name: "Images", path: "/dashboard/images", icon: Image },
 ];
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const supabase = await makeServerClient();
+  const isAdmin = await supabase.rpc("is_admin").then((res) => res.data);
   return (
     <div className="flex h-screen w-screen bg-(--theme-bg)">
       {/* Sidebar */}
@@ -40,16 +64,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         {/* Navigation */}
         <nav className="flex-1 space-y-1 overflow-y-auto p-4">
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              href={item.path}
-              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
-            >
-              <item.icon className="h-5 w-5 shrink-0" />
-              {item.name}
-            </Link>
-          ))}
+          {navItems
+            .filter((item) => (item.isAdmin ? isAdmin : true))
+            .map((item) => (
+              <Link
+                key={item.path}
+                href={item.path}
+                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+              >
+                <item.icon className="h-5 w-5 shrink-0" />
+                {item.name}
+              </Link>
+            ))}
         </nav>
 
         {/* Footer */}
@@ -67,7 +93,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main Content */}
-      <main className="relative flex-1 p-8">{children}</main>
+      <main className="relative h-screen flex-1 overflow-auto p-8">
+        {children}
+      </main>
     </div>
   );
 }

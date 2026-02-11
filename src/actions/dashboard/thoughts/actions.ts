@@ -116,7 +116,7 @@ export async function updateThoughtStatus(
   revalidateTag(CACHE_TAGS.THOUGHTS);
   revalidateTag(CACHE_TAGS.SUMMARY);
   revalidatePath(ROUTES.HOME);
-  revalidatePath(ROUTES.DASHBOARD.HOME);
+  revalidatePath(ROUTES.DASHBOARD.OVERVIEW);
   revalidatePath(ROUTES.DASHBOARD.THOUGHTS);
   revalidatePath(ROUTES.THOUGHTS);
 

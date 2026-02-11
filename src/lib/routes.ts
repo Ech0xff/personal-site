@@ -12,10 +12,11 @@ export const ROUTES = {
 
   // Dashboard routes
   DASHBOARD: {
-    HOME: "/dashboard",
+    OVERVIEW: "/dashboard/overview",
     POSTS: "/dashboard/posts",
     THOUGHTS: "/dashboard/thoughts",
     EVENT: "/dashboard/event",
     IMAGES: "/dashboard/images",
+    ACCOUNT: "/dashboard/account",
   },
 } as const;
