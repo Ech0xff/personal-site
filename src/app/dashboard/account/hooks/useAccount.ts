@@ -22,6 +22,7 @@ export function useAccount() {
 
   const [accountObj, setAccountObj] = useState<AccountObj>();
   const [loading, setLoading] = useState(true);
+  const [savingNickname, setSavingNickname] = useState(false);
 
   // Profile
   const [nickname, setNickname] = useState("");
@@ -77,6 +78,38 @@ export function useAccount() {
     }
   };
 
+  const saveNickname = async (nextNickname: string) => {
+    if (!accountObj) return;
+
+    const previousNickname = accountObj.nickname;
+    setAccountObj({
+      ...accountObj,
+      nickname: nextNickname,
+    });
+    setSavingNickname(true);
+
+    const { error } = await supabase.auth.updateUser({
+      data: {
+        avatar_url: accountObj.avatar_url,
+        nickname: nextNickname,
+      },
+    });
+
+    setSavingNickname(false);
+
+    if (error) {
+      setAccountObj({
+        ...accountObj,
+        nickname: previousNickname,
+      });
+      toast.error("Error updating nickname");
+      return;
+    }
+
+    toast.success("Nickname updated successfully.");
+    fetchAccountObj();
+  };
+
   const handleLink = async (provider: "github" | "google") => {
     try {
       const { data, error } = await supabase.auth.linkIdentity({
@@ -122,6 +155,8 @@ export function useAccount() {
     nickname,
     setNickname,
     handleSaveUserMeta,
+    saveNickname,
+    savingNickname,
     handleLink,
     handleUnlink,
   };

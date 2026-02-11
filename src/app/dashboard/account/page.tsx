@@ -9,6 +9,7 @@ import {
 import { useAccount } from "./hooks/useAccount";
 
 import HeaderSection from "../components/HeaderSection";
+import EditableInfoRow from "./components/ui/EditableInfoRow";
 import IdentityCard from "./components/ui/IdentityCard";
 import InfoRow from "./components/ui/InfoRow";
 import SectionCard from "./components/ui/SectionCard";
@@ -17,6 +18,8 @@ export default function AccountPage() {
   const {
     accountObj,
     loading,
+    saveNickname,
+    savingNickname,
     handleLink,
     handleUnlink,
   } = useAccount();
@@ -44,7 +47,12 @@ export default function AccountPage() {
       {/* Account Overview */}
       <SectionCard title="Account Information" icon={UserIcon}>
         <div className="space-y-3">
-          <InfoRow label="Nickname" value={accountObj.nickname} />
+          <EditableInfoRow
+            label="Nickname"
+            value={accountObj.nickname}
+            onSave={saveNickname}
+            saving={savingNickname}
+          />
           <InfoRow label="Role" value={accountObj.role} />
           <InfoRow
             label="Created"
