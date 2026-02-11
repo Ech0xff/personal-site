@@ -6,12 +6,11 @@ import {
   FileText,
   Image,
   LayoutDashboard,
-  LogOut,
   MessageCircle,
   UserCog,
 } from "lucide-react";
 
-import { logout } from "@/actions";
+import LogOutButton from "@/components/LogOutButton";
 import ThemeToggle from "@/components/ThemeToggle";
 import { makeServerClient } from "@/lib/supabase";
 
@@ -45,7 +44,10 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const supabase = await makeServerClient();
-  const isAdmin = (await supabase.auth.getSession()).data.session?.user.app_metadata.role==="admin"
+
+  const isAdmin =
+    (await supabase.auth.getSession()).data.session?.user.app_metadata.role ===
+    "admin";
   return (
     <div className="flex h-screen w-screen bg-(--theme-bg)">
       {/* Sidebar */}
@@ -80,15 +82,7 @@ export default async function Layout({
 
         {/* Footer */}
         <div className="flex items-center justify-between border-t border-zinc-200 p-4 dark:border-zinc-800">
-          <form action={logout}>
-            <button
-              type="submit"
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
-            >
-              <LogOut className="h-4 w-4" />
-              Logout
-            </button>
-          </form>
+          <LogOutButton />
         </div>
       </aside>
 
