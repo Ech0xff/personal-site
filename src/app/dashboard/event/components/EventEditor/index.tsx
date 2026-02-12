@@ -1,14 +1,13 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
-
 import { X } from "lucide-react";
 
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import Button from "@/components/ui/Button";
-import { fetchEventByBrowser, saveEventByBrowser } from "@/lib/client/services";
 import { Status } from "@/types";
+
+import { useHooks } from "./use-hooks";
 
 const COLOR_OPTIONS = [
   { value: "blue", label: "Blue", class: "bg-blue-500" },
@@ -21,100 +20,19 @@ const COLOR_OPTIONS = [
   { value: "gray", label: "Gray", class: "bg-gray-500" },
 ];
 
+export { default as OpenButton } from "./OpenButton";
 export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
-  const isNewMode = id === null;
-
-  const [isPending, startTransition] = useTransition();
-  const [isLoading, setIsLoading] = useState(!isNewMode);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  // Form state
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [eventDate, setEventDate] = useState("");
-  const [color, setColor] = useState("blue");
-  const [status, setStatus] = useState<Status>("hide");
-  const [tags, setTags] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState("");
-
-  useEffect(() => {
-    if (isNewMode) return;
-
-    const loadEvent = async () => {
-      setIsLoading(true);
-      try {
-        const event = await fetchEventByBrowser(id);
-        if (event) {
-          setTitle(event.title);
-          setDescription(event.description || "");
-          setEventDate(event.event_date);
-          setColor(event.color || "blue");
-          setStatus(event.status ?? "hide");
-          setTags(event.tags || []);
-        } else {
-          setErrorMessage("Failed to load event");
-        }
-      } catch {
-        setErrorMessage("Failed to load event");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadEvent();
-  }, [id, isNewMode]);
-
-  const addTag = () => {
-    const tag = tagInput.trim();
-    if (tag && !tags.includes(tag)) {
-      setTags([...tags, tag]);
-      setTagInput("");
-    }
-  };
-
-  const removeTag = (index: number) => {
-    setTags(tags.filter((_, i) => i !== index));
-  };
-
-  const handleSubmit = () => {
-    if (!title.trim()) {
-      setErrorMessage("Please enter a title");
-      return;
-    }
-    if (!eventDate) {
-      setErrorMessage("Please select a date");
-      return;
-    }
-
-    setErrorMessage("");
-
-    startTransition(async () => {
-      try {
-        await saveEventByBrowser({
-          id: id || undefined,
-          title: title.trim(),
-          description: description.trim() || null,
-          event_date: eventDate,
-          color,
-          status,
-          tags: tags.length > 0 ? tags : null,
-        });
-
-        onSaved();
-      } catch (error) {
-        setErrorMessage(
-          error instanceof Error ? error.message : "Failed to save event",
-        );
-      }
-    });
-  };
-
-  const pageTitle = isNewMode ? "New Event" : "Edit Event";
-  const submitButtonText = isPending
-    ? "Saving..."
-    : isNewMode
-      ? "Create Event"
-      : "Update Event";
+  const {
+    form,
+    updateForm,
+    addTag,
+    removeTag,
+    handleSubmit,
+    isPending,
+    isLoading,
+    pageTitle,
+    submitButtonText,
+  } = useHooks({ id, onSaved, onClose });
 
   if (isLoading) {
     return (
@@ -136,8 +54,8 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
 
         <div className="flex items-center gap-3">
           <SegmentedToggle
-            value={status}
-            onChange={setStatus}
+            value={form.status}
+            onChange={(value) => updateForm({ status: value as Status })}
             options={[
               { value: "hide", label: "Hide" },
               { value: "show", label: "Show" },
@@ -155,13 +73,6 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
         </div>
       </div>
 
-      {/* Error Message */}
-      {errorMessage && (
-        <div className="shrink-0 border-b border-red-200 bg-red-50 px-6 py-3 text-sm text-red-600 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-400">
-          {errorMessage}
-        </div>
-      )}
-
       {/* Main Editor Area */}
       <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-auto p-6">
         {/* Title */}
@@ -170,8 +81,8 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
             Title
           </label>
           <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={form.title}
+            onChange={(e) => updateForm({ title: e.target.value })}
             type="text"
             placeholder="Event title..."
             className="w-full rounded-lg border border-zinc-200 bg-transparent px-4 py-2 text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
@@ -185,8 +96,8 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
               Date
             </label>
             <input
-              value={eventDate}
-              onChange={(e) => setEventDate(e.target.value)}
+              value={form.eventDate}
+              onChange={(e) => updateForm({ eventDate: e.target.value })}
               type="date"
               className="w-full rounded-lg border border-zinc-200 bg-transparent px-4 py-2 text-zinc-900 outline-none focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
             />
@@ -201,9 +112,9 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
                 <button
                   key={option.value}
                   type="button"
-                  onClick={() => setColor(option.value)}
+                  onClick={() => updateForm({ color: option.value })}
                   className={`h-8 w-8 rounded-full ${option.class} ${
-                    color === option.value
+                    form.color === option.value
                       ? "ring-2 ring-blue-500 ring-offset-2"
                       : ""
                   }`}
@@ -220,8 +131,8 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
             Description (optional)
           </label>
           <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={form.description}
+            onChange={(e) => updateForm({ description: e.target.value })}
             placeholder="Event description..."
             className="h-32 w-full resize-none rounded-lg border border-zinc-200 bg-transparent p-4 text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
           />
@@ -233,7 +144,7 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
             Tags (optional)
           </label>
           <div className="flex flex-wrap items-center gap-2">
-            {tags.map((tag, index) => (
+            {form.tags.map((tag, index) => (
               <span
                 key={tag}
                 className="flex items-center gap-1 rounded bg-zinc-100 px-2 py-1 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
@@ -249,8 +160,8 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
               </span>
             ))}
             <input
-              value={tagInput}
-              onChange={(e) => setTagInput(e.target.value)}
+              value={form.tagInput}
+              onChange={(e) => updateForm({ tagInput: e.target.value })}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   e.preventDefault();

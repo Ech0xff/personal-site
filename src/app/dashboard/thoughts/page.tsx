@@ -4,10 +4,9 @@ import ThoughtTimeline from "@/components/ThoughtTimeline";
 
 import EditorProvider from "../components/EditorProvider";
 import DashboardShell from "../components/ui/DashboardShell";
-import NewThoughtButton from "./components/NewThoughtButton";
 import StatusToggle from "./components/StatusToggle";
 import ThoughtActions from "./components/ThoughtActions";
-import ThoughtEditor from "./components/ThoughtEditor";
+import ThoughtEditor, { OpenButton } from "./components/ThoughtEditor";
 import { useHooks } from "./use-hooks";
 
 export default function ThoughtsPage() {
@@ -19,7 +18,7 @@ export default function ThoughtsPage() {
         title="Thoughts"
         loading={loading}
         error={error}
-        optActions={<NewThoughtButton />}
+        optActions={<OpenButton />}
         className="space-y-6"
       >
         <ThoughtTimeline

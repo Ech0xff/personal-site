@@ -13,6 +13,7 @@ import { Status } from "@/types";
 
 type ViewMode = "edit" | "preview" | "split";
 
+export { default as OpenButton } from "./OpenButton";
 export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
   const isNewMode = id === null;
   const [isPending, startTransition] = useTransition();

@@ -7,9 +7,8 @@ import { cn, formatDate } from "@/lib/shared/utils";
 
 import EditorProvider from "../components/EditorProvider";
 import DashboardShell from "../components/ui/DashboardShell";
-import NewPostButton from "./components/NewPostButton";
 import PostActions from "./components/PostActions";
-import PostEditor from "./components/PostEditor";
+import PostEditor, { OpenButton } from "./components/PostEditor";
 import StatusToggle from "./components/StatusToggle";
 import { useHooks } from "./use-hooks";
 
@@ -45,7 +44,7 @@ export default function Page() {
     <EditorProvider editorComponent={PostEditor}>
       <DashboardShell
         title="Posts"
-        optActions={<NewPostButton />}
+        optActions={<OpenButton />}
         loading={loading}
         error={error}
       >

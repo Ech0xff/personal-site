@@ -34,9 +34,11 @@ export function useEditor() {
 export default function EditorProvider({
   children,
   editorComponent: Editor,
+  onSaved,
 }: {
   children: ReactNode;
   editorComponent: ComponentType<BaseEditorProps>;
+  onSaved?: () => Promise<void> | void;
 }) {
   const [showEditor, setShowEditor] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -46,7 +48,7 @@ export default function EditorProvider({
     setShowEditor(true);
   };
 
-  const closeEditor = () => {
+  const closeEditor = async () => {
     setShowEditor(false);
     setEditingId(null);
   };
@@ -57,7 +59,14 @@ export default function EditorProvider({
     >
       {children}
       {showEditor && (
-        <Editor id={editingId} onClose={closeEditor} onSaved={closeEditor} />
+        <Editor
+          id={editingId}
+          onClose={closeEditor}
+          onSaved={() => {
+            if (onSaved) onSaved();
+            closeEditor();
+          }}
+        />
       )}
     </EditorContext.Provider>
   );
