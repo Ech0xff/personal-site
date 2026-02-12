@@ -7,7 +7,9 @@ import "@/styles/globals.css";
 import "@/styles/tailwind.css";
 import "@/styles/variables.scss";
 
+
 import AppProvider from "../providers/AppProvider";
+import { LightboxProvider } from '../providers/LightboxProvider';
 
 export const metadata: Metadata = {
   title: "BBLF",
@@ -26,7 +28,9 @@ export default function RootLayout({
       </head>
       <body>
         <Toaster position="top-center" richColors />
-        <AppProvider>{children}</AppProvider>
+        <AppProvider>
+          <LightboxProvider>{children}</LightboxProvider>
+        </AppProvider>
       </body>
     </html>
   );

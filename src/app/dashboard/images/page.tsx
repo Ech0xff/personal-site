@@ -2,7 +2,7 @@
 
 import { ArrowDownAZ, ArrowUpAZ, Calendar, HardDrive } from "lucide-react";
 
-import LightboxImage from "@/components/LightboxImage";
+import LightboxImage from "@/components/ui/Image";
 import { formatDate, formatSize } from "@/lib/shared/utils/tools";
 
 import DashboardShell from "../components/ui/DashboardShell";

@@ -4,8 +4,8 @@ import { Upload, X } from "lucide-react";
 
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
-import LightboxImage from "@/components/LightboxImage";
 import Button from "@/components/ui/Button";
+import LightboxImage from "@/components/ui/Image";
 import { Status } from "@/types";
 
 import { useHooks } from "./use-hooks";

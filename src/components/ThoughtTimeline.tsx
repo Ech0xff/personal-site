@@ -1,5 +1,5 @@
-import LightboxImage from "@/components/LightboxImage";
 import { ThoughtMarkdown } from "@/components/markdown";
+import LightboxImage from "@/components/ui/Image";
 import { cn } from "@/lib/shared/utils";
 
 export interface ThoughtItem {
