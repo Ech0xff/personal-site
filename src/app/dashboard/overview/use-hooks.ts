@@ -22,7 +22,6 @@ export const useHooks = () => {
     }
   }, []);
 
-
   useEffect(() => {
     refetch();
   }, [refetch]);

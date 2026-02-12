@@ -54,10 +54,7 @@ export const updateEventStatus = async (
   id: string,
   status: Status,
 ) => {
-  const { error } = await client
-    .from("events")
-    .update({ status })
-    .eq("id", id);
+  const { error } = await client.from("events").update({ status }).eq("id", id);
   if (error) throw error;
 };
 

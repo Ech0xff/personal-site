@@ -85,7 +85,9 @@ export default function ImagesPage() {
                     <ImageActionRender
                       isPending={isPending}
                       image={image}
-                      onDelete={(selected) => handleDelete(selected, removeImage)}
+                      onDelete={(selected) =>
+                        handleDelete(selected, removeImage)
+                      }
                     />
                   )}
                 />

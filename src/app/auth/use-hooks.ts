@@ -1,16 +1,41 @@
+import { useState } from "react";
+
 import { redirect } from "next/navigation";
 
-import { SupabaseClient } from "@supabase/supabase-js";
 import { toast } from "sonner";
 
 import { makeBrowserClient } from "@/lib/client/supabase";
 
-export function useAuth(supabase?: SupabaseClient) {
-  if (!supabase) supabase = makeBrowserClient();
+type Mode = "login" | "register";
 
-  const handleLogin = async (formData: FormData) => {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+type AuthForm = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
+const initialForm: AuthForm = {
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
+
+export const useHooks = () => {
+  const client = makeBrowserClient();
+
+  const [mode, setModeState] = useState<Mode>("login");
+  const [form, setForm] = useState<AuthForm>(initialForm);
+
+  const updateForm = (updates: Partial<AuthForm>) => {
+    setForm((current) => ({ ...current, ...updates }));
+  };
+
+  const setMode = (nextMode: Mode) => {
+    setModeState(nextMode);
+    setForm(initialForm);
+  };
+
+  const handleLogin = async ({ email, password }: AuthForm) => {
     const toastId = toast.loading("Logging in...");
 
     if (!email || !password) {
@@ -18,7 +43,7 @@ export function useAuth(supabase?: SupabaseClient) {
       return;
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await client.auth.signInWithPassword({
       email,
       password,
     });
@@ -32,9 +57,11 @@ export function useAuth(supabase?: SupabaseClient) {
     redirect("/");
   };
 
-  const handleRegister = async (formData: FormData) => {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+  const handleRegister = async ({
+    email,
+    password,
+    confirmPassword,
+  }: AuthForm) => {
     const toastId = toast.loading("Creating account...");
 
     if (!email || !password) {
@@ -42,7 +69,12 @@ export function useAuth(supabase?: SupabaseClient) {
       return;
     }
 
-    const { error } = await supabase.auth.signUp({
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match", { id: toastId });
+      return;
+    }
+
+    const { error } = await client.auth.signUp({
       email,
       password,
     });
@@ -58,7 +90,7 @@ export function useAuth(supabase?: SupabaseClient) {
 
   const handleLogout = async () => {
     const toastId = toast.loading("Logging out...");
-    const { error } = await supabase.auth.signOut();
+    const { error } = await client.auth.signOut();
     if (error) {
       toast.error("Error logging out", { id: toastId });
       return;
@@ -71,7 +103,7 @@ export function useAuth(supabase?: SupabaseClient) {
     const origin = window.location.origin;
     const toastId = toast.loading("Starting OAuth login...");
 
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { data, error } = await client.auth.signInWithOAuth({
       provider: "github",
       options: {
         redirectTo: `${origin}/auth/callback`,
@@ -87,5 +119,24 @@ export function useAuth(supabase?: SupabaseClient) {
     redirect(data.url);
   };
 
-  return { handleLogin, handleRegister, handleLogout, handleLoginWithOauth };
-}
+  const handleSubmit = async () => {
+    if (mode === "login") {
+      await handleLogin(form);
+      return;
+    }
+
+    await handleRegister(form);
+  };
+
+  return {
+    mode,
+    setMode,
+    form,
+    updateForm,
+    handleLogin,
+    handleRegister,
+    handleSubmit,
+    handleLogout,
+    handleLoginWithOauth,
+  };
+};

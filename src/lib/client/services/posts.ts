@@ -6,6 +6,7 @@ import {
   updatePostStatus,
 } from "@/lib/shared/services";
 import { PostInsert, Status } from "@/types";
+
 import { makeBrowserClient } from "../supabase";
 
 export const fetchPostsByBrowser = async () => {
@@ -25,10 +26,7 @@ export const savePostByBrowser = async (
   return savePost(client, payload);
 };
 
-export const updatePostStatusByBrowser = async (
-  id: string,
-  status: Status,
-) => {
+export const updatePostStatusByBrowser = async (id: string, status: Status) => {
   const client = makeBrowserClient();
   return updatePostStatus(client, id, status);
 };

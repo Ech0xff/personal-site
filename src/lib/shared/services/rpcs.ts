@@ -4,7 +4,7 @@ import { BlogSummaryData, Database } from "@/types";
 
 export const fetchSummary = async (
   client: SupabaseClient<Database>,
-  recent_limit: number=5,
+  recent_limit: number = 5,
 ) => {
   const { data, error } = await client.rpc("get_summary", {
     recent_limit: recent_limit,

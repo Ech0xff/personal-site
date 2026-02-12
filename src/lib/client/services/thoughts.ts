@@ -5,8 +5,9 @@ import {
   saveThought,
   updateThoughtStatus,
 } from "@/lib/shared/services";
-import { makeBrowserClient } from "../supabase";
 import { Status, ThoughtInsert } from "@/types";
+
+import { makeBrowserClient } from "../supabase";
 
 export const fetchThoughtsByBrowser = async () => {
   const client = makeBrowserClient();

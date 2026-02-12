@@ -5,8 +5,9 @@ import {
   saveEvent,
   updateEventStatus,
 } from "@/lib/shared/services";
-import { makeBrowserClient } from "../supabase";
 import { EventInsert, Status } from "@/types";
+
+import { makeBrowserClient } from "../supabase";
 
 export const fetchEventsByBrowser = async () => {
   const client = makeBrowserClient();

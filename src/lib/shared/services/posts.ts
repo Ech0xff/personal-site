@@ -54,10 +54,7 @@ export const updatePostStatus = async (
   id: string,
   status: Status,
 ) => {
-  const { error } = await client
-    .from("posts")
-    .update({ status })
-    .eq("id", id);
+  const { error } = await client.from("posts").update({ status }).eq("id", id);
   if (error) throw error;
 };
 

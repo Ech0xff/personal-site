@@ -1,35 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { type FormEvent } from "react";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 
 import SvgGithub from "@/components/icons/Github";
 
-import { useAuth } from "./hooks/useAuth";
-
-const errorMessages: Record<string, string> = {
-  config: "Server configuration error",
-  invalid: "Invalid email or password",
-  forbidden: "You do not have admin access",
-  register: "Registration failed. Email may already be in use.",
-  oauth: "GitHub login failed",
-};
-
-type Mode = "login" | "register";
+import { useHooks } from "./use-hooks";
 
 export default function AuthPage() {
-  const searchParams = useSearchParams();
-  const error = searchParams.get("error");
-  const errorMessage = error ? errorMessages[error] : null;
-  const [mode, setMode] = useState<Mode>("login");
-
   const {
-    handleLogin: login,
-    handleRegister: register,
+    mode,
+    setMode,
+    form,
+    updateForm,
+    handleSubmit,
     handleLoginWithOauth: loginWithGithub,
-  } = useAuth();
+  } = useHooks();
+
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await handleSubmit();
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-(--theme-bg) p-4">
@@ -72,10 +64,7 @@ export default function AuthPage() {
             </button>
           </div>
 
-          <form
-            action={mode === "login" ? login : register}
-            className="space-y-6"
-          >
+          <form onSubmit={onSubmit} className="space-y-6">
             <div>
               <label
                 htmlFor="email"
@@ -91,6 +80,8 @@ export default function AuthPage() {
                 className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
                 required
                 autoFocus
+                value={form.email}
+                onChange={(event) => updateForm({ email: event.target.value })}
               />
             </div>
 
@@ -108,14 +99,33 @@ export default function AuthPage() {
                 placeholder="Enter your password"
                 className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
                 required
+                value={form.password}
+                onChange={(event) =>
+                  updateForm({ password: event.target.value })
+                }
               />
             </div>
 
-            {errorMessage && (
-              <div className="rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-900/20">
-                <p className="text-center text-sm text-red-600 dark:text-red-400">
-                  {errorMessage}
-                </p>
+            {mode === "register" && (
+              <div>
+                <label
+                  htmlFor="confirmPassword"
+                  className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                >
+                  Confirm Password
+                </label>
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  placeholder="Repeat your password"
+                  className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
+                  required
+                  value={form.confirmPassword}
+                  onChange={(event) =>
+                    updateForm({ confirmPassword: event.target.value })
+                  }
+                />
               </div>
             )}
 
@@ -135,7 +145,12 @@ export default function AuthPage() {
           </div>
 
           {/* GitHub OAuth */}
-          <form action={loginWithGithub}>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              void loginWithGithub();
+            }}
+          >
             <button
               type="submit"
               className="flex w-full items-center justify-center gap-3 rounded-lg border border-zinc-300 bg-white px-4 py-3 font-medium text-zinc-900 transition-all duration-200 hover:bg-zinc-50 focus:ring-2 focus:ring-zinc-300 focus:ring-offset-2 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"

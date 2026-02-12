@@ -2,10 +2,11 @@
 
 import { useTransition } from "react";
 
+import { toast } from "sonner";
+
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import { updatePostStatusByBrowser } from "@/lib/client/services";
 import { Status } from "@/types";
-import { toast } from "sonner";
 
 interface StatusToggleProps {
   postId: string;
