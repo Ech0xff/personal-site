@@ -41,6 +41,14 @@ export default function ThoughtsPage() {
     };
   }, []);
 
+  const syncStatus = (thoughtId: string, nextStatus: string) => {
+    setThoughts((prev) =>
+      prev.map((thought) =>
+        thought.id === thoughtId ? { ...thought, status: nextStatus } : thought,
+      ),
+    );
+  };
+
   return (
     <EditorProvider editorComponent={ThoughtEditor}>
       <DashboardShell
@@ -56,6 +64,7 @@ export default function ThoughtsPage() {
             <StatusToggle
               thoughtId={thought.id}
               status={thought.status ?? null}
+              successCallback={syncStatus}
             />
           )}
           renderActions={(thought) => <ThoughtActions thoughtId={thought.id} />}

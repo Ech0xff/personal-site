@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import { Edit, Eye, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -11,20 +10,22 @@ import { deletePostByBrowser } from "@/lib/client/services";
 
 interface PostActionsProps {
   postId: string;
+  successCallback?: (postId: string) => void;
 }
 
-export default function PostActions({ postId }: PostActionsProps) {
+export default function PostActions({
+  postId,
+  successCallback,
+}: PostActionsProps) {
   const { openEditor } = useEditor();
-  const router = useRouter();
-
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this post?")) return;
     const toastId = toast.loading("Deleting post...");
 
     try {
       await deletePostByBrowser(postId);
+      if (successCallback) successCallback(postId);
       toast.success("Post deleted successfully.", { id: toastId });
-      router.refresh();
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Failed to delete post",

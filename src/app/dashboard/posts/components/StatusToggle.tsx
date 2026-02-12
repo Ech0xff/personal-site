@@ -12,9 +12,14 @@ import { toast } from "sonner";
 interface StatusToggleProps {
   postId: string;
   status: Status | null;
+  successCallback?: (postId: string, nextStatus: Status) => void;
 }
 
-export default function StatusToggle({ postId, status }: StatusToggleProps) {
+export default function StatusToggle({
+  postId,
+  status,
+  successCallback,
+}: StatusToggleProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const currentStatus: Status = status ?? "hide";
@@ -26,6 +31,7 @@ export default function StatusToggle({ postId, status }: StatusToggleProps) {
       const toastId = toast.loading("Updating status...");
       try {
         await updatePostStatusByBrowser(postId, nextStatus);
+        if (successCallback) successCallback(postId, nextStatus);
         toast.success("Status updated successfully.", { id: toastId });
         router.refresh();
       } catch (error) {

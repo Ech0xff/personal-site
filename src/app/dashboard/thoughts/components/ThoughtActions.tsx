@@ -8,9 +8,13 @@ import { deleteThoughtByBrowser } from "@/lib/client/services";
 
 interface ThoughtActionsProps {
   thoughtId: string;
+  successCallback?: (thoughtId: string) => void;
 }
 
-export default function ThoughtActions({ thoughtId }: ThoughtActionsProps) {
+export default function ThoughtActions({
+  thoughtId,
+  successCallback,
+}: ThoughtActionsProps) {
   const { openEditor } = useEditor();
 
   const handleDelete = async () => {
@@ -19,6 +23,7 @@ export default function ThoughtActions({ thoughtId }: ThoughtActionsProps) {
 
     try {
       await deleteThoughtByBrowser(thoughtId);
+      if (successCallback) successCallback(thoughtId);
       toast.success("Thought deleted successfully.", { id: toastId });
     } catch (error) {
       toast.error(

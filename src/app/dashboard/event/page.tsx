@@ -41,6 +41,14 @@ export default function EventsPage() {
     };
   }, []);
 
+  const handleStatusChange = (eventId: string, nextStatus: string) => {
+    setEvents((prevEvents) =>
+      prevEvents.map((event) =>
+        event.id === eventId ? { ...event, status: nextStatus } : event,
+      ),
+    );
+  };
+
   return (
     <EditorProvider editorComponent={EventEditor}>
       <DashboardShell
@@ -53,7 +61,11 @@ export default function EventsPage() {
         <EventTimeline
           events={events}
           renderMetaRight={(event) => (
-            <StatusToggle eventId={event.id} status={event.status ?? null} />
+            <StatusToggle
+              eventId={event.id}
+              status={event.status ?? null}
+              successCallback={handleStatusChange}
+            />
           )}
           renderActions={(event) => <EventActions eventId={event.id} />}
         />

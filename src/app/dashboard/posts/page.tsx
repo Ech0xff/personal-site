@@ -113,6 +113,14 @@ export default function PostsPage() {
     );
   };
 
+  const syncStatus = (postId: string, newStatus: string) => {
+    setPosts((prev) =>
+      prev.map((post) =>
+        post.id === postId ? { ...post, status: newStatus } : post,
+      ),
+    );
+  };
+
   return (
     <EditorProvider editorComponent={PostEditor}>
       <DashboardShell
@@ -145,7 +153,13 @@ export default function PostsPage() {
                     "font-medium text-zinc-900 dark:text-zinc-100",
                   )}
                   {td(<TagsList tags={post.tags} maxVisible={3} />)}
-                  {td(<StatusToggle postId={post.id} status={post.status} />)}
+                  {td(
+                    <StatusToggle
+                      postId={post.id}
+                      status={post.status}
+                      successCallback={syncStatus}
+                    />,
+                  )}
                   {td(
                     post.view_count || 0,
                     "text-sm text-zinc-500 dark:text-zinc-400",

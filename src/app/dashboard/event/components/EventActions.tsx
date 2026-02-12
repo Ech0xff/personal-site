@@ -8,9 +8,13 @@ import { deleteEventByBrowser } from "@/lib/client/services";
 
 interface EventActionsProps {
   eventId: string;
+  successCallback?: (eventId: string) => void;
 }
 
-export default function EventActions({ eventId }: EventActionsProps) {
+export default function EventActions({
+  eventId,
+  successCallback,
+}: EventActionsProps) {
   const { openEditor } = useEditor();
 
   const handleDelete = async () => {
@@ -19,6 +23,7 @@ export default function EventActions({ eventId }: EventActionsProps) {
 
     try {
       await deleteEventByBrowser(eventId);
+      if (successCallback) successCallback(eventId);
       toast.success("Event deleted successfully.", { id: toastId });
     } catch (error) {
       toast.error(

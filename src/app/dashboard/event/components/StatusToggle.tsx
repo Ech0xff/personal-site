@@ -2,20 +2,23 @@
 
 import { useTransition } from "react";
 
-import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import { updateEventStatusByBrowser } from "@/lib/client/services";
 import { Status } from "@/types";
-import { toast } from "sonner";
 
 interface StatusToggleProps {
   eventId: string;
   status: Status | null;
+  successCallback?: (eventId: string, nextStatus: Status) => void;
 }
 
-export default function StatusToggle({ eventId, status }: StatusToggleProps) {
-  const router = useRouter();
+export default function StatusToggle({
+  eventId,
+  status,
+  successCallback,
+}: StatusToggleProps) {
   const [isPending, startTransition] = useTransition();
   const currentStatus: Status = status ?? "hide";
 
@@ -26,8 +29,8 @@ export default function StatusToggle({ eventId, status }: StatusToggleProps) {
       const toastId = toast.loading("Updating status...");
       try {
         await updateEventStatusByBrowser(eventId, nextStatus);
+        if (successCallback) successCallback(eventId, nextStatus);
         toast.success("Status updated successfully.", { id: toastId });
-        router.refresh();
       } catch (error) {
         toast.error(
           error instanceof Error ? error.message : "Failed to update status",
