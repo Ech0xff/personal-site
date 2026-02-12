@@ -4,8 +4,10 @@ A modern, full-featured personal blog platform built with Next.js 16, React 19, 
 
 ## 📋 Todo List
 
-- [ ] Optimize project structure.
-- [ ] Configure a webhook to refresh the cache.
+- [x] Optimize project structure.
+- [x] Configure a webhook to refresh the cache.
+- [ ] Separate environment
+- [ ] Automated Supabase configuration
 
 ## 🛠️ Tech Stack
 
