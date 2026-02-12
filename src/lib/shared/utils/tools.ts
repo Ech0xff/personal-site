@@ -53,3 +53,15 @@ export const checkIsAdmin = async (
   const { data } = await client.auth.getSession();
   return data.session?.user.app_metadata.role === "admin";
 };
+
+export const getUserStatus = async (client: SupabaseClient) => {
+  const {
+    data: { session },
+  } = await client.auth.getSession();
+  const user = session?.user;
+  return {
+    isAuth: !!session,
+    isAdmin: user?.app_metadata.role === "admin",
+    metadata: user?.user_metadata || {},
+  };
+};

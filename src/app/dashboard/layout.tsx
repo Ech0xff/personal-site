@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import {
   ArrowLeft,
@@ -13,6 +14,8 @@ import {
 import LogoutButton from "@/components/LogoutButton";
 import ThemeToggle from "@/components/ThemeToggle";
 import { makeServerClient } from "@/lib/server/supabase";
+
+import { getUserStatus } from "../../lib/shared/utils/tools";
 
 const navItems = [
   {
@@ -43,11 +46,9 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await makeServerClient();
-
-  const isAdmin =
-    (await supabase.auth.getSession()).data.session?.user.app_metadata.role ===
-    "admin";
+  const client = await makeServerClient();
+  const { isAuth, isAdmin } = await getUserStatus(client);
+  if (!isAuth) redirect("/auth");
   return (
     <div className="flex h-screen w-screen bg-(--theme-bg)">
       {/* Sidebar */}
