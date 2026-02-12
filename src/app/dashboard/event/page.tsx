@@ -1,10 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import EventTimeline from "@/components/EventTimeline";
-import { fetchEventsByBrowser } from "@/lib/client/services";
-import { Event as DashboardEvent } from "@/types";
 
 import EditorProvider from "../components/EditorProvider";
 import DashboardShell from "../components/ui/DashboardShell";
@@ -12,42 +8,10 @@ import EventActions from "./components/EventActions";
 import EventEditor from "./components/EventEditor";
 import NewEventButton from "./components/NewEventButton";
 import StatusToggle from "./components/StatusToggle";
+import { useHooks } from "./use-hooks";
 
 export default function EventsPage() {
-  const [events, setEvents] = useState<DashboardEvent[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    (async () => {
-      try {
-        const data = await fetchEventsByBrowser();
-        if (!isMounted) return;
-        setEvents(data);
-        setError(false);
-      } catch {
-        if (!isMounted) return;
-        setError(true);
-      } finally {
-        if (!isMounted) return;
-        setLoading(false);
-      }
-    })();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  const handleStatusChange = (eventId: string, nextStatus: string) => {
-    setEvents((prevEvents) =>
-      prevEvents.map((event) =>
-        event.id === eventId ? { ...event, status: nextStatus } : event,
-      ),
-    );
-  };
+  const { events, loading, error, syncStatus, removeEvent } = useHooks();
 
   return (
     <EditorProvider editorComponent={EventEditor}>
@@ -64,10 +28,12 @@ export default function EventsPage() {
             <StatusToggle
               eventId={event.id}
               status={event.status ?? null}
-              successCallback={handleStatusChange}
+              successCallback={syncStatus}
             />
           )}
-          renderActions={(event) => <EventActions eventId={event.id} />}
+          renderActions={(event) => (
+            <EventActions eventId={event.id} successCallback={removeEvent} />
+          )}
         />
       </DashboardShell>
     </EditorProvider>

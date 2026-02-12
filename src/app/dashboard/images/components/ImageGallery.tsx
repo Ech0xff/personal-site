@@ -19,7 +19,15 @@ import { ImageFile } from "@/types";
 type SortField = "createdAt" | "size";
 type SortOrder = "asc" | "desc";
 
-export default function ImageGallery({ images }: { images: ImageFile[] }) {
+interface ImageGalleryProps {
+  images: ImageFile[];
+  onDeleteSuccess?: (imageId: string) => void;
+}
+
+export default function ImageGallery({
+  images,
+  onDeleteSuccess,
+}: ImageGalleryProps) {
   const [sortField, setSortField] = useState<SortField>("createdAt");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [isPending, startTransition] = useTransition();
@@ -45,6 +53,7 @@ export default function ImageGallery({ images }: { images: ImageFile[] }) {
     startTransition(async () => {
       try {
         await deleteImageByBrowser(image.name);
+        if (onDeleteSuccess) onDeleteSuccess(image.id);
         toast.success("Image deleted successfully.", { id: toastId });
       } catch (error) {
         toast.error(

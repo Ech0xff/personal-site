@@ -1,22 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import Link from "next/link";
 
-import {
-  Calendar,
-  Eye,
-  FileText,
-  MessageCircle,
-  PenSquare,
-  Plus,
-} from "lucide-react";
-
-import { fetchSummaryByBrowser } from "@/lib/client/services";
-import { BlogSummaryData } from "@/types";
+import { MessageCircle, PenSquare, Plus } from "lucide-react";
 
 import DashboardShell from "../components/ui/DashboardShell";
+import { useHooks } from "./use-hooks";
 
 const quickActions = [
   {
@@ -43,69 +32,7 @@ const quickActions = [
 ];
 
 export default function DashboardPage() {
-  const [summaryData, setSummaryData] = useState<BlogSummaryData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    (async () => {
-      try {
-        const data = await fetchSummaryByBrowser(5);
-        if (!isMounted) return;
-        setSummaryData(data);
-        setError(false);
-      } catch {
-        if (!isMounted) return;
-        setError(true);
-      } finally {
-        if (!isMounted) return;
-        setLoading(false);
-      }
-    })();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  const stats = [
-    {
-      label: "Total Posts",
-      value:
-        (summaryData?.statistics.posts.show.count ?? 0) +
-          (summaryData?.statistics.posts.hide.count ?? 0) || "—",
-      icon: FileText,
-    },
-    {
-      label: "Total Thoughts",
-      value:
-        (summaryData?.statistics.thoughts.show.count ?? 0) +
-          (summaryData?.statistics.thoughts.hide.count ?? 0) || "—",
-      icon: MessageCircle,
-    },
-    {
-      label: "Total Events",
-      value:
-        (summaryData?.statistics.events.show.count ?? 0) +
-          (summaryData?.statistics.events.hide.count ?? 0) || "—",
-      icon: Calendar,
-    },
-    {
-      label: "Total Characters",
-      value:
-        (
-          (summaryData?.statistics.posts.show.characters ?? 0) +
-          (summaryData?.statistics.posts.hide.characters ?? 0) +
-          (summaryData?.statistics.thoughts.show.characters ?? 0) +
-          (summaryData?.statistics.thoughts.hide.characters ?? 0) +
-          (summaryData?.statistics.events.show.characters ?? 0) +
-          (summaryData?.statistics.events.hide.characters ?? 0)
-        ).toLocaleString() || "—",
-      icon: Eye,
-    },
-  ];
+  const { loading, error, stats } = useHooks();
 
   return (
     <DashboardShell title="Overview" loading={loading} error={error}>
