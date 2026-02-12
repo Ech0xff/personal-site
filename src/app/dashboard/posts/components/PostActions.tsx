@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { Edit, Eye, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { useEditor } from "@/app/dashboard/components/EditorProvider";
 import { deletePostByBrowser } from "@/lib/client/services";
@@ -18,12 +19,17 @@ export default function PostActions({ postId }: PostActionsProps) {
 
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this post?")) return;
+    const toastId = toast.loading("Deleting post...");
 
     try {
       await deletePostByBrowser(postId);
+      toast.success("Post deleted successfully.", { id: toastId });
       router.refresh();
     } catch (error) {
-      alert(error instanceof Error ? error.message : "Failed to delete post");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to delete post",
+        { id: toastId },
+      );
     }
   };
 

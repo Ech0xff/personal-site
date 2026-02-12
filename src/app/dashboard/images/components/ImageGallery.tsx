@@ -10,6 +10,7 @@ import {
   HardDrive,
   Trash2,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import LightboxImage from "@/components/LightboxImage";
 import { deleteImageByBrowser } from "@/lib/client/services";
@@ -19,7 +20,6 @@ type SortField = "createdAt" | "size";
 type SortOrder = "asc" | "desc";
 
 export default function ImageGallery({ images }: { images: ImageFile[] }) {
-  const [error, setError] = useState("");
   const [sortField, setSortField] = useState<SortField>("createdAt");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [isPending, startTransition] = useTransition();
@@ -41,18 +41,29 @@ export default function ImageGallery({ images }: { images: ImageFile[] }) {
 
   const handleDelete = (image: ImageFile) => {
     if (!confirm(`Delete "${image.name}"?`)) return;
+    const toastId = toast.loading(`Deleting "${image.name}"...`);
     startTransition(async () => {
-      await deleteImageByBrowser(image.name);
+      try {
+        await deleteImageByBrowser(image.name);
+        toast.success("Image deleted successfully.", { id: toastId });
+      } catch (error) {
+        toast.error(
+          error instanceof Error ? error.message : "Failed to delete image",
+          { id: toastId },
+        );
+      }
     });
   };
 
   const handleCopyUrl = async (image: ImageFile) => {
+    const toastId = toast.loading("Copying URL...");
     try {
       await navigator.clipboard.writeText(image.url);
+      toast.success("URL copied successfully.", { id: toastId });
       setCopiedId(image.id);
       setTimeout(() => setCopiedId(null), 2000);
     } catch {
-      setError("Failed to copy URL");
+      toast.error("Failed to copy URL", { id: toastId });
     }
   };
 
@@ -121,13 +132,6 @@ export default function ImageGallery({ images }: { images: ImageFile[] }) {
           {images.length} image{images.length !== 1 ? "s" : ""}
         </div>
       </div>
-
-      {/* Error message */}
-      {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-400">
-          {error}
-        </div>
-      )}
 
       {/* Images grid */}
       {sortedImages.length === 0 ? (

@@ -1,6 +1,7 @@
 "use client";
 
 import { Edit, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { useEditor } from "@/app/dashboard/components/EditorProvider";
 import { deleteEventByBrowser } from "@/lib/client/services";
@@ -14,11 +15,16 @@ export default function EventActions({ eventId }: EventActionsProps) {
 
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this event?")) return;
+    const toastId = toast.loading("Deleting event...");
 
     try {
       await deleteEventByBrowser(eventId);
+      toast.success("Event deleted successfully.", { id: toastId });
     } catch (error) {
-      alert(error instanceof Error ? error.message : "Failed to delete event");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to delete event",
+        { id: toastId },
+      );
     }
   };
 

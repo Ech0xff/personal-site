@@ -15,8 +15,6 @@ export type AccountObj = {
   identities?: UserIdentity[];
 };
 
-export type StatusMsg = { type: "success" | "error"; text: string } | null;
-
 export function useAccount() {
   const supabase = useMemo(() => makeBrowserClient(), []);
 
@@ -30,7 +28,6 @@ export function useAccount() {
       .then(({ data: { user }, error }) => {
         if (error || !user) {
           setAccountObj(undefined);
-          toast.error("Error fetching user data");
           return;
         }
         setAccountObj({
@@ -88,17 +85,21 @@ export function useAccount() {
           return;
         }
         if (data.url) {
+          toast.success("Redirecting to provider...", { id: toastId });
           window.location.href = data.url;
+        } else {
+          toast.error("Failed to start linking.", { id: toastId });
         }
       });
   };
 
   const handleUnlink = async (identity: UserIdentity) => {
+    const toastId = toast.loading("Unlinking provider...");
     supabase.auth.unlinkIdentity(identity).then(({ error }) => {
       if (error) {
-        toast.error("Error unlinking provider");
+        toast.error("Error unlinking provider", { id: toastId });
       } else {
-        toast.success("Provider unlinked successfully.");
+        toast.success("Provider unlinked successfully.", { id: toastId });
         fetchAccountObj();
       }
     });

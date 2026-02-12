@@ -1,6 +1,7 @@
 "use client";
 
 import { Edit, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { useEditor } from "@/app/dashboard/components/EditorProvider";
 import { deleteThoughtByBrowser } from "@/lib/client/services";
@@ -14,12 +15,15 @@ export default function ThoughtActions({ thoughtId }: ThoughtActionsProps) {
 
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this thought?")) return;
+    const toastId = toast.loading("Deleting thought...");
 
     try {
       await deleteThoughtByBrowser(thoughtId);
+      toast.success("Thought deleted successfully.", { id: toastId });
     } catch (error) {
-      alert(
+      toast.error(
         error instanceof Error ? error.message : "Failed to delete thought",
+        { id: toastId },
       );
     }
   };

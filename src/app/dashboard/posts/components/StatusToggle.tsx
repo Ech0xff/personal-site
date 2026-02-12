@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import { updatePostStatusByBrowser } from "@/lib/client/services";
 import { Status } from "@/types";
+import { toast } from "sonner";
 
 interface StatusToggleProps {
   postId: string;
@@ -22,12 +23,15 @@ export default function StatusToggle({ postId, status }: StatusToggleProps) {
     if (nextStatus === currentStatus) return;
 
     startTransition(async () => {
+      const toastId = toast.loading("Updating status...");
       try {
         await updatePostStatusByBrowser(postId, nextStatus);
+        toast.success("Status updated successfully.", { id: toastId });
         router.refresh();
       } catch (error) {
-        alert(
+        toast.error(
           error instanceof Error ? error.message : "Failed to update status",
+          { id: toastId },
         );
       }
     });
