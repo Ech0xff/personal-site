@@ -1,33 +1,11 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import imageCompression from "browser-image-compression";
+
+import { compressToWebp, computeHash } from "@/lib/shared/utils";
 
 const BUCKET_NAME = "images";
 const WEBP_EXTENSION = "webp";
 
-const compressToWebp = async (file: File | Blob) => {
-  const imageFile =
-    file instanceof File
-      ? file
-      : new File([file], "image.png", { type: file.type || "image/png" });
-
-  const compressedFile = await imageCompression(imageFile, {
-    maxSizeMB: 2,
-    maxWidthOrHeight: 1920,
-    useWebWorker: true,
-    fileType: "image/webp",
-    initialQuality: 0.85,
-  });
-
-  return compressedFile;
-};
-
-const computeHash = async (buffer: ArrayBuffer) => {
-  const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-};
-
-const getExistingPublicUrl = async (
+export const fetchExistingPublicUrl = async (
   client: SupabaseClient,
   filePath: string,
 ) => {
@@ -82,7 +60,7 @@ export const uploadImage = async (client: SupabaseClient, file: File) => {
   const hash = await computeHash(buffer);
   const filePath = `${hash}.${WEBP_EXTENSION}`;
 
-  const existingUrl = await getExistingPublicUrl(client, filePath);
+  const existingUrl = await fetchExistingPublicUrl(client, filePath);
   if (existingUrl) {
     return { url: existingUrl };
   }
@@ -118,7 +96,7 @@ export const uploadImageFromUrl = async (
   const hash = await computeHash(arrayBuffer);
   const filePath = `${hash}.${WEBP_EXTENSION}`;
 
-  const existingUrl = await getExistingPublicUrl(client, filePath);
+  const existingUrl = await fetchExistingPublicUrl(client, filePath);
   if (existingUrl) {
     return { url: existingUrl };
   }
