@@ -10,7 +10,7 @@ import {
   UserCog,
 } from "lucide-react";
 
-import LogOutButton from "@/components/LogOutButton";
+import LogoutButton from "@/components/LogoutButton";
 import ThemeToggle from "@/components/ThemeToggle";
 import { makeServerClient } from "@/lib/server/supabase";
 
@@ -82,7 +82,7 @@ export default async function Layout({
 
         {/* Footer */}
         <div className="flex items-center justify-between border-t border-zinc-200 p-4 dark:border-zinc-800">
-          <LogOutButton />
+          <LogoutButton />
         </div>
       </aside>
 

@@ -1,13 +1,21 @@
 "use client";
 import { LogOut } from "lucide-react";
+import { toast } from "sonner";
 
 import { makeBrowserClient } from "@/lib/client/supabase";
 
 export default function LogOutButton() {
   const supabase = makeBrowserClient();
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    window.location.href = "/dashboard/account";
+    const toastId = toast.loading("Logging out...");
+    supabase.auth.signOut().then(({ error }) => {
+      if (error) {
+        toast.error("Failed to log out", { id: toastId });
+      } else {
+        toast.success("Logged out successfully.", { id: toastId });
+        window.location.href = "/dashboard/account";
+      }
+    });
   };
 
   return (
