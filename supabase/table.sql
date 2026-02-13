@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS pg_net SCHEMA extensions;
+
 DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
 
@@ -158,6 +160,51 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION public.send_webhook_via_pg_net()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  payload jsonb;
+  new_row jsonb;
+  old_row jsonb;
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    new_row := to_jsonb(NEW);
+    old_row := NULL;
+  ELSIF TG_OP = 'UPDATE' THEN
+    new_row := to_jsonb(NEW);
+    old_row := to_jsonb(OLD);
+  ELSE
+    new_row := NULL;
+    old_row := to_jsonb(OLD);
+  END IF;
+
+  payload := jsonb_build_object(
+    'type', TG_OP,
+    'table', TG_TABLE_NAME,
+    'schema', TG_TABLE_SCHEMA,
+    'record', new_row,
+    'new', new_row,
+    'old_record', old_row,
+    'old', old_row
+  );
+
+  PERFORM net.http_post(
+    url := TG_ARGV[0],
+    body := payload,
+    headers := COALESCE(TG_ARGV[1], '{}')::jsonb,
+    timeout_milliseconds := 1000
+  );
+
+  IF TG_OP = 'DELETE' THEN
+    RETURN OLD;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION manage_webhook(
   target_url text,   
   secret_token text,    
@@ -184,7 +231,7 @@ BEGIN
         'CREATE TRIGGER %I
          AFTER INSERT OR UPDATE OR DELETE ON public.%I
          FOR EACH ROW
-         EXECUTE FUNCTION supabase_functions.http_request(%L, ''POST'', %L, ''{}'', ''1000'')',
+        EXECUTE FUNCTION public.send_webhook_via_pg_net(%L, %L)',
          trigger_name, t_name, target_url, headers
       );
       

@@ -30,6 +30,7 @@ export const loadEnvConfig = (targetEnv: string) => {
 export const loadEnvByPath = (envPath: string) => {
   const { parsed: envConfig, error } = dotenv.config({
     path: resolve(envPath),
+    override: true,
   });
 
   if (error || !envConfig) {
