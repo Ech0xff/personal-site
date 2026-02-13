@@ -93,3 +93,41 @@ BEGIN
 
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION manage_webhook(
+  target_url text,   
+  secret_token text,    
+  table_names text[]    
+)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  t_name text;
+  trigger_name text;
+  headers text;
+BEGIN
+  IF NOT (
+    current_setting('role', true) = 'service_role' 
+    OR COALESCE(public.is_admin(), FALSE)
+  ) THEN
+      RAISE EXCEPTION 'Access Denied' USING ERRCODE = '42501';
+  END IF;
+  headers := format('{"Content-Type":"application/json", "Authorization":"Bearer %s"}', secret_token);
+  FOREACH t_name IN ARRAY table_names
+  LOOP
+      trigger_name := 'webhook_' || t_name;
+      EXECUTE format('DROP TRIGGER IF EXISTS %I ON public.%I', trigger_name, t_name);
+      EXECUTE format(
+        'CREATE TRIGGER %I
+         AFTER INSERT OR UPDATE OR DELETE ON public.%I
+         FOR EACH ROW
+         EXECUTE FUNCTION supabase_functions.http_request(%L, ''POST'', %L, ''{}'', ''1000'')',
+         trigger_name, t_name, target_url, headers
+      );
+      
+      RAISE NOTICE 'Webhook setup for table: %', t_name;
+  END LOOP;
+END;
+$$;
