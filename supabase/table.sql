@@ -282,7 +282,7 @@ VALUES (
   'World Hello!', 
   '## ~~Hello World~~ World Hello! 👋
 
-t is a pleasure to meet you in this vast digital space.
+It is a pleasure to meet you in this vast digital space.
 
 This is the very first post of my blog, marking the start of a brand-new journey.
 
