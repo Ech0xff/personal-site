@@ -277,14 +277,50 @@ WITH CHECK (bucket_id = 'images' AND public.is_admin());
 
 -----------------------------------------------------------------------------------------------------
 
-INSERT INTO public.posts (title, content, author, status, published_at, tags)
-SELECT 'World Hello!', '# Dec 1, 2025\n\nThis is the first post.', 'BBLF Admin', 'show', NOW(), ARRAY['Blog', 'Tech']
-WHERE NOT EXISTS (SELECT 1 FROM public.posts);
+INSERT INTO public.posts (title, content, author, status, published_at, created_at, updated_at, tags)
+VALUES (
+  'World Hello!', 
+  '## ~~Hello World~~ World Hello! 👋
 
-INSERT INTO public.thoughts (content, images, status)
-SELECT 'The blog is finally live! 🎉', ARRAY[]::TEXT[], 'show'
-WHERE NOT EXISTS (SELECT 1 FROM public.thoughts);
+t is a pleasure to meet you in this vast digital space.
 
-INSERT INTO public.events (title, description, event_date, tags, color, status)
-SELECT 'Blog Officially Launched', 'BBLF has officially gone live!', CURRENT_DATE, ARRAY['Milestone', 'Blog'], '#3B82F6', 'show'
-WHERE NOT EXISTS (SELECT 1 FROM public.events);
+This is the very first post of my blog, marking the start of a brand-new journey.
+
+Why am I here? I want this space to become my "Cyber Sanctuary." In the days to come, I’ll be documenting my thoughts, musings, and my journey of personal growth right here.
+
+About this Blog If you’re curious about how this blog was built, the source code is hosted on GitHub: 👉 [BBLF](https://github.com/yuzi-beep/BBLF)
+
+Thanks to the generosity of Vercel and Supabase, you can easily deploy it to the cloud using the pre-written automation scripts. If you’ve ever wanted a blog of your own, trust me—it’s incredibly simple. You can kickstart your own recording journey in just a few minutes.
+
+I don''t know how long I''ll keep this up, but at least for now, I''ve started.
+
+**Keep expressing, keep loving. I hope you find a little resonance or inspiration here.I’m glad you made it this far. The journey begins—stay tuned!**', 
+  'BBLF Admin', 
+  'show', 
+  '2025-11-04 00:00:00+00', 
+  '2025-11-04 00:00:00+00', 
+  '2025-11-04 00:00:00+00', 
+  ARRAY['Blog', 'Tech']
+);
+
+INSERT INTO public.thoughts (content, images, status, published_at, created_at, updated_at)
+VALUES (
+  'It’s finally up and running, though it’s still ~~a bit buggy~~ a work in progress. As the saying goes: the beginning is hard, the middle is harder, and finally... well, just ship it first. Anyway, this is officially my ~~Premium Inspiration Museum~~, ~~Repository of Brilliant Ideas~~, Cyber Trash Bin from now on. Be kind! (｡•̀ᴗ-)✧', 
+  ARRAY[]::TEXT[], 
+  'show', 
+  '2025-11-04 00:00:00+00', 
+  '2025-11-04 00:00:00+00', 
+  '2025-11-04 00:00:00+00'
+);
+
+INSERT INTO public.events (title, description, event_date, tags, color, status, created_at, updated_at)
+VALUES (
+  'Blog Officially Launched', 
+  'BBLF has officially gone live!', 
+  '2025-11-04', 
+  ARRAY['Milestone', 'Blog'], 
+  '#3B82F6', 
+  'show',
+  '2025-11-04 00:00:00+00',
+  '2025-11-04 00:00:00+00'
+);
