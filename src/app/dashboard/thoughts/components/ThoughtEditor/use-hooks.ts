@@ -17,6 +17,7 @@ type ThoughtFormState = {
   images: string[];
   imageInput: string;
   status: Status;
+  publishedAt: string;
 };
 
 type UseThoughtEditorParams = {
@@ -30,6 +31,21 @@ const DEFAULT_FORM: ThoughtFormState = {
   images: [],
   imageInput: "",
   status: "hide",
+  publishedAt: "",
+};
+
+const toDatetimeLocalValue = (dateString: string | null | undefined) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return "";
+
+  const pad = (value: number) => value.toString().padStart(2, "0");
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  const hour = pad(date.getHours());
+  const minute = pad(date.getMinutes());
+  return `${year}-${month}-${day}T${hour}:${minute}`;
 };
 
 export const useHooks = ({ id, onSaved, onClose }: UseThoughtEditorParams) => {
@@ -66,6 +82,7 @@ export const useHooks = ({ id, onSaved, onClose }: UseThoughtEditorParams) => {
             content: thought.content,
             images: thought.images || [],
             status: thought.status ?? "hide",
+            publishedAt: toDatetimeLocalValue(thought.published_at),
           });
         }
       } catch {
@@ -164,6 +181,9 @@ export const useHooks = ({ id, onSaved, onClose }: UseThoughtEditorParams) => {
           content: form.content.trim(),
           images: form.images.length > 0 ? form.images : null,
           status: form.status,
+          published_at: form.publishedAt
+            ? new Date(form.publishedAt).toISOString()
+            : null,
         });
 
         onSaved();

@@ -8,7 +8,12 @@ export const fetchPosts = async (client: SupabaseClient<Database>) => {
     .select("*")
     .order("created_at", { ascending: false });
   if (error) throw error;
-  return data || [];
+  const items = data || [];
+  return items.sort((a, b) => {
+    const aTs = new Date(a.published_at || a.created_at || 0).getTime();
+    const bTs = new Date(b.published_at || b.created_at || 0).getTime();
+    return bTs - aTs;
+  });
 };
 
 export const fetchPost = async (

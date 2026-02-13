@@ -6,6 +6,7 @@ export interface ThoughtItem {
   id: string;
   content: string;
   images: string[] | null;
+  published_at?: string | null;
   created_at: string | null;
   status?: string | null;
 }
@@ -47,7 +48,9 @@ export default function ThoughtTimeline({
                 #{total - index}
               </span>
               <span>•</span>
-              <span>{formatDateDetail(thought.created_at)}</span>
+              <span>
+                {formatDateDetail(thought.published_at || thought.created_at)}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               {renderMetaRight && renderMetaRight(thought)}

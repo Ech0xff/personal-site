@@ -14,6 +14,7 @@ type PostFormState = {
   content: string;
   author: string;
   status: Status;
+  publishedAt: string;
   tags: string[];
   tagInput: string;
 };
@@ -29,11 +30,26 @@ const DEFAULT_FORM: PostFormState = {
   content: "",
   author: "",
   status: "hide",
+  publishedAt: "",
   tags: [],
   tagInput: "",
 };
 
 const DEFAULT_VIEW_MODE: ViewMode = "split";
+
+const toDatetimeLocalValue = (dateString: string | null | undefined) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return "";
+
+  const pad = (value: number) => value.toString().padStart(2, "0");
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  const hour = pad(date.getHours());
+  const minute = pad(date.getMinutes());
+  return `${year}-${month}-${day}T${hour}:${minute}`;
+};
 
 export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
   const isNewMode = id === null;
@@ -65,6 +81,7 @@ export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
             content: post.content,
             author: post.author || "",
             status: post.status ?? "hide",
+            publishedAt: toDatetimeLocalValue(post.published_at),
             tags: post.tags || [],
           });
         }
@@ -115,6 +132,9 @@ export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
           content: form.content.trim(),
           author: form.author.trim() || null,
           status: form.status,
+          published_at: form.publishedAt
+            ? new Date(form.publishedAt).toISOString()
+            : null,
           tags: form.tags.length > 0 ? form.tags : null,
         });
 

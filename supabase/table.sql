@@ -27,10 +27,12 @@ CREATE TABLE public.thoughts (
   content TEXT NOT NULL,
   images TEXT[] DEFAULT '{}',
   status VARCHAR(20) DEFAULT 'hide' CHECK (status IN ('hide', 'show')),
+  published_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 CREATE INDEX idx_thoughts_status ON public.thoughts(status);
+CREATE INDEX idx_thoughts_published_at ON public.thoughts(published_at DESC NULLS LAST);
 CREATE INDEX idx_thoughts_created_at ON public.thoughts(created_at DESC);
 
 CREATE TABLE public.events (
@@ -124,7 +126,7 @@ BEGIN
   FROM (
     SELECT * FROM public.posts 
     WHERE (status = query_status OR query_status IS NULL)
-    ORDER BY created_at DESC 
+    ORDER BY COALESCE(published_at, created_at) DESC 
     LIMIT recent_limit
   ) t;
 
@@ -132,7 +134,7 @@ BEGIN
   FROM (
     SELECT * FROM public.thoughts 
     WHERE (status = query_status OR query_status IS NULL)
-    ORDER BY created_at DESC 
+    ORDER BY COALESCE(published_at, created_at) DESC 
     LIMIT recent_limit
   ) t;
 

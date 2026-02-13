@@ -77,6 +77,18 @@ export default function ThoughtEditor({
 
       {/* Main Editor Area */}
       <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-6">
+        <div className="flex items-center gap-3">
+          <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            Published Time
+          </label>
+          <input
+            value={form.publishedAt}
+            onChange={(e) => updateForm({ publishedAt: e.target.value })}
+            type="datetime-local"
+            className="rounded border border-zinc-200 bg-transparent px-2 py-1 text-sm text-zinc-900 outline-none focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
+          />
+        </div>
+
         {/* Content and Upload Button Row */}
         <div className="grid grid-cols-4 gap-4">
           {/* Content - Left Half */}

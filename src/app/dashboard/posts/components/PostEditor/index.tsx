@@ -1,113 +1,35 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
-
 import { Eye, X } from "lucide-react";
 
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import { PostMarkdown } from "@/components/markdown";
 import Button from "@/components/ui/Button";
-import { fetchPostByBrowser, savePostByBrowser } from "@/lib/client/services";
-import { Status } from "@/types";
 
-type ViewMode = "edit" | "preview" | "split";
+import { useHooks } from "./use-hooks";
 
 export { default as OpenButton } from "./OpenButton";
 export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
-  const isNewMode = id === null;
-  const [isPending, startTransition] = useTransition();
-  const [isLoading, setIsLoading] = useState(!isNewMode);
-  const [errorMessage, setErrorMessage] = useState("");
+  const {
+    form,
+    updateForm,
+    addTag,
+    removeTag,
+    handleSubmit,
+    viewMode,
+    setViewMode,
+    isPending,
+    isLoading,
+    pageTitle,
+    submitButtonText,
+  } = useHooks({
+    id,
+    onSaved,
+    onClose,
+  });
 
-  // Form state
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [author, setAuthor] = useState("");
-  const [status, setStatus] = useState<Status>("hide");
-  const [tags, setTags] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState("");
-
-  // View mode
-  const [viewMode, setViewMode] = useState<ViewMode>("split");
-
-  // Load post data for edit mode
-  useEffect(() => {
-    if (isNewMode) return;
-
-    const loadPost = async () => {
-      setIsLoading(true);
-      try {
-        const post = await fetchPostByBrowser(id);
-        if (post) {
-          setTitle(post.title);
-          setContent(post.content);
-          setAuthor(post.author || "");
-          setStatus(post.status ?? "hide");
-          setTags(post.tags || []);
-        } else {
-          setErrorMessage("Failed to load post");
-        }
-      } catch {
-        setErrorMessage("Failed to load post");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadPost();
-  }, [id, isNewMode]);
-
-  const addTag = () => {
-    const tag = tagInput.trim();
-    if (tag && !tags.includes(tag)) {
-      setTags([...tags, tag]);
-      setTagInput("");
-    }
-  };
-
-  const removeTag = (index: number) => {
-    setTags(tags.filter((_, i) => i !== index));
-  };
-
-  const handleSubmit = () => {
-    if (!title.trim()) {
-      setErrorMessage("Please enter a title");
-      return;
-    }
-    if (!content.trim()) {
-      setErrorMessage("Please enter content");
-      return;
-    }
-
-    setErrorMessage("");
-
-    startTransition(async () => {
-      try {
-        await savePostByBrowser({
-          id: id || undefined,
-          title: title.trim(),
-          content: content.trim(),
-          author: author.trim() || null,
-          status,
-          tags: tags.length > 0 ? tags : null,
-        });
-
-        onSaved();
-      } catch (error) {
-        setErrorMessage(
-          error instanceof Error ? error.message : "Failed to save post",
-        );
-      }
-    });
-  };
-
-  const pageTitle = isNewMode ? "New Post" : "Edit Post";
-  const submitButtonText = isPending
-    ? "Saving..."
-    : isNewMode
-      ? "Create Post"
-      : "Update Post";
+  const { title, content, author, status, publishedAt, tags, tagInput } = form;
 
   if (isLoading) {
     return (
@@ -142,7 +64,7 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
           {/* Status Toggle */}
           <SegmentedToggle
             value={status}
-            onChange={setStatus}
+            onChange={(value) => updateForm({ status: value })}
             options={[
               { value: "hide", label: "Hide" },
               { value: "show", label: "Show" },
@@ -163,13 +85,6 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
         </div>
       </div>
 
-      {/* Error Message */}
-      {errorMessage && (
-        <div className="shrink-0 border-b border-red-200 bg-red-50 px-6 py-3 text-sm text-red-600 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-400">
-          {errorMessage}
-        </div>
-      )}
-
       {/* Main Editor Area */}
       <div className="flex min-h-0 flex-1 gap-0">
         {/* Left: Editor Panel */}
@@ -187,7 +102,7 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
             {/* Title Input */}
             <input
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => updateForm({ title: e.target.value })}
               type="text"
               placeholder="Enter post title..."
               className="w-full border-none bg-transparent text-xl font-semibold text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
@@ -199,10 +114,20 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
                 <span className="text-sm text-zinc-500">Author:</span>
                 <input
                   value={author}
-                  onChange={(e) => setAuthor(e.target.value)}
+                  onChange={(e) => updateForm({ author: e.target.value })}
                   type="text"
                   placeholder="Optional"
                   className="w-24 rounded border border-zinc-200 bg-transparent px-2 py-1 text-sm text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-zinc-500">Published:</span>
+                <input
+                  value={publishedAt}
+                  onChange={(e) => updateForm({ publishedAt: e.target.value })}
+                  type="datetime-local"
+                  className="rounded border border-zinc-200 bg-transparent px-2 py-1 text-sm text-zinc-900 outline-none focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
                 />
               </div>
 
@@ -226,7 +151,7 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
                   ))}
                   <input
                     value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
+                    onChange={(e) => updateForm({ tagInput: e.target.value })}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         e.preventDefault();
@@ -246,7 +171,7 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
           <div className="min-h-0 flex-1 p-4">
             <textarea
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={(e) => updateForm({ content: e.target.value })}
               placeholder="Write your post content using Markdown..."
               className="h-full w-full resize-none bg-transparent font-mono leading-relaxed text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
             />

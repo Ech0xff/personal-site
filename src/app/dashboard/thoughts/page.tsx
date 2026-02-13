@@ -10,10 +10,11 @@ import ThoughtEditor, { OpenButton } from "./components/ThoughtEditor";
 import { useHooks } from "./use-hooks";
 
 export default function ThoughtsPage() {
-  const { thoughts, loading, error, syncStatus, removeThought } = useHooks();
+  const { thoughts, loading, error, syncStatus, removeThought, refetch } =
+    useHooks();
 
   return (
-    <EditorProvider editorComponent={ThoughtEditor}>
+    <EditorProvider editorComponent={ThoughtEditor} onSaved={refetch}>
       <DashboardShell
         title="Thoughts"
         loading={loading}

@@ -38,10 +38,10 @@ const td = (children: ReactNode, className?: string) => {
 };
 
 export default function Page() {
-  const { posts, error, loading, syncStatus, removePost } = useHooks();
+  const { posts, error, loading, syncStatus, removePost, refetch } = useHooks();
 
   return (
-    <EditorProvider editorComponent={PostEditor}>
+    <EditorProvider editorComponent={PostEditor} onSaved={refetch}>
       <DashboardShell
         title="Posts"
         optActions={<OpenButton />}
@@ -57,7 +57,7 @@ export default function Page() {
                 "Tags",
                 "Status",
                 "Views",
-                "Created At",
+                "Published At",
                 "Actions",
               ])}
             </thead>
@@ -84,7 +84,7 @@ export default function Page() {
                     "text-sm text-zinc-500 dark:text-zinc-400",
                   )}
                   {td(
-                    formatDate(post.created_at),
+                    formatDate(post.published_at || post.created_at),
                     "text-sm text-zinc-500 dark:text-zinc-400",
                   )}
                   {td(
