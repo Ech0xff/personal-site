@@ -108,10 +108,7 @@ DECLARE
   trigger_name text;
   headers text;
 BEGIN
-  IF NOT (
-    current_setting('role', true) = 'service_role' 
-    OR COALESCE(public.is_admin(), FALSE)
-  ) THEN
+  IF NOT public.is_admin() THEN
       RAISE EXCEPTION 'Access Denied' USING ERRCODE = '42501';
   END IF;
   headers := format('{"Content-Type":"application/json", "Authorization":"Bearer %s"}', secret_token);

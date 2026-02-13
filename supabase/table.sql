@@ -38,7 +38,10 @@ CREATE TABLE public.events (
 CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS BOOLEAN AS $$
 BEGIN
-  RETURN (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin';
+  RETURN (
+    COALESCE(auth.jwt() ->> 'role' = 'service_role', FALSE) OR
+    COALESCE((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin', FALSE)
+  );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
