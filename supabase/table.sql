@@ -40,6 +40,7 @@ CREATE TABLE public.events (
   title VARCHAR(255) NOT NULL,
   description TEXT,
   event_date DATE NOT NULL,
+  published_at TIMESTAMPTZ,
   tags TEXT[] DEFAULT '{}',
   color VARCHAR(50),
   status VARCHAR(20) DEFAULT 'hide' CHECK (status IN ('hide', 'show')),
@@ -47,6 +48,7 @@ CREATE TABLE public.events (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 CREATE INDEX idx_events_status ON public.events(status);
+CREATE INDEX idx_events_published_at ON public.events(published_at DESC NULLS LAST);
 CREATE INDEX idx_events_event_date ON public.events(event_date DESC);
 CREATE INDEX idx_events_tags ON public.events USING GIN(tags);
 
@@ -142,7 +144,7 @@ BEGIN
   FROM (
     SELECT * FROM public.events 
     WHERE (status = query_status OR query_status IS NULL)
-    ORDER BY event_date DESC, created_at DESC 
+    ORDER BY COALESCE(published_at, event_date::timestamptz, created_at) DESC 
     LIMIT recent_limit
   ) t;
 

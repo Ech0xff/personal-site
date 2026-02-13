@@ -10,7 +10,7 @@ import { Status } from "@/types";
 type EventFormState = {
   title: string;
   description: string;
-  eventDate: string;
+  publishedAt: string;
   color: string;
   status: Status;
   tags: string[];
@@ -26,11 +26,25 @@ type UseEventEditorParams = {
 const DEFAULT_FORM: EventFormState = {
   title: "",
   description: "",
-  eventDate: "",
+  publishedAt: "",
   color: "blue",
   status: "hide",
   tags: [],
   tagInput: "",
+};
+
+const toDatetimeLocalValue = (dateString: string | null | undefined) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return "";
+
+  const pad = (value: number) => value.toString().padStart(2, "0");
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  const hour = pad(date.getHours());
+  const minute = pad(date.getMinutes());
+  return `${year}-${month}-${day}T${hour}:${minute}`;
 };
 
 export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
@@ -59,7 +73,9 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
             ...DEFAULT_FORM,
             title: event.title,
             description: event.description || "",
-            eventDate: event.event_date,
+            publishedAt: toDatetimeLocalValue(
+              event.published_at || event.event_date,
+            ),
             color: event.color || "blue",
             status: event.status ?? "hide",
             tags: event.tags || [],
@@ -99,8 +115,8 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
       toast.error("Title is required");
       return;
     }
-    if (!form.eventDate) {
-      toast.error("Please select a date");
+    if (!form.publishedAt) {
+      toast.error("Please select publish time");
       return;
     }
 
@@ -110,7 +126,8 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
           id: id || undefined,
           title: form.title.trim(),
           description: form.description.trim() || null,
-          event_date: form.eventDate,
+          event_date: form.publishedAt.slice(0, 10),
+          published_at: new Date(form.publishedAt).toISOString(),
           color: form.color,
           status: form.status,
           tags: form.tags.length > 0 ? form.tags : null,

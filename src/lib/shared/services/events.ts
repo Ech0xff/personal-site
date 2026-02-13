@@ -8,7 +8,12 @@ export const fetchEvents = async (client: SupabaseClient<Database>) => {
     .select("*")
     .order("event_date", { ascending: false });
   if (error) throw error;
-  return (data || []).map((e) => ({ ...e, tags: e.tags || [] }));
+  const items = (data || []).map((e) => ({ ...e, tags: e.tags || [] }));
+  return items.sort((a, b) => {
+    const aTs = new Date(a.published_at || a.event_date || a.created_at || 0).getTime();
+    const bTs = new Date(b.published_at || b.event_date || b.created_at || 0).getTime();
+    return bTs - aTs;
+  });
 };
 
 export const fetchEvent = async (

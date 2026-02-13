@@ -89,16 +89,16 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
           />
         </div>
 
-        {/* Date and Color */}
+        {/* Publish Time and Color */}
         <div className="flex gap-6">
           <div className="flex-1">
             <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Date
+              Published Time
             </label>
             <input
-              value={form.eventDate}
-              onChange={(e) => updateForm({ eventDate: e.target.value })}
-              type="date"
+              value={form.publishedAt}
+              onChange={(e) => updateForm({ publishedAt: e.target.value })}
+              type="datetime-local"
               className="w-full rounded-lg border border-zinc-200 bg-transparent px-4 py-2 text-zinc-900 outline-none focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
             />
           </div>

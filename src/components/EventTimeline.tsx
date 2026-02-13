@@ -5,6 +5,7 @@ export interface EventItem {
   title: string;
   description: string | null;
   event_date: string;
+  published_at?: string | null;
   tags: string[] | null;
   color: string | null;
   created_at: string | null;
@@ -34,7 +35,8 @@ export default function EventTimeline({
   // Group by year
   const groupedEvents: Record<string, EventItem[]> = {};
   events.forEach((event) => {
-    const year = new Date(event.event_date).getFullYear().toString();
+    const effectiveDate = event.published_at || event.event_date;
+    const year = new Date(effectiveDate).getFullYear().toString();
     if (!groupedEvents[year]) {
       groupedEvents[year] = [];
     }
@@ -88,7 +90,7 @@ export default function EventTimeline({
                     {/* Meta Row */}
                     <div className="mb-3 flex items-center justify-between">
                       <div className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
-                        {formatEventDate(event.event_date)}
+                        {formatEventDate(event.published_at || event.event_date)}
                       </div>
                       <div className="flex items-center gap-2">
                         {renderMetaRight && renderMetaRight(event)}
