@@ -10,8 +10,8 @@ export const fetchEvents = async (client: SupabaseClient<Database>) => {
   if (error) throw error;
   const items = (data || []).map((e) => ({ ...e, tags: e.tags || [] }));
   return items.sort((a, b) => {
-    const aTs = new Date(a.published_at || a.event_date || a.created_at || 0).getTime();
-    const bTs = new Date(b.published_at || b.event_date || b.created_at || 0).getTime();
+    const aTs = new Date(a.published_at || 0).getTime();
+    const bTs = new Date(b.published_at || 0).getTime();
     return bTs - aTs;
   });
 };

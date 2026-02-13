@@ -4,15 +4,9 @@ interface PostListItemProps {
   id: string;
   title: string;
   publishedAt?: string | null;
-  createdAt?: string | null;
 }
 
-export default function PostListItem({
-  id,
-  title,
-  publishedAt,
-  createdAt,
-}: PostListItemProps) {
+export default function PostListItem({ id, title, publishedAt }: PostListItemProps) {
   const formatDate = (dateStr: string | null | undefined): string => {
     if (!dateStr) return "Unknown Date";
     return new Date(dateStr).toLocaleDateString("en-US", {
@@ -31,7 +25,7 @@ export default function PostListItem({
       <span className="mx-4 flex-1">{title}</span>
       {/* Date */}
       <span className="w-28 shrink-0 text-sm text-gray-400">
-        {formatDate(publishedAt || createdAt)}
+        {formatDate(publishedAt)}
       </span>
     </Link>
   );

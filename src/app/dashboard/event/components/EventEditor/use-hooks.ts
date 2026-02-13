@@ -73,9 +73,7 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
             ...DEFAULT_FORM,
             title: event.title,
             description: event.description || "",
-            publishedAt: toDatetimeLocalValue(
-              event.published_at || event.event_date,
-            ),
+            publishedAt: toDatetimeLocalValue(event.published_at),
             color: event.color || "blue",
             status: event.status ?? "hide",
             tags: event.tags || [],

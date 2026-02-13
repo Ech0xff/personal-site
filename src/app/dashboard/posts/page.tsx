@@ -84,7 +84,7 @@ export default function Page() {
                     "text-sm text-zinc-500 dark:text-zinc-400",
                   )}
                   {td(
-                    formatDate(post.published_at || post.created_at),
+                    formatDate(post.published_at),
                     "text-sm text-zinc-500 dark:text-zinc-400",
                   )}
                   {td(

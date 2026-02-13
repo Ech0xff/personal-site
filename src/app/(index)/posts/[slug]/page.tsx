@@ -77,10 +77,10 @@ export default async function PostPage({ params }: PageProps) {
             </span>
           )}
 
-          {post.created_at && (
+          {post.published_at && (
             <span className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
-              {formatDate(post.created_at)}
+              {formatDate(post.published_at)}
             </span>
           )}
         </div>

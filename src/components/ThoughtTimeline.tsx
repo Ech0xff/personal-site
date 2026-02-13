@@ -49,7 +49,7 @@ export default function ThoughtTimeline({
               </span>
               <span>•</span>
               <span>
-                {formatDateDetail(thought.published_at || thought.created_at)}
+                {formatDateDetail(thought.published_at || null)}
               </span>
             </div>
             <div className="flex items-center gap-2">

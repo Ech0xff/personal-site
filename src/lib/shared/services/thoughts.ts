@@ -10,8 +10,8 @@ export const fetchThoughts = async (client: SupabaseClient<Database>) => {
   if (error) throw error;
   const items = (data || []).map((t) => ({ ...t, images: t.images || [] }));
   return items.sort((a, b) => {
-    const aTs = new Date(a.published_at || a.created_at || 0).getTime();
-    const bTs = new Date(b.published_at || b.created_at || 0).getTime();
+    const aTs = new Date(a.published_at || 0).getTime();
+    const bTs = new Date(b.published_at || 0).getTime();
     return bTs - aTs;
   });
 };

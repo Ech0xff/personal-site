@@ -128,7 +128,7 @@ BEGIN
   FROM (
     SELECT * FROM public.posts 
     WHERE (status = query_status OR query_status IS NULL)
-    ORDER BY COALESCE(published_at, created_at) DESC 
+    ORDER BY published_at DESC NULLS LAST 
     LIMIT recent_limit
   ) t;
 
@@ -136,7 +136,7 @@ BEGIN
   FROM (
     SELECT * FROM public.thoughts 
     WHERE (status = query_status OR query_status IS NULL)
-    ORDER BY COALESCE(published_at, created_at) DESC 
+    ORDER BY published_at DESC NULLS LAST 
     LIMIT recent_limit
   ) t;
 
@@ -144,7 +144,7 @@ BEGIN
   FROM (
     SELECT * FROM public.events 
     WHERE (status = query_status OR query_status IS NULL)
-    ORDER BY COALESCE(published_at, event_date::timestamptz, created_at) DESC 
+    ORDER BY published_at DESC NULLS LAST 
     LIMIT recent_limit
   ) t;
 

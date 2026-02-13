@@ -19,9 +19,10 @@ export default async function PostsPage() {
   const groupedPosts: Record<string, (typeof posts)[number][]> = {};
 
   posts.forEach((post) => {
-    const dateStr = post.published_at || post.created_at || "";
-    const date = new Date(dateStr);
-    const year = date.getFullYear().toString();
+    const date = post.published_at ? new Date(post.published_at) : null;
+    const year = date && !Number.isNaN(date.getTime())
+      ? date.getFullYear().toString()
+      : "Unknown";
 
     if (!groupedPosts[year]) {
       groupedPosts[year] = [];
@@ -30,9 +31,11 @@ export default async function PostsPage() {
   });
 
   // Sort years descending
-  const sortedYears = Object.keys(groupedPosts).sort(
-    (a, b) => Number(b) - Number(a),
-  );
+  const sortedYears = Object.keys(groupedPosts).sort((a, b) => {
+    if (a === "Unknown") return 1;
+    if (b === "Unknown") return -1;
+    return Number(b) - Number(a);
+  });
 
   return (
     <CollectionBody
@@ -71,7 +74,6 @@ export default async function PostsPage() {
                   id={post.id}
                   title={post.title}
                   publishedAt={post.published_at}
-                  createdAt={post.created_at}
                 />
               ))}
             </div>

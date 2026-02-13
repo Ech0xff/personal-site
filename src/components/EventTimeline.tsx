@@ -35,8 +35,10 @@ export default function EventTimeline({
   // Group by year
   const groupedEvents: Record<string, EventItem[]> = {};
   events.forEach((event) => {
-    const effectiveDate = event.published_at || event.event_date;
-    const year = new Date(effectiveDate).getFullYear().toString();
+    const date = event.published_at ? new Date(event.published_at) : null;
+    const year = date && !Number.isNaN(date.getTime())
+      ? date.getFullYear().toString()
+      : "Unknown";
     if (!groupedEvents[year]) {
       groupedEvents[year] = [];
     }
@@ -44,9 +46,11 @@ export default function EventTimeline({
   });
 
   // Sort years descending
-  const sortedYears = Object.keys(groupedEvents).sort(
-    (a, b) => Number(b) - Number(a),
-  );
+  const sortedYears = Object.keys(groupedEvents).sort((a, b) => {
+    if (a === "Unknown") return 1;
+    if (b === "Unknown") return -1;
+    return Number(b) - Number(a);
+  });
 
   return (
     <div className="relative mt-8">
@@ -90,7 +94,9 @@ export default function EventTimeline({
                     {/* Meta Row */}
                     <div className="mb-3 flex items-center justify-between">
                       <div className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
-                        {formatEventDate(event.published_at || event.event_date)}
+                        {event.published_at
+                          ? formatEventDate(event.published_at)
+                          : "Unknown Date"}
                       </div>
                       <div className="flex items-center gap-2">
                         {renderMetaRight && renderMetaRight(event)}

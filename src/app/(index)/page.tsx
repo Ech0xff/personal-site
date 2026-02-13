@@ -144,7 +144,6 @@ function PostsCard({
             id={post.id}
             title={post.title}
             publishedAt={post.published_at}
-            createdAt={post.created_at}
           />
         ))}
       </div>
