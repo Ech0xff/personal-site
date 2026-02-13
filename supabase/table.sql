@@ -220,7 +220,6 @@ USING (status = 'show' OR public.is_admin());
 CREATE POLICY "EVENT ADMIN" ON public.events FOR ALL 
 USING (public.is_admin()) WITH CHECK (public.is_admin());
 
-DROP POLICY IF EXISTS "STORAGE OBJECT PUBLIC" ON storage.objects;
 CREATE POLICY "STORAGE OBJECT MANAGE" ON storage.objects FOR ALL TO authenticated
 USING (bucket_id = 'images' AND public.is_admin())
 WITH CHECK (bucket_id = 'images' AND public.is_admin());
