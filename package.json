@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write .",
-    "gen:types": "source .env && bunx supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > src/types/supabase.ts",
+    "gen:types": "source .env && bunx supabase gen types typescript --project-id $(echo $NEXT_PUBLIC_SUPABASE_URL | sed 's/https:\\/\\///' | cut -d'.' -f1) > src/types/supabase.ts",
     "icons": "svgr --out-dir src/components/icons --typescript --icon --replace-attr-values \"#000=currentColor\" public/svg-icons"
   },
   "dependencies": {
