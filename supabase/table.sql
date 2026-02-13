@@ -313,7 +313,7 @@ VALUES (
   '2025-11-04 00:00:00+00'
 );
 
-INSERT INTO public.events (title, description, event_date, tags, color, status, created_at, updated_at)
+INSERT INTO public.events (title, description, event_date, tags, color, status, published_at, created_at, updated_at)
 VALUES (
   'Blog Officially Launched', 
   'BBLF has officially gone live!', 
@@ -321,6 +321,7 @@ VALUES (
   ARRAY['Milestone', 'Blog'], 
   '#3B82F6', 
   'show',
+  '2025-11-04 00:00:00+00', 
   '2025-11-04 00:00:00+00',
   '2025-11-04 00:00:00+00'
 );
