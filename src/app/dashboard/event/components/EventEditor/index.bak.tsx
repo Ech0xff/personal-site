@@ -10,7 +10,7 @@ import StackY from "@/components/ui/StackY";
 import { cn } from "@/lib/shared/utils";
 import { Status } from "@/types";
 
-import EventCard from "../../../../../components/ui/EventCard";
+import EventCard from "../../../../../components/features/events/EventCard";
 import { useHooks } from "./use-hooks";
 
 const COLOR_OPTIONS = [

@@ -1,6 +1,6 @@
 "use client";
 
-import EventTimeline from "@/components/features/EventTimeline";
+import EventTimeline from "@/components/features/events/EventTimeline";
 
 import EditorProvider from "../components/EditorProvider";
 import DashboardShell from "../components/ui/DashboardShell";
@@ -23,15 +23,15 @@ export default function EventsPage() {
       >
         <EventTimeline
           events={events}
-          renderMetaRight={(event) => (
-            <StatusToggle
-              eventId={event.id}
-              status={event.status ?? null}
-              successCallback={syncStatus}
-            />
-          )}
           renderActions={(event) => (
-            <EventActions eventId={event.id} successCallback={removeEvent} />
+            <>
+              <StatusToggle
+                eventId={event.id}
+                status={event.status ?? null}
+                successCallback={syncStatus}
+              />
+              <EventActions eventId={event.id} successCallback={removeEvent} />
+            </>
           )}
         />
       </DashboardShell>

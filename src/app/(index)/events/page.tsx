@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 
-import EventTimeline from "@/components/features/EventTimeline";
+import EventTimeline from "@/components/features/events/EventTimeline";
 import { fetchCachedEvents } from "@/lib/server/services-cache/events";
 
 import CollectionBody from "../components/CollectionBody";
