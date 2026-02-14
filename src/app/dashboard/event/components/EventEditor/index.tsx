@@ -62,6 +62,11 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
               { value: "show", label: "Show" },
             ]}
           />
+          <DateTimeInput
+            value={form.publishedAt}
+            onChange={(value) => updateForm({ publishedAt: value })}
+            disabled={isPending}
+          />
           <Button onClick={handleSubmit} disabled={isPending}>
             {submitButtonText}
           </Button>
@@ -90,33 +95,25 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
           />
         </div>
 
-        {/* Publish Time and Color */}
-        <div className="flex gap-6">
-          <DateTimeInput
-            value={form.publishedAt}
-            onChange={(value) => updateForm({ publishedAt: value })}
-            wrapperClassName="flex-1"
-          />
-
-          <div className="flex-1">
-            <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Color
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {COLOR_OPTIONS.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => updateForm({ color: option.value })}
-                  className={`h-8 w-8 rounded-full ${option.class} ${
-                    form.color === option.value
-                      ? "ring-2 ring-blue-500 ring-offset-2"
-                      : ""
-                  }`}
-                  title={option.label}
-                />
-              ))}
-            </div>
+        {/* Color */}
+        <div>
+          <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            Color
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {COLOR_OPTIONS.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => updateForm({ color: option.value })}
+                className={`h-8 w-8 rounded-full ${option.class} ${
+                  form.color === option.value
+                    ? "ring-2 ring-blue-500 ring-offset-2"
+                    : ""
+                }`}
+                title={option.label}
+              />
+            ))}
           </div>
         </div>
 

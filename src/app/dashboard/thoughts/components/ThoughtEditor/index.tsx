@@ -8,6 +8,7 @@ import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import ThoughtTimeline from "@/components/ThoughtTimeline";
 import Button from "@/components/ui/Button";
 import LightboxImage from "@/components/ui/Image";
+import { cn } from "@/lib/shared/utils";
 import { Status } from "@/types";
 
 import { useHooks } from "./use-hooks";
@@ -20,6 +21,8 @@ export default function ThoughtEditor({
 }: BaseEditorProps) {
   const {
     form,
+    viewMode,
+    setViewMode,
     updateForm,
     fileInputRef,
     handleFileUpload,
@@ -53,11 +56,14 @@ export default function ThoughtEditor({
         </div>
 
         <div className="ml-auto flex items-center gap-3">
-          <DateTimeInput
-            value={form.publishedAt}
-            onChange={(value) => updateForm({ publishedAt: value })}
-            triggerOnly
-            wrapperClassName="flex items-center"
+          <SegmentedToggle
+            value={viewMode}
+            onChange={setViewMode}
+            options={[
+              { value: "edit", label: "Edit" },
+              { value: "split", label: "Split" },
+              { value: "preview", label: "Preview" },
+            ]}
           />
           <SegmentedToggle
             value={form.status}
@@ -66,6 +72,11 @@ export default function ThoughtEditor({
               { value: "hide", label: "Hide" },
               { value: "show", label: "Show" },
             ]}
+          />
+          <DateTimeInput
+            value={form.publishedAt}
+            onChange={(value) => updateForm({ publishedAt: value })}
+            disabled={isPending}
           />
           <Button
             onClick={(e) => {
@@ -90,7 +101,16 @@ export default function ThoughtEditor({
       </div>
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
         {/* Main Editor Area */}
-        <div className="flex min-h-0 basis-1/2 flex-col gap-4 overflow-y-auto border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+        <div
+          className={cn(
+            "flex min-h-0 flex-col overflow-y-auto border-b border-zinc-200 px-6 py-4 dark:border-zinc-800",
+            {
+              "flex-1": viewMode === "edit",
+              hidden: viewMode === "preview",
+              "basis-1/2": viewMode === "split",
+            },
+          )}
+        >
           {/* Content and Upload Button Row */}
           <div className="flex flex-1 flex-col gap-2">
             <textarea
@@ -100,7 +120,7 @@ export default function ThoughtEditor({
               value={form.content}
               onChange={(e) => updateForm({ content: e.target.value })}
               placeholder="What's on your mind..."
-              className="h-64 resize-none rounded-lg bg-transparent p-4 text-zinc-900 outline-none placeholder:text-zinc-400 dark:border-zinc-700 dark:text-zinc-100"
+              className="h-full w-full resize-none rounded-lg bg-transparent p-4 text-zinc-900 outline-none placeholder:text-zinc-400 dark:border-zinc-700 dark:text-zinc-100"
             />
             {form.images.length > 0 && (
               <div className="mt-auto grid grid-cols-6 gap-2 md:grid-cols-8 lg:grid-cols-10">
@@ -142,9 +162,12 @@ export default function ThoughtEditor({
         </div>
 
         {/* Preview */}
-
         <ThoughtTimeline
-          className="min-h-0 basis-1/2 overflow-y-auto pb-4"
+          className={cn("min-h-0 overflow-y-auto pb-4", {
+            "flex-1": viewMode === "preview",
+            hidden: viewMode === "edit",
+            "basis-1/2": viewMode === "split",
+          })}
           thoughts={[
             {
               ...form,

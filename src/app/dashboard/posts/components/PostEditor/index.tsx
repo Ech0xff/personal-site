@@ -30,8 +30,6 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
     onClose,
   });
 
-  const { title, content, author, status, publishedAt, tags, tagInput } = form;
-
   if (isLoading) {
     return (
       <div className="absolute inset-0 z-50 flex items-center justify-center bg-white dark:bg-zinc-900">
@@ -64,12 +62,19 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
 
           {/* Status Toggle */}
           <SegmentedToggle
-            value={status}
+            value={form.status}
             onChange={(value) => updateForm({ status: value })}
             options={[
               { value: "hide", label: "Hide" },
               { value: "show", label: "Show" },
             ]}
+          />
+
+          {/* Published At */}
+          <DateTimeInput
+            value={form.publishedAt}
+            onChange={(value) => updateForm({ publishedAt: value })}
+            disabled={isPending}
           />
 
           {/* Save Button */}
@@ -102,7 +107,7 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
           <div className="shrink-0 space-y-3 border-b border-zinc-200 p-4 dark:border-zinc-800">
             {/* Title Input */}
             <input
-              value={title}
+              value={form.title}
               onChange={(e) => updateForm({ title: e.target.value })}
               type="text"
               placeholder="Enter post title..."
@@ -114,7 +119,7 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
               <div className="flex items-center gap-2">
                 <span className="text-sm text-zinc-500">Author:</span>
                 <input
-                  value={author}
+                  value={form.author}
                   onChange={(e) => updateForm({ author: e.target.value })}
                   type="text"
                   placeholder="Optional"
@@ -122,22 +127,10 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
                 />
               </div>
 
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-zinc-500">Published:</span>
-                <DateTimeInput
-                  value={publishedAt}
-                  onChange={(value) => updateForm({ publishedAt: value })}
-                  wrapperClassName=""
-                  label=""
-                  labelClassName="hidden"
-                  inputClassName="rounded border border-zinc-200 bg-transparent px-2 py-1 text-sm text-zinc-900 outline-none focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
-                />
-              </div>
-
               <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
                 <span className="shrink-0 text-sm text-zinc-500">Tags:</span>
                 <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1">
-                  {tags.map((tag, index) => (
+                  {form.tags.map((tag, index) => (
                     <span
                       key={tag}
                       className="flex shrink-0 items-center gap-1 rounded bg-zinc-100 px-2 py-0.5 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
@@ -153,7 +146,7 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
                     </span>
                   ))}
                   <input
-                    value={tagInput}
+                    value={form.tagInput}
                     onChange={(e) => updateForm({ tagInput: e.target.value })}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
@@ -173,7 +166,7 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
           {/* Content Editor */}
           <div className="min-h-0 flex-1 p-4">
             <textarea
-              value={content}
+              value={form.content}
               onChange={(e) => updateForm({ content: e.target.value })}
               placeholder="Write your post content using Markdown..."
               className="h-full w-full resize-none bg-transparent font-mono leading-relaxed text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
@@ -202,21 +195,21 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
           {/* Preview Content */}
           <div className="min-h-0 flex-1 overflow-auto p-6">
             {/* Preview Title */}
-            {title ? (
+            {form.title ? (
               <h1 className="mb-4 text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-                {title}
+                {form.title}
               </h1>
             ) : (
               <h1 className="mb-4 text-2xl text-zinc-400 italic">Untitled</h1>
             )}
 
             {/* Preview Meta */}
-            {(author || tags.length > 0) && (
+            {(form.author || form.tags.length > 0) && (
               <div className="mb-6 flex items-center gap-3 text-sm text-zinc-500">
-                {author && <span>{author}</span>}
-                {tags.length > 0 && (
+                {form.author && <span>{form.author}</span>}
+                {form.tags.length > 0 && (
                   <div className="flex items-center gap-1">
-                    {tags.map((tag) => (
+                    {form.tags.map((tag) => (
                       <span
                         key={tag}
                         className="text-blue-600 dark:text-blue-400"
@@ -230,8 +223,8 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
             )}
 
             {/* Markdown Content Preview */}
-            {content ? (
-              <PostMarkdown content={content} />
+            {form.content ? (
+              <PostMarkdown content={form.content} />
             ) : (
               <p className="text-sm text-zinc-400 italic">
                 Start writing and the preview will appear here...

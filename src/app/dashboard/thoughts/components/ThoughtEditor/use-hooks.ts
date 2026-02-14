@@ -13,6 +13,9 @@ import {
 import { toDatetimeLocalValue } from "@/lib/shared/utils";
 import { Status } from "@/types";
 
+export type ViewMode = "edit" | "preview" | "split";
+const DEFAULT_VIEW_MODE: ViewMode = "split";
+
 type ThoughtFormState = {
   content: string;
   images: string[];
@@ -40,6 +43,7 @@ export const useHooks = ({ id, onSaved, onClose }: UseThoughtEditorParams) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState<ThoughtFormState>(DEFAULT_FORM);
+  const [viewMode, setViewMode] = useState<ViewMode>(DEFAULT_VIEW_MODE);
   const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
@@ -191,6 +195,7 @@ export const useHooks = ({ id, onSaved, onClose }: UseThoughtEditorParams) => {
 
   return {
     form,
+    viewMode,
     updateForm,
     fileInputRef,
     handleFileUpload,
@@ -204,6 +209,7 @@ export const useHooks = ({ id, onSaved, onClose }: UseThoughtEditorParams) => {
     isDragging,
     showUrlInput,
     setShowUrlInput,
+    setViewMode,
     pageTitle,
     submitButtonText,
     handleSubmit,
