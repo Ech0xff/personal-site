@@ -79,93 +79,74 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
         </div>
       </div>
 
-      {/* Main Editor Area */}
-      <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-auto p-6">
-        {/* Title */}
-        <div>
-          <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            Title
-          </label>
-          <input
-            value={form.title}
-            onChange={(e) => updateForm({ title: e.target.value })}
-            type="text"
-            placeholder="Event title..."
-            className="w-full rounded-lg border border-zinc-200 bg-transparent px-4 py-2 text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
-          />
-        </div>
+      <div className="border-b border-zinc-200 p-4 dark:border-zinc-800">
+        <input
+          value={form.title}
+          onChange={(e) => updateForm({ title: e.target.value })}
+          type="text"
+          placeholder="Event title..."
+          className="w-full rounded-lg bg-transparent text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
+        />
+      </div>
 
-        {/* Color */}
-        <div>
-          <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            Color
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {COLOR_OPTIONS.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => updateForm({ color: option.value })}
-                className={`h-8 w-8 rounded-full ${option.class} ${
-                  form.color === option.value
-                    ? "ring-2 ring-blue-500 ring-offset-2"
-                    : ""
-                }`}
-                title={option.label}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Description */}
-        <div className="flex-1">
-          <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            Description (optional)
-          </label>
-          <textarea
-            value={form.description}
-            onChange={(e) => updateForm({ description: e.target.value })}
-            placeholder="Event description..."
-            className="h-32 w-full resize-none rounded-lg border border-zinc-200 bg-transparent p-4 text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
-          />
-        </div>
-
-        {/* Tags */}
-        <div>
-          <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            Tags (optional)
-          </label>
-          <div className="flex flex-wrap items-center gap-2">
-            {form.tags.map((tag, index) => (
-              <span
-                key={tag}
-                className="flex items-center gap-1 rounded bg-zinc-100 px-2 py-1 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
-              >
-                #{tag}
-                <button
-                  type="button"
-                  onClick={() => removeTag(index)}
-                  className="transition-colors hover:text-red-500"
-                >
-                  ×
-                </button>
-              </span>
-            ))}
-            <input
-              value={form.tagInput}
-              onChange={(e) => updateForm({ tagInput: e.target.value })}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  addTag();
-                }
-              }}
-              type="text"
-              placeholder="Add tag..."
-              className="w-24 rounded border border-zinc-200 bg-transparent px-2 py-1 text-sm text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
+      <div className="border-b border-zinc-200 p-4 dark:border-zinc-800">
+        <div className="flex flex-wrap gap-2">
+          {COLOR_OPTIONS.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => updateForm({ color: option.value })}
+              className={`h-8 w-8 rounded-full ${option.class} ${
+                form.color === option.value
+                  ? "ring-2 ring-blue-500 ring-offset-2"
+                  : ""
+              }`}
+              title={option.label}
             />
-          </div>
+          ))}
         </div>
+      </div>
+
+      <div className="border-b border-zinc-200 p-4 dark:border-zinc-800">
+        <div className="flex flex-wrap items-center gap-2">
+          {form.tags.map((tag, index) => (
+            <span
+              key={tag}
+              className="flex items-center gap-1 rounded bg-zinc-100 px-2 py-1 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+            >
+              #{tag}
+              <button
+                type="button"
+                onClick={() => removeTag(index)}
+                className="transition-colors hover:text-red-500"
+              >
+                ×
+              </button>
+            </span>
+          ))}
+          <input
+            value={form.tagInput}
+            onChange={(e) => updateForm({ tagInput: e.target.value })}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                addTag();
+              }
+            }}
+            type="text"
+            placeholder="Add tag..."
+            className="w-24 rounded border border-zinc-200 bg-transparent px-2 py-1 text-sm text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
+          />
+        </div>
+      </div>
+
+      <div className="flex-1 border-b border-zinc-200 p-4 dark:border-zinc-800">
+        <textarea
+          value={form.description}
+          onChange={(e) => updateForm({ description: e.target.value })}
+          placeholder="Event description..."
+          className="h-full w-full resize-none rounded-lg bg-transparent p-4 text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
+        />
       </div>
     </div>
   );
