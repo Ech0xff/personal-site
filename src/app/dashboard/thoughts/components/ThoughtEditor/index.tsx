@@ -5,7 +5,7 @@ import { Upload, X } from "lucide-react";
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import DateTimeInput from "@/app/dashboard/components/ui/DateTimeInput";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
-import ThoughtTimeline from "@/components/ThoughtTimeline";
+import ThoughtTimeline from "@/components/features/ThoughtTimeline";
 import Button from "@/components/ui/Button";
 import LightboxImage from "@/components/ui/Image";
 import StackX from "@/components/ui/StackX";

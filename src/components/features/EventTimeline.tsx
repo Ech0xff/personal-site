@@ -1,4 +1,4 @@
-import { EventMarkdown } from "@/components/markdown";
+import { EventMarkdown } from "@/components/ui/markdown";
 import { formatTime } from "@/lib/shared/utils";
 
 export interface EventItem {

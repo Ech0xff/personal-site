@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import ThemeToggle from "@/components/ThemeToggle";
+import ThemeToggle from "@/components/shared/ThemeToggle";
 import { cn } from "@/lib/shared/utils";
 
 import NavBarController from "./NavBarController";

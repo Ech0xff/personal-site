@@ -1,5 +1,5 @@
-import FooterSection from "@/components/FooterSection";
 import { Bilibili, Email, Github, Qq } from "@/components/icons";
+import FooterSection from "@/components/ui/FooterSection";
 import { fetchCachedSummary } from "@/lib/server/services-cache/rpcs";
 import { cn } from "@/lib/shared/utils";
 import { BlogSummaryData } from "@/types";

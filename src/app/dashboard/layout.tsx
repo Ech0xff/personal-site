@@ -11,8 +11,8 @@ import {
   UserCog,
 } from "lucide-react";
 
-import LogoutButton from "@/components/LogoutButton";
-import ThemeToggle from "@/components/ThemeToggle";
+import LogoutButton from "@/components/shared/LogoutButton";
+import ThemeToggle from "@/components/shared/ThemeToggle";
 import StackX from "@/components/ui/StackX";
 import StackY from "@/components/ui/StackY";
 import { makeServerClient } from "@/lib/server/supabase";

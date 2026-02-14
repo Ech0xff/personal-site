@@ -3,8 +3,8 @@ import Link from "next/link";
 
 import { ArrowLeft, Calendar, User } from "lucide-react";
 
-import ScrollToTopButton from "@/components/ScrollToTopButton";
-import { PostMarkdown } from "@/components/markdown";
+import ScrollToTopButton from "@/components/shared/ScrollToTopButton";
+import { PostMarkdown } from "@/components/ui/markdown";
 import { fetchCachedPost } from "@/lib/server/services-cache/posts";
 import { formatTime } from "@/lib/shared/utils";
 

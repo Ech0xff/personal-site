@@ -1,7 +1,7 @@
 import { cn } from "@/lib/shared/utils";
 import { formatTime } from "@/lib/shared/utils/tools";
 
-import { EventMarkdown } from "../markdown";
+import { EventMarkdown } from "./markdown";
 
 type Event = {
   title: string;

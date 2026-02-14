@@ -1,6 +1,6 @@
 "use client";
 
-import EventTimeline from "@/components/EventTimeline";
+import EventTimeline from "@/components/features/EventTimeline";
 
 import EditorProvider from "../components/EditorProvider";
 import DashboardShell from "../components/ui/DashboardShell";
