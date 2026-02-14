@@ -26,14 +26,14 @@ export default function ThoughtsPage() {
           thoughts={thoughts}
           renderMetaRight={(thought) => (
             <StatusToggle
-              thoughtId={thought.id}
+              thoughtId={thought.id ?? ""}
               status={thought.status ?? null}
               successCallback={syncStatus}
             />
           )}
           renderActions={(thought) => (
             <ThoughtActions
-              thoughtId={thought.id}
+              thoughtId={thought.id ?? ""}
               successCallback={removeThought}
             />
           )}

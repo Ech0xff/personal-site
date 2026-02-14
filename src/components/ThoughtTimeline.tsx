@@ -3,7 +3,7 @@ import LightboxImage from "@/components/ui/Image";
 import { cn, formatTime } from "@/lib/shared/utils";
 
 export interface ThoughtItem {
-  id: string;
+  id?: string;
   content: string;
   images: string[] | null;
   published_at?: string | null;
@@ -14,6 +14,7 @@ export interface ThoughtItem {
 interface ThoughtTimelineProps {
   thoughts: ThoughtItem[];
   totalCount?: number;
+  className?: string;
   renderMetaRight?: (thought: ThoughtItem) => React.ReactNode;
   renderActions?: (thought: ThoughtItem) => React.ReactNode;
 }
@@ -23,18 +24,24 @@ export default function ThoughtTimeline({
   totalCount,
   renderMetaRight,
   renderActions,
+  className,
 }: ThoughtTimelineProps) {
   const total = totalCount ?? thoughts.length;
 
   return (
-    <div className="mt-4 space-y-12 border-l border-zinc-200 pt-1 pl-6 dark:border-zinc-800">
+    <div
+      className={cn(
+        "mt-4 space-y-12 border-l border-zinc-200 pt-1 pl-6 dark:border-zinc-800",
+        className,
+      )}
+    >
       {thoughts.map((thought, index) => (
-        <div key={thought.id} className="group">
+        <div key={thought.id ?? `preview-${index}`} className="group">
           {/* Meta Row */}
           <div className="mb-3 flex items-center justify-between">
             <div className="flex items-center gap-3 font-mono text-xs text-zinc-400 dark:text-zinc-500">
               <span className="font-bold text-zinc-500 dark:text-zinc-400">
-                #{total - index}
+                #{thought.id ? total - index : "preview"}
               </span>
               <span>•</span>
               <span>
