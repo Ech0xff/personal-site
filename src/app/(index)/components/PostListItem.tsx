@@ -22,7 +22,9 @@ export default function PostListItem({
       <span className="mx-4 flex-1">{title}</span>
       {/* Date */}
       <span className="w-28 shrink-0 text-sm text-gray-400">
-        {publishedAt ? formatTime(publishedAt, "MMM D, YYYY", "Unknown Date") : "Unknown Date"}
+        {publishedAt
+          ? formatTime(publishedAt, "MMM D, YYYY", "Unknown Date")
+          : "Unknown Date"}
       </span>
     </Link>
   );

@@ -10,10 +10,7 @@ interface Props {
   renderActions?: (event: Event) => React.ReactNode;
 }
 
-export default function EventTimeline({
-  events,
-  renderActions,
-}: Props) {
+export default function EventTimeline({ events, renderActions }: Props) {
   // Group by year
   const groupedEvents: Record<string, Event[]> = {};
   events.forEach((event) => {

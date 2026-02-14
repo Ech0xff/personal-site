@@ -6,9 +6,9 @@ import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import DateTimeInput from "@/app/dashboard/components/ui/DateTimeInput";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import Button from "@/components/ui/Button";
-import { PostMarkdown } from "@/components/ui/markdown";
 import StackX from "@/components/ui/StackX";
 import StackY from "@/components/ui/StackY";
+import { PostMarkdown } from "@/components/ui/markdown";
 
 import { useHooks } from "./use-hooks";
 
