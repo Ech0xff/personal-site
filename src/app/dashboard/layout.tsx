@@ -13,6 +13,8 @@ import {
 
 import LogoutButton from "@/components/LogoutButton";
 import ThemeToggle from "@/components/ThemeToggle";
+import StackX from "@/components/ui/StackX";
+import StackY from "@/components/ui/StackY";
 import { makeServerClient } from "@/lib/server/supabase";
 
 import { getUserStatus } from "../../lib/shared/utils/tools";
@@ -50,11 +52,11 @@ export default async function Layout({
   const { isAuth, isAdmin } = await getUserStatus(client);
   if (!isAuth) redirect("/auth");
   return (
-    <div className="flex h-screen w-screen bg-(--theme-bg)">
+    <StackX divided={true} className="h-screen w-screen bg-(--theme-bg)">
       {/* Sidebar */}
-      <aside className="top-0 left-0 z-40 flex h-screen w-auto flex-col border-r border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
+      <StackY className="top-0 left-0 z-40 flex h-screen w-auto bg-zinc-50 *:p-4 dark:bg-zinc-900">
         {/* Header */}
-        <div className="flex gap-2 p-4">
+        <StackX className="gap-2">
           <Link
             href="/"
             className="flex items-center gap-2 text-lg font-semibold text-zinc-900 transition-colors hover:text-blue-600 dark:text-zinc-100 dark:hover:text-blue-400"
@@ -63,10 +65,10 @@ export default async function Layout({
             Back
           </Link>
           <ThemeToggle />
-        </div>
+        </StackX>
 
         {/* Navigation */}
-        <nav className="flex-1 space-y-1 overflow-y-auto p-4">
+        <StackY className="flex-1 space-y-1 overflow-y-auto">
           {navItems
             .filter((item) => (item.isAdmin ? isAdmin : true))
             .map((item) => (
@@ -79,18 +81,16 @@ export default async function Layout({
                 {item.name}
               </Link>
             ))}
-        </nav>
+        </StackY>
 
         {/* Footer */}
-        <div className="flex items-center justify-between border-t border-zinc-200 p-4 dark:border-zinc-800">
+        <StackX className="items-center justify-center">
           <LogoutButton />
-        </div>
-      </aside>
+        </StackX>
+      </StackY>
 
       {/* Main Content */}
-      <main className="relative h-screen flex-1 overflow-auto p-8">
-        {children}
-      </main>
-    </div>
+      <StackY className="relative flex-1 overflow-auto p-8">{children}</StackY>
+    </StackX>
   );
 }
