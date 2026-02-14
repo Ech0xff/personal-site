@@ -3,7 +3,7 @@
 import { ArrowDownAZ, ArrowUpAZ, Calendar, HardDrive } from "lucide-react";
 
 import LightboxImage from "@/components/ui/Image";
-import { formatDate, formatSize } from "@/lib/shared/utils/tools";
+import { formatSize, formatTime } from "@/lib/shared/utils/tools";
 
 import DashboardShell from "../components/ui/DashboardShell";
 import ImageActionRender from "./components/ImageActionRender";
@@ -101,7 +101,7 @@ export default function ImagesPage() {
                   </p>
                   <div className="flex items-center justify-between text-xs text-white/70">
                     <span>{formatSize(image.size)}</span>
-                    <span>{formatDate(image.createdAt).split(",")[0]}</span>
+                    <span>{formatTime(image.createdAt, "MMM D, YYYY")}</span>
                   </div>
                 </div>
               </div>

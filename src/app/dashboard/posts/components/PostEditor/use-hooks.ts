@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import { fetchPostByBrowser, savePostByBrowser } from "@/lib/client/services";
+import { toDatetimeLocalValue } from "@/lib/shared/utils";
 import { Status } from "@/types";
 
 export type ViewMode = "edit" | "preview" | "split";
@@ -36,20 +37,6 @@ const DEFAULT_FORM: PostFormState = {
 };
 
 const DEFAULT_VIEW_MODE: ViewMode = "split";
-
-const toDatetimeLocalValue = (dateString: string | null | undefined) => {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  if (Number.isNaN(date.getTime())) return "";
-
-  const pad = (value: number) => value.toString().padStart(2, "0");
-  const year = date.getFullYear();
-  const month = pad(date.getMonth() + 1);
-  const day = pad(date.getDate());
-  const hour = pad(date.getHours());
-  const minute = pad(date.getMinutes());
-  return `${year}-${month}-${day}T${hour}:${minute}`;
-};
 
 export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
   const isNewMode = id === null;

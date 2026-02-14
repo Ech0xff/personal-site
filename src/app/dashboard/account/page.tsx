@@ -2,6 +2,8 @@
 
 import { Shield, User as UserIcon } from "lucide-react";
 
+import { formatTime } from "@/lib/shared/utils";
+
 import DashboardShell from "../components/ui/DashboardShell";
 import EditableInfoRow from "./components/ui/EditableInfoRow";
 import IdentityCard from "./components/ui/IdentityCard";
@@ -29,7 +31,7 @@ export default function AccountPage() {
                 label="Created"
                 value={
                   accountObj.createdAt
-                    ? new Date(accountObj.createdAt).toLocaleString()
+                    ? formatTime(accountObj.createdAt, "MMM D, YYYY, HH:mm")
                     : undefined
                 }
               />
@@ -37,7 +39,7 @@ export default function AccountPage() {
                 label="Last Sign In"
                 value={
                   accountObj.lastSignInAt
-                    ? new Date(accountObj.lastSignInAt).toLocaleString()
+                    ? formatTime(accountObj.lastSignInAt, "MMM D, YYYY, HH:mm")
                     : undefined
                 }
               />

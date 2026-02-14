@@ -3,6 +3,7 @@
 import { Eye, X } from "lucide-react";
 
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
+import DateTimeInput from "@/app/dashboard/components/ui/DateTimeInput";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import { PostMarkdown } from "@/components/markdown";
 import Button from "@/components/ui/Button";
@@ -123,11 +124,13 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
 
               <div className="flex items-center gap-2">
                 <span className="text-sm text-zinc-500">Published:</span>
-                <input
+                <DateTimeInput
                   value={publishedAt}
-                  onChange={(e) => updateForm({ publishedAt: e.target.value })}
-                  type="datetime-local"
-                  className="rounded border border-zinc-200 bg-transparent px-2 py-1 text-sm text-zinc-900 outline-none focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
+                  onChange={(value) => updateForm({ publishedAt: value })}
+                  wrapperClassName=""
+                  label=""
+                  labelClassName="hidden"
+                  inputClassName="rounded border border-zinc-200 bg-transparent px-2 py-1 text-sm text-zinc-900 outline-none focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
                 />
               </div>
 

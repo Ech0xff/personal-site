@@ -6,6 +6,7 @@ import { ArrowLeft, Calendar, User } from "lucide-react";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { PostMarkdown } from "@/components/markdown";
 import { fetchCachedPost } from "@/lib/server/services-cache/posts";
+import { formatTime } from "@/lib/shared/utils";
 
 export const revalidate = 3600;
 
@@ -54,15 +55,6 @@ export default async function PostPage({ params }: PageProps) {
     );
   }
 
-  // Format Date
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
   return (
     <article className="mx-auto w-full px-4 pt-10 pb-20">
       {/* Header */}
@@ -80,7 +72,7 @@ export default async function PostPage({ params }: PageProps) {
           {post.published_at && (
             <span className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
-              {formatDate(post.published_at)}
+              {formatTime(post.published_at, "MMMM D, YYYY")}
             </span>
           )}
         </div>

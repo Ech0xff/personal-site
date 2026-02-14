@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 
 import { fetchCachedPosts } from "@/lib/server/services-cache/posts";
+import { formatTime } from "@/lib/shared/utils";
 
 import CollectionBody from "../components/CollectionBody";
 import PostListItem from "../components/PostListItem";
@@ -19,10 +20,7 @@ export default async function PostsPage() {
   const groupedPosts: Record<string, (typeof posts)[number][]> = {};
 
   posts.forEach((post) => {
-    const date = post.published_at ? new Date(post.published_at) : null;
-    const year = date && !Number.isNaN(date.getTime())
-      ? date.getFullYear().toString()
-      : "Unknown";
+    const year = formatTime(post.published_at, "YYYY", "Unknown");
 
     if (!groupedPosts[year]) {
       groupedPosts[year] = [];

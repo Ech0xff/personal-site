@@ -1,6 +1,6 @@
 import { ThoughtMarkdown } from "@/components/markdown";
 import LightboxImage from "@/components/ui/Image";
-import { cn } from "@/lib/shared/utils";
+import { cn, formatTime } from "@/lib/shared/utils";
 
 export interface ThoughtItem {
   id: string;
@@ -16,17 +16,6 @@ interface ThoughtTimelineProps {
   totalCount?: number;
   renderMetaRight?: (thought: ThoughtItem) => React.ReactNode;
   renderActions?: (thought: ThoughtItem) => React.ReactNode;
-}
-
-function formatDateDetail(dateStr: string | null) {
-  if (!dateStr) return "Unknown Date";
-  return new Date(dateStr).toLocaleDateString("en-US", {
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
 }
 
 export default function ThoughtTimeline({
@@ -49,7 +38,11 @@ export default function ThoughtTimeline({
               </span>
               <span>•</span>
               <span>
-                {formatDateDetail(thought.published_at || null)}
+                {formatTime(
+                  thought.published_at || null,
+                  "MM/DD, HH:mm",
+                  "Unknown Date",
+                )}
               </span>
             </div>
             <div className="flex items-center gap-2">

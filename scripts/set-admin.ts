@@ -12,7 +12,10 @@ const findUserByEmail = async (email: string) => {
   const perPage = 200;
 
   while (true) {
-    const { data, error } = await client.auth.admin.listUsers({ page, perPage });
+    const { data, error } = await client.auth.admin.listUsers({
+      page,
+      perPage,
+    });
 
     if (error) {
       throw new Error(`Failed to list users: ${error.message}`);
@@ -48,7 +51,10 @@ const findUserByEmail = async (email: string) => {
       process.exit(1);
     }
 
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    if (
+      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      !process.env.SUPABASE_SERVICE_ROLE_KEY
+    ) {
       console.error(
         "❌ Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in environment variables.",
       );
@@ -65,12 +71,15 @@ const findUserByEmail = async (email: string) => {
       process.exit(1);
     }
 
-    const { error } = await makeAdminClient().auth.admin.updateUserById(user.id, {
-      app_metadata: {
-        ...(user.app_metadata || {}),
-        role: "admin",
+    const { error } = await makeAdminClient().auth.admin.updateUserById(
+      user.id,
+      {
+        app_metadata: {
+          ...(user.app_metadata || {}),
+          role: "admin",
+        },
       },
-    });
+    );
 
     if (error) {
       console.error(`❌ Failed to promote ${email}: ${error.message}`);

@@ -3,6 +3,7 @@
 import { X } from "lucide-react";
 
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
+import DateTimeInput from "@/app/dashboard/components/ui/DateTimeInput";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import Button from "@/components/ui/Button";
 import { Status } from "@/types";
@@ -91,17 +92,11 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
 
         {/* Publish Time and Color */}
         <div className="flex gap-6">
-          <div className="flex-1">
-            <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Published Time
-            </label>
-            <input
-              value={form.publishedAt}
-              onChange={(e) => updateForm({ publishedAt: e.target.value })}
-              type="datetime-local"
-              className="w-full rounded-lg border border-zinc-200 bg-transparent px-4 py-2 text-zinc-900 outline-none focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
-            />
-          </div>
+          <DateTimeInput
+            value={form.publishedAt}
+            onChange={(value) => updateForm({ publishedAt: value })}
+            wrapperClassName="flex-1"
+          />
 
           <div className="flex-1">
             <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">

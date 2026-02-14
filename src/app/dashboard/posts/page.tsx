@@ -3,7 +3,7 @@
 import { type ReactNode } from "react";
 
 import TagsList from "@/components/ui/TagsList";
-import { cn, formatDate } from "@/lib/shared/utils";
+import { cn, formatTime } from "@/lib/shared/utils";
 
 import EditorProvider from "../components/EditorProvider";
 import DashboardShell from "../components/ui/DashboardShell";
@@ -84,7 +84,7 @@ export default function Page() {
                     "text-sm text-zinc-500 dark:text-zinc-400",
                   )}
                   {td(
-                    formatDate(post.published_at),
+                    formatTime(post.published_at, "MMM D, YYYY"),
                     "text-sm text-zinc-500 dark:text-zinc-400",
                   )}
                   {td(

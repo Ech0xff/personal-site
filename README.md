@@ -74,6 +74,7 @@ Required environment variables:
 - `SUPABASE_ANON_KEY`: Your Supabase anonymous key
 - `SUPABASE_PROJECT_ID`: Your Supabase project ID (for type generation)
 - `DASHBOARD_SECRET_KEY`: A secure secret key for dashboard authentication
+- `NEXT_PUBLIC_APP_TIMEZONE` (optional): IANA timezone (e.g. `America/New_York`), defaults to `America/New_York` when missing or invalid
 
 ### 5. Generate TypeScript types (optional)
 

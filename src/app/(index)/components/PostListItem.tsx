@@ -1,21 +1,18 @@
 import Link from "next/link";
 
+import { formatTime } from "@/lib/shared/utils";
+
 interface PostListItemProps {
   id: string;
   title: string;
   publishedAt?: string | null;
 }
 
-export default function PostListItem({ id, title, publishedAt }: PostListItemProps) {
-  const formatDate = (dateStr: string | null | undefined): string => {
-    if (!dateStr) return "Unknown Date";
-    return new Date(dateStr).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
+export default function PostListItem({
+  id,
+  title,
+  publishedAt,
+}: PostListItemProps) {
   return (
     <Link
       href={`/posts/${id}`}
@@ -25,7 +22,7 @@ export default function PostListItem({ id, title, publishedAt }: PostListItemPro
       <span className="mx-4 flex-1">{title}</span>
       {/* Date */}
       <span className="w-28 shrink-0 text-sm text-gray-400">
-        {formatDate(publishedAt)}
+        {publishedAt ? formatTime(publishedAt, "MMM D, YYYY", "Unknown Date") : "Unknown Date"}
       </span>
     </Link>
   );

@@ -1,4 +1,5 @@
 import { EventMarkdown } from "@/components/markdown";
+import { formatTime } from "@/lib/shared/utils";
 
 export interface EventItem {
   id: string;
@@ -23,22 +24,10 @@ export default function EventTimeline({
   renderMetaRight,
   renderActions,
 }: EventTimelineProps) {
-  // Format date helper
-  const formatEventDate = (dateStr: string): string => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-    });
-  };
-
   // Group by year
   const groupedEvents: Record<string, EventItem[]> = {};
   events.forEach((event) => {
-    const date = event.published_at ? new Date(event.published_at) : null;
-    const year = date && !Number.isNaN(date.getTime())
-      ? date.getFullYear().toString()
-      : "Unknown";
+    const year = formatTime(event.published_at, "YYYY", "Unknown");
     if (!groupedEvents[year]) {
       groupedEvents[year] = [];
     }
@@ -95,7 +84,7 @@ export default function EventTimeline({
                     <div className="mb-3 flex items-center justify-between">
                       <div className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
                         {event.published_at
-                          ? formatEventDate(event.published_at)
+                          ? formatTime(event.published_at, "MMM D", "Unknown Date")
                           : "Unknown Date"}
                       </div>
                       <div className="flex items-center gap-2">
