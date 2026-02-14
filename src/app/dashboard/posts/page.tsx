@@ -2,6 +2,8 @@
 
 import { type ReactNode } from "react";
 
+import StackX from "@/components/ui/StackX";
+import StackY from "@/components/ui/StackY";
 import TagsList from "@/components/ui/TagsList";
 import { cn, formatTime } from "@/lib/shared/utils";
 
@@ -30,9 +32,9 @@ const th = (title: string[]) => {
 const td = (children: ReactNode, className?: string) => {
   return (
     <td className="px-6 py-4">
-      <div className={cn("flex items-center justify-center", className)}>
+      <StackX className={cn("items-center justify-center", className)}>
         {children}
-      </div>
+      </StackX>
     </td>
   );
 };
@@ -48,57 +50,59 @@ export default function Page() {
         loading={loading}
         error={error}
       >
-        {/* Posts Table */}
-        <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-          <table className="w-full table-auto">
-            <thead>
-              {th([
-                "Title",
-                "Tags",
-                "Status",
-                "Views",
-                "Published At",
-                "Actions",
-              ])}
-            </thead>
-            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
-              {posts.map((post) => (
-                <tr
-                  key={post.id}
-                  className="transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-                >
-                  {td(
-                    post.title,
-                    "font-medium text-zinc-900 dark:text-zinc-100",
-                  )}
-                  {td(<TagsList tags={post.tags} maxVisible={3} />)}
-                  {td(
-                    <StatusToggle
-                      postId={post.id}
-                      status={post.status}
-                      successCallback={syncStatus}
-                    />,
-                  )}
-                  {td(
-                    post.view_count || 0,
-                    "text-sm text-zinc-500 dark:text-zinc-400",
-                  )}
-                  {td(
-                    formatTime(post.published_at, "MMM D, YYYY"),
-                    "text-sm text-zinc-500 dark:text-zinc-400",
-                  )}
-                  {td(
-                    <PostActions
-                      postId={post.id}
-                      successCallback={removePost}
-                    />,
-                    "gap-2",
-                  )}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <StackY>
+          {/* Posts Table */}
+          <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+            <table className="w-full table-auto">
+              <thead>
+                {th([
+                  "Title",
+                  "Tags",
+                  "Status",
+                  "Views",
+                  "Published At",
+                  "Actions",
+                ])}
+              </thead>
+              <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
+                {posts.map((post) => (
+                  <tr
+                    key={post.id}
+                    className="transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+                  >
+                    {td(
+                      post.title,
+                      "font-medium text-zinc-900 dark:text-zinc-100",
+                    )}
+                    {td(<TagsList tags={post.tags} maxVisible={3} />)}
+                    {td(
+                      <StatusToggle
+                        postId={post.id}
+                        status={post.status}
+                        successCallback={syncStatus}
+                      />,
+                    )}
+                    {td(
+                      post.view_count || 0,
+                      "text-sm text-zinc-500 dark:text-zinc-400",
+                    )}
+                    {td(
+                      formatTime(post.published_at, "MMM D, YYYY"),
+                      "text-sm text-zinc-500 dark:text-zinc-400",
+                    )}
+                    {td(
+                      <PostActions
+                        postId={post.id}
+                        successCallback={removePost}
+                      />,
+                      "gap-2",
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </StackY>
       </DashboardShell>
     </EditorProvider>
   );

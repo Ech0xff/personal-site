@@ -1,6 +1,9 @@
 import { UserIdentity } from "@supabase/supabase-js";
 import { Github, Link2, Link2Off, Loader2, Mail } from "lucide-react";
 
+import StackX from "@/components/ui/StackX";
+import StackY from "@/components/ui/StackY";
+
 // ---------------------------------------------------------------------------
 // Provider config
 // ---------------------------------------------------------------------------
@@ -50,14 +53,14 @@ export default function IdentityCard({
   const Icon = config.icon;
 
   return (
-    <div className="flex items-center justify-between rounded-lg border border-zinc-200 px-4 py-3 transition-colors dark:border-zinc-700">
-      <div className="flex items-center gap-3">
-        <div
+    <StackX className="items-center justify-between rounded-lg border border-zinc-200 px-4 py-3 transition-colors dark:border-zinc-700">
+      <StackX className="items-center gap-3">
+        <StackX
           className={`flex h-9 w-9 items-center justify-center rounded-lg ${config.color}`}
         >
           <Icon className="h-4 w-4" />
-        </div>
-        <div>
+        </StackX>
+        <StackY>
           <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
             {config.label}
           </p>
@@ -66,8 +69,8 @@ export default function IdentityCard({
               identity.identity_data?.preferred_username ??
               "Connected"}
           </p>
-        </div>
-      </div>
+        </StackY>
+      </StackX>
 
       {provider !== "email" && (
         <button
@@ -84,6 +87,6 @@ export default function IdentityCard({
           Unlink
         </button>
       )}
-    </div>
+    </StackX>
   );
 }

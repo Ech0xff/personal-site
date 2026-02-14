@@ -4,6 +4,8 @@ import { ComponentPropsWithoutRef } from "react";
 
 import { Loader2 } from "lucide-react";
 
+import StackX from "@/components/ui/StackX";
+import StackY from "@/components/ui/StackY";
 import { cn } from "@/lib/shared/utils";
 
 interface Props extends ComponentPropsWithoutRef<"div"> {
@@ -28,15 +30,15 @@ export default function DashboardShell({
 }: Props) {
   if (loading) {
     return (
-      <div className="flex h-full items-center justify-center">
+      <StackX className="h-full items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
-      </div>
+      </StackX>
     );
   }
 
   if (error) {
     return (
-      <div className="flex h-full items-center justify-center">
+      <StackX className="h-full items-center justify-center">
         {errorRender ? (
           errorRender
         ) : (
@@ -44,21 +46,19 @@ export default function DashboardShell({
             An error occurred while loading data.
           </span>
         )}
-      </div>
+      </StackX>
     );
   }
 
   return (
-    <div {...props} className={cn("relative space-y-8", className)}>
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-            {title}
-          </h2>
-        </div>
+    <StackY {...props} className={cn("flex-1 overflow-auto *:p-4", className)}>
+      <StackX className="items-center justify-between">
+        <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+          {title}
+        </h2>
         {optActions && <div>{optActions}</div>}
-      </div>
-      {children}
-    </div>
+      </StackX>
+      <StackY className="flex-1 overflow-auto">{children}</StackY>
+    </StackY>
   );
 }

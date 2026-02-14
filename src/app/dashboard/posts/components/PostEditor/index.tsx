@@ -7,6 +7,8 @@ import DateTimeInput from "@/app/dashboard/components/ui/DateTimeInput";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import { PostMarkdown } from "@/components/markdown";
 import Button from "@/components/ui/Button";
+import StackX from "@/components/ui/StackX";
+import StackY from "@/components/ui/StackY";
 
 import { useHooks } from "./use-hooks";
 
@@ -32,23 +34,23 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
 
   if (isLoading) {
     return (
-      <div className="absolute inset-0 z-50 flex items-center justify-center bg-white dark:bg-zinc-900">
+      <StackX className="absolute inset-0 z-50 items-center justify-center bg-white dark:bg-zinc-900">
         <div className="text-zinc-500">Loading...</div>
-      </div>
+      </StackX>
     );
   }
 
   return (
-    <div className="absolute inset-0 z-50 flex flex-col bg-white dark:bg-zinc-900">
+    <StackY className="absolute inset-0 z-50 bg-white dark:bg-zinc-900">
       {/* Top Toolbar */}
-      <div className="flex shrink-0 items-center justify-between border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
-        <div className="flex items-center gap-4">
+      <StackX className="shrink-0 items-center justify-between border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+        <StackX className="items-center gap-4">
           <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
             {pageTitle}
           </h1>
-        </div>
+        </StackX>
 
-        <div className="flex items-center gap-3">
+        <StackX className="items-center gap-3">
           {/* View Mode Toggle */}
           <SegmentedToggle
             value={viewMode}
@@ -88,13 +90,13 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
           >
             <X className="h-8 w-8" />
           </button>
-        </div>
-      </div>
+        </StackX>
+      </StackX>
 
       {/* Main Editor Area */}
-      <div className="flex min-h-0 flex-1 gap-0">
+      <StackX className="min-h-0 flex-1 gap-0">
         {/* Left: Editor Panel */}
-        <div
+        <StackY
           className={`flex flex-col overflow-hidden border-r border-zinc-200 transition-all dark:border-zinc-800 ${
             viewMode === "preview"
               ? "hidden"
@@ -115,8 +117,8 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
             />
 
             {/* Author and Tags */}
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="flex items-center gap-2">
+            <StackX className="flex-wrap items-center gap-4">
+              <StackX className="items-center gap-2">
                 <span className="text-sm text-zinc-500">Author:</span>
                 <input
                   value={form.author}
@@ -125,11 +127,11 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
                   placeholder="Optional"
                   className="w-24 rounded border border-zinc-200 bg-transparent px-2 py-1 text-sm text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
                 />
-              </div>
+              </StackX>
 
-              <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
+              <StackX className="min-w-0 flex-1 flex-wrap items-center gap-2">
                 <span className="shrink-0 text-sm text-zinc-500">Tags:</span>
-                <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1">
+                <StackX className="min-w-0 flex-1 flex-wrap items-center gap-1">
                   {form.tags.map((tag, index) => (
                     <span
                       key={tag}
@@ -158,9 +160,9 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
                     placeholder="Add tag..."
                     className="w-20 shrink-0 rounded border border-zinc-200 bg-transparent px-2 py-0.5 text-xs text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
                   />
-                </div>
-              </div>
-            </div>
+                </StackX>
+              </StackX>
+            </StackX>
           </div>
 
           {/* Content Editor */}
@@ -172,10 +174,10 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
               className="h-full w-full resize-none bg-transparent font-mono leading-relaxed text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
             />
           </div>
-        </div>
+        </StackY>
 
         {/* Right: Preview Panel */}
-        <div
+        <StackY
           className={`flex flex-col overflow-hidden transition-all ${
             viewMode === "edit"
               ? "hidden"
@@ -186,10 +188,10 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
         >
           {/* Preview Header */}
           <div className="shrink-0 border-b border-zinc-200 p-4 dark:border-zinc-800">
-            <div className="flex items-center gap-2 text-sm text-zinc-500">
+            <StackX className="items-center gap-2 text-sm text-zinc-500">
               <Eye className="h-4 w-4" />
               Preview
-            </div>
+            </StackX>
           </div>
 
           {/* Preview Content */}
@@ -205,10 +207,10 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
 
             {/* Preview Meta */}
             {(form.author || form.tags.length > 0) && (
-              <div className="mb-6 flex items-center gap-3 text-sm text-zinc-500">
+              <StackX className="mb-6 items-center gap-3 text-sm text-zinc-500">
                 {form.author && <span>{form.author}</span>}
                 {form.tags.length > 0 && (
-                  <div className="flex items-center gap-1">
+                  <StackX className="items-center gap-1">
                     {form.tags.map((tag) => (
                       <span
                         key={tag}
@@ -217,9 +219,9 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
                         #{tag}
                       </span>
                     ))}
-                  </div>
+                  </StackX>
                 )}
-              </div>
+              </StackX>
             )}
 
             {/* Markdown Content Preview */}
@@ -231,8 +233,8 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
               </p>
             )}
           </div>
-        </div>
-      </div>
-    </div>
+        </StackY>
+      </StackX>
+    </StackY>
   );
 }

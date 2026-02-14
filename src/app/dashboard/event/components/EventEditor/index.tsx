@@ -41,9 +41,9 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
 
   if (isLoading) {
     return (
-      <div className="absolute inset-0 z-50 flex items-center justify-center bg-white dark:bg-zinc-900">
+      <StackX className="absolute inset-0 z-50 items-center justify-center bg-white dark:bg-zinc-900">
         <div className="text-zinc-500">Loading...</div>
-      </div>
+      </StackX>
     );
   }
 

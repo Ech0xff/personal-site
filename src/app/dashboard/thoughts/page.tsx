@@ -1,6 +1,7 @@
 "use client";
 
 import ThoughtTimeline from "@/components/ThoughtTimeline";
+import StackY from "@/components/ui/StackY";
 
 import EditorProvider from "../components/EditorProvider";
 import DashboardShell from "../components/ui/DashboardShell";
@@ -20,24 +21,25 @@ export default function ThoughtsPage() {
         loading={loading}
         error={error}
         optActions={<OpenButton />}
-        className="space-y-6"
       >
-        <ThoughtTimeline
-          thoughts={thoughts}
-          renderMetaRight={(thought) => (
-            <StatusToggle
-              thoughtId={thought.id ?? ""}
-              status={thought.status ?? null}
-              successCallback={syncStatus}
-            />
-          )}
-          renderActions={(thought) => (
-            <ThoughtActions
-              thoughtId={thought.id ?? ""}
-              successCallback={removeThought}
-            />
-          )}
-        />
+        <StackY className="gap-6">
+          <ThoughtTimeline
+            thoughts={thoughts}
+            renderMetaRight={(thought) => (
+              <StatusToggle
+                thoughtId={thought.id ?? ""}
+                status={thought.status ?? null}
+                successCallback={syncStatus}
+              />
+            )}
+            renderActions={(thought) => (
+              <ThoughtActions
+                thoughtId={thought.id ?? ""}
+                successCallback={removeThought}
+              />
+            )}
+          />
+        </StackY>
       </DashboardShell>
     </EditorProvider>
   );

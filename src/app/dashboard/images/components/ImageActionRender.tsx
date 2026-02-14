@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Copy, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
+import StackX from "@/components/ui/StackX";
 import { ImageFile } from "@/types";
 
 interface ImageActionButtonsProps {
@@ -33,7 +34,7 @@ export default function ImageActionRender({
   };
 
   return (
-    <div className="absolute top-1 right-1 flex gap-1 opacity-0 transition-opacity group-hover/lightbox:opacity-100">
+    <StackX className="absolute top-1 right-1 gap-1 opacity-0 transition-opacity group-hover/lightbox:opacity-100">
       <button
         type="button"
         onClick={(event) => {
@@ -61,6 +62,6 @@ export default function ImageActionRender({
       >
         <Trash2 className="h-3 w-3" />
       </button>
-    </div>
+    </StackX>
   );
 }

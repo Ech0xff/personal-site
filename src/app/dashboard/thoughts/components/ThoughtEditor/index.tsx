@@ -8,6 +8,8 @@ import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import ThoughtTimeline from "@/components/ThoughtTimeline";
 import Button from "@/components/ui/Button";
 import LightboxImage from "@/components/ui/Image";
+import StackX from "@/components/ui/StackX";
+import StackY from "@/components/ui/StackY";
 import { cn } from "@/lib/shared/utils";
 import { Status } from "@/types";
 
@@ -39,23 +41,23 @@ export default function ThoughtEditor({
 
   if (isLoading) {
     return (
-      <div className="absolute inset-0 z-50 flex items-center justify-center bg-white dark:bg-zinc-900">
+      <StackX className="absolute inset-0 z-50 items-center justify-center bg-white dark:bg-zinc-900">
         <div className="text-zinc-500">Loading...</div>
-      </div>
+      </StackX>
     );
   }
 
   return (
-    <div className="absolute inset-0 z-50 flex flex-col bg-white dark:bg-zinc-900">
+    <StackY className="absolute inset-0 z-50 bg-white dark:bg-zinc-900">
       {/* Top Toolbar */}
-      <div className="flex shrink-0 items-center justify-between border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
-        <div className="flex items-center gap-4">
+      <StackX className="shrink-0 items-center justify-between border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+        <StackX className="items-center gap-4">
           <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
             {pageTitle}
           </h1>
-        </div>
+        </StackX>
 
-        <div className="ml-auto flex items-center gap-3">
+        <StackX className="ml-auto items-center gap-3">
           <SegmentedToggle
             value={viewMode}
             onChange={setViewMode}
@@ -97,11 +99,11 @@ export default function ThoughtEditor({
           >
             <X className="h-8 w-8" />
           </button>
-        </div>
-      </div>
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        </StackX>
+      </StackX>
+      <StackY className="min-h-0 flex-1 overflow-hidden">
         {/* Main Editor Area */}
-        <div
+        <StackY
           className={cn(
             "flex min-h-0 flex-col overflow-y-auto border-b border-zinc-200 px-6 py-4 dark:border-zinc-800",
             {
@@ -112,7 +114,7 @@ export default function ThoughtEditor({
           )}
         >
           {/* Content and Upload Button Row */}
-          <div className="flex flex-1 flex-col gap-2">
+          <StackY className="flex-1 gap-2">
             <textarea
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -158,8 +160,8 @@ export default function ThoughtEditor({
               }}
               className="hidden"
             />
-          </div>
-        </div>
+          </StackY>
+        </StackY>
 
         {/* Preview */}
         <ThoughtTimeline
@@ -176,7 +178,7 @@ export default function ThoughtEditor({
             },
           ]}
         />
-      </div>
-    </div>
+      </StackY>
+    </StackY>
   );
 }

@@ -1,3 +1,5 @@
+import StackY from "@/components/ui/StackY";
+
 export default function InfoRow({
   label,
   value,
@@ -8,7 +10,7 @@ export default function InfoRow({
   mono?: boolean;
 }) {
   return (
-    <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-4">
+    <StackY className="gap-1 sm:flex-row sm:items-center sm:gap-4">
       <span className="w-36 shrink-0 text-sm font-medium text-zinc-500 dark:text-zinc-400">
         {label}
       </span>
@@ -17,6 +19,6 @@ export default function InfoRow({
       >
         {value || "—"}
       </span>
-    </div>
+    </StackY>
   );
 }

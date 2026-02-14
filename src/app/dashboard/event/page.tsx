@@ -20,7 +20,6 @@ export default function EventsPage() {
         loading={loading}
         error={error}
         optActions={<OpenButton />}
-        className="space-y-6"
       >
         <EventTimeline
           events={events}

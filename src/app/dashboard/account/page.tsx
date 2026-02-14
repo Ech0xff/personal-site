@@ -2,58 +2,75 @@
 
 import { Shield, User as UserIcon } from "lucide-react";
 
+import SectionCard from "@/components/ui/SectionCard";
+import StackX from "@/components/ui/StackX";
+import StackY from "@/components/ui/StackY";
 import { formatTime } from "@/lib/shared/utils";
 
 import DashboardShell from "../components/ui/DashboardShell";
 import EditableInfoRow from "./components/ui/EditableInfoRow";
 import IdentityCard from "./components/ui/IdentityCard";
 import InfoRow from "./components/ui/InfoRow";
-import SectionCard from "./components/ui/SectionCard";
 import { useAccount } from "./hooks/useAccount";
 
 export default function AccountPage() {
   const { accountObj, loading, handleSaveNickname, handleLink, handleUnlink } =
     useAccount();
 
+  const TitleRender = (title: string, Icon: React.ElementType) => {
+    return (
+      <StackX className="items-center gap-3">
+        <Icon className="h-4 w-4" />
+        <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+          {title}
+        </h3>
+      </StackX>
+    );
+  };
+
   return (
     <DashboardShell title="Account" error={!accountObj} loading={loading}>
       {accountObj && (
         <>
-          <SectionCard title="Account Information" icon={UserIcon}>
-            <div className="space-y-3">
-              <EditableInfoRow
-                label="Nickname"
-                value={accountObj.nickname}
-                onSave={handleSaveNickname}
-              />
-              <InfoRow label="Role" value={accountObj.role} />
-              <InfoRow
-                label="Created"
-                value={
-                  accountObj.createdAt
-                    ? formatTime(accountObj.createdAt, "MMM D, YYYY, HH:mm")
-                    : undefined
-                }
-              />
-              <InfoRow
-                label="Last Sign In"
-                value={
-                  accountObj.lastSignInAt
-                    ? formatTime(accountObj.lastSignInAt, "MMM D, YYYY, HH:mm")
-                    : undefined
-                }
-              />
-            </div>
-          </SectionCard>
+          <StackY className="gap-6">
+            <SectionCard divided={true}>
+              {TitleRender("Profile", UserIcon)}
+              <StackY className="gap-2">
+                <EditableInfoRow
+                  label="Nickname"
+                  value={accountObj.nickname}
+                  onSave={handleSaveNickname}
+                />
+                <InfoRow label="Role" value={accountObj.role} />
+                <InfoRow
+                  label="Created"
+                  value={
+                    accountObj.createdAt
+                      ? formatTime(accountObj.createdAt, "MMM D, YYYY")
+                      : undefined
+                  }
+                />
+                <InfoRow
+                  label="Last Sign In"
+                  value={
+                    accountObj.lastSignInAt
+                      ? formatTime(
+                          accountObj.lastSignInAt,
+                          "MMM D, YYYY h:mm A",
+                        )
+                      : undefined
+                  }
+                />
+              </StackY>
+            </SectionCard>
 
-          <SectionCard title="Connected Accounts" icon={Shield}>
-            <div className="space-y-4">
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                Manage the login methods linked to your account. You must keep
-                at least one login method active.
-              </p>
-
-              <div className="space-y-2">
+            <SectionCard divided={true}>
+              {TitleRender("Connected Accounts", Shield)}
+              <StackY className="gap-4 pb-4">
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                  Manage the login methods linked to your account. You must keep
+                  at least one login method active.
+                </p>
                 {accountObj &&
                   accountObj.identities!.map((identity) => (
                     <IdentityCard
@@ -64,14 +81,14 @@ export default function AccountPage() {
                       unlinking={false}
                     />
                   ))}
-              </div>
+              </StackY>
 
               {/* Link new providers */}
-              <div className="border-t border-zinc-100 pt-4 dark:border-zinc-800">
+              <StackY>
                 <p className="mb-3 text-sm font-medium text-zinc-700 dark:text-zinc-300">
                   Link a new provider
                 </p>
-                <div className="flex flex-wrap gap-2">
+                <StackX className="gap-2">
                   {!accountObj.identities!.some(
                     (identity) => identity.provider === "github",
                   ) && (
@@ -94,10 +111,10 @@ export default function AccountPage() {
                       Link Google
                     </button>
                   )}
-                </div>
-              </div>
-            </div>
-          </SectionCard>
+                </StackX>
+              </StackY>
+            </SectionCard>
+          </StackY>
         </>
       )}
     </DashboardShell>
