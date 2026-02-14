@@ -1,5 +1,6 @@
 import { cn } from "@/lib/shared/utils";
 import { formatTime } from "@/lib/shared/utils/tools";
+
 import { EventMarkdown } from "../markdown";
 
 type Event = {
@@ -19,7 +20,7 @@ interface Props {
 export default function EventCard({ event, className, renderActions }: Props) {
   const { title, description, tags, color, published_at } = event;
   return (
-    <div className={cn("rounded-2xl flex flex-col", className)}>
+    <div className={cn("flex flex-col rounded-2xl", className)}>
       {/* Meta Row */}
       <div className="mb-3 flex items-center justify-between">
         <div className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
@@ -46,7 +47,7 @@ export default function EventCard({ event, className, renderActions }: Props) {
 
       {/* Tags */}
       {tags && tags.length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-auto">
+        <div className="mt-auto flex flex-wrap gap-2">
           {tags.map((tag) => (
             <span
               key={tag}
