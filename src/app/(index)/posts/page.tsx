@@ -1,10 +1,11 @@
 import { Metadata } from "next";
 
+import StackY from "@/components/ui/StackY";
 import { fetchCachedPosts } from "@/lib/server/services-cache/posts";
 import { formatTime } from "@/lib/shared/utils";
 
+import PostCard from "../../../components/features/posts/PostCard";
 import CollectionBody from "../components/CollectionBody";
-import PostListItem from "../components/PostListItem";
 
 export const revalidate = 86400;
 
@@ -65,16 +66,11 @@ export default async function PostsPage() {
             </h2>
 
             {/* List of posts for the year */}
-            <div className="space-y-1">
+            <StackY className="gap-1">
               {groupedPosts[year]?.map((post) => (
-                <PostListItem
-                  key={post.id}
-                  id={post.id}
-                  title={post.title}
-                  publishedAt={post.published_at}
-                />
+                <PostCard key={post.id} post={post} />
               ))}
-            </div>
+            </StackY>
           </section>
         ))}
       </div>

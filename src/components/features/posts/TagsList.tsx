@@ -1,11 +1,15 @@
-import StackX from "../ui/StackX";
+import { cn } from "@/lib/shared/utils/tailwind";
+
+import StackX from "../../ui/StackX";
 
 export default function TagsList({
   tags,
   maxVisible = 3,
+  className,
 }: {
   tags: string[] | null;
   maxVisible?: number;
+  className?: string;
 }) {
   if (!tags || tags.length === 0) return null;
 
@@ -14,7 +18,7 @@ export default function TagsList({
   const hasMore = hiddenTags.length > 0;
 
   return (
-    <StackX className="flex-wrap items-center gap-1">
+    <StackX className={cn("flex-wrap items-center gap-1", className)}>
       {visibleTags.map((tag) => (
         <div
           key={tag}

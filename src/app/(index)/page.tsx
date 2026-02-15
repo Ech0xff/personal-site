@@ -4,8 +4,8 @@ import { fetchCachedSummary } from "@/lib/server/services-cache/rpcs";
 import { cn } from "@/lib/shared/utils";
 import { BlogSummaryData } from "@/types";
 
+import PostListItem from "../../components/features/posts/PostCard";
 import HeroSection from "./components/HeroSection";
-import PostListItem from "./components/PostListItem";
 
 export const revalidate = 86400;
 
@@ -139,12 +139,7 @@ function PostsCard({
     <Card title="Latest Posts">
       <div className="mb-8 space-y-1">
         {posts.map((post) => (
-          <PostListItem
-            key={post.id}
-            id={post.id}
-            title={post.title}
-            publishedAt={post.published_at}
-          />
+          <PostListItem key={post.id} post={post} />
         ))}
       </div>
     </Card>

@@ -2,7 +2,7 @@
 
 import { type ReactNode } from "react";
 
-import TagsList from "@/components/features/TagsList";
+import TagsList from "@/components/features/posts/TagsList";
 import StackX from "@/components/ui/StackX";
 import StackY from "@/components/ui/StackY";
 import { cn, formatTime } from "@/lib/shared/utils";
