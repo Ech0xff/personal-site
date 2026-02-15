@@ -29,7 +29,7 @@ export default function ThoughtTimeline({
         <ThoughtCard
           key={thought.id}
           thought={thought}
-          index={total - index}
+          index={index + 1}
           isLast={index === thoughts.length - 1}
           renderActions={renderActions}
         />

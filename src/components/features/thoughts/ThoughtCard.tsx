@@ -23,7 +23,7 @@ export default function ThoughtCard({
   thought,
   className,
   index,
-  isLast,
+  isLast = true,
   renderActions,
 }: Props) {
   return (
@@ -71,7 +71,7 @@ export default function ThoughtCard({
       )}
 
       {/* Divider */}
-      {isLast && (
+      {!isLast && (
         <div className="mt-12 h-px w-full bg-zinc-100 dark:bg-zinc-800/60" />
       )}
     </div>
