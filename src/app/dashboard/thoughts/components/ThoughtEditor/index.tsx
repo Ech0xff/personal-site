@@ -5,7 +5,7 @@ import { Upload, X } from "lucide-react";
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import DateTimeInput from "@/app/dashboard/components/ui/DateTimeInput";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
-import ThoughtTimeline from "@/components/features/ThoughtTimeline";
+import ThoughtCard from "@/components/features/thoughts/ThoughtCard";
 import Button from "@/components/ui/Button";
 import LightboxImage from "@/components/ui/Image";
 import StackX from "@/components/ui/StackX";
@@ -101,17 +101,14 @@ export default function ThoughtEditor({
           </button>
         </StackX>
       </StackX>
-      <StackY className="min-h-0 flex-1 overflow-hidden">
+      <StackY divided={true} className="flex-1 overflow-hidden *:p-4">
         {/* Main Editor Area */}
         <StackY
-          className={cn(
-            "flex min-h-0 flex-col overflow-y-auto border-b border-zinc-200 px-6 py-4 dark:border-zinc-800",
-            {
-              "flex-1": viewMode === "edit",
-              hidden: viewMode === "preview",
-              "basis-1/2": viewMode === "split",
-            },
-          )}
+          className={cn("overflow-y-auto", {
+            "flex-1": viewMode === "edit",
+            hidden: viewMode === "preview",
+            "basis-1/2": viewMode === "split",
+          })}
         >
           {/* Content and Upload Button Row */}
           <StackY className="flex-1 gap-2">
@@ -122,7 +119,7 @@ export default function ThoughtEditor({
               value={form.content}
               onChange={(e) => updateForm({ content: e.target.value })}
               placeholder="What's on your mind..."
-              className="h-full w-full resize-none rounded-lg bg-transparent p-4 text-zinc-900 outline-none placeholder:text-zinc-400 dark:border-zinc-700 dark:text-zinc-100"
+              className="h-full w-full resize-none rounded-lg bg-transparent text-zinc-900 outline-none placeholder:text-zinc-400 dark:border-zinc-700 dark:text-zinc-100"
             />
             {form.images.length > 0 && (
               <div className="mt-auto grid grid-cols-6 gap-2 md:grid-cols-8 lg:grid-cols-10">
@@ -164,19 +161,16 @@ export default function ThoughtEditor({
         </StackY>
 
         {/* Preview */}
-        <ThoughtTimeline
-          className={cn("min-h-0 overflow-y-auto pb-4", {
+        <ThoughtCard
+          className={cn("overflow-y-auto", {
             "flex-1": viewMode === "preview",
             hidden: viewMode === "edit",
             "basis-1/2": viewMode === "split",
           })}
-          thoughts={[
-            {
-              ...form,
-              published_at: form.publishedAt,
-              created_at: null,
-            },
-          ]}
+          thought={{
+            ...form,
+            published_at: form.publishedAt,
+          }}
         />
       </StackY>
     </StackY>

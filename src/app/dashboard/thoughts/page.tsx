@@ -1,6 +1,6 @@
 "use client";
 
-import ThoughtTimeline from "@/components/features/ThoughtTimeline";
+import ThoughtTimeline from "@/components/features/thoughts/ThoughtTimeline";
 import StackY from "@/components/ui/StackY";
 
 import EditorProvider from "../components/EditorProvider";

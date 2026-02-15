@@ -1,3 +1,5 @@
+import StackX from "../ui/StackX";
+
 export default function TagsList({
   tags,
   maxVisible = 3,
@@ -12,7 +14,7 @@ export default function TagsList({
   const hasMore = hiddenTags.length > 0;
 
   return (
-    <div className="flex flex-wrap items-center gap-1">
+    <StackX className="flex-wrap items-center gap-1">
       {visibleTags.map((tag) => (
         <div
           key={tag}
@@ -32,6 +34,6 @@ export default function TagsList({
           </div>
         </div>
       )}
-    </div>
+    </StackX>
   );
 }
