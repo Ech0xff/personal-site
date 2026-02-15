@@ -37,11 +37,7 @@ export default function ThoughtCard({
           </span>
           <span>•</span>
           <span>
-            {formatTime(
-              thought.published_at,
-              "MM/DD, HH:mm",
-              "Unknown Date",
-            )}
+            {formatTime(thought.published_at, "MM/DD, HH:mm", "Unknown Date")}
           </span>
         </StackX>
 
@@ -57,7 +53,7 @@ export default function ThoughtCard({
       {thought.images && thought.images.length > 0 && (
         <div
           className={cn(
-            "grid gap-2 mt-4",
+            "mt-4 grid gap-2",
             "grid-cols-6 gap-2 md:grid-cols-8 lg:grid-cols-10",
           )}
         >

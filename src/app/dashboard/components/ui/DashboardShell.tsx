@@ -30,7 +30,7 @@ export default function DashboardShell({
 }: Props) {
   if (loading) {
     return (
-      <StackX className="h-full items-center justify-center">
+      <StackX className="flex-1 items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
       </StackX>
     );
@@ -38,7 +38,7 @@ export default function DashboardShell({
 
   if (error) {
     return (
-      <StackX className="h-full items-center justify-center">
+      <StackX className="flex-1 items-center justify-center">
         {errorRender ? (
           errorRender
         ) : (
@@ -51,7 +51,10 @@ export default function DashboardShell({
   }
 
   return (
-    <StackY {...props} className={cn("flex-1 overflow-auto *:p-4", className)}>
+    <StackY
+      {...props}
+      className={cn("relative flex-1 overflow-hidden *:p-4", className)}
+    >
       <StackX className="items-center justify-between">
         <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
           {title}

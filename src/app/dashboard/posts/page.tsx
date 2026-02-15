@@ -55,13 +55,7 @@ export default function Page() {
           <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
             <table className="w-full table-auto">
               <thead>
-                {th([
-                  "Title",
-                  "Tags",
-                  "Status",
-                  "Published At",
-                  "Actions",
-                ])}
+                {th(["Title", "Tags", "Status", "Published At", "Actions"])}
               </thead>
               <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
                 {posts.map((post) => (

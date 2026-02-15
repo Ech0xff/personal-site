@@ -90,7 +90,7 @@ export default async function Layout({
       </StackY>
 
       {/* Main Content */}
-      <StackY className="relative flex flex-1">{children}</StackY>
+      {children}
     </StackX>
   );
 }

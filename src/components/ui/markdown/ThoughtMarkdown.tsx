@@ -17,7 +17,7 @@ export default function ThoughtMarkdown({
 }: ThoughtMarkdownProps) {
   return (
     <div
-      className={`prose prose-zinc dark:prose-invert max-w-none text-base leading-relaxed text-zinc-800 dark:text-zinc-200 ${className}`}
+      className={`prose prose-zinc dark:prose-invert max-w-none text-base leading-relaxed wrap-break-word text-zinc-800 dark:text-zinc-200 ${className}`}
     >
       <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
     </div>
