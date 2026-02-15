@@ -27,7 +27,7 @@ export default function EventsPage() {
             <>
               <StatusToggle
                 eventId={event.id}
-                status={event.status ?? null}
+                status={event.status}
                 successCallback={syncStatus}
               />
               <EventActions eventId={event.id} successCallback={removeEvent} />

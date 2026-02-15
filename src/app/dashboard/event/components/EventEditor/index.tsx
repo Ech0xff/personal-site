@@ -68,8 +68,8 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
             ]}
           />
           <DateTimeInput
-            value={form.publishedAt}
-            onChange={(value) => updateForm({ publishedAt: value })}
+            value={form.published_at}
+            onChange={(value) => updateForm({ published_at: value })}
             disabled={isPending}
           />
           <Button onClick={handleSubmit} disabled={isPending}>
@@ -142,15 +142,15 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
       >
         <StackX>
           <textarea
-            value={form.description}
-            onChange={(e) => updateForm({ description: e.target.value })}
-            placeholder="Event description..."
+            value={form.content}
+            onChange={(e) => updateForm({ content: e.target.value })}
+            placeholder="Event content..."
             className="w-full resize-none rounded-lg bg-transparent text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
           />
         </StackX>
 
         <StackX>
-          <EventCard event={{ ...form, published_at: form.publishedAt }} />
+          <EventCard event={form} />
         </StackX>
       </StackY>
     </StackY>

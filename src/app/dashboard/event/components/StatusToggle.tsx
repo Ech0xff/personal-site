@@ -10,7 +10,7 @@ import { Status } from "@/types";
 
 interface StatusToggleProps {
   eventId: string;
-  status: Status | null;
+  status: Status;
   successCallback?: (eventId: string, nextStatus: Status) => void;
 }
 
@@ -20,7 +20,7 @@ export default function StatusToggle({
   successCallback,
 }: StatusToggleProps) {
   const [isPending, startTransition] = useTransition();
-  const currentStatus: Status = status ?? "hide";
+  const currentStatus: Status = status;
 
   const handleChange = (nextStatus: Status) => {
     if (nextStatus === currentStatus) return;

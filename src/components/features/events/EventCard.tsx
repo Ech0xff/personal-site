@@ -5,11 +5,12 @@ import { formatTime } from "@/lib/shared/utils/tools";
 import { EventMarkdown } from "../../ui/markdown";
 
 export type Event = {
-  id?: string;
+  id: string;
   title: string;
-  description: string;
+  content: string;
   tags: string[];
   color: string;
+  status: string;
   published_at: string;
 };
 
@@ -20,7 +21,7 @@ interface Props {
 }
 
 export default function EventCard({ event, className, renderActions }: Props) {
-  const { title, description, tags, color, published_at } = event;
+  const { title, content, tags, color, published_at } = event;
   return (
     <StackY className={className}>
       {/* Meta Row */}
@@ -39,7 +40,7 @@ export default function EventCard({ event, className, renderActions }: Props) {
       </h3>
 
       {/* Description */}
-      {description && <EventMarkdown content={description} />}
+      {content && <EventMarkdown content={content} />}
 
       {/* Tags */}
       <StackX className="mt-auto flex-wrap gap-2 pt-3">
@@ -50,8 +51,8 @@ export default function EventCard({ event, className, renderActions }: Props) {
                 key={tag}
                 className="rounded-md px-2 py-1 text-xs font-medium"
                 style={{
-                  backgroundColor: (color || "#3B82F6") + "40",
-                  color: color || "#3B82F6",
+                  backgroundColor: color + "40",
+                  color,
                 }}
               >
                 {tag}

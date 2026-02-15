@@ -5,9 +5,10 @@ import { cn } from "@/lib/shared/utils/tailwind";
 import { formatTime } from "@/lib/shared/utils/tools";
 
 export type Thought = {
-  id?: string;
+  id: string;
   content: string;
-  images: string[] | null;
+  images: string[];
+  status: string;
   published_at: string;
 };
 
@@ -37,7 +38,7 @@ export default function ThoughtCard({
           <span>•</span>
           <span>
             {formatTime(
-              thought.published_at || null,
+              thought.published_at,
               "MM/DD, HH:mm",
               "Unknown Date",
             )}
@@ -50,13 +51,13 @@ export default function ThoughtCard({
       </StackX>
 
       {/* Content */}
-      <ThoughtMarkdown content={thought.content} className="mb-4" />
+      <ThoughtMarkdown content={thought.content} />
 
       {/* Images Grid */}
       {thought.images && thought.images.length > 0 && (
         <div
           className={cn(
-            "mt-4 grid gap-2",
+            "grid gap-2 mt-4",
             "grid-cols-6 gap-2 md:grid-cols-8 lg:grid-cols-10",
           )}
         >

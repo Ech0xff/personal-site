@@ -6,7 +6,7 @@ export const fetchEvents = async (client: SupabaseClient<Database>) => {
   const { data, error } = await client
     .from("events")
     .select("*")
-    .order("event_date", { ascending: false });
+    .order("published_at", { ascending: false });
   if (error) throw error;
   const items = (data || []).map((e) => ({ ...e, tags: e.tags || [] }));
   return items.sort((a, b) => {

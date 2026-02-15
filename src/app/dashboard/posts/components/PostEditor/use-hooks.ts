@@ -15,7 +15,7 @@ type PostFormState = {
   content: string;
   author: string;
   status: Status;
-  publishedAt: string;
+  published_at: string;
   tags: string[];
   tagInput: string;
 };
@@ -31,7 +31,7 @@ const DEFAULT_FORM: PostFormState = {
   content: "",
   author: "",
   status: "hide",
-  publishedAt: "",
+  published_at: "",
   tags: [],
   tagInput: "",
 };
@@ -66,10 +66,10 @@ export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
             ...DEFAULT_FORM,
             title: post.title,
             content: post.content,
-            author: post.author || "",
-            status: post.status ?? "hide",
-            publishedAt: toDatetimeLocalValue(post.published_at),
-            tags: post.tags || [],
+            author: post.author,
+            status: post.status,
+            published_at: toDatetimeLocalValue(post.published_at),
+            tags: post.tags ?? [],
           });
         }
       } catch {
@@ -110,6 +110,10 @@ export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
       toast.error("Please enter content");
       return;
     }
+    if (!form.published_at) {
+      toast.error("Please select publish time");
+      return;
+    }
 
     startTransition(async () => {
       try {
@@ -117,11 +121,9 @@ export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
           id: id || undefined,
           title: form.title.trim(),
           content: form.content.trim(),
-          author: form.author.trim() || null,
+          author: form.author.trim(),
           status: form.status,
-          published_at: form.publishedAt
-            ? new Date(form.publishedAt).toISOString()
-            : null,
+          published_at: new Date(form.published_at).toISOString(),
           tags: form.tags.length > 0 ? form.tags : null,
         });
 

@@ -5,12 +5,12 @@ import { Upload, X } from "lucide-react";
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import DateTimeInput from "@/app/dashboard/components/ui/DateTimeInput";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
-import ThoughtCard from "@/components/features/thoughts/ThoughtCard";
 import Button from "@/components/ui/Button";
 import LightboxImage from "@/components/ui/Image";
 import StackX from "@/components/ui/StackX";
 import StackY from "@/components/ui/StackY";
 import { cn } from "@/lib/shared/utils";
+import ThoughtCard from "@/lib/shared/utils/thoughts/ThoughtCard";
 import { Status } from "@/types";
 
 import { useHooks } from "./use-hooks";
@@ -76,8 +76,8 @@ export default function ThoughtEditor({
             ]}
           />
           <DateTimeInput
-            value={form.publishedAt}
-            onChange={(value) => updateForm({ publishedAt: value })}
+            value={form.published_at}
+            onChange={(value) => updateForm({ published_at: value })}
             disabled={isPending}
           />
           <Button
@@ -167,10 +167,7 @@ export default function ThoughtEditor({
             hidden: viewMode === "edit",
             "basis-1/2": viewMode === "split",
           })}
-          thought={{
-            ...form,
-            published_at: form.publishedAt,
-          }}
+          thought={form}
         />
       </StackY>
     </StackY>

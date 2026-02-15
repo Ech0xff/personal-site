@@ -1,10 +1,10 @@
+import StackY from "@/components/ui/StackY";
 import { cn } from "@/lib/shared/utils";
 
 import ThoughtCard, { Thought } from "./ThoughtCard";
 
-interface ThoughtTimelineProps {
+interface Props {
   thoughts: Thought[];
-  totalCount?: number;
   className?: string;
   renderMetaRight?: (thought: Thought) => React.ReactNode;
   renderActions?: (thought: Thought) => React.ReactNode;
@@ -12,16 +12,13 @@ interface ThoughtTimelineProps {
 
 export default function ThoughtTimeline({
   thoughts,
-  totalCount,
   renderActions,
   className,
-}: ThoughtTimelineProps) {
-  const total = totalCount ?? thoughts.length;
-
+}: Props) {
   return (
-    <div
+    <StackY
       className={cn(
-        "mt-4 space-y-12 border-l border-zinc-200 pt-1 pl-6 dark:border-zinc-800",
+        "my-6 gap-12 border-l border-zinc-200 py-2 pl-6 dark:border-zinc-800",
         className,
       )}
     >
@@ -34,6 +31,6 @@ export default function ThoughtTimeline({
           renderActions={renderActions}
         />
       ))}
-    </div>
+    </StackY>
   );
 }

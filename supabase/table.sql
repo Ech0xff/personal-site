@@ -1,56 +1,54 @@
+DROP SCHEMA IF EXISTS public CASCADE;
+CREATE SCHEMA IF NOT EXISTS public;
+CREATE EXTENSION IF NOT EXISTS postgis SCHEMA extensions;
 CREATE EXTENSION IF NOT EXISTS pg_net SCHEMA extensions;
-
-DROP SCHEMA public CASCADE;
-CREATE SCHEMA public;
-
+ALTER DATABASE postgres SET search_path TO "$user", public, extensions;
+SET search_path TO "$user", public, extensions;
 -----------------------------------------------------------------------------------------------------
 
 CREATE TABLE public.posts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title VARCHAR(500) NOT NULL,
   content TEXT NOT NULL,
-  author VARCHAR(100), 
-  status VARCHAR(20) DEFAULT 'hide' CHECK (status IN ('hide', 'show')),
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  published_at TIMESTAMPTZ,
-  view_count INTEGER DEFAULT 0,
-  tags TEXT[] DEFAULT '{}'
+  author VARCHAR(100) NOT NULL,
+  tags TEXT[] DEFAULT '{}',
+  status VARCHAR(20) DEFAULT 'hide' CHECK (status IN ('hide', 'show')) NOT NULL,
+  published_at TIMESTAMPTZ NOT NULL
 );
 CREATE INDEX idx_posts_status ON public.posts(status);
 CREATE INDEX idx_posts_published_at ON public.posts(published_at DESC NULLS LAST);
-CREATE INDEX idx_posts_created_at ON public.posts(created_at DESC);
 CREATE INDEX idx_posts_tags ON public.posts USING GIN(tags);
 
 CREATE TABLE public.thoughts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   content TEXT NOT NULL,
-  images TEXT[] DEFAULT '{}',
-  status VARCHAR(20) DEFAULT 'hide' CHECK (status IN ('hide', 'show')),
-  published_at TIMESTAMPTZ,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
+  images TEXT[] DEFAULT '{}' NOT NULL,
+  author VARCHAR(100) NOT NULL,
+  location_name VARCHAR(255),
+  location_point GEOGRAPHY(POINT, 4326),
+  status VARCHAR(20) DEFAULT 'hide' CHECK (status IN ('hide', 'show')) NOT NULL,
+  published_at TIMESTAMPTZ NOT NULL
 );
 CREATE INDEX idx_thoughts_status ON public.thoughts(status);
 CREATE INDEX idx_thoughts_published_at ON public.thoughts(published_at DESC NULLS LAST);
-CREATE INDEX idx_thoughts_created_at ON public.thoughts(created_at DESC);
+CREATE INDEX idx_thoughts_location_point ON public.thoughts USING GIST(location_point);
 
 CREATE TABLE public.events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title VARCHAR(255) NOT NULL,
-  description TEXT,
-  event_date DATE NOT NULL,
-  published_at TIMESTAMPTZ,
-  tags TEXT[] DEFAULT '{}',
-  color VARCHAR(50),
-  status VARCHAR(20) DEFAULT 'hide' CHECK (status IN ('hide', 'show')),
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
+  content TEXT NOT NULL,
+  tags TEXT[] DEFAULT '{}' NOT NULL,
+  color VARCHAR(50) NOT NULL,
+  location_name VARCHAR(255),
+  location_point GEOGRAPHY(POINT, 4326),
+  status VARCHAR(20) DEFAULT 'hide' CHECK (status IN ('hide', 'show')) NOT NULL,
+  published_at TIMESTAMPTZ NOT NULL
 );
 CREATE INDEX idx_events_status ON public.events(status);
 CREATE INDEX idx_events_published_at ON public.events(published_at DESC NULLS LAST);
-CREATE INDEX idx_events_event_date ON public.events(event_date DESC);
 CREATE INDEX idx_events_tags ON public.events USING GIN(tags);
+CREATE INDEX idx_events_location_point ON public.events USING GIST(location_point);
+
 
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('images', 'images', true)
@@ -114,11 +112,11 @@ BEGIN
   SELECT json_build_object(
     'show', json_build_object(
       'count', COUNT(*) FILTER (WHERE status = 'show'),
-      'characters', COALESCE(SUM(LENGTH(description)) FILTER (WHERE status = 'show'), 0)
+      'characters', COALESCE(SUM(LENGTH(content)) FILTER (WHERE status = 'show'), 0)
     ),
     'hide', json_build_object(
       'count', COUNT(*) FILTER (WHERE status = 'hide'),
-      'characters', COALESCE(SUM(LENGTH(description)) FILTER (WHERE status = 'hide'), 0)
+      'characters', COALESCE(SUM(LENGTH(content)) FILTER (WHERE status = 'hide'), 0)
     )
   ) INTO events_stats
   FROM public.events
@@ -277,7 +275,7 @@ WITH CHECK (bucket_id = 'images' AND public.is_admin());
 
 -----------------------------------------------------------------------------------------------------
 
-INSERT INTO public.posts (title, content, author, status, published_at, created_at, updated_at, tags)
+INSERT INTO public.posts (title, content, author, status, published_at, tags)
 VALUES (
   'World Hello!', 
   '## ~~Hello World~~ World Hello! 👋
@@ -295,33 +293,27 @@ Thanks to the generosity of Vercel and Supabase, you can easily deploy it to the
 I don''t know how long I''ll keep this up, but at least for now, I''ve started.
 
 **Keep expressing, keep loving. I hope you find a little resonance or inspiration here.I’m glad you made it this far. The journey begins—stay tuned!**', 
-  'BBLF Admin', 
+  'BBLF', 
   'show', 
-  '2025-11-04 00:00:00+00', 
-  '2025-11-04 00:00:00+00', 
   '2025-11-04 00:00:00+00', 
   ARRAY['Blog', 'Tech']
 );
 
-INSERT INTO public.thoughts (content, images, status, published_at, created_at, updated_at)
+INSERT INTO public.thoughts (author, content, images, status, published_at)
 VALUES (
+  'BBLF', 
   'It’s finally up and running, though it’s still ~~a bit buggy~~ a work in progress. As the saying goes: the beginning is hard, the middle is harder, and finally... well, just ship it first. Anyway, this is officially my ~~Premium Inspiration Museum~~, ~~Repository of Brilliant Ideas~~, Cyber Trash Bin from now on. Be kind! (｡•̀ᴗ-)✧', 
   ARRAY[]::TEXT[], 
   'show', 
-  '2025-11-04 00:00:00+00', 
-  '2025-11-04 00:00:00+00', 
   '2025-11-04 00:00:00+00'
 );
 
-INSERT INTO public.events (title, description, event_date, tags, color, status, published_at, created_at, updated_at)
+INSERT INTO public.events (title, content, tags, color, status, published_at)
 VALUES (
   'Blog Officially Launched', 
   'BBLF has officially gone live!', 
-  '2025-11-04', 
   ARRAY['Milestone', 'Blog'], 
   '#3B82F6', 
   'show',
-  '2025-11-04 00:00:00+00', 
-  '2025-11-04 00:00:00+00',
   '2025-11-04 00:00:00+00'
 );

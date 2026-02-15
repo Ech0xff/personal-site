@@ -17,11 +17,13 @@ export type ViewMode = "edit" | "preview" | "split";
 const DEFAULT_VIEW_MODE: ViewMode = "split";
 
 type ThoughtFormState = {
+  id: string;
+  author: string;
   content: string;
   images: string[];
   imageInput: string;
   status: Status;
-  publishedAt: string;
+  published_at: string;
 };
 
 type UseThoughtEditorParams = {
@@ -31,11 +33,13 @@ type UseThoughtEditorParams = {
 };
 
 const DEFAULT_FORM: ThoughtFormState = {
+  id: "",
+  author: "",
   content: "",
   images: [],
   imageInput: "",
   status: "hide",
-  publishedAt: "",
+  published_at: "",
 };
 
 export const useHooks = ({ id, onSaved, onClose }: UseThoughtEditorParams) => {
@@ -70,10 +74,12 @@ export const useHooks = ({ id, onSaved, onClose }: UseThoughtEditorParams) => {
         if (thought) {
           setForm({
             ...DEFAULT_FORM,
+            id: thought.id,
+            author: thought.author,
             content: thought.content,
-            images: thought.images || [],
-            status: thought.status ?? "hide",
-            publishedAt: toDatetimeLocalValue(thought.published_at),
+            images: thought.images,
+            status: thought.status,
+            published_at: toDatetimeLocalValue(thought.published_at),
           });
         }
       } catch {
@@ -164,17 +170,20 @@ export const useHooks = ({ id, onSaved, onClose }: UseThoughtEditorParams) => {
       toast.error("Please enter content");
       return;
     }
+    if (!form.published_at) {
+      toast.error("Please select publish time");
+      return;
+    }
 
     startTransition(async () => {
       try {
         await saveThoughtByBrowser({
           id: id || undefined,
-          content: form.content.trim(),
-          images: form.images.length > 0 ? form.images : null,
+          author: form.author,
+          content: form.content,
+          images: form.images,
           status: form.status,
-          published_at: form.publishedAt
-            ? new Date(form.publishedAt).toISOString()
-            : null,
+          published_at: form.published_at,
         });
 
         onSaved();

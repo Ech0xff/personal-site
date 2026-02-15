@@ -57,7 +57,7 @@ export default function EventTimeline({ events, renderActions }: Props) {
                   {/* Dot */}
                   <div
                     className="absolute top-1/2 left-1/2 z-10 aspect-square h-5 -translate-1/2 rounded-full"
-                    style={{ backgroundColor: event.color || "#3B82F6" }}
+                    style={{ backgroundColor: event.color }}
                   />
                   <SectionCard
                     className={cn(

@@ -6,7 +6,7 @@ export const fetchPosts = async (client: SupabaseClient<Database>) => {
   const { data, error } = await client
     .from("posts")
     .select("*")
-    .order("created_at", { ascending: false });
+    .order("published_at", { ascending: false });
   if (error) throw error;
   const items = data || [];
   return items.sort((a, b) => {

@@ -1,7 +1,7 @@
 "use client";
 
-import ThoughtTimeline from "@/components/features/thoughts/ThoughtTimeline";
 import StackY from "@/components/ui/StackY";
+import ThoughtTimeline from "@/lib/shared/utils/thoughts/ThoughtTimeline";
 
 import EditorProvider from "../components/EditorProvider";
 import DashboardShell from "../components/ui/DashboardShell";
@@ -27,16 +27,13 @@ export default function ThoughtsPage() {
             thoughts={thoughts}
             renderMetaRight={(thought) => (
               <StatusToggle
-                thoughtId={thought.id ?? ""}
-                status={thought.status ?? null}
+                thoughtId={thought.id}
+                status={thought.status}
                 successCallback={syncStatus}
               />
             )}
             renderActions={(thought) => (
-              <ThoughtActions
-                thoughtId={thought.id ?? ""}
-                successCallback={removeThought}
-              />
+              <ThoughtActions thoughtId={thought.id} successCallback={removeThought} />
             )}
           />
         </StackY>

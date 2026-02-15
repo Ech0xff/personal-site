@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "eslint . && tsc --noEmit",
     "format": "prettier --write .",
     "reset:db:dev": "bun ./scripts/reset-db.ts dev",
     "reset:db:prod": "bun ./scripts/reset-db.ts prod",
@@ -16,7 +16,8 @@
     "set:admin:prod": "bun ./scripts/set-admin.ts prod",
     "vercel:env:push:dev": "bun ./scripts/push-env.ts dev",
     "vercel:env:push:prod": "bun ./scripts/push-env.ts prod",
-    "gen:types": "source .env && bunx supabase gen types typescript --project-id $(echo $NEXT_PUBLIC_SUPABASE_URL | sed 's/https:\\/\\///' | cut -d'.' -f1) > src/types/supabase.ts",
+    "gen:types:dev": "source .env.development && bunx supabase gen types typescript --project-id $(echo $NEXT_PUBLIC_SUPABASE_URL | sed 's/https:\\/\\///' | cut -d'.' -f1) > src/types/supabase.ts",
+    "gen:types:prod": "source .env.production && bunx supabase gen types typescript --project-id $(echo $NEXT_PUBLIC_SUPABASE_URL | sed 's/https:\\/\\///' | cut -d'.' -f1) > src/types/supabase.ts",
     "gen:icons": "svgr --out-dir src/components/icons --typescript --icon --replace-attr-values \"#000=currentColor\" public/svg-icons"
   },
   "dependencies": {

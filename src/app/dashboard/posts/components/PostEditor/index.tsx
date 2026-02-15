@@ -74,8 +74,8 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
 
           {/* Published At */}
           <DateTimeInput
-            value={form.publishedAt}
-            onChange={(value) => updateForm({ publishedAt: value })}
+            value={form.published_at}
+            onChange={(value) => updateForm({ published_at: value })}
             disabled={isPending}
           />
 

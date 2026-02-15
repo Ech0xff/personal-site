@@ -9,9 +9,10 @@ import { toDatetimeLocalValue } from "@/lib/shared/utils";
 import { Status } from "@/types";
 
 type EventFormState = {
+  id: string;
   title: string;
-  description: string;
-  publishedAt: string;
+  content: string;
+  published_at: string;
   color: string;
   status: Status;
   tags: string[];
@@ -25,9 +26,10 @@ type UseEventEditorParams = {
 };
 
 const DEFAULT_FORM: EventFormState = {
+  id: "",
   title: "",
-  description: "",
-  publishedAt: "",
+  content: "",
+  published_at: "",
   color: "blue",
   status: "hide",
   tags: [],
@@ -58,12 +60,13 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
         if (event) {
           setForm({
             ...DEFAULT_FORM,
+            id: event.id,
             title: event.title,
-            description: event.description || "",
-            publishedAt: toDatetimeLocalValue(event.published_at),
-            color: event.color || "blue",
-            status: event.status ?? "hide",
-            tags: event.tags || [],
+            content: event.content,
+            published_at: toDatetimeLocalValue(event.published_at),
+            color: event.color,
+            status: event.status,
+            tags: event.tags,
           });
         }
       } catch {
@@ -100,7 +103,7 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
       toast.error("Title is required");
       return;
     }
-    if (!form.publishedAt) {
+    if (!form.published_at) {
       toast.error("Please select publish time");
       return;
     }
@@ -110,12 +113,11 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
         await saveEventByBrowser({
           id: id || undefined,
           title: form.title.trim(),
-          description: form.description.trim() || null,
-          event_date: form.publishedAt.slice(0, 10),
-          published_at: new Date(form.publishedAt).toISOString(),
+          content: form.content.trim(),
+          published_at: new Date(form.published_at).toISOString(),
           color: form.color,
           status: form.status,
-          tags: form.tags.length > 0 ? form.tags : null,
+          tags: form.tags.length > 0 ? form.tags : undefined,
         });
 
         onSaved();

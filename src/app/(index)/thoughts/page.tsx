@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
-import ThoughtTimeline from "@/components/features/thoughts/ThoughtTimeline";
 import { fetchCachedThoughts } from "@/lib/server/services-cache/thoughts";
+import ThoughtTimeline from "@/lib/shared/utils/thoughts/ThoughtTimeline";
 
 import CollectionBody from "../components/CollectionBody";
 
@@ -36,7 +36,7 @@ export default async function ThoughtsPage() {
         </>
       }
     >
-      <ThoughtTimeline thoughts={thoughts} totalCount={totalThoughts} />
+      <ThoughtTimeline thoughts={thoughts} />
     </CollectionBody>
   );
 }

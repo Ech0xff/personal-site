@@ -59,7 +59,6 @@ export default function Page() {
                   "Title",
                   "Tags",
                   "Status",
-                  "Views",
                   "Published At",
                   "Actions",
                 ])}
@@ -81,10 +80,6 @@ export default function Page() {
                         status={post.status}
                         successCallback={syncStatus}
                       />,
-                    )}
-                    {td(
-                      post.view_count || 0,
-                      "text-sm text-zinc-500 dark:text-zinc-400",
                     )}
                     {td(
                       formatTime(post.published_at, "MMM D, YYYY"),

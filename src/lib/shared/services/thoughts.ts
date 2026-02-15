@@ -6,7 +6,7 @@ export const fetchThoughts = async (client: SupabaseClient<Database>) => {
   const { data, error } = await client
     .from("thoughts")
     .select("*")
-    .order("created_at", { ascending: false });
+    .order("published_at", { ascending: false });
   if (error) throw error;
   const items = (data || []).map((t) => ({ ...t, images: t.images || [] }));
   return items.sort((a, b) => {
