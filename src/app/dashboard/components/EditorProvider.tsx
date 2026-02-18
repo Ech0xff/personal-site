@@ -2,7 +2,9 @@
 
 import {
   ComponentType,
+  ReactElement,
   ReactNode,
+  cloneElement,
   createContext,
   useContext,
   useState,
@@ -10,6 +12,7 @@ import {
 
 export interface BaseEditorProps {
   id: string | null;
+  show: boolean;
   onClose: () => void;
   onSaved: () => void;
 }
@@ -36,7 +39,7 @@ export default function EditorProvider({
   editorComponent: Editor,
   onSaved,
 }: {
-  children: ReactNode;
+  children: ReactElement<{ children?: ReactNode }>;
   editorComponent: ComponentType<BaseEditorProps>;
   onSaved?: () => Promise<void> | void;
 }) {
@@ -53,21 +56,32 @@ export default function EditorProvider({
     setEditingId(null);
   };
 
+  const editorNode = (
+    <Editor
+      id={editingId}
+      show={showEditor}
+      onClose={closeEditor}
+      onSaved={() => {
+        if (onSaved) onSaved();
+        closeEditor();
+      }}
+    />
+  );
+
+  const childrenWithEditor = cloneElement(
+    children,
+    undefined,
+    <>
+      {children.props.children}
+      {editorNode}
+    </>,
+  );
+
   return (
     <EditorContext.Provider
       value={{ openEditor, closeEditor, isOpen: showEditor }}
     >
-      {children}
-      {showEditor && (
-        <Editor
-          id={editingId}
-          onClose={closeEditor}
-          onSaved={() => {
-            if (onSaved) onSaved();
-            closeEditor();
-          }}
-        />
-      )}
+      {childrenWithEditor}
     </EditorContext.Provider>
   );
 }

@@ -26,7 +26,12 @@ const COLOR_OPTIONS = [
 ];
 
 export { default as OpenButton } from "./OpenButton";
-export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
+export default function EventEditor({
+  id,
+  show,
+  onClose,
+  onSaved,
+}: BaseEditorProps) {
   const {
     form,
     updateForm,
@@ -38,6 +43,10 @@ export default function EventEditor({ id, onClose, onSaved }: BaseEditorProps) {
     pageTitle,
     submitButtonText,
   } = useHooks({ id, onSaved, onClose });
+
+  if (!show) {
+    return null;
+  }
 
   if (isLoading) {
     return (

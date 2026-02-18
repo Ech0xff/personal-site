@@ -56,6 +56,7 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
 
     const loadEvent = async () => {
       try {
+        setIsLoading(true);
         const event = await fetchEventByBrowser(id);
         if (event) {
           setForm({

@@ -13,7 +13,12 @@ import { PostMarkdown } from "@/components/ui/markdown";
 import { useHooks } from "./use-hooks";
 
 export { default as OpenButton } from "./OpenButton";
-export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
+export default function PostEditor({
+  id,
+  show,
+  onClose,
+  onSaved,
+}: BaseEditorProps) {
   const {
     form,
     updateForm,
@@ -31,6 +36,10 @@ export default function PostEditor({ id, onClose, onSaved }: BaseEditorProps) {
     onSaved,
     onClose,
   });
+
+  if (!show) {
+    return null;
+  }
 
   if (isLoading) {
     return (

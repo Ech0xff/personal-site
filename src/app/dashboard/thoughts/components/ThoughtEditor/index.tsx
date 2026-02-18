@@ -18,6 +18,7 @@ import { useHooks } from "./use-hooks";
 export { default as OpenButton } from "./OpenButton";
 export default function ThoughtEditor({
   id,
+  show,
   onClose,
   onSaved,
 }: BaseEditorProps) {
@@ -38,6 +39,10 @@ export default function ThoughtEditor({
     submitButtonText,
     handleSubmit,
   } = useHooks({ id, onSaved, onClose });
+
+  if (!show) {
+    return null;
+  }
 
   if (isLoading) {
     return (
