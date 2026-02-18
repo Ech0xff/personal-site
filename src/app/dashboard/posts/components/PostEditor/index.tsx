@@ -4,6 +4,7 @@ import { Eye, X } from "lucide-react";
 
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import DateTimeInput from "@/app/dashboard/components/ui/DateTimeInput";
+import HeaderSection from "@/app/dashboard/components/ui/HeaderSection";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import Button from "@/components/ui/Button";
 import StackX from "@/components/ui/StackX";
@@ -52,55 +53,56 @@ export default function PostEditor({
   return (
     <StackY className="absolute inset-0 z-50 bg-white dark:bg-zinc-900">
       {/* Top Toolbar */}
-      <StackX className="shrink-0 items-center justify-between border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
-        <StackX className="items-center gap-4">
-          <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
-            {pageTitle}
-          </h1>
-        </StackX>
-
-        <StackX className="items-center gap-3">
-          {/* View Mode Toggle */}
-          <SegmentedToggle
-            value={viewMode}
-            onChange={setViewMode}
-            options={[
-              { value: "edit", label: "Edit" },
-              { value: "split", label: "Split" },
-              { value: "preview", label: "Preview" },
-            ]}
+      <HeaderSection title={pageTitle}>
+        <div className="flex items-center rounded-lg bg-zinc-100 p-1 dark:bg-zinc-800">
+          <input
+            value={form.author}
+            onChange={(e) => updateForm({ author: e.target.value })}
+            type="text"
+            placeholder="Author"
+            className="w-32 px-3 py-1.5 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 dark:text-zinc-100 dark:placeholder:text-zinc-300"
           />
+        </div>
 
-          {/* Status Toggle */}
-          <SegmentedToggle
-            value={form.status}
-            onChange={(value) => updateForm({ status: value })}
-            options={[
-              { value: "hide", label: "Hide" },
-              { value: "show", label: "Show" },
-            ]}
-          />
+        <SegmentedToggle
+          value={viewMode}
+          onChange={setViewMode}
+          options={[
+            { value: "edit", label: "Edit" },
+            { value: "split", label: "Split" },
+            { value: "preview", label: "Preview" },
+          ]}
+        />
 
-          {/* Published At */}
-          <DateTimeInput
-            value={form.published_at}
-            onChange={(value) => updateForm({ published_at: value })}
-            disabled={isPending}
-          />
+        {/* Status Toggle */}
+        <SegmentedToggle
+          value={form.status}
+          onChange={(value) => updateForm({ status: value })}
+          options={[
+            { value: "hide", label: "Hide" },
+            { value: "show", label: "Show" },
+          ]}
+        />
 
-          {/* Save Button */}
-          <Button onClick={handleSubmit} disabled={isPending}>
-            {submitButtonText}
-          </Button>
+        {/* Published At */}
+        <DateTimeInput
+          value={form.published_at}
+          onChange={(value) => updateForm({ published_at: value })}
+          disabled={isPending}
+        />
 
-          <button
-            onClick={onClose}
-            className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
-          >
-            <X className="h-8 w-8" />
-          </button>
-        </StackX>
-      </StackX>
+        {/* Save Button */}
+        <Button onClick={handleSubmit} disabled={isPending}>
+          {submitButtonText}
+        </Button>
+
+        <button
+          onClick={onClose}
+          className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
+        >
+          <X className="h-8 w-8" />
+        </button>
+      </HeaderSection>
 
       {/* Main Editor Area */}
       <StackX className="min-h-0 flex-1 gap-0">
@@ -122,22 +124,11 @@ export default function PostEditor({
               onChange={(e) => updateForm({ title: e.target.value })}
               type="text"
               placeholder="Enter post title..."
-              className="w-full border-none bg-transparent text-xl font-semibold text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
+              className="w-full border-none text-xl font-semibold text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
             />
 
-            {/* Author and Tags */}
+            {/* Tags */}
             <StackX className="flex-wrap items-center gap-4">
-              <StackX className="items-center gap-2">
-                <span className="text-sm text-zinc-500">Author:</span>
-                <input
-                  value={form.author}
-                  onChange={(e) => updateForm({ author: e.target.value })}
-                  type="text"
-                  placeholder="Optional"
-                  className="w-24 rounded border border-zinc-200 bg-transparent px-2 py-1 text-sm text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
-                />
-              </StackX>
-
               <StackX className="min-w-0 flex-1 flex-wrap items-center gap-2">
                 <span className="shrink-0 text-sm text-zinc-500">Tags:</span>
                 <StackX className="min-w-0 flex-1 flex-wrap items-center gap-1">

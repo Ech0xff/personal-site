@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import DateTimeInput from "@/app/dashboard/components/ui/DateTimeInput";
+import HeaderSection from "@/app/dashboard/components/ui/HeaderSection";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import EventCard from "@/components/features/events/EventCard";
 import Button from "@/components/ui/Button";
@@ -61,37 +62,30 @@ export default function EventEditor({
       divided={true}
       className="absolute inset-0 z-50 bg-white *:p-4 dark:bg-zinc-900"
     >
-      <StackX className="items-center justify-between">
-        <StackX>
-          <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
-            {pageTitle}
-          </h1>
-        </StackX>
-        <StackX className="items-center gap-3">
-          <SegmentedToggle
-            value={form.status}
-            onChange={(value) => updateForm({ status: value as Status })}
-            options={[
-              { value: "hide", label: "Hide" },
-              { value: "show", label: "Show" },
-            ]}
-          />
-          <DateTimeInput
-            value={form.published_at}
-            onChange={(value) => updateForm({ published_at: value })}
-            disabled={isPending}
-          />
-          <Button onClick={handleSubmit} disabled={isPending}>
-            {submitButtonText}
-          </Button>
-          <button
-            onClick={onClose}
-            className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
-          >
-            <X className="h-8 w-8" />
-          </button>
-        </StackX>
-      </StackX>
+      <HeaderSection title={pageTitle}>
+        <SegmentedToggle
+          value={form.status}
+          onChange={(value) => updateForm({ status: value as Status })}
+          options={[
+            { value: "hide", label: "Hide" },
+            { value: "show", label: "Show" },
+          ]}
+        />
+        <DateTimeInput
+          value={form.published_at}
+          onChange={(value) => updateForm({ published_at: value })}
+          disabled={isPending}
+        />
+        <Button onClick={handleSubmit} disabled={isPending}>
+          {submitButtonText}
+        </Button>
+        <button
+          onClick={onClose}
+          className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
+        >
+          <X className="h-8 w-8" />
+        </button>
+      </HeaderSection>
       <StackX>
         <input
           value={form.title}

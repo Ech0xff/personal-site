@@ -4,6 +4,7 @@ import { Upload, X } from "lucide-react";
 
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import DateTimeInput from "@/app/dashboard/components/ui/DateTimeInput";
+import HeaderSection from "@/app/dashboard/components/ui/HeaderSection";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import Button from "@/components/ui/Button";
 import LightboxImage from "@/components/ui/Image";
@@ -54,58 +55,58 @@ export default function ThoughtEditor({
 
   return (
     <StackY className="absolute inset-0 z-50 bg-white dark:bg-zinc-900">
-      {/* Top Toolbar */}
-      <StackX className="shrink-0 items-center justify-between border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
-        <StackX className="items-center gap-4">
-          <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
-            {pageTitle}
-          </h1>
-        </StackX>
-
-        <StackX className="ml-auto items-center gap-3">
-          <SegmentedToggle
-            value={viewMode}
-            onChange={setViewMode}
-            options={[
-              { value: "edit", label: "Edit" },
-              { value: "split", label: "Split" },
-              { value: "preview", label: "Preview" },
-            ]}
+      <HeaderSection title={pageTitle}>
+        <div className="flex items-center rounded-lg bg-zinc-100 p-1 dark:bg-zinc-800">
+          <input
+            value={form.author}
+            onChange={(e) => updateForm({ author: e.target.value })}
+            type="text"
+            placeholder="Author"
+            className="w-32 rounded-md px-3 py-1.5 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 dark:text-zinc-100 dark:placeholder:text-zinc-300"
           />
-          <SegmentedToggle
-            value={form.status}
-            onChange={(value) => updateForm({ status: value as Status })}
-            options={[
-              { value: "hide", label: "Hide" },
-              { value: "show", label: "Show" },
-            ]}
-          />
-          <DateTimeInput
-            value={form.published_at}
-            onChange={(value) => updateForm({ published_at: value })}
-            disabled={isPending}
-          />
-          <Button
-            onClick={(e) => {
-              e.stopPropagation();
-              fileInputRef.current?.click();
-            }}
-            disabled={isPending}
-          >
-            <Upload className="h-4 w-4" />
-            Browse Files
-          </Button>
-          <Button onClick={handleSubmit} disabled={isPending}>
-            {submitButtonText}
-          </Button>
-          <button
-            onClick={onClose}
-            className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
-          >
-            <X className="h-8 w-8" />
-          </button>
-        </StackX>
-      </StackX>
+        </div>
+        <SegmentedToggle
+          value={viewMode}
+          onChange={setViewMode}
+          options={[
+            { value: "edit", label: "Edit" },
+            { value: "split", label: "Split" },
+            { value: "preview", label: "Preview" },
+          ]}
+        />
+        <SegmentedToggle
+          value={form.status}
+          onChange={(value) => updateForm({ status: value as Status })}
+          options={[
+            { value: "hide", label: "Hide" },
+            { value: "show", label: "Show" },
+          ]}
+        />
+        <DateTimeInput
+          value={form.published_at}
+          onChange={(value) => updateForm({ published_at: value })}
+          disabled={isPending}
+        />
+        <Button
+          onClick={(e) => {
+            e.stopPropagation();
+            fileInputRef.current?.click();
+          }}
+          disabled={isPending}
+        >
+          <Upload className="h-4 w-4" />
+          Browse Files
+        </Button>
+        <Button onClick={handleSubmit} disabled={isPending}>
+          {submitButtonText}
+        </Button>
+        <button
+          onClick={onClose}
+          className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
+        >
+          <X className="h-8 w-8" />
+        </button>
+      </HeaderSection>
       <StackY divided={true} className="flex-1 overflow-hidden *:p-4">
         {/* Main Editor Area */}
         <StackY
