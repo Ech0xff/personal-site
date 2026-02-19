@@ -1,0 +1,27 @@
+:root {
+  --duration-fast: 300ms;
+  --layout-padding-x: 0.5rem;
+  --color-text: #18181b;
+  --theme-bg: #ffffff;
+  --theme-border: transparent;
+
+  @media (min-width: 640px) {
+    --layout-padding-x: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    --layout-padding-x: 10svh;
+  }
+
+  @media (min-width: 1024px) {
+    --layout-padding-x: 20svh;
+  }
+
+  @media (min-width: 1280px) {
+    --layout-padding-x: 25svh;
+  }
+
+  @media (min-width: 1536px) {
+    --layout-padding-x: 30svh;
+  }
+}

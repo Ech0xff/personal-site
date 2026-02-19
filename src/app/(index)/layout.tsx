@@ -1,6 +1,8 @@
 import React from "react";
 
+import StackY from "@/components/ui/StackY";
 import NavBar from "./components/NavBar";
+import "./layout.scss";
 
 interface Props {
   children: React.ReactNode;
@@ -9,12 +11,12 @@ interface Props {
 export default function Layout({ children }: Props) {
   return (
     <>
-      <div className="relative flex flex-col duration-300">
+      <StackY className="relative duration-300 w-screen">
         <NavBar />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto px-(--layout-padding-x) pt-12">
+        <StackY className="flex-1 pt-12 px-(--layout-padding-x)">
           {children}
-        </main>
-      </div>
+        </StackY>
+      </StackY>
     </>
   );
 }
