@@ -3,11 +3,11 @@ import Link from "next/link";
 import { CalendarDays, FileText, Lightbulb, Menu } from "lucide-react";
 
 import ThemeToggle from "@/components/shared/ThemeToggle";
+import DropdownPopover from "@/components/ui/DropdownPopover";
 import StackX from "@/components/ui/StackX";
 import StackY from "@/components/ui/StackY";
 import { cn } from "@/lib/shared/utils";
 
-import DropdownPopover from "@/components/ui/DropdownPopover";
 import NavBarController from "./NavBarController";
 import "./index.scss";
 
@@ -69,6 +69,7 @@ export default function NavBar({ className }: { className?: string }) {
             {/* Nav Items - Right aligned */}
             <StackX className={cn("relative items-center gap-4")}>
               <DropdownPopover
+                className="md:hidden"
                 trigger={
                   <button>
                     <Menu className="h-5 w-5" />
