@@ -1,5 +1,6 @@
 import { Bilibili, Email, Github, Qq } from "@/components/icons";
 import FooterSection from "@/components/ui/FooterSection";
+import StackY from "@/components/ui/StackY";
 import { fetchCachedSummary } from "@/lib/server/services-cache/rpcs";
 import { cn } from "@/lib/shared/utils";
 import { BlogSummaryData } from "@/types";
@@ -214,7 +215,7 @@ export default async function HomePage() {
   return (
     <>
       <HeroSection />
-      <div className="relative flex w-full flex-col gap-3 pt-[10svh]">
+      <StackY className="relative flex w-full flex-col gap-3 pt-[10svh]">
         {/* background */}
         <div
           className={cn(
@@ -225,7 +226,7 @@ export default async function HomePage() {
         />
         <IntroductionSection stats={stats ?? undefined} />
         <FooterSection />
-      </div>
+      </StackY>
     </>
   );
 }

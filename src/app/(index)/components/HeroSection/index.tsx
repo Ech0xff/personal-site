@@ -34,25 +34,27 @@ export default function HeroSection() {
         )}
       >
         <AnimatedGridBackground />
-        <div className="relative flex flex-1 flex-col items-center justify-center">
+        <div className="relative flex flex-1 flex-col items-center justify-center text-[clamp(0.6rem,2vw,1.2rem)]">
           <div className="flex flex-col items-center">
             <h1
-              className="text-center text-6xl"
+              className="text-center text-[5em]"
               style={{ fontFamily: '"Titan One", cursive' }}
             >
               BBLF
             </h1>
+
             <div className="my-2 h-px w-full bg-linear-to-r from-transparent via-gray-300 to-transparent dark:via-gray-700" />
+
             <HeroTypewriter />
-            <div className="from-transparentmy-2 h-px w-full bg-linear-to-r" />
+
             <div
-              className="mt-8 text-9xl font-black"
+              className="mt-8 text-[4.5em] font-black"
               style={{
                 fontFamily:
                   '"Savoye LET", "Snell Roundhand", "Segoe Script", "Gabriola", cursive',
               }}
             >
-              In code we trust
+              Always Continue, Never break.
             </div>
           </div>
         </div>
