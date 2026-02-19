@@ -13,7 +13,7 @@ interface Props {
 export default function Layout({ children }: Props) {
   return (
     <>
-      <StackY className="relative min-h-dvw w-dvw duration-300">
+      <StackY className="relative min-h-dvh w-dvw duration-300">
         <NavBar />
         <StackY className="flex-1 px-(--layout-padding-x) pt-12">
           {children}
