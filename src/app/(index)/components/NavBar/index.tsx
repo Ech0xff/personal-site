@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { CalendarDays, FileText, Lightbulb } from "lucide-react";
+import { CalendarDays, FileText, Lightbulb, Menu } from "lucide-react";
 
 import ThemeToggle from "@/components/shared/ThemeToggle";
 import StackX from "@/components/ui/StackX";
@@ -68,20 +68,26 @@ export default function NavBar({ className }: { className?: string }) {
               </div>
             </Link>
             {/* Nav Items - Right aligned */}
-            <StackX className={cn("items-center gap-4")}>
-              <details className="group/nav-menu relative sm:hidden">
-                <summary className="cursor-pointer list-none select-none">
-                  MENU
-                </summary>
+            <StackX className={cn("relative items-center gap-4")}>
+              <StackX className="flex items-center gap-4 sm:hidden">
+                <button
+                  popoverTarget="nav-menu"
+                  className="flex items-center gap-2 rounded-md [anchor-name:--nav-anchor]"
+                >
+                  <Menu className="h-5 w-5" />
+                </button>
                 <StackY
+                  id="nav-menu"
+                  popover="auto"
                   className={cn(
-                    "pointer-events-none absolute top-full left-1/2 mt-2 -translate-x-1/2 items-center gap-2 rounded-md bg-(--nav-button-line-bg) p-2 opacity-0 backdrop-blur-md transition-all duration-300",
-                    "group-open/nav-menu:pointer-events-auto group-open/nav-menu:opacity-100",
+                    "pointer-events-none scale-50 items-center gap-2 rounded-md bg-white px-2 py-1 opacity-0 transition-discrete duration-100",
+                    "fixed top-[anchor(--nav-anchor_bottom)] left-[anchor(--nav-anchor_center)] mt-2 -translate-x-1/2",
+                    "open:scale-100 open:opacity-100",
                   )}
                 >
                   {navItems.map(navItemRender)}
                 </StackY>
-              </details>
+              </StackX>
 
               <StackX className="hidden items-center gap-4 sm:flex">
                 {navItems.map(navItemRender)}
