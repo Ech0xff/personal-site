@@ -1,6 +1,6 @@
 export default function FooterSection() {
   return (
-    <footer className="mt-12 flex w-full flex-col items-center justify-center gap-6 pb-8">
+    <footer className="mt-auto flex w-full flex-col items-center justify-center gap-6 pb-8">
       <div className="mx-auto w-full max-w-2xl px-4">
         <div className="h-px w-full bg-linear-to-r from-transparent via-slate-200 to-transparent dark:via-slate-800" />
       </div>

@@ -30,7 +30,7 @@ export default function HeroSection() {
       <div
         className={cn(
           "bg-brand-gradient absolute inset-0 flex h-screen w-screen snap-start flex-col items-center justify-center overflow-hidden transition-all",
-          "duration-(--duration-fast) group-data-[scrolled=true]:h-[60svh]",
+          "duration-300 group-data-[scrolled=true]:h-[60svh]",
         )}
       >
         <AnimatedGridBackground />
@@ -61,7 +61,7 @@ export default function HeroSection() {
       </div>
       <div
         className={cn(
-          "h-screen transition-all duration-(--duration-fast)",
+          "h-screen transition-all duration-300",
           "group-data-[scrolled=true]:h-[60svh]",
         )}
       ></div>

@@ -37,7 +37,7 @@ const DEFAULT_FORM: ThoughtFormState = {
   content: "",
   images: [],
   imageInput: "",
-  status: "hide",
+  status: "show",
   published_at: "",
 };
 

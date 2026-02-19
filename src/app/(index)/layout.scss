@@ -1,12 +1,8 @@
 :root {
-  --duration-fast: 300ms;
-  --layout-padding-x: 1rem;
-  --color-text: #18181b;
-  --theme-bg: #ffffff;
-  --theme-border: transparent;
+  --layout-padding-x: 0rem;
 
   @media (min-width: 640px) {
-    --layout-padding-x: 1rem;
+    --layout-padding-x: 2rem;
   }
 
   @media (min-width: 768px) {

@@ -1,5 +1,4 @@
 import { Bilibili, Email, Github, Qq } from "@/components/icons";
-import FooterSection from "@/components/ui/FooterSection";
 import StackY from "@/components/ui/StackY";
 import { fetchCachedSummary } from "@/lib/server/services-cache/rpcs";
 import { cn } from "@/lib/shared/utils";
@@ -110,7 +109,7 @@ function FindMeCard() {
             </div>
             <item.icon
               className={cn(
-                "absolute top-[50%] right-5 h-20 w-20 translate-y-[-50%] opacity-50 transition-transform duration-300 group-hover:scale-110",
+                "absolute top-[50%] right-5 w-15 h-15 aspect-square translate-y-[-50%] opacity-50 transition-transform duration-300 group-hover:scale-110",
                 "text-slate-400 dark:text-slate-500",
               )}
             />
@@ -200,12 +199,12 @@ function StatsCard({
 
 function IntroductionSection({ stats }: { stats?: BlogSummaryData }) {
   return (
-    <div className="flex flex-col px-4">
+    <StackY className="px-4">
       <AboutMeCard />
       <FindMeCard />
       <PostsCard posts={stats?.recently.posts} />
       <StatsCard statistics={stats?.statistics} />
-    </div>
+    </StackY>
   );
 }
 
@@ -219,13 +218,12 @@ export default async function HomePage() {
         {/* background */}
         <div
           className={cn(
-            "absolute top-0 bottom-0 left-1/2 w-screen -translate-x-1/2 transition-all duration-(--duration-fast)",
+            "absolute top-0 bottom-0 left-1/2 w-screen -translate-x-1/2 transition-all duration-300",
             "bg-linear-to-b from-(--theme-bg)/0 to-(--theme-bg) to-[18svh]",
             "group-data-[scrolled=true]:top-[-18svh]",
           )}
         />
         <IntroductionSection stats={stats ?? undefined} />
-        <FooterSection />
       </StackY>
     </>
   );

@@ -29,7 +29,7 @@ const DEFAULT_FORM: PostFormState = {
   title: "",
   content: "",
   author: "",
-  status: "hide",
+  status: "show",
   published_at: "",
   tags: [],
   tagInput: "",

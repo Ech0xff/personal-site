@@ -30,7 +30,7 @@ const DEFAULT_FORM: EventFormState = {
   content: "",
   published_at: "",
   color: "blue",
-  status: "hide",
+  status: "show",
   tags: [],
   tagInput: "",
 };
