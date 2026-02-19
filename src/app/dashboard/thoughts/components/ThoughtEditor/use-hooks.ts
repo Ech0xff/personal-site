@@ -70,7 +70,6 @@ export const useHooks = ({ id, onSaved, onClose }: UseThoughtEditorParams) => {
 
     const loadThought = async () => {
       try {
-        setIsLoading(true);
         const thought = await fetchThoughtByBrowser(id);
         if (thought) {
           setForm({

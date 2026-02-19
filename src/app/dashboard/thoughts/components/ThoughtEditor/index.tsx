@@ -8,7 +8,6 @@ import HeaderSection from "@/app/dashboard/components/ui/HeaderSection";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import Button from "@/components/ui/Button";
 import LightboxImage from "@/components/ui/Image";
-import StackX from "@/components/ui/StackX";
 import StackY from "@/components/ui/StackY";
 import { cn } from "@/lib/shared/utils";
 import ThoughtCard from "@/lib/shared/utils/thoughts/ThoughtCard";
@@ -19,7 +18,7 @@ import { useHooks } from "./use-hooks";
 export { default as OpenButton } from "./OpenButton";
 export default function ThoughtEditor({
   id,
-  show,
+  className,
   onClose,
   onSaved,
 }: BaseEditorProps) {
@@ -41,141 +40,137 @@ export default function ThoughtEditor({
     handleSubmit,
   } = useHooks({ id, onSaved, onClose });
 
-  if (!show) {
-    return null;
-  }
-
-  if (isLoading) {
-    return (
-      <StackX className="absolute inset-0 z-50 items-center justify-center bg-white dark:bg-zinc-900">
-        <div className="text-zinc-500">Loading...</div>
-      </StackX>
-    );
-  }
-
   return (
-    <StackY className="absolute inset-0 z-50 bg-white dark:bg-zinc-900">
-      <HeaderSection title={pageTitle}>
-        <div className="flex items-center rounded-lg bg-zinc-100 p-1 dark:bg-zinc-800">
-          <input
-            value={form.author}
-            onChange={(e) => updateForm({ author: e.target.value })}
-            type="text"
-            placeholder="Author"
-            className="w-32 rounded-md px-3 py-1.5 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 dark:text-zinc-100 dark:placeholder:text-zinc-300"
-          />
+    <StackY className={cn("bg-white dark:bg-zinc-900", className)}>
+      {isLoading ? (
+        <div className="flex flex-1 items-center justify-center text-zinc-500">
+          Loading...
         </div>
-        <SegmentedToggle
-          value={viewMode}
-          onChange={setViewMode}
-          options={[
-            { value: "edit", label: "Edit" },
-            { value: "split", label: "Split" },
-            { value: "preview", label: "Preview" },
-          ]}
-        />
-        <SegmentedToggle
-          value={form.status}
-          onChange={(value) => updateForm({ status: value as Status })}
-          options={[
-            { value: "hide", label: "Hide" },
-            { value: "show", label: "Show" },
-          ]}
-        />
-        <DateTimeInput
-          value={form.published_at}
-          onChange={(value) => updateForm({ published_at: value })}
-          disabled={isPending}
-        />
-        <Button
-          onClick={(e) => {
-            e.stopPropagation();
-            fileInputRef.current?.click();
-          }}
-          disabled={isPending}
-        >
-          <Upload className="h-4 w-4" />
-          Browse Files
-        </Button>
-        <Button onClick={handleSubmit} disabled={isPending}>
-          {submitButtonText}
-        </Button>
-        <button
-          onClick={onClose}
-          className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
-        >
-          <X className="h-8 w-8" />
-        </button>
-      </HeaderSection>
-      <StackY divided={true} className="flex-1 overflow-hidden *:p-4">
-        {/* Main Editor Area */}
-        <StackY
-          className={cn("overflow-y-auto", {
-            "flex-1": viewMode === "edit",
-            hidden: viewMode === "preview",
-            "basis-1/2": viewMode === "split",
-          })}
-        >
-          {/* Content and Upload Button Row */}
-          <StackY className="flex-1 gap-2">
-            <textarea
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              value={form.content}
-              onChange={(e) => updateForm({ content: e.target.value })}
-              placeholder="What's on your mind..."
-              className="h-full w-full resize-none rounded-lg bg-transparent text-zinc-900 outline-none placeholder:text-zinc-400 dark:border-zinc-700 dark:text-zinc-100"
+      ) : (
+        <>
+          <HeaderSection title={pageTitle}>
+            <div className="flex items-center rounded-lg bg-zinc-100 p-1 dark:bg-zinc-800">
+              <input
+                value={form.author}
+                onChange={(e) => updateForm({ author: e.target.value })}
+                type="text"
+                placeholder="Author"
+                className="w-32 rounded-md px-3 py-1.5 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 dark:text-zinc-100 dark:placeholder:text-zinc-300"
+              />
+            </div>
+            <SegmentedToggle
+              value={viewMode}
+              onChange={setViewMode}
+              options={[
+                { value: "edit", label: "Edit" },
+                { value: "split", label: "Split" },
+                { value: "preview", label: "Preview" },
+              ]}
             />
-            {form.images.length > 0 && (
-              <div className="mt-auto grid grid-cols-6 gap-2 md:grid-cols-8 lg:grid-cols-10">
-                {form.images.map((url, index) => (
-                  <LightboxImage
-                    key={index}
-                    src={url}
-                    alt={`Image ${index + 1}`}
-                    actionRender={() => (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          removeImage(index);
-                        }}
-                        className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-all group-hover/lightbox:opacity-100 hover:bg-red-600"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    )}
-                  />
-                ))}
-              </div>
-            )}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={(e) => {
-                if (e.target.files) {
-                  handleFileUpload(e.target.files);
-                  e.target.value = "";
-                }
+            <SegmentedToggle
+              value={form.status}
+              onChange={(value) => updateForm({ status: value as Status })}
+              options={[
+                { value: "hide", label: "Hide" },
+                { value: "show", label: "Show" },
+              ]}
+            />
+            <DateTimeInput
+              value={form.published_at}
+              onChange={(value) => updateForm({ published_at: value })}
+              disabled={isPending}
+            />
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                fileInputRef.current?.click();
               }}
-              className="hidden"
+              disabled={isPending}
+            >
+              <Upload className="h-4 w-4" />
+              Browse Files
+            </Button>
+            <Button onClick={handleSubmit} disabled={isPending}>
+              {submitButtonText}
+            </Button>
+            <button
+              onClick={onClose}
+              className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
+            >
+              <X className="h-8 w-8" />
+            </button>
+          </HeaderSection>
+          <StackY divided={true} className="flex-1 overflow-hidden *:p-4">
+            {/* Main Editor Area */}
+            <StackY
+              className={cn("overflow-y-auto", {
+                "flex-1": viewMode === "edit",
+                hidden: viewMode === "preview",
+                "basis-1/2": viewMode === "split",
+              })}
+            >
+              {/* Content and Upload Button Row */}
+              <StackY className="flex-1 gap-2">
+                <textarea
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  value={form.content}
+                  onChange={(e) => updateForm({ content: e.target.value })}
+                  placeholder="What's on your mind..."
+                  className="h-full w-full resize-none rounded-lg bg-transparent text-zinc-900 outline-none placeholder:text-zinc-400 dark:border-zinc-700 dark:text-zinc-100"
+                />
+                {form.images.length > 0 && (
+                  <div className="mt-auto grid grid-cols-6 gap-2 md:grid-cols-8 lg:grid-cols-10">
+                    {form.images.map((url, index) => (
+                      <LightboxImage
+                        key={index}
+                        src={url}
+                        alt={`Image ${index + 1}`}
+                        actionRender={() => (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              removeImage(index);
+                            }}
+                            className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-all group-hover/lightbox:opacity-100 hover:bg-red-600"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        )}
+                      />
+                    ))}
+                  </div>
+                )}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => {
+                    if (e.target.files) {
+                      handleFileUpload(e.target.files);
+                      e.target.value = "";
+                    }
+                  }}
+                  className="hidden"
+                />
+              </StackY>
+            </StackY>
+
+            {/* Preview */}
+            <ThoughtCard
+              className={cn("overflow-y-auto", {
+                "flex-1": viewMode === "preview",
+                hidden: viewMode === "edit",
+                "basis-1/2": viewMode === "split",
+              })}
+              thought={form}
             />
           </StackY>
-        </StackY>
-
-        {/* Preview */}
-        <ThoughtCard
-          className={cn("overflow-y-auto", {
-            "flex-1": viewMode === "preview",
-            hidden: viewMode === "edit",
-            "basis-1/2": viewMode === "split",
-          })}
-          thought={form}
-        />
-      </StackY>
+        </>
+      )}
     </StackY>
   );
 }

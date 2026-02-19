@@ -4,7 +4,6 @@ import {
   ComponentType,
   ReactElement,
   ReactNode,
-  cloneElement,
   createContext,
   useContext,
   useState,
@@ -12,7 +11,7 @@ import {
 
 export interface BaseEditorProps {
   id: string | null;
-  show: boolean;
+  className?: string;
   onClose: () => void;
   onSaved: () => void;
 }
@@ -56,32 +55,23 @@ export default function EditorProvider({
     setEditingId(null);
   };
 
-  const editorNode = (
-    <Editor
-      id={editingId}
-      show={showEditor}
-      onClose={closeEditor}
-      onSaved={() => {
-        if (onSaved) onSaved();
-        closeEditor();
-      }}
-    />
-  );
-
-  const childrenWithEditor = cloneElement(
-    children,
-    undefined,
-    <>
-      {children.props.children}
-      {editorNode}
-    </>,
-  );
-
   return (
     <EditorContext.Provider
       value={{ openEditor, closeEditor, isOpen: showEditor }}
     >
-      {childrenWithEditor}
+      {children}
+      {showEditor && (
+        <Editor
+          key={editingId || "new"}
+          id={editingId}
+          onClose={closeEditor}
+          onSaved={async () => {
+            await onSaved?.();
+            closeEditor();
+          }}
+          className="fixed inset-[anchor(top)_anchor(right)_anchor(bottom)_anchor(left)] z-100 [position-anchor:--dashboard]"
+        />
+      )}
     </EditorContext.Provider>
   );
 }

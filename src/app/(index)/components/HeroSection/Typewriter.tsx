@@ -38,7 +38,7 @@ export default function HeroTypewriter() {
 
   return (
     <div className="flex flex-col items-center space-y-2 font-mono tracking-widest text-gray-500 dark:text-gray-500">
-      <div className="flex items-center gap-1  text-[1.2em]  font-black">
+      <div className="flex items-center gap-1 text-[1.2em] font-black">
         {currentText}
         <span className="typing-cursor">▋</span>
       </div>

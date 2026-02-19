@@ -60,7 +60,6 @@ export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
 
     const loadPost = async () => {
       try {
-        setIsLoading(true);
         const post = await fetchPostByBrowser(id);
         if (post) {
           setForm({

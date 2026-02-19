@@ -53,6 +53,7 @@ export default function DashboardShell({
   return (
     <StackY
       {...props}
+      style={{ anchorName: "--dashboard" }}
       className={cn("relative flex-1 overflow-hidden *:p-4", className)}
     >
       <StackX className="items-center justify-between">
