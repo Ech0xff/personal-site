@@ -32,7 +32,7 @@ function AboutMeCard() {
     <Card title="Hi there 👋">
       <div className="mb-8 space-y-4 text-sm leading-relaxed sm:text-base">
         <p style={{ textIndent: "2em" }}>
-          I am <span className="font-bold">BBLF</span>, a Junior Software
+          I am <span className="font-bold">Yuzi</span>, a Junior Software
           Engineering student and a{" "}
           <span className="font-medium">Frontend Engineer</span>
           &nbsp;currently based in Chengdu. It is a genuine pleasure to cross

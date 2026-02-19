@@ -55,9 +55,7 @@ export default function NavBar({ className }: { className?: string }) {
           >
             {/* Navbar Main */}
             <Link href="/" className="flex flex-col">
-              <div className={cn("text-xl font-black", "sm:text-lg")}>
-                BBLF&#39;s Reef
-              </div>
+              <div className={cn("text-xl font-black", "sm:text-lg")}>BBLF</div>
               <div
                 className={cn(
                   "hidden text-sm text-gray-500 dark:text-gray-400",
