@@ -43,7 +43,7 @@ export default function EventCard({ event, className, renderActions }: Props) {
       {content && <EventMarkdown content={content} />}
 
       {/* Tags */}
-      <StackX className="mt-auto flex-wrap gap-2 pt-3">
+      <StackX className="mt-auto flex-wrap gap-2 py-3">
         {tags && tags.length > 0 && (
           <>
             {tags.map((tag) => (

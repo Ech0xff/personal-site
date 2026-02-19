@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, X } from "lucide-react";
+import { Eye, Save, X } from "lucide-react";
 
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import AuthorInput from "@/app/dashboard/components/ui/AuthorInput";
@@ -41,7 +41,10 @@ export default function PostEditor({
   });
 
   return (
-    <StackY className={cn("bg-white dark:bg-zinc-900", className)}>
+    <StackY
+      divided={true}
+      className={cn("bg-white dark:bg-zinc-900", className)}
+    >
       {/* Top Toolbar */}
       {isLoading ? (
         <div className="flex flex-1 items-center justify-center text-zinc-500">
@@ -85,7 +88,8 @@ export default function PostEditor({
 
             {/* Save Button */}
             <Button onClick={handleSubmit} disabled={isPending}>
-              {submitButtonText}
+              <Save className="h-4 w-4" />
+              <div className="hidden xl:block">{submitButtonText}</div>
             </Button>
 
             <button
@@ -97,10 +101,11 @@ export default function PostEditor({
           </HeaderSection>
 
           {/* Main Editor Area */}
-          <StackX className="min-h-0 flex-1 gap-0">
+          <StackX divided={true} className="min-h-0 flex-1 gap-0">
             {/* Left: Editor Panel */}
             <StackY
-              className={`flex flex-col overflow-hidden border-r border-zinc-200 transition-all dark:border-zinc-800 ${
+              divided={true}
+              className={`overflow-hidden *:p-4 ${
                 viewMode === "preview"
                   ? "hidden"
                   : viewMode === "split"
@@ -109,7 +114,7 @@ export default function PostEditor({
               }`}
             >
               {/* Editor Header */}
-              <div className="shrink-0 space-y-3 border-b border-zinc-200 p-4 dark:border-zinc-800">
+              <StackY className="shrink-0 gap-3">
                 {/* Title Input */}
                 <input
                   value={form.title}
@@ -159,10 +164,10 @@ export default function PostEditor({
                     </StackX>
                   </StackX>
                 </StackX>
-              </div>
+              </StackY>
 
               {/* Content Editor */}
-              <div className="min-h-0 flex-1 p-4">
+              <div className="min-h-0 flex-1">
                 <textarea
                   value={form.content}
                   onChange={(e) => updateForm({ content: e.target.value })}
@@ -174,7 +179,8 @@ export default function PostEditor({
 
             {/* Right: Preview Panel */}
             <StackY
-              className={`flex flex-col overflow-hidden transition-all ${
+              divided={true}
+              className={`flex flex-col overflow-hidden transition-all *:p-4 ${
                 viewMode === "edit"
                   ? "hidden"
                   : viewMode === "split"
@@ -183,15 +189,13 @@ export default function PostEditor({
               }`}
             >
               {/* Preview Header */}
-              <div className="shrink-0 border-b border-zinc-200 p-4 dark:border-zinc-800">
-                <StackX className="items-center gap-2 text-sm text-zinc-500">
-                  <Eye className="h-4 w-4" />
-                  Preview
-                </StackX>
-              </div>
+              <StackX className="items-center gap-2 text-sm text-zinc-500">
+                <Eye className="h-4 w-4" />
+                Preview
+              </StackX>
 
               {/* Preview Content */}
-              <div className="min-h-0 flex-1 overflow-auto p-6">
+              <div className="min-h-0 flex-1 overflow-auto">
                 {/* Preview Title */}
                 {form.title ? (
                   <h1 className="mb-4 text-2xl font-bold text-zinc-900 dark:text-zinc-100">

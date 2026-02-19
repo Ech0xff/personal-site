@@ -218,7 +218,7 @@ export default async function HomePage() {
         {/* background */}
         <div
           className={cn(
-            "absolute top-0 bottom-0 left-1/2 w-screen -translate-x-1/2 transition-all duration-300",
+            "absolute top-0 bottom-0 left-1/2 w-dvw -translate-x-1/2 transition-all duration-300",
             "bg-linear-to-b from-(--theme-bg)/0 to-(--theme-bg) to-[18svh]",
             "group-data-[scrolled=true]:top-[-18svh]",
           )}

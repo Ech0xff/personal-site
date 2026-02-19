@@ -7,6 +7,7 @@ import StackX from "@/components/ui/StackX";
 import StackY from "@/components/ui/StackY";
 import { cn } from "@/lib/shared/utils";
 
+import DropdownPopover from "@/components/ui/DropdownPopover";
 import NavBarController from "./NavBarController";
 import "./index.scss";
 
@@ -34,7 +35,7 @@ export default function NavBar({ className }: { className?: string }) {
       <NavBarController />
       <StackY
         className={cn(
-          "fixed top-0 left-0 z-100 w-screen duration-300",
+          "fixed top-0 left-0 z-100 w-dvw duration-300",
           "group-data-[scrolled=true]:backdrop-blur-md",
           "sm:group-data-[home=false]:px-(--layout-padding-x)",
           className,
@@ -67,25 +68,15 @@ export default function NavBar({ className }: { className?: string }) {
             </Link>
             {/* Nav Items - Right aligned */}
             <StackX className={cn("relative items-center gap-4")}>
-              <StackX className="flex items-center gap-4 sm:hidden">
-                <button
-                  popoverTarget="nav-menu"
-                  className="flex items-center gap-2 rounded-md [anchor-name:--nav-anchor]"
-                >
-                  <Menu className="h-5 w-5" />
-                </button>
-                <StackY
-                  id="nav-menu"
-                  popover="auto"
-                  className={cn(
-                    "pointer-events-none scale-50 items-center gap-2 rounded-md bg-white px-2 py-1 opacity-0 transition-discrete duration-100",
-                    "fixed top-[anchor(--nav-anchor_bottom)] left-[anchor(--nav-anchor_center)] mt-2 -translate-x-1/2",
-                    "open:pointer-events-auto open:scale-100 open:opacity-100",
-                  )}
-                >
-                  {navItems.map(navItemRender)}
-                </StackY>
-              </StackX>
+              <DropdownPopover
+                trigger={
+                  <button>
+                    <Menu className="h-5 w-5" />
+                  </button>
+                }
+              >
+                {navItems.map(navItemRender)}
+              </DropdownPopover>
 
               <StackX className="hidden items-center gap-4 sm:flex">
                 {navItems.map(navItemRender)}
@@ -100,7 +91,7 @@ export default function NavBar({ className }: { className?: string }) {
           className={cn(
             "mx-auto h-px bg-(--nav-button-line-bg) duration-300",
             "w-full",
-            "group-data-[home=true]:w-screen",
+            "group-data-[home=true]:w-dvw",
             "sm:w-[calc(100svw-2*var(--layout-padding-x))]",
           )}
         />

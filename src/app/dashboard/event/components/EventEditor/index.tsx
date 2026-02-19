@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { Save, X } from "lucide-react";
 
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import DateTimeInput from "@/app/dashboard/components/ui/DateTimeInput";
@@ -48,7 +48,7 @@ export default function EventEditor({
   return (
     <StackY
       divided={true}
-      className={cn("bg-white dark:bg-zinc-900", className)}
+      className={cn("bg-white *:p-4 dark:bg-zinc-900", className)}
     >
       {isLoading ? (
         <div className="flex flex-1 items-center justify-center text-zinc-500">
@@ -71,7 +71,8 @@ export default function EventEditor({
               disabled={isPending}
             />
             <Button onClick={handleSubmit} disabled={isPending}>
-              {submitButtonText}
+              <Save className="h-4 w-4" />
+              <div className="hidden xl:block">{submitButtonText}</div>
             </Button>
             <button
               onClick={onClose}
@@ -80,7 +81,7 @@ export default function EventEditor({
               <X className="h-8 w-8" />
             </button>
           </HeaderSection>
-          <StackX>
+          <StackX className="p-4">
             <input
               value={form.title}
               onChange={(e) => updateForm({ title: e.target.value })}

@@ -29,7 +29,7 @@ export default function HeroSection() {
     <>
       <div
         className={cn(
-          "bg-brand-gradient absolute inset-0 flex h-screen w-screen snap-start flex-col items-center justify-center overflow-hidden transition-all",
+          "bg-brand-gradient absolute inset-0 flex h-dvw w-dvw snap-start flex-col items-center justify-center overflow-hidden transition-all",
           "duration-300 group-data-[scrolled=true]:h-[60svh]",
         )}
       >
@@ -61,7 +61,7 @@ export default function HeroSection() {
       </div>
       <div
         className={cn(
-          "h-screen transition-all duration-300",
+          "h-dvw transition-all duration-300",
           "group-data-[scrolled=true]:h-[60svh]",
         )}
       ></div>

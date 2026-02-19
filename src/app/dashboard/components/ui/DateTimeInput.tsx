@@ -60,7 +60,6 @@ export default function DateTimeInput({
         className="sr-only"
       />
       <CalendarDays className="h-4 w-4" />
-      Time
     </Button>
   );
 }
