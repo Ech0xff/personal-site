@@ -18,6 +18,7 @@ export default function DropdownPopover({
   trigger,
   children,
   className,
+  popoverClassName,
 }: Props) {
   const uniqueId = useId().replace(/:/g, "");
   const popoverId = `popover-${uniqueId}`;
@@ -40,6 +41,7 @@ export default function DropdownPopover({
         className={cn(
           "pointer-events-none fixed z-10 mt-2 flex -translate-x-1/2 scale-50 flex-col items-center rounded-md border border-zinc-200 bg-white px-2 py-1 text-zinc-700 opacity-0 shadow-sm duration-200 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200",
           "open:pointer-events-auto open:scale-100 open:opacity-100",
+          popoverClassName,
         )}
         style={{
           positionAnchor: anchorName,
