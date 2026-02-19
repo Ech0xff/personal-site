@@ -10,7 +10,6 @@ import {
   saveThoughtByBrowser,
   uploadImageByBrowser,
 } from "@/lib/client/services";
-import { toDatetimeLocalValue } from "@/lib/shared/utils";
 import { Status } from "@/types";
 
 export type ViewMode = "edit" | "preview" | "split";
@@ -79,7 +78,7 @@ export const useHooks = ({ id, onSaved, onClose }: UseThoughtEditorParams) => {
             content: thought.content,
             images: thought.images,
             status: thought.status,
-            published_at: toDatetimeLocalValue(thought.published_at),
+            published_at: thought.published_at,
           });
         }
       } catch {

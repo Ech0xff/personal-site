@@ -5,7 +5,6 @@ import { useCallback, useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import { fetchPostByBrowser, savePostByBrowser } from "@/lib/client/services";
-import { toDatetimeLocalValue } from "@/lib/shared/utils";
 import { Status } from "@/types";
 
 export type ViewMode = "edit" | "preview" | "split";
@@ -68,7 +67,7 @@ export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
             content: post.content,
             author: post.author,
             status: post.status,
-            published_at: toDatetimeLocalValue(post.published_at),
+            published_at: post.published_at,
             tags: post.tags ?? [],
           });
         }
@@ -123,7 +122,7 @@ export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
           content: form.content.trim(),
           author: form.author.trim(),
           status: form.status,
-          published_at: new Date(form.published_at).toISOString(),
+          published_at: form.published_at,
           tags: form.tags.length > 0 ? form.tags : null,
         });
 

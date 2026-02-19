@@ -5,7 +5,6 @@ import { useCallback, useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import { fetchEventByBrowser, saveEventByBrowser } from "@/lib/client/services";
-import { toDatetimeLocalValue } from "@/lib/shared/utils";
 import { Status } from "@/types";
 
 type EventFormState = {
@@ -63,7 +62,7 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
             id: event.id,
             title: event.title,
             content: event.content,
-            published_at: toDatetimeLocalValue(event.published_at),
+            published_at: event.published_at,
             color: event.color,
             status: event.status,
             tags: event.tags,
@@ -114,7 +113,7 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
           id: id || undefined,
           title: form.title.trim(),
           content: form.content.trim(),
-          published_at: new Date(form.published_at).toISOString(),
+          published_at: form.published_at,
           color: form.color,
           status: form.status,
           tags: form.tags.length > 0 ? form.tags : undefined,

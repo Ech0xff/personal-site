@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 import { CalendarDays } from "lucide-react";
 
 import Button from "@/components/ui/Button";
+import { datetimeLocalToUtcIso, toDatetimeLocalValue } from "@/lib/shared/utils";
 
 type DateTimeInputProps = {
   value: string;
@@ -23,6 +24,14 @@ export default function DateTimeInput({
   disabled,
 }: DateTimeInputProps) {
   const dateInputRef = useRef<HTMLInputElement>(null);
+  const fallbackNowUtc = useMemo(() => new Date().toISOString(), []);
+  const resolvedValue = toDatetimeLocalValue(value || fallbackNowUtc);
+
+  useEffect(() => {
+    if (!value) {
+      onChange(fallbackNowUtc);
+    }
+  }, [fallbackNowUtc, onChange, value]);
 
   return (
     <Button
@@ -43,8 +52,10 @@ export default function DateTimeInput({
     >
       <input
         ref={dateInputRef}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
+        value={resolvedValue}
+        onChange={(event) =>
+          onChange(datetimeLocalToUtcIso(event.target.value, fallbackNowUtc))
+        }
         type="datetime-local"
         className="sr-only"
       />

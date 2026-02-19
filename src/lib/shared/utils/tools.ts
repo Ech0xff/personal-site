@@ -77,6 +77,19 @@ export const toDatetimeLocalValue = (
   return date.format("YYYY-MM-DDTHH:mm");
 };
 
+/** Converts a datetime-local string in app timezone to UTC ISO string */
+export const datetimeLocalToUtcIso = (
+  dateInput: string | null | undefined,
+  fallback = "",
+) => {
+  if (!dateInput) return fallback;
+
+  const date = dayjs.tz(dateInput, APP_TIME_ZONE);
+  if (!date.isValid()) return fallback;
+
+  return date.utc().toISOString();
+};
+
 /** Formats a file size in bytes into a human-readable string */
 export const formatSize = (bytes: number) => {
   if (bytes === 0) return "—";
