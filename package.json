@@ -10,8 +10,6 @@
     "format": "prettier --write .",
     "reset:db:dev": "bun ./scripts/reset-db.ts dev",
     "reset:db:prod": "bun ./scripts/reset-db.ts prod",
-    "reset:webhook:dev": "bun ./scripts/reset-webhook.ts dev",
-    "reset:webhook:prod": "bun ./scripts/reset-webhook.ts prod",
     "set:admin:dev": "bun ./scripts/set-admin.ts dev",
     "set:admin:prod": "bun ./scripts/set-admin.ts prod",
     "vercel:env:push:dev": "bun ./scripts/push-env.ts dev",

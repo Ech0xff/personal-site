@@ -164,10 +164,8 @@ BBLF/
 
 These scripts require explicit environment selection and interactive confirmation (`yes`) before execution.
 
-- `bun run reset:db:dev` - Reset database with `.env.development`
-- `bun run reset:db:prod` - Reset database with `.env.production`
-- `bun run reset:webhook:dev` - Configure webhook with `.env.development`
-- `bun run reset:webhook:prod` - Configure webhook with `.env.production`
+- `bun run reset:db:dev` - Reset database + configure webhook with `.env.development`
+- `bun run reset:db:prod` - Reset database + configure webhook with `.env.production`
 - `bun run vercel:env:push:dev` - Push env vars to Vercel `development`
 - `bun run vercel:env:push:prod` - Push env vars to Vercel `production`
 
