@@ -76,7 +76,7 @@ export function useAccount() {
       .linkIdentity({
         provider,
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+          redirectTo: `${window.location.origin}/auth/callback?next=/dashboard/account`,
         },
       })
       .then(({ data, error }) => {

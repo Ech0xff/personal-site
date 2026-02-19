@@ -54,7 +54,7 @@ export const useHooks = () => {
     }
 
     toast.success("Logged in successfully.", { id: toastId });
-    redirect("/");
+    redirect("/dashboard/account");
   };
 
   const handleRegister = async ({
@@ -85,7 +85,7 @@ export const useHooks = () => {
     }
 
     toast.success("Account created successfully.", { id: toastId });
-    redirect("/");
+    redirect("/dashboard/account");
   };
 
   const handleLogout = async () => {
@@ -106,7 +106,7 @@ export const useHooks = () => {
     const { data, error } = await client.auth.signInWithOAuth({
       provider: "github",
       options: {
-        redirectTo: `${origin}/auth/callback`,
+        redirectTo: `${origin}/auth/callback?next=/dashboard/account`,
       },
     });
 

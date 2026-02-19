@@ -3,6 +3,7 @@
 import { Upload, X } from "lucide-react";
 
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
+import AuthorInput from "@/app/dashboard/components/ui/AuthorInput";
 import DateTimeInput from "@/app/dashboard/components/ui/DateTimeInput";
 import HeaderSection from "@/app/dashboard/components/ui/HeaderSection";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
@@ -49,15 +50,11 @@ export default function ThoughtEditor({
       ) : (
         <>
           <HeaderSection title={pageTitle}>
-            <div className="flex items-center rounded-lg bg-zinc-100 p-1 dark:bg-zinc-800">
-              <input
-                value={form.author}
-                onChange={(e) => updateForm({ author: e.target.value })}
-                type="text"
-                placeholder="Author"
-                className="w-32 rounded-md px-3 py-1.5 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 dark:text-zinc-100 dark:placeholder:text-zinc-300"
-              />
-            </div>
+            <AuthorInput
+              value={form.author}
+              onChange={(value) => updateForm({ author: value })}
+              disabled={isPending}
+            />
             <SegmentedToggle
               value={viewMode}
               onChange={setViewMode}
