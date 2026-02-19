@@ -5,6 +5,7 @@ import { cn } from "@/lib/shared/utils";
 interface Props extends ComponentPropsWithoutRef<"div"> {
   x?: true;
   y?: true;
+  
   divide?: true;
   children?: React.ReactNode;
   className?: string;
@@ -23,7 +24,7 @@ export default function Stack({
   return (
     <div
       className={cn(
-        "divide-zinc-200 dark:divide-zinc-800",
+        "divide-zinc-200 dark:divide-zinc-800 border-zinc-200 dark:border-zinc-800",
         divideClass,
         layoutClass,
         className,

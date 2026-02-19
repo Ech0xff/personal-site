@@ -1,19 +1,20 @@
 "use client";
 
-import { Upload, X } from "lucide-react";
+import { Edit, Save, Upload, X } from "lucide-react";
 
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import AuthorInput from "@/app/dashboard/components/ui/AuthorInput";
 import DateTimeInput from "@/app/dashboard/components/ui/DateTimeInput";
 import HeaderSection from "@/app/dashboard/components/ui/HeaderSection";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
-import Button from "@/components/ui/Button";
 import LightboxImage from "@/components/ui/Image";
+import Stack from "@/components/ui/Stack";
 import StackY from "@/components/ui/StackY";
 import { cn } from "@/lib/shared/utils";
 import ThoughtCard from "@/lib/shared/utils/thoughts/ThoughtCard";
 import { Status } from "@/types";
 
+import DropdownPopover from "../../../../../components/ui/DropdownPopover";
 import { useHooks } from "./use-hooks";
 
 export { default as OpenButton } from "./OpenButton";
@@ -37,12 +38,11 @@ export default function ThoughtEditor({
     isPending,
     isLoading,
     pageTitle,
-    submitButtonText,
     handleSubmit,
   } = useHooks({ id, onSaved, onClose });
 
   return (
-    <StackY className={cn("bg-white dark:bg-zinc-900", className)}>
+    <StackY className={cn("min- bg-white dark:bg-zinc-900", className)}>
       {isLoading ? (
         <div className="flex flex-1 items-center justify-center text-zinc-500">
           Loading...
@@ -50,46 +50,101 @@ export default function ThoughtEditor({
       ) : (
         <>
           <HeaderSection title={pageTitle}>
-            <AuthorInput
-              value={form.author}
-              onChange={(value) => updateForm({ author: value })}
-              disabled={isPending}
-            />
-            <SegmentedToggle
-              value={viewMode}
-              onChange={setViewMode}
-              options={[
-                { value: "edit", label: "Edit" },
-                { value: "split", label: "Split" },
-                { value: "preview", label: "Preview" },
-              ]}
-            />
-            <SegmentedToggle
-              value={form.status}
-              onChange={(value) => updateForm({ status: value as Status })}
-              options={[
-                { value: "hide", label: "Hide" },
-                { value: "show", label: "Show" },
-              ]}
-            />
-            <DateTimeInput
-              value={form.published_at}
-              onChange={(value) => updateForm({ published_at: value })}
-              disabled={isPending}
-            />
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                fileInputRef.current?.click();
-              }}
-              disabled={isPending}
+            <DropdownPopover
+              className="md:hidden"
+              trigger={
+                <button className="duration-300 hover:scale-110">
+                  <Edit className="h-6 w-6" />
+                </button>
+              }
             >
-              <Upload className="h-4 w-4" />
-              Browse Files
-            </Button>
-            <Button onClick={handleSubmit} disabled={isPending}>
-              {submitButtonText}
-            </Button>
+              <Stack y className="gap-1">
+                <Stack x className="w-full justify-between gap-1">
+                  <button
+                    className="ml-3"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      fileInputRef.current?.click();
+                    }}
+                    disabled={isPending}
+                  >
+                    <Upload />
+                  </button>
+                  <AuthorInput
+                    value={form.author}
+                    onChange={(value) => updateForm({ author: value })}
+                    disabled={isPending}
+                  />
+                </Stack>
+                <Stack x className="w-full justify-between gap-1">
+                  <DateTimeInput
+                    className="ml-3"
+                    value={form.published_at}
+                    onChange={(value) => updateForm({ published_at: value })}
+                    disabled={isPending}
+                  />
+                  <SegmentedToggle
+                    className="ml-auto"
+                    value={form.status}
+                    onChange={(value) =>
+                      updateForm({ status: value as Status })
+                    }
+                    options={[
+                      { value: "hide", label: "Hide" },
+                      { value: "show", label: "Show" },
+                    ]}
+                  />
+                </Stack>
+                <SegmentedToggle
+                  value={viewMode}
+                  onChange={setViewMode}
+                  options={[
+                    { value: "edit", label: "Edit" },
+                    { value: "split", label: "Split" },
+                    { value: "preview", label: "Preview" },
+                  ]}
+                />
+              </Stack>
+            </DropdownPopover>
+            <Stack x className="hidden gap-2 md:flex">
+              <AuthorInput
+                value={form.author}
+                onChange={(value) => updateForm({ author: value })}
+                disabled={isPending}
+              />
+              <SegmentedToggle
+                value={viewMode}
+                onChange={setViewMode}
+                options={[
+                  { value: "edit", label: "Edit" },
+                  { value: "split", label: "Split" },
+                  { value: "preview", label: "Preview" },
+                ]}
+              />
+              <SegmentedToggle
+                className="ml-auto"
+                value={form.status}
+                onChange={(value) => updateForm({ status: value as Status })}
+                options={[
+                  { value: "hide", label: "Hide" },
+                  { value: "show", label: "Show" },
+                ]}
+              />
+
+              <DateTimeInput
+                className="duration-300 hover:scale-110"
+                value={form.published_at}
+                onChange={(value) => updateForm({ published_at: value })}
+                disabled={isPending}
+              />
+            </Stack>
+            <button
+              onClick={handleSubmit}
+              className="duration-300 hover:scale-110"
+            >
+              <Save className="h-6 w-6" />
+            </button>
+
             <button
               onClick={onClose}
               className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"

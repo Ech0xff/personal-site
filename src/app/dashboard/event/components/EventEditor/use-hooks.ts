@@ -20,7 +20,7 @@ type EventFormState = {
 
 type UseEventEditorParams = {
   id: string | null;
-  onSaved: () => void;
+  onSaved: () => Promise<void>;
   onClose: () => void;
 };
 
@@ -108,6 +108,9 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
     }
 
     startTransition(async () => {
+      const toastId = toast.loading(
+        isNewMode ? "Creating event..." : "Updating event...",
+      );
       try {
         await saveEventByBrowser({
           id: id || undefined,
@@ -119,20 +122,17 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
           tags: form.tags.length > 0 ? form.tags : undefined,
         });
 
-        onSaved();
+        await onSaved();
+        toast.success(isNewMode ? "Event created" : "Event updated", {
+          id: toastId,
+        });
       } catch {
-        toast.error("Failed to save event");
+        toast.error("Failed to save event", { id: toastId });
       }
     });
   };
 
   const pageTitle = isNewMode ? "New Event" : "Edit Event";
-  const submitButtonText = isPending
-    ? "Saving..."
-    : isNewMode
-      ? "Create Event"
-      : "Update Event";
-
   return {
     form,
     updateForm,
@@ -143,6 +143,5 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
     isPending,
     isLoading,
     pageTitle,
-    submitButtonText,
   };
 };

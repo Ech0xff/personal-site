@@ -1,18 +1,18 @@
 "use client";
 
-import { Eye, Save, X } from "lucide-react";
+import { Edit, Eye, Save, X } from "lucide-react";
 
 import { BaseEditorProps } from "@/app/dashboard/components/EditorProvider";
 import AuthorInput from "@/app/dashboard/components/ui/AuthorInput";
 import DateTimeInput from "@/app/dashboard/components/ui/DateTimeInput";
 import HeaderSection from "@/app/dashboard/components/ui/HeaderSection";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
-import Button from "@/components/ui/Button";
 import StackX from "@/components/ui/StackX";
 import StackY from "@/components/ui/StackY";
 import { PostMarkdown } from "@/components/ui/markdown";
 import { cn } from "@/lib/shared/utils";
 
+import DropdownPopover from "../../../../../components/ui/DropdownPopover";
 import { useHooks } from "./use-hooks";
 
 export { default as OpenButton } from "./OpenButton";
@@ -33,7 +33,6 @@ export default function PostEditor({
     isPending,
     isLoading,
     pageTitle,
-    submitButtonText,
   } = useHooks({
     id,
     onSaved,
@@ -53,44 +52,91 @@ export default function PostEditor({
       ) : (
         <>
           <HeaderSection title={pageTitle}>
-            <AuthorInput
-              value={form.author}
-              onChange={(value) => updateForm({ author: value })}
-              disabled={isPending}
-            />
+            <DropdownPopover
+              className="md:hidden"
+              trigger={
+                <button className="duration-300 hover:scale-110">
+                  <Edit className="h-6 w-6" />
+                </button>
+              }
+            >
+              <StackY className="gap-1">
+                <AuthorInput
+                  value={form.author}
+                  onChange={(value) => updateForm({ author: value })}
+                  disabled={isPending}
+                />
+                <StackX className="w-full justify-between gap-1">
+                  <DateTimeInput
+                    className="ml-3"
+                    value={form.published_at}
+                    onChange={(value) => updateForm({ published_at: value })}
+                    disabled={isPending}
+                  />
+                  <SegmentedToggle
+                    className="ml-auto"
+                    value={form.status}
+                    onChange={(value) => updateForm({ status: value })}
+                    options={[
+                      { value: "hide", label: "Hide" },
+                      { value: "show", label: "Show" },
+                    ]}
+                  />
+                </StackX>
+                <SegmentedToggle
+                  value={viewMode}
+                  onChange={setViewMode}
+                  options={[
+                    { value: "edit", label: "Edit" },
+                    { value: "split", label: "Split" },
+                    { value: "preview", label: "Preview" },
+                  ]}
+                />
+              </StackY>
+            </DropdownPopover>
 
-            <SegmentedToggle
-              value={viewMode}
-              onChange={setViewMode}
-              options={[
-                { value: "edit", label: "Edit" },
-                { value: "split", label: "Split" },
-                { value: "preview", label: "Preview" },
-              ]}
-            />
+            <StackX className="hidden gap-2 md:flex">
+              <AuthorInput
+                value={form.author}
+                onChange={(value) => updateForm({ author: value })}
+                disabled={isPending}
+              />
 
-            {/* Status Toggle */}
-            <SegmentedToggle
-              value={form.status}
-              onChange={(value) => updateForm({ status: value })}
-              options={[
-                { value: "hide", label: "Hide" },
-                { value: "show", label: "Show" },
-              ]}
-            />
+              <SegmentedToggle
+                value={viewMode}
+                onChange={setViewMode}
+                options={[
+                  { value: "edit", label: "Edit" },
+                  { value: "split", label: "Split" },
+                  { value: "preview", label: "Preview" },
+                ]}
+              />
 
-            {/* Published At */}
-            <DateTimeInput
-              value={form.published_at}
-              onChange={(value) => updateForm({ published_at: value })}
-              disabled={isPending}
-            />
+              <SegmentedToggle
+                value={form.status}
+                onChange={(value) => updateForm({ status: value })}
+                options={[
+                  { value: "hide", label: "Hide" },
+                  { value: "show", label: "Show" },
+                ]}
+              />
+
+              <DateTimeInput
+                className="duration-300 hover:scale-110"
+                value={form.published_at}
+                onChange={(value) => updateForm({ published_at: value })}
+                disabled={isPending}
+              />
+            </StackX>
 
             {/* Save Button */}
-            <Button onClick={handleSubmit} disabled={isPending}>
-              <Save className="h-4 w-4" />
-              <div className="hidden xl:block">{submitButtonText}</div>
-            </Button>
+            <button
+              onClick={handleSubmit}
+              disabled={isPending}
+              className="duration-300 hover:scale-110 disabled:opacity-50"
+            >
+              <Save className="h-6 w-6" />
+            </button>
 
             <button
               onClick={onClose}

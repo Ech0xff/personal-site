@@ -27,7 +27,7 @@ type ThoughtFormState = {
 
 type UseThoughtEditorParams = {
   id: string | null;
-  onSaved: () => void;
+  onSaved: () => Promise<void>;
   onClose: () => void;
 };
 
@@ -175,6 +175,9 @@ export const useHooks = ({ id, onSaved, onClose }: UseThoughtEditorParams) => {
     }
 
     startTransition(async () => {
+      const toastId = toast.loading(
+        isNewMode ? "Creating thought..." : "Updating thought...",
+      );
       try {
         await saveThoughtByBrowser({
           id: id || undefined,
@@ -185,10 +188,14 @@ export const useHooks = ({ id, onSaved, onClose }: UseThoughtEditorParams) => {
           published_at: form.published_at,
         });
 
-        onSaved();
+        await onSaved();
+        toast.success(isNewMode ? "Thought created" : "Thought updated", {
+          id: toastId,
+        });
       } catch (error) {
         toast.error(
           error instanceof Error ? error.message : "Failed to save thought",
+          { id: toastId },
         );
       }
     });

@@ -13,7 +13,7 @@ export interface BaseEditorProps {
   id: string | null;
   className?: string;
   onClose: () => void;
-  onSaved: () => void;
+  onSaved: () => Promise<void>;
 }
 
 interface EditorContextType {

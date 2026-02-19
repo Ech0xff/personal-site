@@ -1,5 +1,6 @@
 "use client";
 
+import Stack from "@/components/ui/Stack";
 import { cn } from "@/lib/shared/utils";
 
 export type SegmentedOption<T extends string> = {
@@ -30,9 +31,9 @@ export default function SegmentedToggle<T extends string>({
   const buttonSizeClass =
     size === "sm" ? "px-2 py-0.5 text-xs" : "px-3 py-1.5 text-sm";
   return (
-    <div
+    <Stack
       className={cn(
-        "flex items-center rounded-lg bg-zinc-100 dark:bg-zinc-800",
+        "flex items-center w-min rounded-lg bg-zinc-100 dark:bg-zinc-800",
         wrapperSizeClass,
         disabled && "opacity-60",
         className,
@@ -60,6 +61,6 @@ export default function SegmentedToggle<T extends string>({
           </button>
         );
       })}
-    </div>
+    </Stack>
   );
 }

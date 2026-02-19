@@ -21,7 +21,7 @@ type PostFormState = {
 
 type UsePostEditorParams = {
   id: string | null;
-  onSaved: () => void;
+  onSaved: () => Promise<void>;
   onClose: () => void;
 };
 
@@ -115,6 +115,9 @@ export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
     }
 
     startTransition(async () => {
+      const toastId = toast.loading(
+        isNewMode ? "Creating post..." : "Updating post...",
+      );
       try {
         await savePostByBrowser({
           id: id || undefined,
@@ -126,20 +129,17 @@ export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
           tags: form.tags.length > 0 ? form.tags : null,
         });
 
-        onSaved();
+        await onSaved();
+        toast.success(isNewMode ? "Post created" : "Post updated", {
+          id: toastId,
+        });
       } catch {
-        toast.error("Failed to save post");
+        toast.error("Failed to save post", { id: toastId });
       }
     });
   };
 
   const pageTitle = isNewMode ? "New Post" : "Edit Post";
-  const submitButtonText = isPending
-    ? "Saving..."
-    : isNewMode
-      ? "Create Post"
-      : "Update Post";
-
   return {
     form,
     updateForm,
@@ -151,6 +151,5 @@ export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
     isPending,
     isLoading,
     pageTitle,
-    submitButtonText,
   };
 };

@@ -4,8 +4,10 @@ import { useEffect, useMemo, useRef } from "react";
 
 import { CalendarDays } from "lucide-react";
 
-import Button from "@/components/ui/Button";
-import { datetimeLocalToUtcIso, toDatetimeLocalValue } from "@/lib/shared/utils";
+import {
+  datetimeLocalToUtcIso,
+  toDatetimeLocalValue,
+} from "@/lib/shared/utils";
 
 type DateTimeInputProps = {
   value: string;
@@ -34,8 +36,7 @@ export default function DateTimeInput({
   }, [fallbackNowUtc, onChange, value]);
 
   return (
-    <Button
-      type="button"
+    <button
       disabled={disabled}
       aria-label={ariaLabel}
       title={ariaLabel}
@@ -48,7 +49,6 @@ export default function DateTimeInput({
         }
         input.click();
       }}
-      className={className}
     >
       <input
         ref={dateInputRef}
@@ -59,7 +59,7 @@ export default function DateTimeInput({
         type="datetime-local"
         className="sr-only"
       />
-      <CalendarDays className="h-4 w-4" />
-    </Button>
+      <CalendarDays className={className} />
+    </button>
   );
 }

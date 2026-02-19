@@ -7,7 +7,6 @@ import DateTimeInput from "@/app/dashboard/components/ui/DateTimeInput";
 import HeaderSection from "@/app/dashboard/components/ui/HeaderSection";
 import SegmentedToggle from "@/app/dashboard/components/ui/SegmentedToggle";
 import EventCard from "@/components/features/events/EventCard";
-import Button from "@/components/ui/Button";
 import StackX from "@/components/ui/StackX";
 import StackY from "@/components/ui/StackY";
 import { cn } from "@/lib/shared/utils";
@@ -42,7 +41,6 @@ export default function EventEditor({
     isPending,
     isLoading,
     pageTitle,
-    submitButtonText,
   } = useHooks({ id, onSaved, onClose });
 
   return (
@@ -70,10 +68,13 @@ export default function EventEditor({
               onChange={(value) => updateForm({ published_at: value })}
               disabled={isPending}
             />
-            <Button onClick={handleSubmit} disabled={isPending}>
-              <Save className="h-4 w-4" />
-              <div className="hidden xl:block">{submitButtonText}</div>
-            </Button>
+            <button
+              onClick={handleSubmit}
+              disabled={isPending}
+              className="duration-300 hover:scale-110 disabled:opacity-50"
+            >
+              <Save className="h-6 w-6" />
+            </button>
             <button
               onClick={onClose}
               className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"

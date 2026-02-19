@@ -9,8 +9,8 @@ export default function EditorHeader({
 }) {
   return (
     <StackX className="shrink-0 items-center justify-between border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
-      <StackX className="items-center gap-4">
-        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+      <StackX className="items-center gap-4 min-w-0">
+        <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 truncate">
           {title}
         </h1>
       </StackX>
