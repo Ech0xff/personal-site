@@ -30,7 +30,7 @@ export default function PostCard({ post, className }: Props) {
       <StackX className="flex-1">
         {/* Title */}
         <span className="mx-4">{title}</span>
-        <TagsList className="mr-auto" tags={post.tags} />
+        <TagsList className="mr-auto hidden sm:flex" tags={post.tags} />
         {/* Date */}
         <span className="ml-auto w-28 text-sm text-gray-400">
           {formatTime(published_at, "MMM D, YYYY", "Unknown Date")}

@@ -43,7 +43,7 @@ export default function NavBar({ className }: { className?: string }) {
         <StackY
           className={cn(
             "relative flex-1 duration-300",
-            "sm:group-data-[scrolled=true]:px-(--layout-padding-x)",
+            "sm:group-data-[scrolled=true]:group-data-[home=true]:px-(--layout-padding-x)",
           )}
         >
           <StackX
@@ -82,7 +82,7 @@ export default function NavBar({ className }: { className?: string }) {
                   className={cn(
                     "pointer-events-none scale-50 items-center gap-2 rounded-md bg-white px-2 py-1 opacity-0 transition-discrete duration-100",
                     "fixed top-[anchor(--nav-anchor_bottom)] left-[anchor(--nav-anchor_center)] mt-2 -translate-x-1/2",
-                    "open:scale-100 open:opacity-100",
+                    "open:pointer-events-auto open:scale-100 open:opacity-100",
                   )}
                 >
                   {navItems.map(navItemRender)}

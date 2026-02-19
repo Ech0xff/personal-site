@@ -38,7 +38,7 @@ export default function EventTimeline({ events, renderActions }: Props) {
         return (
           <StackY key={year} className="mb-12">
             {/* Year Title */}
-            <StackX className="mb-4 justify-center">
+            <StackX className="mb-8 justify-center">
               <h2 className="z-10 rounded-full bg-blue-500 px-4 py-1 text-lg font-bold text-white">
                 {year}
               </h2>
@@ -56,15 +56,21 @@ export default function EventTimeline({ events, renderActions }: Props) {
                 >
                   {/* Dot */}
                   <div
-                    className="absolute top-1/2 left-1/2 z-10 aspect-square h-5 -translate-1/2 rounded-full"
+                    className={cn(
+                      "absolute z-10 aspect-square h-5 rounded-full duration-300",
+                      "top-0 left-1/2 -translate-1/2",
+                      "sm:top-1/2 sm:left-1/2 sm:-translate-1/2",
+                    )}
                     style={{ backgroundColor: event.color }}
                   />
                   <SectionCard
                     className={cn(
-                      "relative md:w-[calc(50%-2rem)]",
+                      "relative w-full duration-300",
+                      "w-full",
+                      "sm:w-[calc(50%-2rem)]",
                       index % 2 === 0
-                        ? "md:mr-auto md:pr-8"
-                        : "md:ml-auto md:pl-8",
+                        ? "sm:mr-auto md:pr-8"
+                        : "sm:ml-auto md:pl-8",
                     )}
                   >
                     <EventCard event={event} renderActions={renderActions} />
