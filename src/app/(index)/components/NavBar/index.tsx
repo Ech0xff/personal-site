@@ -1,6 +1,12 @@
 import Link from "next/link";
 
-import { CalendarDays, FileText, Lightbulb, Menu } from "lucide-react";
+import {
+  CalendarDays,
+  FileText,
+  LayoutDashboard,
+  Lightbulb,
+  Menu,
+} from "lucide-react";
 
 import ThemeToggle from "@/components/shared/ThemeToggle";
 import DropdownPopover from "@/components/ui/DropdownPopover";
@@ -16,6 +22,7 @@ export default function NavBar({ className }: { className?: string }) {
     { name: "POSTS", path: "/posts", icon: FileText },
     { name: "THOUGHTS", path: "/thoughts", icon: Lightbulb },
     { name: "EVENTS", path: "/events", icon: CalendarDays },
+    { name: "DASHBOARD", path: "/dashboard/account", icon: LayoutDashboard },
   ];
 
   const navItemRender = (item: (typeof navItems)[number]) => (
