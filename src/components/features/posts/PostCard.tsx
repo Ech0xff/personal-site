@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 import StackX from "@/components/ui/StackX";
 import { cn, formatTime } from "@/lib/shared/utils";

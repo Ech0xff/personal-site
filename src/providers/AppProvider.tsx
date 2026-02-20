@@ -35,10 +35,11 @@ export default function AppProvider({
 }) {
   const pathname = usePathname();
   const [theme, setTheme] = useState<Theme>(() => getThemeFromDocument());
+  const isHomePath = /^\/(?:en|zh-CN)?\/?$/.test(pathname);
 
   useEffect(() => {
-    document.documentElement.dataset.home = (pathname === "/").toString();
-  }, [pathname]);
+    document.documentElement.dataset.home = isHomePath.toString();
+  }, [isHomePath]);
 
   useEffect(() => {
     const html = document.documentElement;
