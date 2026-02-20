@@ -1,5 +1,58 @@
 {
-  "HomePage": {
-    "title": "Hello world!"
+  "Navigation": {
+    "posts": "POSTS",
+    "dashboard": "DASHBOARD",
+    "thoughts": "THOUGHTS",
+    "events": "EVENTS",
+    "description": "A corner for my thoughts."
+  },
+  "Common": {
+    "unknownYear": "Unknown",
+    "unknownDate": "Unknown Date"
+  },
+  "IndexHome": {
+    "about": {
+      "cardTitle": "Hi there 👋",
+      "description": "I am Yuzi, a Junior Software Engineering student and a Frontend Engineer currently based in Chengdu. It is a genuine pleasure to cross paths with you in this vast digital landscape. I believe technology serves as a bridge between imagination and reality—existing not for its own sake, but to empower our ability to create and solve. Guided by the spirit of \"I want to understand everything,\" I find joy in deconstructing complex systems and uncovering the underlying logic behind every tool. My current technical journey is built upon Next.js, Vue, TypeScript, Nuxt.js, Java, Node.js, and Bun."
+    },
+    "find": {
+      "cardTitle": "Find me on"
+    },
+    "latestPosts": {
+      "cardTitle": "Latest Posts",
+      "empty": "No posts yet..."
+    },
+    "stats": {
+      "cardTitle": "Statistics",
+      "posts": "Posts",
+      "thoughts": "Thoughts",
+      "articles": "Articles",
+      "characters": "Characters"
+    }
+  },
+  "IndexEvents": {
+    "metaTitle": "Events",
+    "title": "Timeline",
+    "description": "A timeline of memorable moments and milestones. Total <b>{total}</b> events recorded, documenting the journey."
+  },
+  "IndexPosts": {
+    "metaTitle": "Posts",
+    "title": "Posts",
+    "description": "Writings and articles about tech, life, and everything in between. Total <b>{totalPosts}</b> posts, approx <b>{totalCharacters}</b> characters."
+  },
+  "IndexThoughts": {
+    "metaTitle": "Thoughts",
+    "title": "Thoughts",
+    "description": "Just some random ramblings. Total <b>{totalThoughts}</b> entries, approx <b>{totalCharacters}</b> characters."
+  },
+  "PostDetail": {
+    "metaNotFoundTitle": "Post Not Found",
+    "notFoundTitle": "Post Not Found",
+    "notFoundDescription": "Sorry, the post you are looking for does not exist or has been deleted.",
+    "backToPosts": "Back to Posts"
+  },
+  "ThoughtCard": {
+    "preview": "preview",
+    "imageAlt": "Thought image {index}"
   }
 }

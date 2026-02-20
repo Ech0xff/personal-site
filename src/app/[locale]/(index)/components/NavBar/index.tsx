@@ -1,4 +1,4 @@
-import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 import {
   CalendarDays,
@@ -12,17 +12,20 @@ import ThemeToggle from "@/components/shared/ThemeToggle";
 import DropdownPopover from "@/components/ui/DropdownPopover";
 import StackX from "@/components/ui/StackX";
 import StackY from "@/components/ui/StackY";
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/shared/utils";
 
 import NavBarController from "./NavBarController";
 import "./index.scss";
 
 export default function NavBar({ className }: { className?: string }) {
+  const t = useTranslations("Navigation");
+
   const navItems = [
-    { name: "POSTS", path: "/posts", icon: FileText },
-    { name: "THOUGHTS", path: "/thoughts", icon: Lightbulb },
-    { name: "EVENTS", path: "/events", icon: CalendarDays },
-    { name: "DASHBOARD", path: "/dashboard/account", icon: LayoutDashboard },
+    { name: t("posts"), path: "/posts", icon: FileText },
+    { name: t("thoughts"), path: "/thoughts", icon: Lightbulb },
+    { name: t("events"), path: "/events", icon: CalendarDays },
+    { name: t("dashboard"), path: "/dashboard/account", icon: LayoutDashboard },
   ];
 
   const navItemRender = (item: (typeof navItems)[number]) => (
@@ -70,7 +73,7 @@ export default function NavBar({ className }: { className?: string }) {
                   "sm:block",
                 )}
               >
-                A corner for my thoughts.
+                {t("description")}
               </div>
             </Link>
             {/* Nav Items - Right aligned */}

@@ -3,6 +3,7 @@ import StackX from "@/components/ui/StackX";
 import ThoughtMarkdown from "@/components/ui/markdown/ThoughtMarkdown";
 import { cn } from "@/lib/shared/utils/tailwind";
 import { formatTime } from "@/lib/shared/utils/tools";
+import { useTranslations } from "next-intl";
 
 export type Thought = {
   id: string;
@@ -27,17 +28,24 @@ export default function ThoughtCard({
   isLast = true,
   renderActions,
 }: Props) {
+  const tCommon = useTranslations("Common");
+  const tThoughtCard = useTranslations("ThoughtCard");
+
   return (
     <div className={cn("group", className)}>
       {/* Meta Row */}
       <StackX className="items-center justify-between">
         <StackX className="gap-3 font-mono text-xs text-zinc-400 dark:text-zinc-500">
           <span className="font-bold text-zinc-500 dark:text-zinc-400">
-            #{index ? index : "preview"}
+            #{index ? index : tThoughtCard("preview")}
           </span>
           <span>•</span>
           <span>
-            {formatTime(thought.published_at, "MM/DD, HH:mm", "Unknown Date")}
+            {formatTime(
+              thought.published_at,
+              "MM/DD, HH:mm",
+              tCommon("unknownDate"),
+            )}
           </span>
         </StackX>
 
@@ -61,7 +69,7 @@ export default function ThoughtCard({
             <LightboxImage
               key={idx}
               src={img}
-              alt={`Thought image ${idx + 1}`}
+              alt={tThoughtCard("imageAlt", { index: idx + 1 })}
             />
           ))}
         </div>

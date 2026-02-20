@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 import { fetchCachedThoughts } from "@/lib/server/services-cache/thoughts";
 import ThoughtTimeline from "@/lib/shared/utils/thoughts/ThoughtTimeline";
@@ -7,11 +8,21 @@ import CollectionBody from "../components/CollectionBody";
 
 export const revalidate = 86400;
 
-export const metadata: Metadata = {
-  title: "Thoughts",
-};
+interface PageProps {
+  params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "IndexThoughts" });
+
+  return {
+    title: t("metaTitle"),
+  };
+}
 
 export default async function ThoughtsPage() {
+  const t = await getTranslations("IndexThoughts");
   const thoughts = await fetchCachedThoughts();
   const totalThoughts = thoughts.length;
   const totalCharacters = thoughts.reduce(
@@ -21,20 +32,16 @@ export default async function ThoughtsPage() {
 
   return (
     <CollectionBody
-      title="Thoughts"
-      description={
-        <>
-          A corner for my random thoughts and life fragments. Total{" "}
+      title={t("title")}
+      description={t.rich("description", {
+        totalThoughts,
+        totalCharacters,
+        b: (chunks) => (
           <span className="font-bold text-zinc-900 dark:text-zinc-100">
-            {totalThoughts}
-          </span>{" "}
-          entries, approx{" "}
-          <span className="font-bold text-zinc-900 dark:text-zinc-100">
-            {totalCharacters}
-          </span>{" "}
-          characters.
-        </>
-      }
+            {chunks}
+          </span>
+        ),
+      })}
     >
       <ThoughtTimeline thoughts={thoughts} />
     </CollectionBody>

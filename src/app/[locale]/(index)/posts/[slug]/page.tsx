@@ -1,5 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 import { ArrowLeft, Calendar, User } from "lucide-react";
 
@@ -11,18 +12,19 @@ import { formatTime } from "@/lib/shared/utils";
 export const revalidate = 3600;
 
 interface PageProps {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: "PostDetail" });
   const post = await fetchCachedPost(slug);
 
   if (!post || post.status !== "show") {
     return {
-      title: "Post Not Found",
+      title: t("metaNotFoundTitle"),
     };
   }
 
@@ -34,22 +36,22 @@ export async function generateMetadata({
 
 export default async function PostPage({ params }: PageProps) {
   const { slug } = await params;
+  const t = await getTranslations("PostDetail");
   const post = await fetchCachedPost(slug);
 
   // Handle 404 - also hide non-show posts
   if (!post || post.status !== "show") {
     return (
       <div className="py-20 text-center">
-        <h1 className="mb-4 text-3xl font-bold">Post Not Found</h1>
+        <h1 className="mb-4 text-3xl font-bold">{t("notFoundTitle")}</h1>
         <p className="mb-8 text-gray-500 dark:text-gray-400">
-          Sorry, the post you are looking for does not exist or has been
-          deleted.
+          {t("notFoundDescription")}
         </p>
         <Link
           href="/posts"
           className="inline-flex items-center gap-2 rounded bg-gray-900 px-6 py-3 text-white transition-opacity hover:opacity-90 dark:bg-white dark:text-black"
         >
-          Back to Posts
+          {t("backToPosts")}
         </Link>
       </div>
     );
@@ -105,7 +107,7 @@ export default async function PostPage({ params }: PageProps) {
             className="flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-gray-900 dark:hover:text-gray-100"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Posts
+            {t("backToPosts")}
           </Link>
 
           <ScrollToTopButton />

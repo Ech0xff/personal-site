@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 import StackX from "@/components/ui/StackX";
 import { cn, formatTime } from "@/lib/shared/utils";
@@ -18,6 +19,7 @@ interface Props {
 }
 
 export default function PostCard({ post, className }: Props) {
+  const tCommon = useTranslations("Common");
   const { id, title, published_at } = post;
   return (
     <Link
@@ -33,7 +35,7 @@ export default function PostCard({ post, className }: Props) {
         <TagsList className="mr-auto hidden sm:flex" tags={post.tags} />
         {/* Date */}
         <span className="ml-auto w-28 text-sm text-gray-400">
-          {formatTime(published_at, "MMM D, YYYY", "Unknown Date")}
+          {formatTime(published_at, "MMM D, YYYY", tCommon("unknownDate"))}
         </span>
       </StackX>
     </Link>

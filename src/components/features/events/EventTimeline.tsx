@@ -1,6 +1,7 @@
 import SectionCard from "@/components/ui/SectionCard";
 import StackY from "@/components/ui/StackY";
 import { cn, formatTime } from "@/lib/shared/utils";
+import { useTranslations } from "next-intl";
 
 import StackX from "../../ui/StackX";
 import EventCard, { Event } from "./EventCard";
@@ -11,6 +12,8 @@ interface Props {
 }
 
 export default function EventTimeline({ events, renderActions }: Props) {
+  const tCommon = useTranslations("Common");
+
   // Group by year
   const groupedEvents: Record<string, Event[]> = {};
   events.forEach((event) => {
@@ -40,7 +43,7 @@ export default function EventTimeline({ events, renderActions }: Props) {
             {/* Year Title */}
             <StackX className="mb-8 justify-center">
               <h2 className="z-10 rounded-full bg-blue-500 px-4 py-1 text-lg font-bold text-white">
-                {year}
+                {year === "Unknown" ? tCommon("unknownYear") : year}
               </h2>
             </StackX>
 

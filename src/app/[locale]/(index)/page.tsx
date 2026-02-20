@@ -3,6 +3,7 @@ import StackY from "@/components/ui/StackY";
 import { fetchCachedSummary } from "@/lib/server/services-cache/rpcs";
 import { cn } from "@/lib/shared/utils";
 import { BlogSummaryData } from "@/types";
+import { getTranslations } from "next-intl/server";
 
 import PostListItem from "@/components/features/posts/PostCard";
 import HeroSection from "./components/HeroSection";
@@ -27,32 +28,21 @@ function Card({
   );
 }
 
-function AboutMeCard() {
+async function AboutMeCard() {
+  const t = await getTranslations("IndexHome.about");
+
   return (
-    <Card title="Hi there 👋">
+    <Card title={t("cardTitle")}>
       <div className="mb-8 space-y-4 text-sm leading-relaxed sm:text-base">
-        <p style={{ textIndent: "2em" }}>
-          I am <span className="font-bold">Yuzi</span>, a Junior Software
-          Engineering student and a{" "}
-          <span className="font-medium">Frontend Engineer</span>
-          &nbsp;currently based in Chengdu. It is a genuine pleasure to cross
-          paths with you in this vast digital landscape. I believe technology
-          serves as a bridge between imagination and reality—existing not for
-          its own sake, but to empower our ability to create and solve. Guided
-          by the spirit of{" "}
-          <span className="italic">
-            &quot;I want to understand everything,&quot;
-          </span>
-          &nbsp;I find joy in deconstructing complex systems and uncovering the
-          underlying logic behind every tool. My current technical journey is
-          built upon Next.js, Vue, TypeScript, Nuxt.js, Java, Node.js, and Bun.
-        </p>
+        <p style={{ textIndent: "2em" }}>{t("description")}</p>
       </div>
     </Card>
   );
 }
 
-function FindMeCard() {
+async function FindMeCard() {
+  const t = await getTranslations("IndexHome.find");
+
   const socialLinks = [
     {
       name: "Bilibili",
@@ -80,7 +70,7 @@ function FindMeCard() {
     },
   ];
   return (
-    <Card title="Find me on">
+    <Card title={t("cardTitle")}>
       <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
         {socialLinks.map((item) => (
           <a
@@ -122,21 +112,25 @@ function FindMeCard() {
 
 function PostsCard({
   posts,
+  title,
+  empty,
 }: {
   posts?: BlogSummaryData["recently"]["posts"];
+  title: string;
+  empty: string;
 }) {
   if (!posts || posts.length === 0) {
     return (
-      <Card title="Latest Posts">
+      <Card title={title}>
         <div className="mb-8 space-y-4 text-sm leading-relaxed text-slate-600 sm:text-base">
-          <p style={{ textIndent: "2em" }}>No posts yet...</p>
+          <p style={{ textIndent: "2em" }}>{empty}</p>
         </div>
       </Card>
     );
   }
 
   return (
-    <Card title="Latest Posts">
+    <Card title={title}>
       <div className="mb-8 space-y-1">
         {posts.map((post) => (
           <PostListItem key={post.id} post={post} />
@@ -148,8 +142,17 @@ function PostsCard({
 
 function StatsCard({
   statistics,
+  title,
+  labels,
 }: {
   statistics?: BlogSummaryData["statistics"];
+  title: string;
+  labels: {
+    posts: string;
+    thoughts: string;
+    articles: string;
+    characters: string;
+  };
 }) {
   const totalCharacters = statistics
     ? statistics.posts.show.characters +
@@ -158,11 +161,11 @@ function StatsCard({
     : 0;
 
   return (
-    <Card title="Statistics">
+    <Card title={title}>
       <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <div className="flex flex-col rounded-2xl bg-slate-50 p-4 transition-transform duration-300 hover:scale-105 dark:bg-white/5">
           <span className="text-xs font-medium tracking-wider text-slate-400 uppercase">
-            Posts
+            {labels.posts}
           </span>
           <span className="mt-1 text-2xl font-bold text-slate-700 dark:text-slate-200">
             {statistics?.posts.show.count ?? 0}
@@ -170,7 +173,7 @@ function StatsCard({
         </div>
         <div className="flex flex-col rounded-2xl bg-slate-50 p-4 transition-transform duration-300 hover:scale-105 dark:bg-white/5">
           <span className="text-xs font-medium tracking-wider text-slate-400 uppercase">
-            Thoughts
+            {labels.thoughts}
           </span>
           <span className="mt-1 text-2xl font-bold text-slate-700 dark:text-slate-200">
             {statistics?.thoughts.show.count ?? 0}
@@ -178,7 +181,7 @@ function StatsCard({
         </div>
         <div className="flex flex-col rounded-2xl bg-slate-50 p-4 transition-transform duration-300 hover:scale-105 dark:bg-white/5">
           <span className="text-xs font-medium tracking-wider text-slate-400 uppercase">
-            Articles
+            {labels.articles}
           </span>
           <span className="mt-1 text-2xl font-bold text-slate-700 dark:text-slate-200">
             {statistics ? statistics.posts.show.count : 0}
@@ -186,7 +189,7 @@ function StatsCard({
         </div>
         <div className="flex flex-col rounded-2xl bg-slate-50 p-4 transition-transform duration-300 hover:scale-105 dark:bg-white/5">
           <span className="text-xs font-medium tracking-wider text-slate-400 uppercase">
-            Characters
+            {labels.characters}
           </span>
           <span className="mt-1 text-2xl font-bold text-slate-700 dark:text-slate-200">
             {totalCharacters.toLocaleString()}
@@ -197,13 +200,29 @@ function StatsCard({
   );
 }
 
-function IntroductionSection({ stats }: { stats?: BlogSummaryData }) {
+async function IntroductionSection({ stats }: { stats?: BlogSummaryData }) {
+  const tPosts = await getTranslations("IndexHome.latestPosts");
+  const tStats = await getTranslations("IndexHome.stats");
+
   return (
     <StackY className="px-4">
       <AboutMeCard />
       <FindMeCard />
-      <PostsCard posts={stats?.recently.posts} />
-      <StatsCard statistics={stats?.statistics} />
+      <PostsCard
+        posts={stats?.recently.posts}
+        title={tPosts("cardTitle")}
+        empty={tPosts("empty")}
+      />
+      <StatsCard
+        statistics={stats?.statistics}
+        title={tStats("cardTitle")}
+        labels={{
+          posts: tStats("posts"),
+          thoughts: tStats("thoughts"),
+          articles: tStats("articles"),
+          characters: tStats("characters"),
+        }}
+      />
     </StackY>
   );
 }

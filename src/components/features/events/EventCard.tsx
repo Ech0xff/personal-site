@@ -1,6 +1,7 @@
 import StackX from "@/components/ui/StackX";
 import StackY from "@/components/ui/StackY";
 import { formatTime } from "@/lib/shared/utils/tools";
+import { useTranslations } from "next-intl";
 
 import { EventMarkdown } from "../../ui/markdown";
 
@@ -21,13 +22,14 @@ interface Props {
 }
 
 export default function EventCard({ event, className, renderActions }: Props) {
+  const tCommon = useTranslations("Common");
   const { title, content, tags, color, published_at } = event;
   return (
     <StackY className={className}>
       {/* Meta Row */}
       <StackX className="mb-2 items-center justify-between">
         <div className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
-          {formatTime(published_at, "MMM D", "Unknown Date")}
+          {formatTime(published_at, "MMM D", tCommon("unknownDate"))}
         </div>
         <StackX className="items-center gap-2">
           {renderActions && renderActions(event)}

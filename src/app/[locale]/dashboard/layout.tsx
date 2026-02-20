@@ -26,7 +26,7 @@ const navItems = [
   {
     isAdmin: false,
     name: "Account",
-    path: "/dashboard",
+    path: "/dashboard/account",
     icon: LayoutDashboard,
   },
   {

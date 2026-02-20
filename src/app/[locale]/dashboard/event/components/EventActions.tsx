@@ -4,6 +4,7 @@ import { Edit, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { deleteEventByBrowser } from "@/lib/client/services";
+import { useTranslations } from "next-intl";
 import { useEditor } from "../../components/EditorProvider";
 
 interface EventActionsProps {
@@ -15,6 +16,7 @@ export default function EventActions({
   eventId,
   successCallback,
 }: EventActionsProps) {
+   const t = useTranslations('About');
   const { openEditor } = useEditor();
 
   const handleDelete = async () => {
