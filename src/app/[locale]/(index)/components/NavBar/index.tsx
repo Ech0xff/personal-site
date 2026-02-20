@@ -79,7 +79,7 @@ export default function NavBar({ className }: { className?: string }) {
             {/* Nav Items - Right aligned */}
             <StackX className={cn("relative items-center gap-4")}>
               <DropdownPopover
-                className="md:hidden"
+                className="sm:hidden"
                 trigger={
                   <button>
                     <Menu className="h-5 w-5" />
