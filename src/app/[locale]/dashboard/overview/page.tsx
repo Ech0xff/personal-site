@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@/i18n/navigation";
+import Link from "@/components/ui/Link";
 
 import { MessageCircle, PenSquare, Plus } from "lucide-react";
 

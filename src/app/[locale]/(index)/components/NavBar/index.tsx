@@ -10,9 +10,9 @@ import {
 
 import ThemeToggle from "@/components/shared/ThemeToggle";
 import DropdownPopover from "@/components/ui/DropdownPopover";
+import Link from "@/components/ui/Link";
 import StackX from "@/components/ui/StackX";
 import StackY from "@/components/ui/StackY";
-import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/shared/utils";
 
 import NavBarController from "./NavBarController";

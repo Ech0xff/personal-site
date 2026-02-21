@@ -1,4 +1,4 @@
-import { Link } from "@/i18n/navigation";
+import Link from "@/components/ui/Link";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 

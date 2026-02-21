@@ -1,4 +1,4 @@
-import { Link } from "@/i18n/navigation";
+import Link from "@/components/ui/Link";
 import { useTranslations } from "next-intl";
 
 import StackX from "@/components/ui/StackX";

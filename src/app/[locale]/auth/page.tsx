@@ -2,7 +2,7 @@
 
 import { type FormEvent } from "react";
 
-import { Link } from "@/i18n/navigation";
+import Link from "@/components/ui/Link";
 
 import SvgGithub from "@/components/icons/Github";
 

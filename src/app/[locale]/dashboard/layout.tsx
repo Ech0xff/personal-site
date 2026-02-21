@@ -1,15 +1,15 @@
-import { Link } from "@/i18n/navigation";
+import Link from "@/components/ui/Link";
 import { redirect } from "next/navigation";
 
 import {
-  ArrowLeft,
-  Calendar,
-  FileText,
-  Image,
-  LayoutDashboard,
-  Menu,
-  MessageCircle,
-  UserCog,
+    ArrowLeft,
+    Calendar,
+    FileText,
+    Image,
+    LayoutDashboard,
+    Menu,
+    MessageCircle,
+    UserCog,
 } from "lucide-react";
 
 import LogoutButton from "@/components/shared/LogoutButton";

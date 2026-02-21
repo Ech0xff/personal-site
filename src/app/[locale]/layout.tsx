@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { NextIntlClientProvider } from "next-intl";
 
 import { Toaster } from "sonner";
 
@@ -26,13 +25,11 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body>
-        <NextIntlClientProvider locale="en">
-          <Toaster position="top-center" richColors />
-          
-          <AppProvider>
-            <LightboxProvider>{children}</LightboxProvider>
-          </AppProvider>
-        </NextIntlClientProvider>
+        <Toaster position="top-center" richColors />
+
+        <AppProvider>
+          <LightboxProvider>{children}</LightboxProvider>
+        </AppProvider>
       </body>
     </html>
   );

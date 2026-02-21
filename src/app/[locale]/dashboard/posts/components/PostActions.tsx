@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@/i18n/navigation";
+import Link from "@/components/ui/Link";
 
 import { Edit, Eye, Trash2 } from "lucide-react";
 import { toast } from "sonner";
