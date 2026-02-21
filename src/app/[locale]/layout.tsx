@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { Toaster } from "sonner";
 
+import { routing } from "@/i18n/routing";
 import { themeInitScript } from "@/lib/shared/themeInitScript";
 import AppProvider from "@/providers/AppProvider";
 import { LightboxProvider } from "@/providers/LightboxProvider";
@@ -13,6 +14,10 @@ export const metadata: Metadata = {
   title: "BBLF",
   description: "BBLF's reef",
 };
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
 
 export default function RootLayout({
   children,

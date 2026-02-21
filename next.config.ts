@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
   sassOptions: {
     includePaths: [path.join(__dirname, "src")],
   },
+  cacheComponents: true,
   reactStrictMode: false,
   async redirects() {
     return [

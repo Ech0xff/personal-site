@@ -17,7 +17,9 @@ export async function GET(request: NextRequest) {
         return NextResponse.redirect(new URL(next, requestUrl.origin));
       }
 
-      return NextResponse.redirect(new URL("/dashboard/account", requestUrl.origin));
+      return NextResponse.redirect(
+        new URL("/dashboard/account", requestUrl.origin),
+      );
     }
   }
 

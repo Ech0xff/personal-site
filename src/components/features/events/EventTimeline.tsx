@@ -1,7 +1,8 @@
+import { useTranslations } from "next-intl";
+
 import SectionCard from "@/components/ui/SectionCard";
 import StackY from "@/components/ui/StackY";
 import { cn, formatTime } from "@/lib/shared/utils";
-import { useTranslations } from "next-intl";
 
 import StackX from "../../ui/StackX";
 import EventCard, { Event } from "./EventCard";

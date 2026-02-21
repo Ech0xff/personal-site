@@ -16,7 +16,7 @@ export const fetchThoughtsByBrowser = async () => {
 
 export const fetchThoughtByBrowser = async (id: string) => {
   const client = makeBrowserClient();
-  return fetchThought(client, id);
+  return fetchThought(id, client);
 };
 
 export const saveThoughtByBrowser = async (

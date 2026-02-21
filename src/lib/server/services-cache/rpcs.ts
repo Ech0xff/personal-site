@@ -8,7 +8,7 @@ import { CACHE_TAGS, CACHE_TIMES } from "./index";
 export const fetchCachedSummary = unstable_cache(
   async (recentLimit: number = 5) => {
     const client = makeStaticClient();
-    return fetchSummary(client, recentLimit);
+    return fetchSummary(recentLimit, client);
   },
   ["summary"],
   {

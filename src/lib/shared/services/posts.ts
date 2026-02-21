@@ -2,7 +2,11 @@ import { SupabaseClient } from "@supabase/supabase-js";
 
 import { Database, PostInsert, PostUpdate, Status } from "@/types";
 
-export const fetchPosts = async (client: SupabaseClient<Database>) => {
+import { makeStaticClient } from "../supabase";
+
+export const fetchPosts = async (
+  client: SupabaseClient<Database> = makeStaticClient(),
+) => {
   const { data, error } = await client
     .from("posts")
     .select("*")
@@ -17,8 +21,8 @@ export const fetchPosts = async (client: SupabaseClient<Database>) => {
 };
 
 export const fetchPost = async (
-  client: SupabaseClient<Database>,
   id: string,
+  client: SupabaseClient<Database> = makeStaticClient(),
 ) => {
   const { data, error } = await client
     .from("posts")

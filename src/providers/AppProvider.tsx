@@ -1,5 +1,6 @@
 "use client";
 import React, {
+  Suspense,
   createContext,
   useContext,
   useEffect,
@@ -33,13 +34,7 @@ export default function AppProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
   const [theme, setTheme] = useState<Theme>(() => getThemeFromDocument());
-  const isHomePath = /^\/(?:en|zh-CN)?\/?$/.test(pathname);
-
-  useEffect(() => {
-    document.documentElement.dataset.home = isHomePath.toString();
-  }, [isHomePath]);
 
   useEffect(() => {
     const html = document.documentElement;
@@ -51,8 +46,24 @@ export default function AppProvider({
   const value = useMemo(() => ({ theme, setTheme }), [theme]);
 
   return (
-    <AppUIContext.Provider value={value}>{children}</AppUIContext.Provider>
+    <AppUIContext.Provider value={value}>
+      <Suspense fallback={null}>
+        <HomePathMarker />
+      </Suspense>
+      {children}
+    </AppUIContext.Provider>
   );
+}
+
+function HomePathMarker() {
+  const pathname = usePathname();
+  const isHomePath = /^\/(?:en|zh-CN)?\/?$/.test(pathname);
+
+  useEffect(() => {
+    document.documentElement.dataset.home = isHomePath.toString();
+  }, [isHomePath]);
+
+  return null;
 }
 
 export const useAppUI = () => {

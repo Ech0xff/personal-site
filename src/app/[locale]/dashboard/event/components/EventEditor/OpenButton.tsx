@@ -3,6 +3,7 @@
 import { Plus } from "lucide-react";
 
 import Button from "@/components/ui/Button";
+
 import { useEditor } from "../../../components/EditorProvider";
 
 export default function NewEventButton() {

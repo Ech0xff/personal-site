@@ -6,15 +6,18 @@ import StackY from "@/components/ui/StackY";
 import NavBar from "./components/NavBar";
 import "./layout.scss";
 
-interface Props {
+export default async function Layout({
+  children,
+  params,
+}: {
+  params: Promise<{ locale: string }>;
   children: React.ReactNode;
-}
-
-export default function Layout({ children }: Props) {
+}) {
+  const { locale } = await params;
   return (
     <>
       <StackY className="relative min-h-dvh w-dvw duration-300">
-        <NavBar />
+        <NavBar locale={locale} />
         <StackY className="flex-1 px-(--layout-padding-x) pt-12">
           {children}
         </StackY>

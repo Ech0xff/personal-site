@@ -2,9 +2,8 @@
 
 import { type FormEvent } from "react";
 
-import Link from "@/components/ui/Link";
-
 import SvgGithub from "@/components/icons/Github";
+import Link from "@/components/ui/Link";
 
 import { useHooks } from "./use-hooks";
 

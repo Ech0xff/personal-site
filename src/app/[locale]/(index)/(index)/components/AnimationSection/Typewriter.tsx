@@ -1,6 +1,7 @@
 "use client";
-import Stack from "@/components/ui/Stack";
 import { useEffect, useState } from "react";
+
+import Stack from "@/components/ui/Stack";
 
 export default function Typewriter() {
   const [currentText, setCurrentText] = useState("");
@@ -38,7 +39,10 @@ export default function Typewriter() {
   }, [currentText, isDeleting, currentIndex, typingSpeed]);
 
   return (
-    <Stack x className="items-center gap-2 font-mono tracking-widest text-gray-500 dark:text-gray-500">
+    <Stack
+      x
+      className="items-center gap-2 font-mono tracking-widest text-gray-500 dark:text-gray-500"
+    >
       <div className="flex items-center gap-1 text-[1.2em] font-black">
         {currentText}
         <span className="typing-cursor">▋</span>

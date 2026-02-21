@@ -1,5 +1,3 @@
-import { useTranslations } from "next-intl";
-
 import {
   CalendarDays,
   FileText,
@@ -13,13 +11,20 @@ import DropdownPopover from "@/components/ui/DropdownPopover";
 import Link from "@/components/ui/Link";
 import StackX from "@/components/ui/StackX";
 import StackY from "@/components/ui/StackY";
+import { getI18n } from "@/i18n/tools";
 import { cn } from "@/lib/shared/utils";
 
 import NavBarController from "./NavBarController";
 import "./index.scss";
 
-export default function NavBar({ className }: { className?: string }) {
-  const t = useTranslations("Navigation");
+export default async function NavBar({
+  className,
+  locale,
+}: {
+  className?: string;
+  locale?: string;
+}) {
+  const t = await getI18n("Navigation", locale);
 
   const navItems = [
     { name: t("posts"), path: "/posts", icon: FileText },

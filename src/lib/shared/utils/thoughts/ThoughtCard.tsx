@@ -1,9 +1,10 @@
+import { useTranslations } from "next-intl";
+
 import LightboxImage from "@/components/ui/Image";
 import StackX from "@/components/ui/StackX";
 import ThoughtMarkdown from "@/components/ui/markdown/ThoughtMarkdown";
 import { cn } from "@/lib/shared/utils/tailwind";
 import { formatTime } from "@/lib/shared/utils/tools";
-import { useTranslations } from "next-intl";
 
 export type Thought = {
   id: string;

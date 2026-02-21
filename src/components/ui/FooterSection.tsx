@@ -6,7 +6,7 @@ export default function FooterSection() {
       </div>
 
       <div className="flex flex-col items-center gap-2 font-mono text-sm text-slate-400 dark:text-slate-500">
-        <p>© {new Date().getFullYear()} BBLF. All rights reserved.</p>
+        <p>© 2025 BBLF. All rights reserved.</p>
         <div className="flex items-center gap-3 text-xs opacity-70">
           <span className="cursor-default transition-colors hover:text-slate-600 dark:hover:text-slate-300">
             Designed by BBLF

@@ -33,7 +33,7 @@ export default function SegmentedToggle<T extends string>({
   return (
     <Stack
       className={cn(
-        "flex items-center w-min rounded-lg bg-zinc-100 dark:bg-zinc-800",
+        "flex w-min items-center rounded-lg bg-zinc-100 dark:bg-zinc-800",
         wrapperSizeClass,
         disabled && "opacity-60",
         className,

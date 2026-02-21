@@ -1,7 +1,8 @@
+import { useTranslations } from "next-intl";
+
 import StackX from "@/components/ui/StackX";
 import StackY from "@/components/ui/StackY";
 import { formatTime } from "@/lib/shared/utils/tools";
-import { useTranslations } from "next-intl";
 
 import { EventMarkdown } from "../../ui/markdown";
 

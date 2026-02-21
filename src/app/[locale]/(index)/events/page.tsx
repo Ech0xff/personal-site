@@ -1,29 +1,34 @@
+"use cache";
+
 import { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
 
 import EventTimeline from "@/components/features/events/EventTimeline";
-import { fetchCachedEvents } from "@/lib/server/services-cache/events";
+import { getI18n } from "@/i18n/tools";
+import { fetchEvents } from "@/lib/shared/services";
+import { makeStaticClient } from "@/lib/shared/supabase";
 
 import CollectionBody from "../components/CollectionBody";
-
-export const revalidate = 86400;
 
 interface PageProps {
   params: Promise<{ locale: string }>;
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "IndexEvents" });
+  const t = await getI18n("IndexEvents", locale);
 
   return {
     title: t("metaTitle"),
   };
 }
 
-export default async function EventsPage() {
-  const t = await getTranslations("IndexEvents");
-  const events = await fetchCachedEvents();
+export default async function EventsPage({ params }: PageProps) {
+  const { locale } = await params;
+  const t = await getI18n("IndexEvents", locale);
+  const client = makeStaticClient();
+  const events = await fetchEvents(client);
 
   const totalEvents = events.length;
 

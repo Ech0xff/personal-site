@@ -1,6 +1,6 @@
-import Link from "@/components/ui/Link";
 import { useTranslations } from "next-intl";
 
+import Link from "@/components/ui/Link";
 import StackX from "@/components/ui/StackX";
 import { cn, formatTime } from "@/lib/shared/utils";
 

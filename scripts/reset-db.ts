@@ -3,6 +3,7 @@ import { resolve } from "path";
 import postgres from "postgres";
 
 import { makeAdminClient } from "@/lib/server/supabase";
+
 import { checkYes, loadEnvByPath, loadEnvConfig } from "./common";
 
 (async () => {

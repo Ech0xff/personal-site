@@ -2,7 +2,11 @@ import { SupabaseClient } from "@supabase/supabase-js";
 
 import { Database, EventInsert, EventUpdate, Status } from "@/types";
 
-export const fetchEvents = async (client: SupabaseClient<Database>) => {
+import { makeStaticClient } from "../supabase";
+
+export const fetchEvents = async (
+  client: SupabaseClient<Database> = makeStaticClient(),
+) => {
   const { data, error } = await client
     .from("events")
     .select("*")
@@ -17,8 +21,8 @@ export const fetchEvents = async (client: SupabaseClient<Database>) => {
 };
 
 export const fetchEvent = async (
-  client: SupabaseClient<Database>,
   id: string,
+  client: SupabaseClient<Database> = makeStaticClient(),
 ) => {
   const { data, error } = await client
     .from("events")

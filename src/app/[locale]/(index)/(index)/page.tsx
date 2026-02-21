@@ -1,6 +1,7 @@
+"use cache";
 import Stack from "@/components/ui/Stack";
 import StackY from "@/components/ui/StackY";
-import { fetchCachedSummary } from "@/lib/server/services-cache/rpcs";
+import { fetchSummary } from "@/lib/shared/services";
 import { cn } from "@/lib/shared/utils";
 import { BlogSummaryData } from "@/types";
 
@@ -13,7 +14,8 @@ export default async function HomePage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const data = (await fetchCachedSummary(5)) as BlogSummaryData;
+
+  const data = (await fetchSummary(5)) as BlogSummaryData;
 
   return (
     <>

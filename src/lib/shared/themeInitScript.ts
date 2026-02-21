@@ -18,4 +18,3 @@ const themeInit = () => {
 };
 
 export const themeInitScript = `(${themeInit.toString()})();`;
-  

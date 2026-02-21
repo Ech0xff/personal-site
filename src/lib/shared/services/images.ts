@@ -1,13 +1,16 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 
 import { compressToWebp, computeHash } from "@/lib/shared/utils";
+import { Database } from "@/types";
+
+import { makeStaticClient } from "../supabase";
 
 const BUCKET_NAME = "images";
 const WEBP_EXTENSION = "webp";
 
 export const fetchExistingPublicUrl = async (
-  client: SupabaseClient,
   filePath: string,
+  client: SupabaseClient<Database> = makeStaticClient(),
 ) => {
   const { data } = await client.storage.from(BUCKET_NAME).list("", {
     search: filePath,
@@ -24,7 +27,9 @@ export const fetchExistingPublicUrl = async (
   return null;
 };
 
-export const fetchImages = async (client: SupabaseClient) => {
+export const fetchImages = async (
+  client: SupabaseClient<Database> = makeStaticClient(),
+) => {
   const { data, error } = await client.storage.from(BUCKET_NAME).list("", {
     limit: 1000,
     sortBy: { column: "created_at", order: "desc" },
@@ -60,7 +65,7 @@ export const uploadImage = async (client: SupabaseClient, file: File) => {
   const hash = await computeHash(buffer);
   const filePath = `${hash}.${WEBP_EXTENSION}`;
 
-  const existingUrl = await fetchExistingPublicUrl(client, filePath);
+  const existingUrl = await fetchExistingPublicUrl(filePath, client);
   if (existingUrl) {
     return { url: existingUrl };
   }
@@ -96,7 +101,7 @@ export const uploadImageFromUrl = async (
   const hash = await computeHash(arrayBuffer);
   const filePath = `${hash}.${WEBP_EXTENSION}`;
 
-  const existingUrl = await fetchExistingPublicUrl(client, filePath);
+  const existingUrl = await fetchExistingPublicUrl(filePath, client);
   if (existingUrl) {
     return { url: existingUrl };
   }

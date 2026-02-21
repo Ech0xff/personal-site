@@ -16,7 +16,7 @@ export const fetchPostsByBrowser = async () => {
 
 export const fetchPostByBrowser = async (id: string) => {
   const client = makeBrowserClient();
-  return fetchPost(client, id);
+  return fetchPost(id, client);
 };
 
 export const savePostByBrowser = async (

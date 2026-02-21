@@ -2,19 +2,19 @@
 
 import { Edit, Save, Upload, X } from "lucide-react";
 
+import DropdownPopover from "@/components/ui/DropdownPopover";
 import LightboxImage from "@/components/ui/Image";
 import Stack from "@/components/ui/Stack";
 import StackY from "@/components/ui/StackY";
 import { cn } from "@/lib/shared/utils";
 import ThoughtCard from "@/lib/shared/utils/thoughts/ThoughtCard";
 import { Status } from "@/types";
+
 import { BaseEditorProps } from "../../../components/EditorProvider";
 import AuthorInput from "../../../components/ui/AuthorInput";
 import DateTimeInput from "../../../components/ui/DateTimeInput";
 import HeaderSection from "../../../components/ui/HeaderSection";
 import SegmentedToggle from "../../../components/ui/SegmentedToggle";
-
-import DropdownPopover from "@/components/ui/DropdownPopover";
 import { useHooks } from "./use-hooks";
 
 export { default as OpenButton } from "./OpenButton";

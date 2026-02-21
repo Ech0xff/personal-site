@@ -1,15 +1,16 @@
-import Link from "@/components/ui/Link";
+"use cache";
+
 import { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
 
 import { ArrowLeft, Calendar, User } from "lucide-react";
 
 import ScrollToTopButton from "@/components/shared/ScrollToTopButton";
+import Link from "@/components/ui/Link";
 import { PostMarkdown } from "@/components/ui/markdown";
-import { fetchCachedPost } from "@/lib/server/services-cache/posts";
+import { getI18n } from "@/i18n/tools";
+import { fetchPost } from "@/lib/shared/services";
+import { makeStaticClient } from "@/lib/shared/supabase";
 import { formatTime } from "@/lib/shared/utils";
-
-export const revalidate = 3600;
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -19,8 +20,9 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { locale, slug } = await params;
-  const t = await getTranslations({ locale, namespace: "PostDetail" });
-  const post = await fetchCachedPost(slug);
+  const t = await getI18n("PostDetail", locale);
+  const client = makeStaticClient();
+  const post = await fetchPost(slug, client);
 
   if (!post || post.status !== "show") {
     return {
@@ -35,9 +37,9 @@ export async function generateMetadata({
 }
 
 export default async function PostPage({ params }: PageProps) {
-  const { slug } = await params;
-  const t = await getTranslations("PostDetail");
-  const post = await fetchCachedPost(slug);
+  const { locale, slug } = await params;
+  const t = await getI18n("PostDetail", locale);
+  const post = await fetchPost(slug);
 
   // Handle 404 - also hide non-show posts
   if (!post || post.status !== "show") {

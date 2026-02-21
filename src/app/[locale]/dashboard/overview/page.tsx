@@ -1,9 +1,8 @@
 "use client";
 
-import Link from "@/components/ui/Link";
-
 import { MessageCircle, PenSquare, Plus } from "lucide-react";
 
+import Link from "@/components/ui/Link";
 import StackX from "@/components/ui/StackX";
 import StackY from "@/components/ui/StackY";
 

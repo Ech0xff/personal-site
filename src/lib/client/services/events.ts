@@ -16,7 +16,7 @@ export const fetchEventsByBrowser = async () => {
 
 export const fetchEventByBrowser = async (id: string) => {
   const client = makeBrowserClient();
-  return fetchEvent(client, id);
+  return fetchEvent(id, client);
 };
 
 export const saveEventByBrowser = async (

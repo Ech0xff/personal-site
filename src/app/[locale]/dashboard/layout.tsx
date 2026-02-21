@@ -1,24 +1,23 @@
-import Link from "@/components/ui/Link";
 import { redirect } from "next/navigation";
 
 import {
-    ArrowLeft,
-    Calendar,
-    FileText,
-    Image,
-    LayoutDashboard,
-    Menu,
-    MessageCircle,
-    UserCog,
+  ArrowLeft,
+  Calendar,
+  FileText,
+  Image,
+  LayoutDashboard,
+  Menu,
+  MessageCircle,
+  UserCog,
 } from "lucide-react";
 
 import LogoutButton from "@/components/shared/LogoutButton";
 import ThemeToggle from "@/components/shared/ThemeToggle";
 import DropdownPopover from "@/components/ui/DropdownPopover";
+import Link from "@/components/ui/Link";
 import Stack from "@/components/ui/Stack";
 import StackX from "@/components/ui/StackX";
 import { makeServerClient } from "@/lib/server/supabase";
-
 import { cn } from "@/lib/shared/utils/tailwind";
 import { getUserStatus } from "@/lib/shared/utils/tools";
 
@@ -97,7 +96,7 @@ export default async function Layout({
           {/* Navigation */}
           <>
             <DropdownPopover
-              className="md:hidden ml-auto"
+              className="ml-auto md:hidden"
               trigger={
                 <button className="ml-auto rounded-md p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800">
                   <Menu className="h-5 w-5" />

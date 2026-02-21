@@ -4,6 +4,7 @@ import { Edit, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { deleteThoughtByBrowser } from "@/lib/client/services";
+
 import { useEditor } from "../../components/EditorProvider";
 
 interface ThoughtActionsProps {

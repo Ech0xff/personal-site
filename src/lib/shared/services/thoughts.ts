@@ -2,7 +2,11 @@ import { SupabaseClient } from "@supabase/supabase-js";
 
 import { Database, Status, ThoughtInsert, ThoughtUpdate } from "@/types";
 
-export const fetchThoughts = async (client: SupabaseClient<Database>) => {
+import { makeStaticClient } from "../supabase";
+
+export const fetchThoughts = async (
+  client: SupabaseClient<Database> = makeStaticClient(),
+) => {
   const { data, error } = await client
     .from("thoughts")
     .select("*")
@@ -17,8 +21,8 @@ export const fetchThoughts = async (client: SupabaseClient<Database>) => {
 };
 
 export const fetchThought = async (
-  client: SupabaseClient<Database>,
   id: string,
+  client: SupabaseClient<Database> = makeStaticClient(),
 ) => {
   const { data, error } = await client
     .from("thoughts")

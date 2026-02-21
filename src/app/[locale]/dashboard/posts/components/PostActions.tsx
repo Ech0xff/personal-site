@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "@/components/ui/Link";
-
 import { Edit, Eye, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
+import Link from "@/components/ui/Link";
 import { deletePostByBrowser } from "@/lib/client/services";
+
 import { useEditor } from "../../components/EditorProvider";
 
 interface PostActionsProps {

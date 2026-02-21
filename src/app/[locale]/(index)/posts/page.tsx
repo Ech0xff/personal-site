@@ -1,32 +1,37 @@
-import { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+"use cache";
 
-import StackY from "@/components/ui/StackY";
-import { fetchCachedPosts } from "@/lib/server/services-cache/posts";
-import { formatTime } from "@/lib/shared/utils";
+import { Metadata } from "next";
 
 import PostCard from "@/components/features/posts/PostCard";
-import CollectionBody from "../components/CollectionBody";
+import StackY from "@/components/ui/StackY";
+import { getI18n } from "@/i18n/tools";
+import { fetchPosts } from "@/lib/shared/services";
+import { makeStaticClient } from "@/lib/shared/supabase";
+import { formatTime } from "@/lib/shared/utils";
 
-export const revalidate = 86400;
+import CollectionBody from "../components/CollectionBody";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "IndexPosts" });
+  const t = await getI18n("IndexPosts", locale);
 
   return {
     title: t("metaTitle"),
   };
 }
 
-export default async function PostsPage() {
-  const t = await getTranslations("IndexPosts");
-  const tCommon = await getTranslations("Common");
-  const posts = await fetchCachedPosts();
+export default async function PostsPage({ params }: PageProps) {
+  const { locale } = await params;
+  const t = await getI18n("IndexPosts", locale);
+  const tCommon = await getI18n("Common", locale);
+  const client = makeStaticClient();
+  const posts = await fetchPosts(client);
   const totalPosts = posts.length;
   const totalCharacters = posts.reduce((acc, p) => acc + p.content.length, 0);
 
