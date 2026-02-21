@@ -1,4 +1,5 @@
 "use client";
+import Stack from "@/components/ui/Stack";
 import { useEffect, useState } from "react";
 
 export default function HeroTypewriter() {
@@ -37,11 +38,11 @@ export default function HeroTypewriter() {
   }, [currentText, isDeleting, currentIndex, typingSpeed]);
 
   return (
-    <div className="flex flex-col items-center space-y-2 font-mono tracking-widest text-gray-500 dark:text-gray-500">
+    <Stack x className="items-center gap-2 font-mono tracking-widest text-gray-500 dark:text-gray-500">
       <div className="flex items-center gap-1 text-[1.2em] font-black">
         {currentText}
         <span className="typing-cursor">▋</span>
       </div>
-    </div>
+    </Stack>
   );
 }
