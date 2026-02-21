@@ -2,7 +2,7 @@ import React from "react";
 
 import { cn } from "@/lib/shared/utils";
 
-import HeroTypewriter from "./Typewriter";
+import Typewriter from "./Typewriter";
 import "./index.scss";
 
 function AnimatedGridBackground({
@@ -24,7 +24,7 @@ function AnimatedGridBackground({
   );
 }
 
-export default function HeroSection() {
+export default function AnimationSection() {
   return (
     <>
       <div
@@ -45,7 +45,7 @@ export default function HeroSection() {
 
             <div className="my-2 h-px w-full bg-linear-to-r from-transparent via-gray-300 to-transparent dark:via-gray-700" />
 
-            <HeroTypewriter />
+            <Typewriter />
 
             <div
               className="mt-8 text-[4.5em] font-black"
