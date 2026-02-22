@@ -1,6 +1,7 @@
 "use client";
 
 import { Save, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 import EventCard from "@/components/features/events/EventCard";
 import Stack from "@/components/ui/Stack";
@@ -31,6 +32,8 @@ export default function EventEditor({
   onClose,
   onSaved,
 }: BaseEditorProps) {
+  const pathname = usePathname();
+  const locale = pathname.split("/")[1];
   const {
     form,
     updateForm,
@@ -151,7 +154,7 @@ export default function EventEditor({
             </Stack>
 
             <Stack x>
-              <EventCard event={form} />
+              <EventCard event={form} locale={locale} />
             </Stack>
           </Stack>
         </>

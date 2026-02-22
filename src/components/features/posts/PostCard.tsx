@@ -1,7 +1,6 @@
-import { useTranslations } from "next-intl";
-
 import Link from "@/components/ui/Link";
 import Stack from "@/components/ui/Stack";
+import { getT } from "@/lib/shared/i18n/tools";
 import { cn, formatTime } from "@/lib/shared/utils";
 
 import TagsList from "./TagsList";
@@ -16,10 +15,11 @@ export type Post = {
 interface Props {
   post: Post;
   className?: string;
+  locale?: string;
 }
 
-export default function PostCard({ post, className }: Props) {
-  const tCommon = useTranslations("Common");
+export default function PostCard({ post, className, locale }: Props) {
+  const tCommon = getT("Common", locale);
   const { id, title, published_at } = post;
   return (
     <Link

@@ -1,7 +1,6 @@
-import { useTranslations } from "next-intl";
-
 import LightboxImage from "@/components/ui/Image";
 import Stack from "@/components/ui/Stack";
+import { getT } from "@/lib/shared/i18n/tools";
 import ThoughtMarkdown from "@/components/ui/markdown/ThoughtMarkdown";
 import { cn } from "@/lib/shared/utils/tailwind";
 import { formatTime } from "@/lib/shared/utils/tools";
@@ -17,6 +16,7 @@ export type Thought = {
 interface Props {
   thought: Thought;
   className?: string;
+  locale?: string;
   index?: number;
   isLast?: boolean;
   renderActions?: (thought: Thought) => React.ReactNode;
@@ -25,12 +25,13 @@ interface Props {
 export default function ThoughtCard({
   thought,
   className,
+  locale,
   index,
   isLast = true,
   renderActions,
 }: Props) {
-  const tCommon = useTranslations("Common");
-  const tThoughtCard = useTranslations("ThoughtCard");
+  const tCommon = getT("Common", locale);
+  const tThoughtCard = getT("ThoughtCard", locale);
 
   return (
     <div className={cn("group", className)}>

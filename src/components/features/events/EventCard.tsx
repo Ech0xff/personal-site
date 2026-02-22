@@ -1,6 +1,5 @@
-import { useTranslations } from "next-intl";
-
 import Stack from "@/components/ui/Stack";
+import { getT } from "@/lib/shared/i18n/tools";
 import { formatTime } from "@/lib/shared/utils/tools";
 
 import { EventMarkdown } from "../../ui/markdown";
@@ -18,11 +17,17 @@ export type Event = {
 interface Props {
   event: Event;
   className?: string;
+  locale?: string;
   renderActions?: (event: Event) => React.ReactNode;
 }
 
-export default function EventCard({ event, className, renderActions }: Props) {
-  const tCommon = useTranslations("Common");
+export default function EventCard({
+  event,
+  className,
+  locale,
+  renderActions,
+}: Props) {
+  const tCommon = getT("Common", locale);
   const { title, content, tags, color, published_at } = event;
   return (
     <Stack y className={className}>

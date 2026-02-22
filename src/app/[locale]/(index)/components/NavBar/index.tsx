@@ -10,7 +10,7 @@ import ThemeToggle from "@/components/shared/ThemeToggle";
 import DropdownPopover from "@/components/ui/DropdownPopover";
 import Link from "@/components/ui/Link";
 import Stack from "@/components/ui/Stack";
-import { getI18n } from "@/i18n/tools";
+import { getT } from "@/lib/shared/i18n/tools";
 import { cn } from "@/lib/shared/utils";
 
 import NavBarController from "./NavBarController";
@@ -23,7 +23,7 @@ export default async function NavBar({
   className?: string;
   locale?: string;
 }) {
-  const t = await getI18n("Navigation", locale);
+  const t = getT("Navigation", locale);
 
   const navItems = [
     { name: t("posts"), path: "/posts", icon: FileText },

@@ -1,5 +1,7 @@
 "use client";
 
+import { usePathname } from "next/navigation";
+
 import EventTimeline from "@/components/features/events/EventTimeline";
 
 import EditorProvider from "../components/EditorProvider";
@@ -10,6 +12,8 @@ import StatusToggle from "./components/StatusToggle";
 import { useHooks } from "./use-hooks";
 
 export default function EventsPage() {
+  const pathname = usePathname();
+  const locale = pathname.split("/")[1];
   const { events, loading, error, syncStatus, removeEvent, refetch } =
     useHooks();
 
@@ -23,6 +27,7 @@ export default function EventsPage() {
       >
         <EventTimeline
           events={events}
+          locale={locale}
           renderActions={(event) => (
             <>
               <StatusToggle

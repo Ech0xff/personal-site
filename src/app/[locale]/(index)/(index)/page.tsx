@@ -18,7 +18,6 @@ export default async function HomePage({
   cacheTag(CACHE_TAGS.summary);
 
   const { locale } = await params;
-
   const data = (await fetchSummary(5)) as BlogSummaryData;
 
   return (

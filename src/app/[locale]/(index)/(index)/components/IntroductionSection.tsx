@@ -1,7 +1,7 @@
 import PostListItem from "@/components/features/posts/PostCard";
 import { Bilibili, Email, Github, Qq } from "@/components/icons";
 import Stack from "@/components/ui/Stack";
-import { getI18n } from "@/i18n/tools";
+import { getT } from "@/lib/shared/i18n/tools";
 import { cn } from "@/lib/shared/utils";
 import { BlogSummaryData } from "@/types";
 
@@ -14,7 +14,7 @@ export async function IntroductionSection({
   locale?: string;
   data: BlogSummaryData;
 }) {
-  const t = await getI18n("IndexHome", locale);
+  const t = getT("IndexHome", locale);
 
   const {
     recently: { posts },
@@ -121,7 +121,7 @@ export async function IntroductionSection({
             <p style={{ textIndent: "2em" }}>{t("latestPosts.empty")}</p>
           )}
           {posts.map((post) => (
-            <PostListItem key={post.id} post={post} />
+            <PostListItem key={post.id} post={post} locale={locale} />
           ))}
         </Stack>
       </Card>

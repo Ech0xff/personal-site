@@ -1,6 +1,7 @@
 "use client";
 
 import { Edit, Save, Upload, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 import ThoughtCard from "@/components/features/thoughts/ThoughtCard";
 import DropdownPopover from "@/components/ui/DropdownPopover";
@@ -23,6 +24,8 @@ export default function ThoughtEditor({
   onClose,
   onSaved,
 }: BaseEditorProps) {
+  const pathname = usePathname();
+  const locale = pathname.split("/")[1];
   const {
     form,
     viewMode,
@@ -218,6 +221,7 @@ export default function ThoughtEditor({
                 hidden: viewMode === "edit",
                 "basis-1/2": viewMode === "split",
               })}
+              locale={locale}
               thought={form}
             />
           </Stack>

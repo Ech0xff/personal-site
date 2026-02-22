@@ -2,7 +2,7 @@
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 
-import { routing } from "@/i18n/routing";
+import { routing } from "@/lib/shared/i18n/routing";
 
 interface Props {
   children: React.ReactNode;

@@ -1,18 +1,18 @@
-import { useTranslations } from "next-intl";
-
 import SectionCard from "@/components/ui/SectionCard";
 import Stack from "@/components/ui/Stack";
+import { getT } from "@/lib/shared/i18n/tools";
 import { cn, formatTime } from "@/lib/shared/utils";
 
 import EventCard, { Event } from "./EventCard";
 
 interface Props {
   events: Event[];
+  locale?: string;
   renderActions?: (event: Event) => React.ReactNode;
 }
 
-export default function EventTimeline({ events, renderActions }: Props) {
-  const tCommon = useTranslations("Common");
+export default function EventTimeline({ events, locale, renderActions }: Props) {
+  const tCommon = getT("Common", locale);
 
   // Group by year
   const groupedEvents: Record<string, Event[]> = {};
@@ -77,7 +77,11 @@ export default function EventTimeline({ events, renderActions }: Props) {
                         : "sm:ml-auto md:pl-8",
                     )}
                   >
-                    <EventCard event={event} renderActions={renderActions} />
+                    <EventCard
+                      event={event}
+                      locale={locale}
+                      renderActions={renderActions}
+                    />
                   </SectionCard>
                 </Stack>
               ))}

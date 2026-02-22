@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { cacheTag } from "next/cache";
 
 import EventTimeline from "@/components/features/events/EventTimeline";
-import { getI18n } from "@/i18n/tools";
+import { getT } from "@/lib/shared/i18n/tools";
 import { CACHE_TAGS } from "@/lib/server/cache";
 import { fetchEvents } from "@/lib/shared/services";
 import { makeStaticClient } from "@/lib/shared/supabase";
@@ -17,7 +17,7 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getI18n("IndexEvents", locale);
+  const t = getT("IndexEvents", locale);
 
   return {
     title: t("metaTitle"),
@@ -29,7 +29,7 @@ export default async function EventsPage({ params }: PageProps) {
   cacheTag(CACHE_TAGS.events);
 
   const { locale } = await params;
-  const t = await getI18n("IndexEvents", locale);
+  const t = getT("IndexEvents", locale);
   const client = makeStaticClient();
   const events = await fetchEvents(client);
 
@@ -47,7 +47,7 @@ export default async function EventsPage({ params }: PageProps) {
         ),
       })}
     >
-      <EventTimeline events={events} />
+      <EventTimeline events={events} locale={locale} />
     </CollectionBody>
   );
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { usePathname } from "next/navigation";
+
 import ThoughtTimeline from "@/components/features/thoughts/ThoughtTimeline";
 
 import EditorProvider from "../components/EditorProvider";
@@ -10,6 +12,8 @@ import ThoughtEditor, { OpenButton } from "./components/ThoughtEditor";
 import { useHooks } from "./use-hooks";
 
 export default function ThoughtsPage() {
+  const pathname = usePathname();
+  const locale = pathname.split("/")[1];
   const { thoughts, loading, error, syncStatus, removeThought, refetch } =
     useHooks();
 
@@ -23,6 +27,7 @@ export default function ThoughtsPage() {
       >
         <ThoughtTimeline
           thoughts={thoughts}
+          locale={locale}
           renderActions={(thought) => {
             return (
               <>

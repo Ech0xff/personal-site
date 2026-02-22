@@ -3,8 +3,8 @@ import { cacheTag } from "next/cache";
 
 import PostCard from "@/components/features/posts/PostCard";
 import Stack from "@/components/ui/Stack";
-import { getI18n } from "@/i18n/tools";
 import { CACHE_TAGS } from "@/lib/server/cache";
+import { getT } from "@/lib/shared/i18n/tools";
 import { fetchPosts } from "@/lib/shared/services";
 import { makeStaticClient } from "@/lib/shared/supabase";
 import { formatTime } from "@/lib/shared/utils";
@@ -19,7 +19,7 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getI18n("IndexPosts", locale);
+  const t = getT("IndexPosts", locale);
 
   return {
     title: t("metaTitle"),
@@ -31,8 +31,8 @@ export default async function PostsPage({ params }: PageProps) {
   cacheTag(CACHE_TAGS.posts);
 
   const { locale } = await params;
-  const t = await getI18n("IndexPosts", locale);
-  const tCommon = await getI18n("Common", locale);
+  const t = getT("IndexPosts", locale);
+  const tCommon = getT("Common", locale);
   const client = makeStaticClient();
   const posts = await fetchPosts(client);
   const totalPosts = posts.length;
@@ -83,7 +83,7 @@ export default async function PostsPage({ params }: PageProps) {
             {/* List of posts for the year */}
             <Stack y className="gap-1">
               {groupedPosts[year]?.map((post) => (
-                <PostCard key={post.id} post={post} />
+                <PostCard key={post.id} post={post} locale={locale} />
               ))}
             </Stack>
           </section>

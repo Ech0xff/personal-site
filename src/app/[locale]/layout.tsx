@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { NextIntlClientProvider } from "next-intl";
 
 import { Toaster } from "sonner";
 
@@ -29,17 +28,14 @@ export default async function RootLayout({
   "use cache";
 
   const { locale } = await params;
-  const messages = (await import(`@/i18n/messages/${locale}.json`)).default;
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head suppressHydrationWarning>
         <script dangerouslySetInnerHTML={{ __html: InitScript }} />
       </head>
       <body>
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <Toaster position="top-center" richColors />
-          <LightboxProvider>{children}</LightboxProvider>
-        </NextIntlClientProvider>
+        <Toaster position="top-center" richColors />
+        <LightboxProvider>{children}</LightboxProvider>
       </body>
     </html>
   );

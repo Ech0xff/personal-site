@@ -6,7 +6,7 @@ import { ArrowLeft, Calendar, User } from "lucide-react";
 import ScrollToTopButton from "@/components/shared/ScrollToTopButton";
 import Link from "@/components/ui/Link";
 import { PostMarkdown } from "@/components/ui/markdown";
-import { getI18n } from "@/i18n/tools";
+import { getT } from "@/lib/shared/i18n/tools";
 import { CACHE_TAGS } from "@/lib/server/cache";
 import { fetchPost } from "@/lib/shared/services";
 import { formatTime } from "@/lib/shared/utils";
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   "use cache";
   const { locale, slug } = await params;
   cacheTag(CACHE_TAGS.post(slug));
-  const t = await getI18n("PostDetail", locale);
+  const t = getT("PostDetail", locale);
   const post = await getPostData(slug);
 
   if (!post || post.status !== "show") {
@@ -44,7 +44,7 @@ export default async function PostPage({ params }: Props) {
   "use cache";
   const { locale, slug } = await params;
   cacheTag(CACHE_TAGS.post(slug));
-  const t = await getI18n("PostDetail", locale);
+  const t = getT("PostDetail", locale);
   const post = await getPostData(slug);
 
   // Handle 404 - also hide non-show posts

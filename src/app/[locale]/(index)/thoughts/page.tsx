@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { cacheTag } from "next/cache";
 
 import ThoughtTimeline from "@/components/features/thoughts/ThoughtTimeline";
-import { getI18n } from "@/i18n/tools";
+import { getT } from "@/lib/shared/i18n/tools";
 import { CACHE_TAGS } from "@/lib/server/cache";
 import { fetchThoughts } from "@/lib/shared/services";
 import { makeStaticClient } from "@/lib/shared/supabase";
@@ -17,7 +17,7 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getI18n("IndexThoughts", locale);
+  const t = getT("IndexThoughts", locale);
 
   return {
     title: t("metaTitle"),
@@ -29,7 +29,7 @@ export default async function ThoughtsPage({ params }: PageProps) {
   cacheTag(CACHE_TAGS.thoughts);
 
   const { locale } = await params;
-  const t = await getI18n("IndexThoughts", locale);
+  const t = getT("IndexThoughts", locale);
   const client = makeStaticClient();
   const thoughts = await fetchThoughts(client);
   const totalThoughts = thoughts.length;
@@ -51,7 +51,7 @@ export default async function ThoughtsPage({ params }: PageProps) {
         ),
       })}
     >
-      <ThoughtTimeline thoughts={thoughts} />
+      <ThoughtTimeline thoughts={thoughts} locale={locale} />
     </CollectionBody>
   );
 }
