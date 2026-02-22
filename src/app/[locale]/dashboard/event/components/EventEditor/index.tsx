@@ -3,8 +3,7 @@
 import { Save, X } from "lucide-react";
 
 import EventCard from "@/components/features/events/EventCard";
-import StackX from "@/components/ui/StackX";
-import StackY from "@/components/ui/StackY";
+import Stack from "@/components/ui/Stack";
 import { cn } from "@/lib/shared/utils";
 import { Status } from "@/types";
 
@@ -44,8 +43,8 @@ export default function EventEditor({
   } = useHooks({ id, onSaved, onClose });
 
   return (
-    <StackY
-      divided={true}
+    <Stack y
+      divide={true}
       className={cn("bg-white *:p-4 dark:bg-zinc-900", className)}
     >
       {isLoading ? (
@@ -82,7 +81,7 @@ export default function EventEditor({
               <X className="h-8 w-8" />
             </button>
           </HeaderSection>
-          <StackX className="p-4">
+          <Stack x className="p-4">
             <input
               value={form.title}
               onChange={(e) => updateForm({ title: e.target.value })}
@@ -90,8 +89,8 @@ export default function EventEditor({
               placeholder="Event title..."
               className="w-full rounded-lg bg-transparent text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
             />
-          </StackX>
-          <StackX className="flex-wrap gap-2">
+          </Stack>
+          <Stack x className="flex-wrap gap-2">
             {COLOR_OPTIONS.map((option) => (
               <button
                 key={option.value}
@@ -105,8 +104,8 @@ export default function EventEditor({
                 title={option.label}
               />
             ))}
-          </StackX>
-          <StackX className="flex-wrap items-center gap-2">
+          </Stack>
+          <Stack x className="flex-wrap items-center gap-2">
             {form.tags.map((tag, index) => (
               <span
                 key={tag}
@@ -135,26 +134,26 @@ export default function EventEditor({
               placeholder="Add tag..."
               className="w-24 rounded border border-zinc-200 bg-transparent px-2 py-1 text-sm text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
             />
-          </StackX>
-          <StackY
-            divided={true}
+          </Stack>
+          <Stack y
+            divide={true}
             className="flex-1 overflow-hidden p-0! *:flex-1 *:overflow-auto *:p-4"
           >
-            <StackX>
+            <Stack x>
               <textarea
                 value={form.content}
                 onChange={(e) => updateForm({ content: e.target.value })}
                 placeholder="Event content..."
                 className="w-full resize-none rounded-lg bg-transparent text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
               />
-            </StackX>
+            </Stack>
 
-            <StackX>
+            <Stack x>
               <EventCard event={form} />
-            </StackX>
-          </StackY>
+            </Stack>
+          </Stack>
         </>
       )}
-    </StackY>
+    </Stack>
   );
 }

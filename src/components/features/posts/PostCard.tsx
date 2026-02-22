@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl";
 
 import Link from "@/components/ui/Link";
-import StackX from "@/components/ui/StackX";
+import Stack from "@/components/ui/Stack";
 import { cn, formatTime } from "@/lib/shared/utils";
 
 import TagsList from "./TagsList";
@@ -29,7 +29,7 @@ export default function PostCard({ post, className }: Props) {
         className,
       )}
     >
-      <StackX className="flex-1">
+      <Stack x className="flex-1">
         {/* Title */}
         <span className="mx-4">{title}</span>
         <TagsList className="mr-auto hidden sm:flex" tags={post.tags} />
@@ -37,7 +37,7 @@ export default function PostCard({ post, className }: Props) {
         <span className="ml-auto w-28 text-sm text-gray-400">
           {formatTime(published_at, "MMM D, YYYY", tCommon("unknownDate"))}
         </span>
-      </StackX>
+      </Stack>
     </Link>
   );
 }

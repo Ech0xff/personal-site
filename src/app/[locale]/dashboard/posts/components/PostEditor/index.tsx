@@ -3,8 +3,7 @@
 import { Edit, Eye, Save, X } from "lucide-react";
 
 import DropdownPopover from "@/components/ui/DropdownPopover";
-import StackX from "@/components/ui/StackX";
-import StackY from "@/components/ui/StackY";
+import Stack from "@/components/ui/Stack";
 import { PostMarkdown } from "@/components/ui/markdown";
 import { cn } from "@/lib/shared/utils";
 
@@ -40,8 +39,8 @@ export default function PostEditor({
   });
 
   return (
-    <StackY
-      divided={true}
+    <Stack y
+      divide={true}
       className={cn("bg-white dark:bg-zinc-900", className)}
     >
       {/* Top Toolbar */}
@@ -60,13 +59,13 @@ export default function PostEditor({
                 </button>
               }
             >
-              <StackY className="gap-1">
+              <Stack y className="gap-1">
                 <AuthorInput
                   value={form.author}
                   onChange={(value) => updateForm({ author: value })}
                   disabled={isPending}
                 />
-                <StackX className="w-full justify-between gap-1">
+                <Stack x className="w-full justify-between gap-1">
                   <DateTimeInput
                     className="ml-3"
                     value={form.published_at}
@@ -82,7 +81,7 @@ export default function PostEditor({
                       { value: "show", label: "Show" },
                     ]}
                   />
-                </StackX>
+                </Stack>
                 <SegmentedToggle
                   value={viewMode}
                   onChange={setViewMode}
@@ -92,10 +91,10 @@ export default function PostEditor({
                     { value: "preview", label: "Preview" },
                   ]}
                 />
-              </StackY>
+              </Stack>
             </DropdownPopover>
 
-            <StackX className="hidden gap-2 md:flex">
+            <Stack x className="hidden gap-2 md:flex">
               <AuthorInput
                 value={form.author}
                 onChange={(value) => updateForm({ author: value })}
@@ -127,7 +126,7 @@ export default function PostEditor({
                 onChange={(value) => updateForm({ published_at: value })}
                 disabled={isPending}
               />
-            </StackX>
+            </Stack>
 
             {/* Save Button */}
             <button
@@ -147,10 +146,10 @@ export default function PostEditor({
           </HeaderSection>
 
           {/* Main Editor Area */}
-          <StackX divided={true} className="min-h-0 flex-1 gap-0">
+          <Stack x divide={true} className="min-h-0 flex-1 gap-0">
             {/* Left: Editor Panel */}
-            <StackY
-              divided={true}
+            <Stack y
+              divide={true}
               className={`overflow-hidden *:p-4 ${
                 viewMode === "preview"
                   ? "hidden"
@@ -160,7 +159,7 @@ export default function PostEditor({
               }`}
             >
               {/* Editor Header */}
-              <StackY className="shrink-0 gap-3">
+              <Stack y className="shrink-0 gap-3">
                 {/* Title Input */}
                 <input
                   value={form.title}
@@ -171,12 +170,12 @@ export default function PostEditor({
                 />
 
                 {/* Tags */}
-                <StackX className="flex-wrap items-center gap-4">
-                  <StackX className="min-w-0 flex-1 flex-wrap items-center gap-2">
+                <Stack x className="flex-wrap items-center gap-4">
+                  <Stack x className="min-w-0 flex-1 flex-wrap items-center gap-2">
                     <span className="shrink-0 text-sm text-zinc-500">
                       Tags:
                     </span>
-                    <StackX className="min-w-0 flex-1 flex-wrap items-center gap-1">
+                    <Stack x className="min-w-0 flex-1 flex-wrap items-center gap-1">
                       {form.tags.map((tag, index) => (
                         <span
                           key={tag}
@@ -207,10 +206,10 @@ export default function PostEditor({
                         placeholder="Add tag..."
                         className="w-20 shrink-0 rounded border border-zinc-200 bg-transparent px-2 py-0.5 text-xs text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
                       />
-                    </StackX>
-                  </StackX>
-                </StackX>
-              </StackY>
+                    </Stack>
+                  </Stack>
+                </Stack>
+              </Stack>
 
               {/* Content Editor */}
               <div className="min-h-0 flex-1">
@@ -221,11 +220,11 @@ export default function PostEditor({
                   className="h-full w-full resize-none bg-transparent font-mono leading-relaxed text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
                 />
               </div>
-            </StackY>
+            </Stack>
 
             {/* Right: Preview Panel */}
-            <StackY
-              divided={true}
+            <Stack y
+              divide={true}
               className={`flex flex-col overflow-hidden transition-all *:p-4 ${
                 viewMode === "edit"
                   ? "hidden"
@@ -235,10 +234,10 @@ export default function PostEditor({
               }`}
             >
               {/* Preview Header */}
-              <StackX className="items-center gap-2 text-sm text-zinc-500">
+              <Stack x className="items-center gap-2 text-sm text-zinc-500">
                 <Eye className="h-4 w-4" />
                 Preview
-              </StackX>
+              </Stack>
 
               {/* Preview Content */}
               <div className="min-h-0 flex-1 overflow-auto">
@@ -255,10 +254,10 @@ export default function PostEditor({
 
                 {/* Preview Meta */}
                 {(form.author || form.tags.length > 0) && (
-                  <StackX className="mb-6 items-center gap-3 text-sm text-zinc-500">
+                  <Stack x className="mb-6 items-center gap-3 text-sm text-zinc-500">
                     {form.author && <span>{form.author}</span>}
                     {form.tags.length > 0 && (
-                      <StackX className="items-center gap-1">
+                      <Stack x className="items-center gap-1">
                         {form.tags.map((tag) => (
                           <span
                             key={tag}
@@ -267,9 +266,9 @@ export default function PostEditor({
                             #{tag}
                           </span>
                         ))}
-                      </StackX>
+                      </Stack>
                     )}
-                  </StackX>
+                  </Stack>
                 )}
 
                 {/* Markdown Content Preview */}
@@ -281,10 +280,10 @@ export default function PostEditor({
                   </p>
                 )}
               </div>
-            </StackY>
-          </StackX>
+            </Stack>
+          </Stack>
         </>
       )}
-    </StackY>
+    </Stack>
   );
 }

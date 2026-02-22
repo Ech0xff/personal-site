@@ -16,7 +16,6 @@ import ThemeToggle from "@/components/shared/ThemeToggle";
 import DropdownPopover from "@/components/ui/DropdownPopover";
 import Link from "@/components/ui/Link";
 import Stack from "@/components/ui/Stack";
-import StackX from "@/components/ui/StackX";
 import { makeServerClient } from "@/lib/server/supabase";
 import { cn } from "@/lib/shared/utils/tailwind";
 import { getUserStatus } from "@/lib/shared/utils/tools";
@@ -81,7 +80,7 @@ export default async function Layout({
         )}
       >
         {/* Header */}
-        <StackX className="gap-2">
+        <Stack x className="gap-2">
           <Link
             href="/"
             className="flex items-center gap-2 text-lg font-semibold text-zinc-900 transition-colors hover:text-blue-600 dark:text-zinc-100 dark:hover:text-blue-400"
@@ -90,7 +89,7 @@ export default async function Layout({
             <div>Back</div>
           </Link>
           <ThemeToggle />
-        </StackX>
+        </Stack>
         {/* Navigation & Logout */}
         <Stack className={cn("ml-auto flex flex-1 gap-2", "md:flex-col")}>
           {/* Navigation */}

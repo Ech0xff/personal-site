@@ -3,8 +3,7 @@
 import { Shield, User as UserIcon } from "lucide-react";
 
 import SectionCard from "@/components/ui/SectionCard";
-import StackX from "@/components/ui/StackX";
-import StackY from "@/components/ui/StackY";
+import Stack from "@/components/ui/Stack";
 import { formatTime } from "@/lib/shared/utils";
 
 import DashboardShell from "../components/ui/DashboardShell";
@@ -19,12 +18,12 @@ export default function AccountPage() {
 
   const TitleRender = (title: string, Icon: React.ElementType) => {
     return (
-      <StackX className="items-center gap-3">
+      <Stack x className="items-center gap-3">
         <Icon className="h-4 w-4" />
         <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
           {title}
         </h3>
-      </StackX>
+      </Stack>
     );
   };
 
@@ -32,10 +31,10 @@ export default function AccountPage() {
     <DashboardShell title="Account" error={!accountObj} loading={loading}>
       {accountObj && (
         <>
-          <StackY className="gap-6">
-            <SectionCard divided={true}>
+          <Stack y className="gap-6">
+            <SectionCard divide={true}>
               {TitleRender("Profile", UserIcon)}
-              <StackY className="gap-2">
+              <Stack y className="gap-2">
                 <EditableInfoRow
                   label="Nickname"
                   value={accountObj.nickname}
@@ -61,12 +60,12 @@ export default function AccountPage() {
                       : undefined
                   }
                 />
-              </StackY>
+              </Stack>
             </SectionCard>
 
-            <SectionCard divided={true}>
+            <SectionCard divide={true}>
               {TitleRender("Connected Accounts", Shield)}
-              <StackY className="gap-4 pb-4">
+              <Stack y className="gap-4 pb-4">
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">
                   Manage the login methods linked to your account. You must keep
                   at least one login method active.
@@ -81,14 +80,14 @@ export default function AccountPage() {
                       unlinking={false}
                     />
                   ))}
-              </StackY>
+              </Stack>
 
               {/* Link new providers */}
-              <StackY>
+              <Stack y>
                 <p className="mb-3 text-sm font-medium text-zinc-700 dark:text-zinc-300">
                   Link a new provider
                 </p>
-                <StackX className="gap-2">
+                <Stack x className="gap-2">
                   {!accountObj.identities!.some(
                     (identity) => identity.provider === "github",
                   ) && (
@@ -111,10 +110,10 @@ export default function AccountPage() {
                       Link Google
                     </button>
                   )}
-                </StackX>
-              </StackY>
+                </Stack>
+              </Stack>
             </SectionCard>
-          </StackY>
+          </Stack>
         </>
       )}
     </DashboardShell>

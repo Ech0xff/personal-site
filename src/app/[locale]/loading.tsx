@@ -1,11 +1,13 @@
+import Stack from "@/components/ui/Stack";
+
 export default function Loading() {
   return (
-    <div className="bg-brand-gradient fixed inset-0 z-1000 flex flex-col items-center justify-center">
-      <div className="animate-pulse">
+    <Stack y className="fixed inset-0 z-1000">
+      <div className="m-auto animate-pulse">
         <div className="text-lg font-bold tracking-[0.5em] text-gray-800 dark:text-white">
           LOADING
         </div>
       </div>
-    </div>
+    </Stack>
   );
 }

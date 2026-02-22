@@ -1,4 +1,4 @@
-import StackX from "@/components/ui/StackX";
+import Stack from "@/components/ui/Stack";
 
 export default function EditorHeader({
   title,
@@ -8,14 +8,14 @@ export default function EditorHeader({
   children?: React.ReactNode;
 }) {
   return (
-    <StackX className="shrink-0 items-center justify-between border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
-      <StackX className="min-w-0 items-center gap-4">
+    <Stack x className="shrink-0 items-center justify-between border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+      <Stack x className="min-w-0 items-center gap-4">
         <h1 className="truncate text-xl font-semibold text-zinc-900 dark:text-zinc-100">
           {title}
         </h1>
-      </StackX>
+      </Stack>
 
-      <StackX className="items-center gap-3">{children}</StackX>
-    </StackX>
+      <Stack x className="items-center gap-3">{children}</Stack>
+    </Stack>
   );
 }

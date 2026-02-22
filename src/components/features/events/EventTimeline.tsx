@@ -1,10 +1,8 @@
 import { useTranslations } from "next-intl";
 
 import SectionCard from "@/components/ui/SectionCard";
-import StackY from "@/components/ui/StackY";
+import Stack from "@/components/ui/Stack";
 import { cn, formatTime } from "@/lib/shared/utils";
-
-import StackX from "../../ui/StackX";
 import EventCard, { Event } from "./EventCard";
 
 interface Props {
@@ -33,25 +31,25 @@ export default function EventTimeline({ events, renderActions }: Props) {
   });
 
   return (
-    <StackY className="relative mt-8">
+    <Stack y className="relative mt-8">
       {/* Timeline Axis */}
       <div className="absolute top-0 bottom-0 left-1/2 w-0.5 -translate-x-1/2 transform bg-zinc-200 dark:bg-zinc-800" />
 
       {sortedYears.map((year) => {
         const yearEvents = groupedEvents[year] || [];
         return (
-          <StackY key={year} className="mb-12">
+          <Stack y key={year} className="mb-12">
             {/* Year Title */}
-            <StackX className="mb-8 justify-center">
+            <Stack x className="mb-8 justify-center">
               <h2 className="z-10 rounded-full bg-blue-500 px-4 py-1 text-lg font-bold text-white">
                 {year === "Unknown" ? tCommon("unknownYear") : year}
               </h2>
-            </StackX>
+            </Stack>
 
             {/* Events List */}
-            <StackY className="gap-8">
+            <Stack y className="gap-8">
               {yearEvents.map((event, index) => (
-                <StackX
+                <Stack x
                   key={event.id}
                   className={cn(
                     "relative",
@@ -79,12 +77,12 @@ export default function EventTimeline({ events, renderActions }: Props) {
                   >
                     <EventCard event={event} renderActions={renderActions} />
                   </SectionCard>
-                </StackX>
+                </Stack>
               ))}
-            </StackY>
-          </StackY>
+            </Stack>
+          </Stack>
         );
       })}
-    </StackY>
+    </Stack>
   );
 }

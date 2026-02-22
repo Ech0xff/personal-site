@@ -3,8 +3,7 @@
 import { ArrowDownAZ, ArrowUpAZ, Calendar, HardDrive } from "lucide-react";
 
 import LightboxImage from "@/components/ui/Image";
-import StackX from "@/components/ui/StackX";
-import StackY from "@/components/ui/StackY";
+import Stack from "@/components/ui/Stack";
 import { formatSize, formatTime } from "@/lib/shared/utils/tools";
 
 import DashboardShell from "../components/ui/DashboardShell";
@@ -30,9 +29,9 @@ export default function ImagesPage() {
 
   return (
     <DashboardShell title="Image Gallery" loading={loading} error={error}>
-      <StackY className="gap-4">
-        <StackX className="flex-wrap items-center gap-3">
-          <StackX className="items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 p-1 dark:border-zinc-700 dark:bg-zinc-800">
+      <Stack y className="gap-4">
+        <Stack x className="flex-wrap items-center gap-3">
+          <Stack x className="items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 p-1 dark:border-zinc-700 dark:bg-zinc-800">
             <button
               onClick={() => toggleSort("createdAt")}
               className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
@@ -59,23 +58,23 @@ export default function ImagesPage() {
               Size
               {sortField === "size" && <SortIcon className="h-3.5 w-3.5" />}
             </button>
-          </StackX>
+          </Stack>
 
-          <StackX className="ml-auto items-center gap-2 text-xs font-medium text-zinc-600 dark:text-zinc-300">
+          <Stack x className="ml-auto items-center gap-2 text-xs font-medium text-zinc-600 dark:text-zinc-300">
             <span className="rounded-full border border-zinc-200 bg-white px-2.5 py-1 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
               {images.length} image{images.length !== 1 ? "s" : ""}
             </span>
             <span className="rounded-full border border-zinc-200 bg-white px-2.5 py-1 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
               {formatSize(totalSize)} total
             </span>
-          </StackX>
-        </StackX>
+          </Stack>
+        </Stack>
 
         {sortedImages.length === 0 ? (
-          <StackY className="items-center justify-center rounded-lg border border-dashed border-zinc-300 py-12 text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
+          <Stack y className="items-center justify-center rounded-lg border border-dashed border-zinc-300 py-12 text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
             <HardDrive className="mb-2 h-12 w-12 opacity-50" />
             <p>No images found</p>
-          </StackY>
+          </Stack>
         ) : (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
             {sortedImages.map((image) => (
@@ -101,16 +100,16 @@ export default function ImagesPage() {
                   >
                     {image.name}
                   </p>
-                  <StackX className="items-center justify-between text-xs text-white/70">
+                  <Stack x className="items-center justify-between text-xs text-white/70">
                     <span>{formatSize(image.size)}</span>
                     <span>{formatTime(image.createdAt, "MMM D, YYYY")}</span>
-                  </StackX>
+                  </Stack>
                 </div>
               </div>
             ))}
           </div>
         )}
-      </StackY>
+      </Stack>
     </DashboardShell>
   );
 }

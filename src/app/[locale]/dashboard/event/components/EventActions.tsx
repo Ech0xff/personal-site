@@ -1,7 +1,5 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-
 import { Edit, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -18,7 +16,6 @@ export default function EventActions({
   eventId,
   successCallback,
 }: EventActionsProps) {
-  const t = useTranslations("About");
   const { openEditor } = useEditor();
 
   const handleDelete = async () => {

@@ -3,8 +3,7 @@
 import { type ReactNode } from "react";
 
 import TagsList from "@/components/features/posts/TagsList";
-import StackX from "@/components/ui/StackX";
-import StackY from "@/components/ui/StackY";
+import Stack from "@/components/ui/Stack";
 import { cn, formatTime } from "@/lib/shared/utils";
 
 import EditorProvider from "../components/EditorProvider";
@@ -32,9 +31,9 @@ const th = (title: string[]) => {
 const td = (children: ReactNode, className?: string) => {
   return (
     <td className="px-6 py-4">
-      <StackX className={cn("items-center justify-center", className)}>
+      <Stack x className={cn("items-center justify-center", className)}>
         {children}
-      </StackX>
+      </Stack>
     </td>
   );
 };
@@ -50,7 +49,7 @@ export default function Page() {
         loading={loading}
         error={error}
       >
-        <StackY>
+        <Stack y>
           {/* Posts Table */}
           <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
             <table className="w-full table-auto">
@@ -91,7 +90,7 @@ export default function Page() {
               </tbody>
             </table>
           </div>
-        </StackY>
+        </Stack>
       </DashboardShell>
     </EditorProvider>
   );

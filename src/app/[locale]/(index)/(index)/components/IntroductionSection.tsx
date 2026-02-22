@@ -1,7 +1,6 @@
 import PostListItem from "@/components/features/posts/PostCard";
 import { Bilibili, Email, Github, Qq } from "@/components/icons";
 import Stack from "@/components/ui/Stack";
-import StackY from "@/components/ui/StackY";
 import { getI18n } from "@/i18n/tools";
 import { cn } from "@/lib/shared/utils";
 import { BlogSummaryData } from "@/types";
@@ -75,7 +74,7 @@ export async function IntroductionSection({
   ];
 
   return (
-    <StackY className="mb-8 gap-8 px-4">
+    <Stack y className="mb-8 gap-8 px-4">
       {/* About Card */}
       <Card title={t("about.cardTitle")}>
         <p className="indent-8 text-sm leading-relaxed">
@@ -99,7 +98,7 @@ export async function IntroductionSection({
             >
               <Stack
                 x
-                className="relative z-10 flex h-full flex-col justify-between"
+                className="relative z-10 h-full justify-between"
               >
                 <Stack className="text-xs font-medium text-slate-400">
                   {item.name}
@@ -148,6 +147,6 @@ export async function IntroductionSection({
           ))}
         </Stack>
       </Card>
-    </StackY>
+    </Stack>
   );
 }

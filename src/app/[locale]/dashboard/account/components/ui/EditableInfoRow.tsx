@@ -4,8 +4,7 @@ import { useRef, useState } from "react";
 
 import { Check, X } from "lucide-react";
 
-import StackX from "@/components/ui/StackX";
-import StackY from "@/components/ui/StackY";
+import Stack from "@/components/ui/Stack";
 
 type EditableInfoRowProps = {
   label: string;
@@ -56,12 +55,12 @@ export default function EditableInfoRow({
   };
 
   return (
-    <StackY className="gap-1 sm:flex-row sm:items-center sm:gap-4">
+    <Stack y className="gap-1 sm:flex-row sm:items-center sm:gap-4">
       <span className="w-36 shrink-0 text-sm font-medium text-zinc-500 dark:text-zinc-400">
         {label}
       </span>
-      <StackX className="inline-flex items-center gap-1">
-        <StackX className={`inline-flex items-center ${widthClassName}`}>
+      <Stack x className="inline-flex items-center gap-1">
+        <Stack x className={`inline-flex items-center ${widthClassName}`}>
           {isEditing ? (
             <input
               type="text"
@@ -88,9 +87,9 @@ export default function EditableInfoRow({
               {value || placeholder}
             </span>
           )}
-        </StackX>
+        </Stack>
         {isEditing ? (
-          <StackX className="items-center gap-1">
+          <Stack x className="items-center gap-1">
             <button
               type="button"
               onMouseDown={() => {
@@ -115,7 +114,7 @@ export default function EditableInfoRow({
             >
               <X className="h-4 w-4" />
             </button>
-          </StackX>
+          </Stack>
         ) : (
           <button
             type="button"
@@ -126,7 +125,7 @@ export default function EditableInfoRow({
             Edit
           </button>
         )}
-      </StackX>
-    </StackY>
+      </Stack>
+    </Stack>
   );
 }

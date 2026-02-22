@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl";
 
 import LightboxImage from "@/components/ui/Image";
-import StackX from "@/components/ui/StackX";
+import Stack from "@/components/ui/Stack";
 import ThoughtMarkdown from "@/components/ui/markdown/ThoughtMarkdown";
 import { cn } from "@/lib/shared/utils/tailwind";
 import { formatTime } from "@/lib/shared/utils/tools";
@@ -35,8 +35,8 @@ export default function ThoughtCard({
   return (
     <div className={cn("group", className)}>
       {/* Meta Row */}
-      <StackX className="items-center justify-between">
-        <StackX className="gap-3 font-mono text-xs text-zinc-400 dark:text-zinc-500">
+      <Stack x className="items-center justify-between">
+        <Stack x className="gap-3 font-mono text-xs text-zinc-400 dark:text-zinc-500">
           <span className="font-bold text-zinc-500 dark:text-zinc-400">
             #{index ? index : tThoughtCard("preview")}
           </span>
@@ -48,12 +48,12 @@ export default function ThoughtCard({
               tCommon("unknownDate"),
             )}
           </span>
-        </StackX>
+        </Stack>
 
-        <StackX className="items-center gap-2">
+        <Stack x className="items-center gap-2">
           {renderActions && renderActions(thought)}
-        </StackX>
-      </StackX>
+        </Stack>
+      </Stack>
 
       {/* Content */}
       <ThoughtMarkdown content={thought.content} />

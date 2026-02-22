@@ -1,4 +1,4 @@
-import StackY from "@/components/ui/StackY";
+import Stack from "@/components/ui/Stack";
 import { cn } from "@/lib/shared/utils";
 
 import ThoughtCard, { Thought } from "./ThoughtCard";
@@ -16,7 +16,7 @@ export default function ThoughtTimeline({
   className,
 }: Props) {
   return (
-    <StackY
+    <Stack y
       className={cn(
         "my-6 gap-12 border-l border-zinc-200 py-2 pl-6 dark:border-zinc-800",
         className,
@@ -31,6 +31,6 @@ export default function ThoughtTimeline({
           renderActions={renderActions}
         />
       ))}
-    </StackY>
+    </Stack>
   );
 }

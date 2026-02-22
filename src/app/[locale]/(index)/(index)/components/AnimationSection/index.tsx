@@ -1,5 +1,6 @@
 import React from "react";
 
+import Stack from "@/components/ui/Stack";
 import { cn } from "@/lib/shared/utils";
 
 import Typewriter from "./Typewriter";
@@ -27,15 +28,19 @@ function AnimatedGridBackground({
 export default function AnimationSection() {
   return (
     <>
-      <div
+      <Stack
+        y
         className={cn(
-          "bg-brand-gradient absolute inset-0 flex h-dvh w-dvw snap-start flex-col items-center justify-center overflow-hidden transition-all",
+          "bg-brand-gradient absolute inset-0 h-dvh w-dvw snap-start items-center justify-center overflow-hidden transition-all",
           "duration-300 group-data-[scrolled=true]:h-[60svh]",
         )}
       >
         <AnimatedGridBackground />
-        <div className="relative flex flex-1 flex-col items-center justify-center text-[clamp(0.6rem,2vw,1.2rem)]">
-          <div className="flex flex-col items-center">
+        <Stack
+          y
+          className="relative flex-1 items-center justify-center text-[clamp(0.6rem,2vw,1.2rem)]"
+        >
+          <Stack y className="items-center">
             <h1
               className="text-center text-[5em]"
               style={{ fontFamily: '"Titan One", cursive' }}
@@ -56,9 +61,9 @@ export default function AnimationSection() {
             >
               Always Continue, Never break.
             </div>
-          </div>
-        </div>
-      </div>
+          </Stack>
+        </Stack>
+      </Stack>
       <div
         className={cn(
           "h-dvh transition-all duration-300",

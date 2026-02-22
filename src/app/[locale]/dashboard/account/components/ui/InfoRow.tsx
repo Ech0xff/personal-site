@@ -1,4 +1,4 @@
-import StackY from "@/components/ui/StackY";
+import Stack from "@/components/ui/Stack";
 
 export default function InfoRow({
   label,
@@ -10,7 +10,7 @@ export default function InfoRow({
   mono?: boolean;
 }) {
   return (
-    <StackY className="gap-1 sm:flex-row sm:items-center sm:gap-4">
+    <Stack y className="gap-1 sm:flex-row sm:items-center sm:gap-4">
       <span className="w-36 shrink-0 text-sm font-medium text-zinc-500 dark:text-zinc-400">
         {label}
       </span>
@@ -19,6 +19,6 @@ export default function InfoRow({
       >
         {value || "—"}
       </span>
-    </StackY>
+    </Stack>
   );
 }

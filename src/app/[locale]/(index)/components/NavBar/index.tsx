@@ -9,8 +9,7 @@ import {
 import ThemeToggle from "@/components/shared/ThemeToggle";
 import DropdownPopover from "@/components/ui/DropdownPopover";
 import Link from "@/components/ui/Link";
-import StackX from "@/components/ui/StackX";
-import StackY from "@/components/ui/StackY";
+import Stack from "@/components/ui/Stack";
 import { getI18n } from "@/i18n/tools";
 import { cn } from "@/lib/shared/utils";
 
@@ -48,7 +47,7 @@ export default async function NavBar({
   return (
     <>
       <NavBarController />
-      <StackY
+      <Stack y
         className={cn(
           "fixed top-0 left-0 z-100 w-dvw duration-300",
           "group-data-[scrolled=true]:backdrop-blur-md",
@@ -56,13 +55,13 @@ export default async function NavBar({
           className,
         )}
       >
-        <StackY
+        <Stack y
           className={cn(
             "relative flex-1 duration-300",
             "sm:group-data-[scrolled=true]:group-data-[home=true]:px-(--layout-padding-x)",
           )}
         >
-          <StackX
+          <Stack x
             className={cn(
               "mx-auto w-full items-center justify-between px-4 py-2",
               "group-data-[scrolled=true]:backdrop-blur-md",
@@ -82,7 +81,7 @@ export default async function NavBar({
               </div>
             </Link>
             {/* Nav Items - Right aligned */}
-            <StackX className={cn("relative items-center gap-4")}>
+            <Stack x className={cn("relative items-center gap-4")}>
               <DropdownPopover
                 className="sm:hidden"
                 trigger={
@@ -94,14 +93,14 @@ export default async function NavBar({
                 {navItems.map(navItemRender)}
               </DropdownPopover>
 
-              <StackX className="hidden items-center gap-4 sm:flex">
+              <Stack x className="hidden items-center gap-4 sm:flex">
                 {navItems.map(navItemRender)}
-              </StackX>
+              </Stack>
               {/* Dark Mode Toggle */}
               <ThemeToggle />
-            </StackX>
-          </StackX>
-        </StackY>
+            </Stack>
+          </Stack>
+        </Stack>
         {/* Bottom Border */}
         <div
           className={cn(
@@ -111,7 +110,7 @@ export default async function NavBar({
             "sm:w-[calc(100svw-2*var(--layout-padding-x))]",
           )}
         />
-      </StackY>
+      </Stack>
     </>
   );
 }

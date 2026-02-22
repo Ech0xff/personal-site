@@ -3,8 +3,7 @@
 import { MessageCircle, PenSquare, Plus } from "lucide-react";
 
 import Link from "@/components/ui/Link";
-import StackX from "@/components/ui/StackX";
-import StackY from "@/components/ui/StackY";
+import Stack from "@/components/ui/Stack";
 
 import DashboardShell from "../components/ui/DashboardShell";
 import { useHooks } from "./use-hooks";
@@ -38,16 +37,16 @@ export default function DashboardPage() {
 
   return (
     <DashboardShell title="Overview" loading={loading} error={error}>
-      <StackY className="gap-6">
+      <Stack y className="gap-6">
         {/* Welcome Section */}
-        <StackY>
+        <Stack y>
           <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
             Welcome back!
           </h2>
           <p className="mt-1 text-zinc-500 dark:text-zinc-400">
             Here&apos;s an overview of your content.
           </p>
-        </StackY>
+        </Stack>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -56,23 +55,23 @@ export default function DashboardPage() {
               key={stat.label}
               className="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900"
             >
-              <StackX className="items-center gap-3">
+              <Stack x className="items-center gap-3">
                 <stat.icon className="h-6 w-6 shrink-0 text-zinc-500 dark:text-zinc-400" />
-                <StackY>
+                <Stack y>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">
                     {stat.label}
                   </p>
                   <p className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
                     {stat.value}
                   </p>
-                </StackY>
-              </StackX>
+                </Stack>
+              </Stack>
             </div>
           ))}
         </div>
 
         {/* Quick Actions */}
-        <StackY>
+        <Stack y>
           <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
             Quick Actions
           </h3>
@@ -83,24 +82,24 @@ export default function DashboardPage() {
                 href={action.href}
                 className={`group rounded-xl border border-zinc-200 p-6 transition-all hover:border-zinc-300 hover:shadow-md dark:border-zinc-800 dark:hover:border-zinc-700 ${action.color}`}
               >
-                <StackX className="items-center gap-4">
+                <Stack x className="items-center gap-4">
                   <action.icon className="h-8 w-8 shrink-0 text-zinc-600 dark:text-zinc-300" />
-                  <StackY>
+                  <Stack y>
                     <h4 className="font-semibold text-zinc-900 group-hover:text-blue-600 dark:text-zinc-100 dark:group-hover:text-blue-400">
                       {action.title}
                     </h4>
                     <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                       {action.description}
                     </p>
-                  </StackY>
-                </StackX>
+                  </Stack>
+                </Stack>
               </Link>
             ))}
           </div>
-        </StackY>
+        </Stack>
 
         {/* Recent Activity Placeholder */}
-        <StackY>
+        <Stack y>
           <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
             Recent Activity
           </h3>
@@ -109,8 +108,8 @@ export default function DashboardPage() {
               No recent activity to show.
             </p>
           </div>
-        </StackY>
-      </StackY>
+        </Stack>
+      </Stack>
     </DashboardShell>
   );
 }

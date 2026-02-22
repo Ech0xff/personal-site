@@ -5,7 +5,6 @@ import { Edit, Save, Upload, X } from "lucide-react";
 import DropdownPopover from "@/components/ui/DropdownPopover";
 import LightboxImage from "@/components/ui/Image";
 import Stack from "@/components/ui/Stack";
-import StackY from "@/components/ui/StackY";
 import { cn } from "@/lib/shared/utils";
 import ThoughtCard from "@/lib/shared/utils/thoughts/ThoughtCard";
 import { Status } from "@/types";
@@ -42,7 +41,7 @@ export default function ThoughtEditor({
   } = useHooks({ id, onSaved, onClose });
 
   return (
-    <StackY className={cn("min- bg-white dark:bg-zinc-900", className)}>
+    <Stack y className={cn("min- bg-white dark:bg-zinc-900", className)}>
       {isLoading ? (
         <div className="flex flex-1 items-center justify-center text-zinc-500">
           Loading...
@@ -152,9 +151,9 @@ export default function ThoughtEditor({
               <X className="h-8 w-8" />
             </button>
           </HeaderSection>
-          <StackY divided={true} className="flex-1 overflow-hidden *:p-4">
+          <Stack y divide={true} className="flex-1 overflow-hidden *:p-4">
             {/* Main Editor Area */}
-            <StackY
+            <Stack y
               className={cn("overflow-y-auto", {
                 "flex-1": viewMode === "edit",
                 hidden: viewMode === "preview",
@@ -162,7 +161,7 @@ export default function ThoughtEditor({
               })}
             >
               {/* Content and Upload Button Row */}
-              <StackY className="flex-1 gap-2">
+              <Stack y className="flex-1 gap-2">
                 <textarea
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
@@ -208,8 +207,8 @@ export default function ThoughtEditor({
                   }}
                   className="hidden"
                 />
-              </StackY>
-            </StackY>
+              </Stack>
+            </Stack>
 
             {/* Preview */}
             <ThoughtCard
@@ -220,9 +219,9 @@ export default function ThoughtEditor({
               })}
               thought={form}
             />
-          </StackY>
+          </Stack>
         </>
       )}
-    </StackY>
+    </Stack>
   );
 }

@@ -1,6 +1,5 @@
 "use cache";
 import Stack from "@/components/ui/Stack";
-import StackY from "@/components/ui/StackY";
 import { fetchSummary } from "@/lib/shared/services";
 import { cn } from "@/lib/shared/utils";
 import { BlogSummaryData } from "@/types";
@@ -20,7 +19,7 @@ export default async function HomePage({
   return (
     <>
       <AnimationSection />
-      <StackY className="relative flex w-full flex-col gap-3 pt-[10svh]">
+      <Stack y className="relative w-full gap-3 pt-[10svh]">
         {/* background */}
         <Stack
           className={cn(
@@ -30,7 +29,7 @@ export default async function HomePage({
           )}
         />
         <IntroductionSection locale={locale} data={data} />
-      </StackY>
+      </Stack>
     </>
   );
 }

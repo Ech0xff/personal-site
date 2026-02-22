@@ -1,7 +1,6 @@
 import { useTranslations } from "next-intl";
 
-import StackX from "@/components/ui/StackX";
-import StackY from "@/components/ui/StackY";
+import Stack from "@/components/ui/Stack";
 import { formatTime } from "@/lib/shared/utils/tools";
 
 import { EventMarkdown } from "../../ui/markdown";
@@ -26,16 +25,16 @@ export default function EventCard({ event, className, renderActions }: Props) {
   const tCommon = useTranslations("Common");
   const { title, content, tags, color, published_at } = event;
   return (
-    <StackY className={className}>
+    <Stack y className={className}>
       {/* Meta Row */}
-      <StackX className="mb-2 items-center justify-between">
+      <Stack x className="mb-2 items-center justify-between">
         <div className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
           {formatTime(published_at, "MMM D", tCommon("unknownDate"))}
         </div>
-        <StackX className="items-center gap-2">
+        <Stack x className="items-center gap-2">
           {renderActions && renderActions(event)}
-        </StackX>
-      </StackX>
+        </Stack>
+      </Stack>
 
       {/* Title */}
       <h3 className="mb-3 text-xl font-bold text-zinc-900 dark:text-zinc-50">
@@ -46,7 +45,7 @@ export default function EventCard({ event, className, renderActions }: Props) {
       {content && <EventMarkdown content={content} />}
 
       {/* Tags */}
-      <StackX className="mt-auto flex-wrap gap-2 py-3">
+      <Stack x className="mt-auto flex-wrap gap-2 py-3">
         {tags && tags.length > 0 && (
           <>
             {tags.map((tag) => (
@@ -63,7 +62,7 @@ export default function EventCard({ event, className, renderActions }: Props) {
             ))}
           </>
         )}
-      </StackX>
-    </StackY>
+      </Stack>
+    </Stack>
   );
 }

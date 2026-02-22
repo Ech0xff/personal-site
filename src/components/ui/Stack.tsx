@@ -3,10 +3,10 @@ import { ComponentPropsWithoutRef } from "react";
 import { cn } from "@/lib/shared/utils";
 
 interface Props extends ComponentPropsWithoutRef<"div"> {
-  x?: true;
-  y?: true;
+  x?: boolean;
+  y?: boolean;
 
-  divide?: true;
+  divide?: boolean;
   children?: React.ReactNode;
   className?: string;
 }

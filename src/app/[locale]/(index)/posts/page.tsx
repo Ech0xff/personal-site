@@ -3,7 +3,7 @@
 import { Metadata } from "next";
 
 import PostCard from "@/components/features/posts/PostCard";
-import StackY from "@/components/ui/StackY";
+import Stack from "@/components/ui/Stack";
 import { getI18n } from "@/i18n/tools";
 import { fetchPosts } from "@/lib/shared/services";
 import { makeStaticClient } from "@/lib/shared/supabase";
@@ -78,11 +78,11 @@ export default async function PostsPage({ params }: PageProps) {
             </h2>
 
             {/* List of posts for the year */}
-            <StackY className="gap-1">
+            <Stack y className="gap-1">
               {groupedPosts[year]?.map((post) => (
                 <PostCard key={post.id} post={post} />
               ))}
-            </StackY>
+            </Stack>
           </section>
         ))}
       </div>
