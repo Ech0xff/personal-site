@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { NextIntlClientProvider } from "next-intl";
 
 import { Toaster } from "sonner";
 
@@ -18,19 +19,27 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }>) {
+  "use cache";
+
+  const { locale } = await params;
+  const messages = (await import(`@/i18n/messages/${locale}.json`)).default;
   return (
     <html lang="en" suppressHydrationWarning>
       <head suppressHydrationWarning>
         <script dangerouslySetInnerHTML={{ __html: InitScript }} />
       </head>
       <body>
-        <Toaster position="top-center" richColors />
-        <LightboxProvider>{children}</LightboxProvider>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <Toaster position="top-center" richColors />
+          <LightboxProvider>{children}</LightboxProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

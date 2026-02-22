@@ -51,6 +51,7 @@ export default async function Layout({
 }) {
   const client = await makeServerClient();
   const { isAuth, isAdmin } = await getUserStatus(client);
+  if (!isAuth) redirect("/auth");
 
   const navIconRender = (item: (typeof navItems)[number]) => (
     <Link
@@ -62,7 +63,6 @@ export default async function Layout({
       <div>{item.name}</div>
     </Link>
   );
-  if (!isAuth) redirect("/auth");
   return (
     <Stack
       className={cn(

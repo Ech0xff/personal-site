@@ -2,11 +2,11 @@
 
 import { Edit, Save, Upload, X } from "lucide-react";
 
+import ThoughtCard from "@/components/features/thoughts/ThoughtCard";
 import DropdownPopover from "@/components/ui/DropdownPopover";
 import LightboxImage from "@/components/ui/Image";
 import Stack from "@/components/ui/Stack";
 import { cn } from "@/lib/shared/utils";
-import ThoughtCard from "@/lib/shared/utils/thoughts/ThoughtCard";
 import { Status } from "@/types";
 
 import { BaseEditorProps } from "../../../components/EditorProvider";

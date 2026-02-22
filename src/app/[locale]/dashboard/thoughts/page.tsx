@@ -1,6 +1,6 @@
 "use client";
 
-import ThoughtTimeline from "@/lib/shared/utils/thoughts/ThoughtTimeline";
+import ThoughtTimeline from "@/components/features/thoughts/ThoughtTimeline";
 
 import EditorProvider from "../components/EditorProvider";
 import DashboardShell from "../components/ui/DashboardShell";
