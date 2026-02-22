@@ -18,6 +18,7 @@ const themeInit = () => {
       const isHomePath = /^\/(?:en|zh-CN)?\/?$/.test(window.location.pathname);
       document.documentElement.dataset.home = isHomePath ? "true" : "false";
     };
+    updateHomeStatus();
     const originalPushState = history.pushState;
     const originalReplaceState = history.replaceState;
     history.pushState = function (...args) {

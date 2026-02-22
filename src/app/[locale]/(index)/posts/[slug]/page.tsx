@@ -9,22 +9,24 @@ import { PostMarkdown } from "@/components/ui/markdown";
 import { getI18n } from "@/i18n/tools";
 import { CACHE_TAGS } from "@/lib/server/cache";
 import { fetchPost } from "@/lib/shared/services";
-import { makeStaticClient } from "@/lib/shared/supabase";
 import { formatTime } from "@/lib/shared/utils";
 
-interface PageProps {
+const getPostData = async (slug: string) => {
+  "use cache";
+  cacheTag(CACHE_TAGS.post(slug));
+  return fetchPost(slug);
+};
+
+interface Props {
   params: Promise<{ locale: string; slug: string }>;
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   "use cache";
   const { locale, slug } = await params;
   cacheTag(CACHE_TAGS.post(slug));
   const t = await getI18n("PostDetail", locale);
-  const client = makeStaticClient();
-  const post = await fetchPost(slug, client);
+  const post = await getPostData(slug);
 
   if (!post || post.status !== "show") {
     return {
@@ -38,12 +40,12 @@ export async function generateMetadata({
   };
 }
 
-export default async function PostPage({ params }: PageProps) {
+export default async function PostPage({ params }: Props) {
   "use cache";
   const { locale, slug } = await params;
   cacheTag(CACHE_TAGS.post(slug));
   const t = await getI18n("PostDetail", locale);
-  const post = await fetchPost(slug);
+  const post = await getPostData(slug);
 
   // Handle 404 - also hide non-show posts
   if (!post || post.status !== "show") {
