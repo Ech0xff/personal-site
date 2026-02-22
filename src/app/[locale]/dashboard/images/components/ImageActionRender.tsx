@@ -34,7 +34,10 @@ export default function ImageActionRender({
   };
 
   return (
-    <Stack x className="absolute top-1 right-1 gap-1 opacity-0 transition-opacity group-hover/lightbox:opacity-100">
+    <Stack
+      x
+      className="absolute top-1 right-1 gap-1 opacity-0 transition-opacity group-hover/lightbox:opacity-100"
+    >
       <button
         type="button"
         onClick={(event) => {

@@ -1,6 +1,5 @@
-"use cache";
-
 import { Metadata } from "next";
+import { cacheTag } from "next/cache";
 
 import { ArrowLeft, Calendar, User } from "lucide-react";
 
@@ -8,6 +7,7 @@ import ScrollToTopButton from "@/components/shared/ScrollToTopButton";
 import Link from "@/components/ui/Link";
 import { PostMarkdown } from "@/components/ui/markdown";
 import { getI18n } from "@/i18n/tools";
+import { CACHE_TAGS } from "@/lib/server/cache";
 import { fetchPost } from "@/lib/shared/services";
 import { makeStaticClient } from "@/lib/shared/supabase";
 import { formatTime } from "@/lib/shared/utils";
@@ -19,7 +19,9 @@ interface PageProps {
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
+  "use cache";
   const { locale, slug } = await params;
+  cacheTag(CACHE_TAGS.post(slug));
   const t = await getI18n("PostDetail", locale);
   const client = makeStaticClient();
   const post = await fetchPost(slug, client);
@@ -37,7 +39,9 @@ export async function generateMetadata({
 }
 
 export default async function PostPage({ params }: PageProps) {
+  "use cache";
   const { locale, slug } = await params;
+  cacheTag(CACHE_TAGS.post(slug));
   const t = await getI18n("PostDetail", locale);
   const post = await fetchPost(slug);
 

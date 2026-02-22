@@ -1,9 +1,9 @@
-"use cache";
-
 import { Metadata } from "next";
+import { cacheTag } from "next/cache";
 
 import EventTimeline from "@/components/features/events/EventTimeline";
 import { getI18n } from "@/i18n/tools";
+import { CACHE_TAGS } from "@/lib/server/cache";
 import { fetchEvents } from "@/lib/shared/services";
 import { makeStaticClient } from "@/lib/shared/supabase";
 
@@ -25,6 +25,9 @@ export async function generateMetadata({
 }
 
 export default async function EventsPage({ params }: PageProps) {
+  "use cache";
+  cacheTag(CACHE_TAGS.events);
+
   const { locale } = await params;
   const t = await getI18n("IndexEvents", locale);
   const client = makeStaticClient();

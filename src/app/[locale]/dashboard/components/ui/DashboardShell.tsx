@@ -50,7 +50,8 @@ export default function DashboardShell({
   }
 
   return (
-    <Stack y
+    <Stack
+      y
       {...props}
       style={{ anchorName: "--dashboard" }}
       className={cn("relative flex-1 overflow-hidden *:p-4", className)}
@@ -61,7 +62,9 @@ export default function DashboardShell({
         </h2>
         {optActions && <div>{optActions}</div>}
       </Stack>
-      <Stack y className="flex-1 overflow-auto">{children}</Stack>
+      <Stack y className="flex-1 overflow-auto">
+        {children}
+      </Stack>
     </Stack>
   );
 }

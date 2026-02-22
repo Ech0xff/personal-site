@@ -43,7 +43,8 @@ export default function EventEditor({
   } = useHooks({ id, onSaved, onClose });
 
   return (
-    <Stack y
+    <Stack
+      y
       divide={true}
       className={cn("bg-white *:p-4 dark:bg-zinc-900", className)}
     >
@@ -135,7 +136,8 @@ export default function EventEditor({
               className="w-24 rounded border border-zinc-200 bg-transparent px-2 py-1 text-sm text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
             />
           </Stack>
-          <Stack y
+          <Stack
+            y
             divide={true}
             className="flex-1 overflow-hidden p-0! *:flex-1 *:overflow-auto *:p-4"
           >

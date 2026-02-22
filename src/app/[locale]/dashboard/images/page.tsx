@@ -31,7 +31,10 @@ export default function ImagesPage() {
     <DashboardShell title="Image Gallery" loading={loading} error={error}>
       <Stack y className="gap-4">
         <Stack x className="flex-wrap items-center gap-3">
-          <Stack x className="items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 p-1 dark:border-zinc-700 dark:bg-zinc-800">
+          <Stack
+            x
+            className="items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 p-1 dark:border-zinc-700 dark:bg-zinc-800"
+          >
             <button
               onClick={() => toggleSort("createdAt")}
               className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
@@ -60,7 +63,10 @@ export default function ImagesPage() {
             </button>
           </Stack>
 
-          <Stack x className="ml-auto items-center gap-2 text-xs font-medium text-zinc-600 dark:text-zinc-300">
+          <Stack
+            x
+            className="ml-auto items-center gap-2 text-xs font-medium text-zinc-600 dark:text-zinc-300"
+          >
             <span className="rounded-full border border-zinc-200 bg-white px-2.5 py-1 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
               {images.length} image{images.length !== 1 ? "s" : ""}
             </span>
@@ -71,7 +77,10 @@ export default function ImagesPage() {
         </Stack>
 
         {sortedImages.length === 0 ? (
-          <Stack y className="items-center justify-center rounded-lg border border-dashed border-zinc-300 py-12 text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
+          <Stack
+            y
+            className="items-center justify-center rounded-lg border border-dashed border-zinc-300 py-12 text-zinc-500 dark:border-zinc-700 dark:text-zinc-400"
+          >
             <HardDrive className="mb-2 h-12 w-12 opacity-50" />
             <p>No images found</p>
           </Stack>
@@ -100,7 +109,10 @@ export default function ImagesPage() {
                   >
                     {image.name}
                   </p>
-                  <Stack x className="items-center justify-between text-xs text-white/70">
+                  <Stack
+                    x
+                    className="items-center justify-between text-xs text-white/70"
+                  >
                     <span>{formatSize(image.size)}</span>
                     <span>{formatTime(image.createdAt, "MMM D, YYYY")}</span>
                   </Stack>

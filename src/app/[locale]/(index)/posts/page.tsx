@@ -1,10 +1,10 @@
-"use cache";
-
 import { Metadata } from "next";
+import { cacheTag } from "next/cache";
 
 import PostCard from "@/components/features/posts/PostCard";
 import Stack from "@/components/ui/Stack";
 import { getI18n } from "@/i18n/tools";
+import { CACHE_TAGS } from "@/lib/server/cache";
 import { fetchPosts } from "@/lib/shared/services";
 import { makeStaticClient } from "@/lib/shared/supabase";
 import { formatTime } from "@/lib/shared/utils";
@@ -27,6 +27,9 @@ export async function generateMetadata({
 }
 
 export default async function PostsPage({ params }: PageProps) {
+  "use cache";
+  cacheTag(CACHE_TAGS.posts);
+
   const { locale } = await params;
   const t = await getI18n("IndexPosts", locale);
   const tCommon = await getI18n("Common", locale);

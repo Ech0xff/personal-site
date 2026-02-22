@@ -1,8 +1,8 @@
-"use cache";
-
 import { Metadata } from "next";
+import { cacheTag } from "next/cache";
 
 import { getI18n } from "@/i18n/tools";
+import { CACHE_TAGS } from "@/lib/server/cache";
 import { fetchThoughts } from "@/lib/shared/services";
 import { makeStaticClient } from "@/lib/shared/supabase";
 import ThoughtTimeline from "@/lib/shared/utils/thoughts/ThoughtTimeline";
@@ -25,6 +25,9 @@ export async function generateMetadata({
 }
 
 export default async function ThoughtsPage({ params }: PageProps) {
+  "use cache";
+  cacheTag(CACHE_TAGS.thoughts);
+
   const { locale } = await params;
   const t = await getI18n("IndexThoughts", locale);
   const client = makeStaticClient();

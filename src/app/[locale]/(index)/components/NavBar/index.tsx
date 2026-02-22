@@ -47,7 +47,8 @@ export default async function NavBar({
   return (
     <>
       <NavBarController />
-      <Stack y
+      <Stack
+        y
         className={cn(
           "fixed top-0 left-0 z-100 w-dvw duration-300",
           "group-data-[scrolled=true]:backdrop-blur-md",
@@ -55,13 +56,15 @@ export default async function NavBar({
           className,
         )}
       >
-        <Stack y
+        <Stack
+          y
           className={cn(
             "relative flex-1 duration-300",
             "sm:group-data-[scrolled=true]:group-data-[home=true]:px-(--layout-padding-x)",
           )}
         >
-          <Stack x
+          <Stack
+            x
             className={cn(
               "mx-auto w-full items-center justify-between px-4 py-2",
               "group-data-[scrolled=true]:backdrop-blur-md",

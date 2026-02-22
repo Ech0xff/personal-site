@@ -36,7 +36,10 @@ export default function ThoughtCard({
     <div className={cn("group", className)}>
       {/* Meta Row */}
       <Stack x className="items-center justify-between">
-        <Stack x className="gap-3 font-mono text-xs text-zinc-400 dark:text-zinc-500">
+        <Stack
+          x
+          className="gap-3 font-mono text-xs text-zinc-400 dark:text-zinc-500"
+        >
           <span className="font-bold text-zinc-500 dark:text-zinc-400">
             #{index ? index : tThoughtCard("preview")}
           </span>

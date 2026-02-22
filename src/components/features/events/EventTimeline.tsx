@@ -3,6 +3,7 @@ import { useTranslations } from "next-intl";
 import SectionCard from "@/components/ui/SectionCard";
 import Stack from "@/components/ui/Stack";
 import { cn, formatTime } from "@/lib/shared/utils";
+
 import EventCard, { Event } from "./EventCard";
 
 interface Props {
@@ -49,7 +50,8 @@ export default function EventTimeline({ events, renderActions }: Props) {
             {/* Events List */}
             <Stack y className="gap-8">
               {yearEvents.map((event, index) => (
-                <Stack x
+                <Stack
+                  x
                   key={event.id}
                   className={cn(
                     "relative",

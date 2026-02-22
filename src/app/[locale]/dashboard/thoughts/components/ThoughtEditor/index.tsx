@@ -153,7 +153,8 @@ export default function ThoughtEditor({
           </HeaderSection>
           <Stack y divide={true} className="flex-1 overflow-hidden *:p-4">
             {/* Main Editor Area */}
-            <Stack y
+            <Stack
+              y
               className={cn("overflow-y-auto", {
                 "flex-1": viewMode === "edit",
                 hidden: viewMode === "preview",

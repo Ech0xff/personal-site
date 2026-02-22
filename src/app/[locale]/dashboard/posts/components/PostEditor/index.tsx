@@ -39,7 +39,8 @@ export default function PostEditor({
   });
 
   return (
-    <Stack y
+    <Stack
+      y
       divide={true}
       className={cn("bg-white dark:bg-zinc-900", className)}
     >
@@ -148,7 +149,8 @@ export default function PostEditor({
           {/* Main Editor Area */}
           <Stack x divide={true} className="min-h-0 flex-1 gap-0">
             {/* Left: Editor Panel */}
-            <Stack y
+            <Stack
+              y
               divide={true}
               className={`overflow-hidden *:p-4 ${
                 viewMode === "preview"
@@ -171,11 +173,17 @@ export default function PostEditor({
 
                 {/* Tags */}
                 <Stack x className="flex-wrap items-center gap-4">
-                  <Stack x className="min-w-0 flex-1 flex-wrap items-center gap-2">
+                  <Stack
+                    x
+                    className="min-w-0 flex-1 flex-wrap items-center gap-2"
+                  >
                     <span className="shrink-0 text-sm text-zinc-500">
                       Tags:
                     </span>
-                    <Stack x className="min-w-0 flex-1 flex-wrap items-center gap-1">
+                    <Stack
+                      x
+                      className="min-w-0 flex-1 flex-wrap items-center gap-1"
+                    >
                       {form.tags.map((tag, index) => (
                         <span
                           key={tag}
@@ -223,7 +231,8 @@ export default function PostEditor({
             </Stack>
 
             {/* Right: Preview Panel */}
-            <Stack y
+            <Stack
+              y
               divide={true}
               className={`flex flex-col overflow-hidden transition-all *:p-4 ${
                 viewMode === "edit"
@@ -254,7 +263,10 @@ export default function PostEditor({
 
                 {/* Preview Meta */}
                 {(form.author || form.tags.length > 0) && (
-                  <Stack x className="mb-6 items-center gap-3 text-sm text-zinc-500">
+                  <Stack
+                    x
+                    className="mb-6 items-center gap-3 text-sm text-zinc-500"
+                  >
                     {form.author && <span>{form.author}</span>}
                     {form.tags.length > 0 && (
                       <Stack x className="items-center gap-1">

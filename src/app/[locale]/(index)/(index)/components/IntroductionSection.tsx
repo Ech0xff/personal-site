@@ -96,10 +96,7 @@ export async function IntroductionSection({
               }
               className="group relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl bg-slate-50 p-4 transition-all duration-300 hover:bg-slate-100 dark:bg-white/5 dark:hover:bg-white/10"
             >
-              <Stack
-                x
-                className="relative z-10 h-full justify-between"
-              >
+              <Stack x className="relative z-10 h-full justify-between">
                 <Stack className="text-xs font-medium text-slate-400">
                   {item.name}
                 </Stack>

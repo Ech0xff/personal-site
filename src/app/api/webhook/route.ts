@@ -1,6 +1,8 @@
+import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
-// TODO: refactor
+import { CACHE_TAGS, getCollectionTagByTable } from "@/lib/server/cache";
+
 export async function POST(request: NextRequest) {
   const authHeader = request.headers.get("Authorization");
   const expectedToken = `Bearer ${process.env.WEBHOOK_SECRET}`;
@@ -15,11 +17,22 @@ export async function POST(request: NextRequest) {
     const oldRecord = body?.old_record;
     const id = record?.id ?? oldRecord?.id;
 
-    const paths = new Set<string>();
     const tags = new Set<string>();
+    const collectionTag =
+      table === "posts" || table === "thoughts" || table === "events"
+        ? getCollectionTagByTable(table)
+        : null;
+
+    if (collectionTag) {
+      tags.add(collectionTag);
+      tags.add(CACHE_TAGS.summary);
+    }
 
     switch (table) {
       case "posts":
+        if (id) {
+          tags.add(CACHE_TAGS.post(id));
+        }
         break;
       case "thoughts":
         break;
@@ -29,7 +42,13 @@ export async function POST(request: NextRequest) {
         break;
     }
 
-    return NextResponse.json({ message: "Revalidation triggered" });
+    tags.forEach((tag) => revalidateTag(tag, "max"));
+
+    return NextResponse.json({
+      message: "Revalidation triggered",
+      table,
+      tags: Array.from(tags),
+    });
   } catch {
     return NextResponse.json(
       { message: "Error revalidating" },

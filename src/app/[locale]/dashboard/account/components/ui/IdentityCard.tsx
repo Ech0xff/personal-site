@@ -52,9 +52,13 @@ export default function IdentityCard({
   const Icon = config.icon;
 
   return (
-    <Stack x className="items-center justify-between rounded-lg border border-zinc-200 px-4 py-3 transition-colors dark:border-zinc-700">
+    <Stack
+      x
+      className="items-center justify-between rounded-lg border border-zinc-200 px-4 py-3 transition-colors dark:border-zinc-700"
+    >
       <Stack x className="items-center gap-3">
-        <Stack x
+        <Stack
+          x
           className={`flex h-9 w-9 items-center justify-center rounded-lg ${config.color}`}
         >
           <Icon className="h-4 w-4" />
