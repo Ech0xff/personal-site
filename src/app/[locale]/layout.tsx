@@ -4,7 +4,6 @@ import { Toaster } from "sonner";
 
 import { routing } from "@/i18n/routing";
 import { InitScript } from "@/lib/shared/themeInitScript";
-import AppProvider from "@/providers/AppProvider";
 import { LightboxProvider } from "@/providers/LightboxProvider";
 import "@/styles/globals.css";
 import "@/styles/tailwind.css";
@@ -31,9 +30,7 @@ export default function RootLayout({
       </head>
       <body>
         <Toaster position="top-center" richColors />
-        <AppProvider>
-          <LightboxProvider>{children}</LightboxProvider>
-        </AppProvider>
+        <LightboxProvider>{children}</LightboxProvider>
       </body>
     </html>
   );

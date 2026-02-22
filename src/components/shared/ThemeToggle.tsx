@@ -1,24 +1,15 @@
 "use client";
 import { Monitor, Moon, Sun } from "lucide-react";
 
+import { toggleTheme } from "@/lib/client/theme";
 import { cn } from "@/lib/shared/utils";
-import { useAppUI } from "@/providers/AppProvider";
 
 export default function ThemeToggle({ className }: { className?: string }) {
-  const { theme, setTheme } = useAppUI();
-
-  const toggleTheme = () => {
-    // system -> light -> dark
-    let nextTheme: typeof theme;
-    if (theme === "light") nextTheme = "dark";
-    else if (theme === "dark") nextTheme = "system";
-    else nextTheme = "light";
-    setTheme(nextTheme);
-  };
+  const toggleHandler = () => toggleTheme();
 
   return (
     <button
-      onClick={toggleTheme}
+      onClick={toggleHandler}
       className={cn(
         "hover:bg-theme-hover rounded-lg p-2 transition-colors",
         className,
