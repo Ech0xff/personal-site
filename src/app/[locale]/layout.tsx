@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Toaster } from "sonner";
 
 import { routing } from "@/i18n/routing";
-import { themeInitScript } from "@/lib/shared/themeInitScript";
+import { InitScript } from "@/lib/shared/themeInitScript";
 import AppProvider from "@/providers/AppProvider";
 import { LightboxProvider } from "@/providers/LightboxProvider";
 import "@/styles/globals.css";
@@ -27,11 +27,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head suppressHydrationWarning>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script dangerouslySetInnerHTML={{ __html: InitScript }} />
       </head>
       <body>
         <Toaster position="top-center" richColors />
-
         <AppProvider>
           <LightboxProvider>{children}</LightboxProvider>
         </AppProvider>
