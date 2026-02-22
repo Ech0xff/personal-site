@@ -3,7 +3,7 @@ import { NextIntlClientProvider } from "next-intl";
 
 import { Toaster } from "sonner";
 
-import { routing } from "@/i18n/routing";
+import { routing } from "@/lib/shared/i18n/routing";
 import { InitScript } from "@/lib/shared/themeInitScript";
 import { LightboxProvider } from "@/providers/LightboxProvider";
 import "@/styles/globals.css";

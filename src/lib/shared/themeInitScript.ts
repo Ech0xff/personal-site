@@ -15,7 +15,7 @@ const themeInit = () => {
 
   (() => {
     const updateHomeStatus = () => {
-      const isHomePath = /^\/(?:en|zh-CN)?\/?$/.test(window.location.pathname);
+      const isHomePath = /^\/[^/]*\/?$/.test(window.location.pathname);
       document.documentElement.dataset.home = isHomePath ? "true" : "false";
     };
     updateHomeStatus();

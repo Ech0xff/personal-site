@@ -1,0 +1,10 @@
+{
+  "common": {
+    "hello": "你好",
+    "welcome": "欢迎你，{name}",
+    "home": {
+      "title": "首页",
+      "description": "这是首页"
+    }
+  }
+}
