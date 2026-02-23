@@ -6,6 +6,7 @@ import {
   Menu,
 } from "lucide-react";
 
+import LanguageToggle from "@/components/shared/LanguageToggle";
 import ThemeToggle from "@/components/shared/ThemeToggle";
 import DropdownPopover from "@/components/ui/DropdownPopover";
 import Link from "@/components/ui/Link";
@@ -99,6 +100,7 @@ export default async function NavBar({
               <Stack x className="hidden items-center gap-4 sm:flex">
                 {navItems.map(navItemRender)}
               </Stack>
+              <LanguageToggle />
               {/* Dark Mode Toggle */}
               <ThemeToggle />
             </Stack>
