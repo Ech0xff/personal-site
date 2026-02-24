@@ -1,7 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { usePathname } from "next/navigation";
 
+import Cookies from "js-cookie";
 import { Languages } from "lucide-react";
 
 import { getNormalizedLocale } from "@/lib/shared/i18n";
@@ -14,12 +17,8 @@ const localeLabelMap: Record<string, string> = {
 };
 
 export default function LanguageToggle({ className }: { className?: string }) {
-  const pathname = usePathname();
-
-  const pathSegments = pathname.split("/").filter(Boolean);
-  const pathLocale = pathSegments[0];
-
-  const currentLocale = getNormalizedLocale(pathLocale);
+  const pathSegments = usePathname().split("/").filter(Boolean);
+  const currentLocale = getNormalizedLocale(pathSegments[0]);
 
   const currentLocaleIndex = routing.locales.indexOf(currentLocale);
   const targetLocale =
@@ -27,6 +26,10 @@ export default function LanguageToggle({ className }: { className?: string }) {
 
   const targetPath = ["", targetLocale, ...pathSegments.slice(1)].join("/");
   const label = localeLabelMap[targetLocale] || targetLocale;
+
+  useEffect(() => {
+    Cookies.set("locale", currentLocale, { expires: 365 });
+  }, [currentLocale]);
 
   return (
     <a
