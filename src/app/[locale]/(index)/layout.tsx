@@ -18,10 +18,9 @@ import { getT } from "@/lib/shared/i18n/tools";
 import { cn } from "@/lib/shared/utils";
 
 import LayoutClient from "./_components/LayoutClient";
-import NavBar from "./_components/NavBar";
 import "./layout.scss";
 
-export function Navbar({ locale }: { className?: string; locale?: string }) {
+function Navbar({ locale }: { className?: string; locale?: string }) {
   const t = getT("Navigation", locale);
 
   const navItems = [
@@ -96,7 +95,7 @@ export default async function Layout({
   "use cache";
   const { locale } = await params;
   return (
-    <LayoutClient navbar={<NavBar locale={locale} />}>
+    <LayoutClient navbar={<Navbar locale={locale} />}>
       {children}
       <FooterSection />
     </LayoutClient>
