@@ -25,7 +25,7 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }>) {
-  "use cache";
+
 
   const { locale } = await params;
   return (

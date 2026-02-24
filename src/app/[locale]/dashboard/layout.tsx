@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import {
@@ -14,44 +15,58 @@ import {
 import LogoutButton from "@/components/shared/LogoutButton";
 import ThemeToggle from "@/components/shared/ThemeToggle";
 import DropdownPopover from "@/components/ui/DropdownPopover";
-import Link from "@/components/ui/Link";
 import Stack from "@/components/ui/Stack";
 import { makeServerClient } from "@/lib/server/supabase";
 import { cn } from "@/lib/shared/utils/tailwind";
 import { getUserStatus } from "@/lib/shared/utils/tools";
 
-const navItems = [
-  {
-    isAdmin: false,
-    name: "Account",
-    path: "/dashboard/account",
-    icon: LayoutDashboard,
-  },
-  {
-    isAdmin: true,
-    name: "Overview",
-    path: "/dashboard/overview",
-    icon: UserCog,
-  },
-  { isAdmin: true, name: "Posts", path: "/dashboard/posts", icon: FileText },
-  {
-    isAdmin: true,
-    name: "Thoughts",
-    path: "/dashboard/thoughts",
-    icon: MessageCircle,
-  },
-  { isAdmin: true, name: "Events", path: "/dashboard/event", icon: Calendar },
-  { isAdmin: true, name: "Images", path: "/dashboard/images", icon: Image },
-];
-
-export default async function Layout({
-  children,
+async function Navbar({
+  isAdmin,
+  locale,
 }: {
-  children: React.ReactNode;
+  isAdmin: boolean;
+  locale: string;
 }) {
-  const client = await makeServerClient();
-  const { isAuth, isAdmin } = await getUserStatus(client);
-  if (!isAuth) redirect("/auth");
+  "use cache";
+
+  const navItems = [
+    {
+      isAdmin: false,
+      name: "Account",
+      path: `/${locale}/dashboard/account`,
+      icon: LayoutDashboard,
+    },
+    {
+      isAdmin: true,
+      name: "Overview",
+      path: `/${locale}/dashboard/overview`,
+      icon: UserCog,
+    },
+    {
+      isAdmin: true,
+      name: "Posts",
+      path: `/${locale}/dashboard/posts`,
+      icon: FileText,
+    },
+    {
+      isAdmin: true,
+      name: "Thoughts",
+      path: `/${locale}/dashboard/thoughts`,
+      icon: MessageCircle,
+    },
+    {
+      isAdmin: true,
+      name: "Events",
+      path: `/${locale}/dashboard/event`,
+      icon: Calendar,
+    },
+    {
+      isAdmin: true,
+      name: "Images",
+      path: `/${locale}/dashboard/images`,
+      icon: Image,
+    },
+  ];
 
   const navIconRender = (item: (typeof navItems)[number]) => (
     <Link
@@ -63,6 +78,66 @@ export default async function Layout({
       <div>{item.name}</div>
     </Link>
   );
+
+  return (
+    <Stack
+      className={cn(
+        "flex bg-zinc-50 p-3 dark:bg-zinc-900",
+        "flex-row items-center",
+        "md:flex-col md:items-start",
+      )}
+    >
+      {/* Header */}
+      <Stack x className="gap-2">
+        <Link
+          href={`/${locale}`}
+          className="flex items-center gap-2 text-lg font-semibold text-zinc-900 transition-colors hover:text-blue-600 dark:text-zinc-100 dark:hover:text-blue-400"
+        >
+          <ArrowLeft className="h-5 w-5" />
+          <div>Back</div>
+        </Link>
+        <ThemeToggle />
+      </Stack>
+      {/* Navigation & Logout */}
+      <Stack className={cn("ml-auto flex flex-1 gap-2", "md:flex-col")}>
+        {/* Navigation */}
+        <>
+          <DropdownPopover
+            className="ml-auto md:hidden"
+            trigger={
+              <button className="ml-auto rounded-md p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+                <Menu className="h-5 w-5" />
+              </button>
+            }
+          >
+            {navItems
+              .filter((item) => (item.isAdmin ? isAdmin : true))
+              .map(navIconRender)}
+          </DropdownPopover>
+          <Stack y className="mt-4 hidden gap-1 md:flex">
+            {navItems
+              .filter((item) => (item.isAdmin ? isAdmin : true))
+              .map(navIconRender)}
+          </Stack>
+        </>
+        {/* Logout */}
+        <LogoutButton className="md:mt-auto" />
+      </Stack>
+    </Stack>
+  );
+}
+
+export default async function Layout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
+  const client = await makeServerClient();
+  const { isAuth, isAdmin } = await getUserStatus(client);
+  if (!isAuth) redirect("/auth");
+
   return (
     <Stack
       className={cn(
@@ -71,52 +146,7 @@ export default async function Layout({
         "md:flex-row md:divide-x",
       )}
     >
-      {/* Sidebar */}
-      <Stack
-        className={cn(
-          "flex bg-zinc-50 p-3 dark:bg-zinc-900",
-          "flex-row items-center",
-          "md:flex-col md:items-start",
-        )}
-      >
-        {/* Header */}
-        <Stack x className="gap-2">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-lg font-semibold text-zinc-900 transition-colors hover:text-blue-600 dark:text-zinc-100 dark:hover:text-blue-400"
-          >
-            <ArrowLeft className="h-5 w-5" />
-            <div>Back</div>
-          </Link>
-          <ThemeToggle />
-        </Stack>
-        {/* Navigation & Logout */}
-        <Stack className={cn("ml-auto flex flex-1 gap-2", "md:flex-col")}>
-          {/* Navigation */}
-          <>
-            <DropdownPopover
-              className="ml-auto md:hidden"
-              trigger={
-                <button className="ml-auto rounded-md p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800">
-                  <Menu className="h-5 w-5" />
-                </button>
-              }
-            >
-              {navItems
-                .filter((item) => (item.isAdmin ? isAdmin : true))
-                .map(navIconRender)}
-            </DropdownPopover>
-            <Stack y className="mt-4 hidden gap-1 md:flex">
-              {navItems
-                .filter((item) => (item.isAdmin ? isAdmin : true))
-                .map(navIconRender)}
-            </Stack>
-          </>
-          {/* Logout */}
-          <LogoutButton className="md:mt-auto" />
-        </Stack>
-      </Stack>
-
+      <Navbar isAdmin={isAdmin} locale={(await params).locale} />
       {/* Main Content */}
       {children}
     </Stack>
