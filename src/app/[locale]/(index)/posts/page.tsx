@@ -9,7 +9,7 @@ import { fetchPosts } from "@/lib/shared/services";
 import { makeStaticClient } from "@/lib/shared/supabase";
 import { formatTime } from "@/lib/shared/utils";
 
-import CollectionBody from "../components/CollectionBody";
+import CollectionBody from "../_components/CollectionBody";
 
 interface PageProps {
   params: Promise<{ locale: string }>;

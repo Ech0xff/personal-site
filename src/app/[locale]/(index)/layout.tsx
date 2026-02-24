@@ -17,8 +17,8 @@ import Stack from "@/components/ui/Stack";
 import { getT } from "@/lib/shared/i18n/tools";
 import { cn } from "@/lib/shared/utils";
 
-import LayoutClient from "./components/LayoutClient";
-import NavBar from "./components/NavBar";
+import LayoutClient from "./_components/LayoutClient";
+import NavBar from "./_components/NavBar";
 import "./layout.scss";
 
 export function Navbar({ locale }: { className?: string; locale?: string }) {

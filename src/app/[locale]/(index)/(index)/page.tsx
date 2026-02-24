@@ -6,8 +6,8 @@ import { fetchSummary } from "@/lib/shared/services";
 import { cn } from "@/lib/shared/utils";
 import { BlogSummaryData } from "@/types";
 
-import AnimationSection from "./components/AnimationSection";
-import { IntroductionSection } from "./components/IntroductionSection";
+import AnimationSection from "./_components/AnimationSection";
+import { IntroductionSection } from "./_components/IntroductionSection";
 
 export default async function HomePage({
   params,
