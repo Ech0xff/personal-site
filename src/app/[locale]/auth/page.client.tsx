@@ -1,4 +1,5 @@
-"use client"
+"use client";
+
 import { type FormEvent } from "react";
 
 import SvgGithub from "@/components/icons/Github";
@@ -6,8 +7,8 @@ import Link from "@/components/ui/Link";
 
 import { useHooks } from "./use-hooks";
 
-export default function PageClient() {
- const {
+export default function PageClient({ locale }: { locale: string }) {
+  const {
     mode,
     setMode,
     form,
@@ -15,7 +16,7 @@ export default function PageClient() {
     handleSubmit,
     handleLoginWithOauth: loginWithGithub,
     t,
-  } = useHooks();
+  } = useHooks({ locale });
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

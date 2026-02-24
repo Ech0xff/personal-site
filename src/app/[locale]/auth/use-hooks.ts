@@ -1,10 +1,13 @@
+"use client";
+
 import { useState } from "react";
 
-import { redirect } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 
 import { toast } from "sonner";
 
 import { makeBrowserClient } from "@/lib/client/supabase";
+import { getT } from "@/lib/shared/i18n";
 
 type Mode = "login" | "register";
 
@@ -26,6 +29,7 @@ export const useHooks = () => {
   const [mode, setModeState] = useState<Mode>("login");
   const [form, setForm] = useState<AuthForm>(initialForm);
 
+  const t = getT("auth", usePathname().split("/")[1]);
   const updateForm = (updates: Partial<AuthForm>) => {
     setForm((current) => ({ ...current, ...updates }));
   };
@@ -36,10 +40,10 @@ export const useHooks = () => {
   };
 
   const handleLogin = async ({ email, password }: AuthForm) => {
-    const toastId = toast.loading("Logging in...");
+    const toastId = toast.loading(t("loggingIn"));
 
     if (!email || !password) {
-      toast.error("Invalid email or password", { id: toastId });
+      toast.error(t("invalidEmailOrPassword"), { id: toastId });
       return;
     }
 
@@ -49,11 +53,11 @@ export const useHooks = () => {
     });
 
     if (error || !data.session) {
-      toast.error("Invalid email or password", { id: toastId });
+      toast.error(t("invalidEmailOrPassword"), { id: toastId });
       return;
     }
 
-    toast.success("Logged in successfully.", { id: toastId });
+    toast.success(t("loggedInSuccessfully"), { id: toastId });
     redirect("/dashboard/account");
   };
 
@@ -62,15 +66,15 @@ export const useHooks = () => {
     password,
     confirmPassword,
   }: AuthForm) => {
-    const toastId = toast.loading("Creating account...");
+    const toastId = toast.loading(t("creatingAccount"));
 
     if (!email || !password) {
-      toast.error("Invalid email or password", { id: toastId });
+      toast.error(t("invalidEmailOrPassword"), { id: toastId });
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match", { id: toastId });
+      toast.error(t("passwordsDoNotMatch"), { id: toastId });
       return;
     }
 
@@ -80,28 +84,28 @@ export const useHooks = () => {
     });
 
     if (error) {
-      toast.error("Error registering user", { id: toastId });
+      toast.error(t("errorRegisteringUser"), { id: toastId });
       return;
     }
 
-    toast.success("Account created successfully.", { id: toastId });
+    toast.success(t("accountCreatedSuccessfully"), { id: toastId });
     redirect("/dashboard/account");
   };
 
   const handleLogout = async () => {
-    const toastId = toast.loading("Logging out...");
+    const toastId = toast.loading(t("loggingOut"));
     const { error } = await client.auth.signOut();
     if (error) {
-      toast.error("Error logging out", { id: toastId });
+      toast.error(t("errorLoggingOut"), { id: toastId });
       return;
     }
-    toast.success("Logged out successfully.", { id: toastId });
+    toast.success(t("loggedOutSuccessfully"), { id: toastId });
     redirect("/auth");
   };
 
   const handleLoginWithOauth = async () => {
     const origin = window.location.origin;
-    const toastId = toast.loading("Starting OAuth login...");
+    const toastId = toast.loading(t("startingOAuthLogin"));
 
     const { data, error } = await client.auth.signInWithOAuth({
       provider: "github",
@@ -111,11 +115,11 @@ export const useHooks = () => {
     });
 
     if (error || !data.url) {
-      toast.error("Error logging in with OAuth", { id: toastId });
+      toast.error(t("errorLoggingInWithOAuth"), { id: toastId });
       return;
     }
 
-    toast.success("Redirecting to OAuth provider...", { id: toastId });
+    toast.success(t("redirectingToOAuthProvider"), { id: toastId });
     redirect(data.url);
   };
 
@@ -131,6 +135,7 @@ export const useHooks = () => {
   return {
     mode,
     setMode,
+    t,
     form,
     updateForm,
     handleLogin,

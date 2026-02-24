@@ -54,5 +54,35 @@
   "ThoughtCard": {
     "preview": "preview",
     "imageAlt": "Thought image {index}"
+  },
+  "auth": {
+    "welcomeBack": "Welcome Back",
+    "createAccount": "Create Account",
+    "signInToYourAccount": "Sign in to your account",
+    "signUpForNewAccount": "Sign up for a new account",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "enterYourEmail": "Enter your email",
+    "enterYourPassword": "Enter your password",
+    "repeatYourPassword": "Repeat your password",
+    "or": "or",
+    "continueWithGithub": "Continue with GitHub",
+    "backToHome": "Back to home",
+    "loggingIn": "Logging in...",
+    "invalidEmailOrPassword": "Invalid email or password",
+    "loggedInSuccessfully": "Logged in successfully.",
+    "creatingAccount": "Creating account...",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "errorRegisteringUser": "Error registering user",
+    "accountCreatedSuccessfully": "Account created successfully.",
+    "loggingOut": "Logging out...",
+    "errorLoggingOut": "Error logging out",
+    "loggedOutSuccessfully": "Logged out successfully.",
+    "startingOAuthLogin": "Starting OAuth login...",
+    "errorLoggingInWithOAuth": "Error logging in with OAuth",
+    "redirectingToOAuthProvider": "Redirecting to OAuth provider..."
   }
 }
