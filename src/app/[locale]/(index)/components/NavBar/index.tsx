@@ -14,8 +14,6 @@ import Stack from "@/components/ui/Stack";
 import { getT } from "@/lib/shared/i18n/tools";
 import { cn } from "@/lib/shared/utils";
 
-import "./index.scss";
-
 export default function Navbar({
   locale,
 }: {
@@ -44,7 +42,6 @@ export default function Navbar({
   );
 
   return (
-    <>
       <Stack y className={cn("relative flex-1 duration-300")}>
         <Stack
           x
@@ -86,15 +83,5 @@ export default function Navbar({
           </Stack>
         </Stack>
       </Stack>
-      {/* Bottom Border */}
-      <div
-        className={cn(
-          "mx-auto h-px bg-(--nav-button-line-bg) duration-300",
-          "w-full",
-          "group-data-[home=true]:w-dvw",
-          "sm:w-[calc(100svw-2*var(--layout-padding-x))]",
-        )}
-      />
-    </>
   );
 }

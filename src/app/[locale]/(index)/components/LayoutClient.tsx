@@ -60,6 +60,14 @@ export default function LayoutClient({
           )}
         >
           {navbar}
+          <div
+            className={cn(
+              "mx-auto h-px w-dvw duration-300",
+              isHome
+                ? "group-data-[scrolled=true]:bg-[#d4d4d8] dark:group-data-[scrolled=true]:bg-[#52525b]"
+                : "bg-[#d4d4d8] dark:bg-[#52525b]",
+            )}
+          />
         </Stack>
         <Stack
           y
