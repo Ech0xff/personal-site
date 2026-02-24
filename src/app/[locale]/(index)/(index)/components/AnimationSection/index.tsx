@@ -32,7 +32,7 @@ export default function AnimationSection() {
         y
         className={cn(
           "bg-brand-gradient absolute inset-0 h-dvh w-dvw snap-start items-center justify-center overflow-hidden transition-all",
-          "duration-300 group-data-[scrolled=true]:h-[60svh]",
+          "duration-300 in-data-[scrolled=true]:h-[60svh]",
         )}
       >
         <AnimatedGridBackground />
@@ -67,7 +67,7 @@ export default function AnimationSection() {
       <div
         className={cn(
           "h-dvh transition-all duration-300",
-          "group-data-[scrolled=true]:h-[60svh]",
+          "in-data-[scrolled=true]:h-[60svh]",
         )}
       ></div>
     </>

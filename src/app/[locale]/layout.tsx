@@ -29,8 +29,8 @@ export default async function RootLayout({
 
   const { locale } = await params;
   return (
-    <html lang={locale} >
-      <head suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
+      <head>
         <script dangerouslySetInnerHTML={{ __html: InitScript }} />
       </head>
       <body>

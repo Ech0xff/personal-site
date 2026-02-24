@@ -15,9 +15,9 @@ export default function ThemeToggle({ className }: { className?: string }) {
         className,
       )}
     >
-      <Sun className="hidden h-5 w-5 group-[.light]:block" />
-      <Moon className="hidden h-5 w-5 group-[.dark]:block" />
-      <Monitor className="hidden h-5 w-5 group-[.system]:block" />
+      <Sun className="hidden h-5 w-5 in-[.light]:block" />
+      <Moon className="hidden h-5 w-5 in-[.dark]:block" />
+      <Monitor className="hidden h-5 w-5 in-[.system]:block" />
     </button>
   );
 }

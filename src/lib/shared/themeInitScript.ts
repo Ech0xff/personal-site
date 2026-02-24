@@ -10,7 +10,7 @@ const themeInit = () => {
         break;
       }
     }
-    document.documentElement.classList.add("group", theme);
+    document.documentElement.classList.add(theme);
   })();
 };
 
