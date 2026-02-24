@@ -4,15 +4,15 @@ import { Plus } from "lucide-react";
 
 import Button from "@/components/ui/Button";
 
-import { useEditor } from "../../../components/EditorProvider";
+import { useEditor } from "../../../_components/EditorProvider";
 
-export default function NewPostButton() {
+export default function NewThoughtButton() {
   const { openEditor } = useEditor();
 
   return (
     <Button onClick={() => openEditor(null)}>
       <Plus className="h-4 w-4" />
-      New Post
+      New Thought
     </Button>
   );
 }

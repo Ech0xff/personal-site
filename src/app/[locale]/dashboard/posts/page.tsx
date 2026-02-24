@@ -6,8 +6,8 @@ import TagsList from "@/components/features/posts/TagsList";
 import Stack from "@/components/ui/Stack";
 import { cn, formatTime } from "@/lib/shared/utils";
 
-import EditorProvider from "../components/EditorProvider";
-import DashboardShell from "../components/ui/DashboardShell";
+import EditorProvider from "../_components/EditorProvider";
+import DashboardShell from "../_components/ui/DashboardShell";
 import PostActions from "./components/PostActions";
 import PostEditor, { OpenButton } from "./components/PostEditor";
 import StatusToggle from "./components/StatusToggle";

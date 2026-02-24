@@ -7,11 +7,11 @@ import Stack from "@/components/ui/Stack";
 import { PostMarkdown } from "@/components/ui/markdown";
 import { cn } from "@/lib/shared/utils";
 
-import { BaseEditorProps } from "../../../components/EditorProvider";
-import AuthorInput from "../../../components/ui/AuthorInput";
-import DateTimeInput from "../../../components/ui/DateTimeInput";
-import HeaderSection from "../../../components/ui/HeaderSection";
-import SegmentedToggle from "../../../components/ui/SegmentedToggle";
+import { BaseEditorProps } from "../../../_components/EditorProvider";
+import AuthorInput from "../../../_components/ui/AuthorInput";
+import DateTimeInput from "../../../_components/ui/DateTimeInput";
+import HeaderSection from "../../../_components/ui/HeaderSection";
+import SegmentedToggle from "../../../_components/ui/SegmentedToggle";
 import { useHooks } from "./use-hooks";
 
 export { default as OpenButton } from "./OpenButton";

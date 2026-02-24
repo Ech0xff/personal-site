@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 import { deleteEventByBrowser } from "@/lib/client/services";
 
-import { useEditor } from "../../components/EditorProvider";
+import { useEditor } from "../../_components/EditorProvider";
 
 interface EventActionsProps {
   eventId: string;

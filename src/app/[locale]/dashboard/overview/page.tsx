@@ -5,7 +5,7 @@ import { MessageCircle, PenSquare, Plus } from "lucide-react";
 import Link from "@/components/ui/Link";
 import Stack from "@/components/ui/Stack";
 
-import DashboardShell from "../components/ui/DashboardShell";
+import DashboardShell from "../_components/ui/DashboardShell";
 import { useHooks } from "./use-hooks";
 
 const quickActions = [

@@ -4,11 +4,11 @@ import { usePathname } from "next/navigation";
 
 import EventTimeline from "@/components/features/events/EventTimeline";
 
-import EditorProvider from "../components/EditorProvider";
-import DashboardShell from "../components/ui/DashboardShell";
-import EventActions from "./components/EventActions";
-import EventEditor, { OpenButton } from "./components/EventEditor";
-import StatusToggle from "./components/StatusToggle";
+import EditorProvider from "../_components/EditorProvider";
+import DashboardShell from "../_components/ui/DashboardShell";
+import EventActions from "./_components/EventActions";
+import EventEditor, { OpenButton } from "./_components/EventEditor";
+import StatusToggle from "./_components/StatusToggle";
 import { useHooks } from "./use-hooks";
 
 export default function EventsPage() {

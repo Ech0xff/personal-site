@@ -4,19 +4,19 @@ import { useTransition } from "react";
 
 import { toast } from "sonner";
 
-import { updatePostStatusByBrowser } from "@/lib/client/services";
+import { updateThoughtStatusByBrowser } from "@/lib/client/services";
 import { Status } from "@/types";
 
-import SegmentedToggle from "../../components/ui/SegmentedToggle";
+import SegmentedToggle from "../../_components/ui/SegmentedToggle";
 
 interface StatusToggleProps {
-  postId: string;
+  thoughtId: string;
   status: Status;
-  successCallback?: (postId: string, nextStatus: Status) => void;
+  successCallback?: (thoughtId: string, nextStatus: Status) => void;
 }
 
 export default function StatusToggle({
-  postId,
+  thoughtId,
   status,
   successCallback,
 }: StatusToggleProps) {
@@ -29,8 +29,8 @@ export default function StatusToggle({
     startTransition(async () => {
       const toastId = toast.loading("Updating status...");
       try {
-        await updatePostStatusByBrowser(postId, nextStatus);
-        if (successCallback) successCallback(postId, nextStatus);
+        await updateThoughtStatusByBrowser(thoughtId, nextStatus);
+        if (successCallback) successCallback(thoughtId, nextStatus);
         toast.success("Status updated successfully.", { id: toastId });
       } catch (error) {
         toast.error(

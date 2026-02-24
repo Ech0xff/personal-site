@@ -6,10 +6,10 @@ import SectionCard from "@/components/ui/SectionCard";
 import Stack from "@/components/ui/Stack";
 import { formatTime } from "@/lib/shared/utils";
 
-import DashboardShell from "../components/ui/DashboardShell";
-import EditableInfoRow from "./components/ui/EditableInfoRow";
-import IdentityCard from "./components/ui/IdentityCard";
-import InfoRow from "./components/ui/InfoRow";
+import DashboardShell from "../_components/ui/DashboardShell";
+import EditableInfoRow from "./_components/ui/EditableInfoRow";
+import IdentityCard from "./_components/ui/IdentityCard";
+import InfoRow from "./_components/ui/InfoRow";
 import { useAccount } from "./hooks/useAccount";
 
 export default function AccountPage() {

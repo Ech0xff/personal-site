@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import Link from "@/components/ui/Link";
 import { deletePostByBrowser } from "@/lib/client/services";
 
-import { useEditor } from "../../components/EditorProvider";
+import { useEditor } from "../../_components/EditorProvider";
 
 interface PostActionsProps {
   postId: string;

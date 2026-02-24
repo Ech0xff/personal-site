@@ -1,14 +1,13 @@
 "use client";
-
 import { usePathname } from "next/navigation";
 
 import ThoughtTimeline from "@/components/features/thoughts/ThoughtTimeline";
 
-import EditorProvider from "../components/EditorProvider";
-import DashboardShell from "../components/ui/DashboardShell";
-import StatusToggle from "./components/StatusToggle";
-import ThoughtActions from "./components/ThoughtActions";
-import ThoughtEditor, { OpenButton } from "./components/ThoughtEditor";
+import EditorProvider from "../_components/EditorProvider";
+import DashboardShell from "../_components/ui/DashboardShell";
+import StatusToggle from "./_components/StatusToggle";
+import ThoughtActions from "./_components/ThoughtActions";
+import ThoughtEditor, { OpenButton } from "./_components/ThoughtEditor";
 import { useHooks } from "./use-hooks";
 
 export default function ThoughtsPage() {

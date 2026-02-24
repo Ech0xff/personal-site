@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 import { deleteThoughtByBrowser } from "@/lib/client/services";
 
-import { useEditor } from "../../components/EditorProvider";
+import { useEditor } from "../../_components/EditorProvider";
 
 interface ThoughtActionsProps {
   thoughtId: string;
