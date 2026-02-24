@@ -14,11 +14,9 @@ import Stack from "@/components/ui/Stack";
 import { getT } from "@/lib/shared/i18n/tools";
 import { cn } from "@/lib/shared/utils";
 
-import NavBarController from "./NavBarController";
 import "./index.scss";
 
-export default async function NavBar({
-  className,
+export default function Navbar({
   locale,
 }: {
   className?: string;
@@ -47,75 +45,56 @@ export default async function NavBar({
 
   return (
     <>
-      <NavBarController />
-      <Stack
-        y
-        className={cn(
-          "fixed top-0 left-0 z-100 w-dvw duration-300",
-          "group-data-[scrolled=true]:backdrop-blur-md",
-          "sm:group-data-[home=false]:px-(--layout-padding-x)",
-          className,
-        )}
-      >
+      <Stack y className={cn("relative flex-1 duration-300")}>
         <Stack
-          y
+          x
           className={cn(
-            "relative flex-1 duration-300",
-            "sm:group-data-[scrolled=true]:group-data-[home=true]:px-(--layout-padding-x)",
+            "mx-auto w-full items-center justify-between px-4 py-2",
           )}
         >
-          <Stack
-            x
-            className={cn(
-              "mx-auto w-full items-center justify-between px-4 py-2",
-              "group-data-[scrolled=true]:backdrop-blur-md",
-              "group-data-[home=false]:backdrop-blur-md",
-            )}
-          >
-            {/* Navbar Main */}
-            <Link href="/" className="flex flex-col">
-              <div className={cn("text-xl font-black", "sm:text-lg")}>BBLF</div>
-              <div
-                className={cn(
-                  "hidden text-sm text-gray-500 dark:text-gray-400",
-                  "sm:block",
-                )}
-              >
-                {t("description")}
-              </div>
-            </Link>
-            {/* Nav Items - Right aligned */}
-            <Stack x className={cn("relative items-center gap-4")}>
-              <DropdownPopover
-                className="sm:hidden"
-                trigger={
-                  <button>
-                    <Menu className="h-5 w-5" />
-                  </button>
-                }
-              >
-                {navItems.map(navItemRender)}
-              </DropdownPopover>
+          {/* Navbar Main */}
+          <Link href="/" className="flex flex-col">
+            <div className={cn("text-xl font-black", "sm:text-lg")}>BBLF</div>
+            <div
+              className={cn(
+                "hidden text-sm text-gray-500 dark:text-gray-400",
+                "sm:block",
+              )}
+            >
+              {t("description")}
+            </div>
+          </Link>
+          {/* Nav Items - Right aligned */}
+          <Stack x className={cn("relative items-center gap-4")}>
+            <DropdownPopover
+              className="sm:hidden"
+              trigger={
+                <button>
+                  <Menu className="h-5 w-5" />
+                </button>
+              }
+            >
+              {navItems.map(navItemRender)}
+            </DropdownPopover>
 
-              <Stack x className="hidden items-center gap-4 sm:flex">
-                {navItems.map(navItemRender)}
-              </Stack>
-              <LanguageToggle />
-              {/* Dark Mode Toggle */}
-              <ThemeToggle />
+            <Stack x className="hidden items-center gap-4 sm:flex">
+              {navItems.map(navItemRender)}
             </Stack>
+            <LanguageToggle />
+            {/* Dark Mode Toggle */}
+            <ThemeToggle />
           </Stack>
         </Stack>
-        {/* Bottom Border */}
-        <div
-          className={cn(
-            "mx-auto h-px bg-(--nav-button-line-bg) duration-300",
-            "w-full",
-            "group-data-[home=true]:w-dvw",
-            "sm:w-[calc(100svw-2*var(--layout-padding-x))]",
-          )}
-        />
       </Stack>
+      {/* Bottom Border */}
+      <div
+        className={cn(
+          "mx-auto h-px bg-(--nav-button-line-bg) duration-300",
+          "w-full",
+          "group-data-[home=true]:w-dvw",
+          "sm:w-[calc(100svw-2*var(--layout-padding-x))]",
+        )}
+      />
     </>
   );
 }
