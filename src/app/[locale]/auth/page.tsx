@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { type FormEvent } from "react";
 
 import SvgGithub from "@/components/icons/Github";
@@ -7,7 +7,7 @@ import Link from "@/components/ui/Link";
 import { useHooks } from "./use-hooks";
 
 export default function PageClient() {
- const {
+  const {
     mode,
     setMode,
     form,

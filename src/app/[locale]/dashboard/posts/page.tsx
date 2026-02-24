@@ -8,9 +8,9 @@ import { cn, formatTime } from "@/lib/shared/utils";
 
 import EditorProvider from "../_components/EditorProvider";
 import DashboardShell from "../_components/ui/DashboardShell";
-import PostActions from "./components/PostActions";
-import PostEditor, { OpenButton } from "./components/PostEditor";
-import StatusToggle from "./components/StatusToggle";
+import PostActions from "./_components/PostActions";
+import PostEditor, { OpenButton } from "./_components/PostEditor";
+import StatusToggle from "./_components/StatusToggle";
 import { useHooks } from "./use-hooks";
 
 const th = (title: string[]) => {
