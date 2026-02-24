@@ -49,11 +49,11 @@ function Navbar({ locale }: { className?: string; locale?: string }) {
         className={cn("mx-auto w-full items-center justify-between px-4 py-2")}
       >
         {/* Navbar Main */}
-        <Link href="/" className="flex flex-col">
+        <Link href="/" className="flex min-w-0 flex-col">
           <div className={cn("text-xl font-black", "sm:text-lg")}>BBLF</div>
           <div
             className={cn(
-              "hidden text-sm text-gray-500 dark:text-gray-400",
+              "hidden truncate text-sm text-gray-500 dark:text-gray-400",
               "sm:block",
             )}
           >
