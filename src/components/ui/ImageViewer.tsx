@@ -25,9 +25,7 @@ export function ImageViewer({ children }: { children: ReactNode }) {
     const handleDelegatedClick = (event: MouseEvent) => {
       const target = event.target;
       if (!(target instanceof Element)) return;
-      const trigger = target.closest<HTMLElement>(
-        "[data-image-viewer-trigger='true']",
-      );
+      const trigger = target.closest<HTMLElement>("[data-viewer-trigger]");
       if (!trigger) return;
       const { src, alt } = trigger.dataset;
       if (src) open({ src, alt });
@@ -46,7 +44,7 @@ export function ImageViewer({ children }: { children: ReactNode }) {
 
       {image && (
         <div
-          className="animate-in fade-in fixed inset-0 z-10000 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm duration-200"
+          className="animate-in fixed inset-0 z-10000 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm duration-200"
           onClick={close}
         >
           {/* Close button */}

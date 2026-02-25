@@ -28,9 +28,9 @@ export default function Image({
       >
         <button
           type="button"
-          data-image-viewer-trigger="true"
-          data-src={src || ""}
-          data-alt={alt || ""}
+          data-viewer-trigger
+          data-src={src}
+          data-alt={alt}
           className="h-full w-full"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -41,7 +41,7 @@ export default function Image({
             loading="lazy"
           />
           {/* Hover overlay */}
-          <div className="absolute inset-0 bg-black/0 transition-colors group-hover/lightbox:bg-black/10" />
+          <div className="pointer-none: absolute inset-0 bg-black/0 transition-colors group-hover/lightbox:bg-black/10" />
         </button>
 
         {/* Action button */}
