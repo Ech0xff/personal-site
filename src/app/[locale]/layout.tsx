@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 
 import { Toaster } from "sonner";
 
+import { ImageViewer } from "@/components/ui/ImageViewer";
 import { routing } from "@/lib/shared/i18n/routing";
 import { InitScript } from "@/lib/shared/themeInitScript";
-import { LightboxProvider } from "@/providers/LightboxProvider";
 import "@/styles/globals.css";
 import "@/styles/tailwind.css";
 import "@/styles/variables.scss";
@@ -35,7 +35,7 @@ export default async function RootLayout({
       </head>
       <body>
         <Toaster position="top-center" richColors />
-        <LightboxProvider>{children}</LightboxProvider>
+        <ImageViewer>{children}</ImageViewer>
       </body>
     </html>
   );

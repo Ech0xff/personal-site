@@ -1,8 +1,6 @@
-"use client";
 import { ComponentPropsWithoutRef } from "react";
 
 import { cn } from "@/lib/shared/utils/tailwind";
-import { useLightbox } from "@/providers/LightboxProvider";
 
 interface Props extends ComponentPropsWithoutRef<"div"> {
   src?: string;
@@ -11,15 +9,13 @@ interface Props extends ComponentPropsWithoutRef<"div"> {
   className?: string;
 }
 
-export default function LightboxImage({
+export default function Image({
   src,
   alt,
   actionRender,
   className,
   ...props
 }: Props) {
-  const { open } = useLightbox();
-
   return (
     <>
       {/* Thumbnail */}
@@ -31,7 +27,10 @@ export default function LightboxImage({
         )}
       >
         <button
-          onClick={() => open({ src: src || "", alt })}
+          type="button"
+          data-image-viewer-trigger="true"
+          data-src={src || ""}
+          data-alt={alt || ""}
           className="h-full w-full"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}

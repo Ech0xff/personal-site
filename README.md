@@ -6,8 +6,9 @@ A modern, full-featured personal blog platform built with Next.js 16, React 19, 
 
 - [x] Optimize project structure.
 - [x] Configure a webhook to refresh the cache.
-- [ ] Separate environment
-- [ ] Automated Supabase configuration
+- [x] Separate environment
+- [x] Automated Supabase configuration
+- [ ] Use the original image hash when saving and uploading images.
 
 ## 🛠️ Tech Stack
 

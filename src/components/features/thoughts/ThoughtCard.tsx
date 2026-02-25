@@ -1,7 +1,7 @@
-import LightboxImage from "@/components/ui/Image";
+import Image from "@/components/ui/Image";
+import ThoughtMarkdown from "@/components/ui/markdown/ThoughtMarkdown";
 import Stack from "@/components/ui/Stack";
 import { getT } from "@/lib/shared/i18n/tools";
-import ThoughtMarkdown from "@/components/ui/markdown/ThoughtMarkdown";
 import { cn } from "@/lib/shared/utils/tailwind";
 import { formatTime } from "@/lib/shared/utils/tools";
 
@@ -71,7 +71,7 @@ export default function ThoughtCard({
           )}
         >
           {thought.images.map((img, idx) => (
-            <LightboxImage
+            <Image
               key={idx}
               src={img}
               alt={tThoughtCard("imageAlt", { index: idx + 1 })}

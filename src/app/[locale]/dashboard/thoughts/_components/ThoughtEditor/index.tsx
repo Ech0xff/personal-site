@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 import ThoughtCard from "@/components/features/thoughts/ThoughtCard";
 import DropdownPopover from "@/components/ui/DropdownPopover";
-import LightboxImage from "@/components/ui/Image";
+import Image from "@/components/ui/Image";
 import Stack from "@/components/ui/Stack";
 import { cn } from "@/lib/shared/utils";
 import { Status } from "@/types";
@@ -178,7 +178,7 @@ export default function ThoughtEditor({
                 {form.images.length > 0 && (
                   <div className="mt-auto grid grid-cols-6 gap-2 md:grid-cols-8 lg:grid-cols-10">
                     {form.images.map((url, index) => (
-                      <LightboxImage
+                      <Image
                         key={index}
                         src={url}
                         alt={`Image ${index + 1}`}

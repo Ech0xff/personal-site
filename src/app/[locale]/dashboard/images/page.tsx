@@ -2,7 +2,7 @@
 
 import { ArrowDownAZ, ArrowUpAZ, Calendar, HardDrive } from "lucide-react";
 
-import LightboxImage from "@/components/ui/Image";
+import Image from "@/components/ui/Image";
 import Stack from "@/components/ui/Stack";
 import { formatSize, formatTime } from "@/lib/shared/utils/tools";
 
@@ -88,7 +88,7 @@ export default function ImagesPage() {
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
             {sortedImages.map((image) => (
               <div key={image.id} className="group/card relative">
-                <LightboxImage
+                <Image
                   src={image.url}
                   alt={image.name}
                   actionRender={() => (
