@@ -9,6 +9,7 @@ A modern, full-featured personal blog platform built with Next.js 16, React 19, 
 - [x] Separate environment
 - [x] Automated Supabase configuration
 - [ ] Use the original image hash when saving and uploading images.
+- [ ] Supports content search
 
 ## 🛠️ Tech Stack
 
