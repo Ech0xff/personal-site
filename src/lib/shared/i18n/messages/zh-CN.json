@@ -28,6 +28,9 @@
       "thoughts": "想法",
       "articles": "条目",
       "characters": "字数"
+    },
+    "playlist": {
+      "cardTitle": "我的歌单"
     }
   },
   "IndexEvents": {

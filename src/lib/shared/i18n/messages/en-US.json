@@ -28,6 +28,9 @@
       "thoughts": "Thoughts",
       "articles": "Articles",
       "characters": "Characters"
+    },
+    "playlist": {
+      "cardTitle": "My Playlist"
     }
   },
   "IndexEvents": {

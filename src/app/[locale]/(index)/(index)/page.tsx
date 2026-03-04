@@ -23,13 +23,12 @@ export default async function HomePage({
   return (
     <>
       <AnimationSection />
-      <Stack y className="relative w-full gap-3 pt-[10svh]">
+      <Stack y className="group relative w-full gap-3 pt-[10svh]">
         {/* background */}
-        <Stack
+        <div
           className={cn(
-            "absolute top-0 bottom-0 left-1/2 w-dvw -translate-x-1/2 transition-all duration-300",
-            "bg-linear-to-b from-(--theme-bg)/0 to-(--theme-bg) to-[18svh]",
-            "data-[scrolled=true]:top-[-18svh]",
+            "absolute top-[-18svh] left-[50%] h-[18dvh] w-dvw -translate-x-1/2 duration-300",
+            "bg-linear-to-t from-(--theme-bg) from-50% to-transparent",
           )}
         />
         <IntroductionSection locale={locale} data={data} />

@@ -144,6 +144,23 @@ export async function IntroductionSection({
           ))}
         </Stack>
       </Card>
+
+      <Card title={t("playlist.cardTitle")}>
+        <iframe
+          allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
+          height="450"
+          className="w-full overflow-hidden border-none rounded-lg hidden dark:block"
+          sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+          src="https://embed.music.apple.com/cn/playlist/ume/pl.u-76oNkr3CvyGz5m1?theme=dark"
+        />
+        <iframe
+          allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
+          height="450"
+          className="w-full overflow-hidden border-none rounded-lg dark:hidden"
+          sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+          src="https://embed.music.apple.com/cn/playlist/ume/pl.u-76oNkr3CvyGz5m1?theme=light"
+        />
+      </Card>
     </Stack>
   );
 }
