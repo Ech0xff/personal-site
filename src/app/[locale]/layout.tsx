@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "sonner";
 
 import { ImageViewer } from "@/components/ui/ImageViewer";
@@ -25,8 +26,6 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }>) {
-
-
   const { locale } = await params;
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -35,6 +34,7 @@ export default async function RootLayout({
       </head>
       <body>
         <Toaster position="top-center" richColors />
+        <SpeedInsights />
         <ImageViewer>{children}</ImageViewer>
       </body>
     </html>
