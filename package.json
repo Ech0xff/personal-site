@@ -19,7 +19,6 @@
     "gen:icons": "svgr --out-dir src/components/icons --typescript --icon --replace-attr-values \"#000=currentColor\" public/svg-icons"
   },
   "dependencies": {
-    "@expressive-code/plugin-line-numbers": "^0.41.7",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.93.3",
     "@tailwindcss/typography": "^0.5.19",
@@ -34,7 +33,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-markdown": "^10.1.0",
-    "rehype-expressive-code": "^0.41.7",
+    "rehype-prism-plus": "^2.0.2",
     "remark-gfm": "^4.0.1",
     "sass": "^1.97.3",
     "sonner": "^2.0.7",

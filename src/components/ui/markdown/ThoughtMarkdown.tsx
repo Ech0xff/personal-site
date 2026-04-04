@@ -13,9 +13,5 @@ export default function ThoughtMarkdown({
   content,
   className = "",
 }: Props) {
-  return (
-    <MarkdownRenderer
-      content={content}
-    />
-  );
+  return <MarkdownRenderer content={content} className={className} />;
 }
