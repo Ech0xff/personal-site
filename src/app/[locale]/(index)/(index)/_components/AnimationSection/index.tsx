@@ -53,13 +53,13 @@ export default function AnimationSection() {
             <Typewriter />
 
             <div
-              className="mt-8 text-[4.5em] font-black"
+              className="mt-8 text-[6em] font-black"
               style={{
                 fontFamily:
                   '"Savoye LET", "Snell Roundhand", "Segoe Script", "Gabriola", cursive',
               }}
             >
-              Always Continue, Never break.
+              Let&apos;s create something cool.
             </div>
           </Stack>
         </Stack>

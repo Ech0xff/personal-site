@@ -30,26 +30,22 @@ export async function IntroductionSection({
   const socialLinks = [
     {
       name: "Bilibili",
-      value: "Blog",
-      link: "https://space.bilibili.com/",
+      link: process.env.NEXT_PUBLIC_SOCIAL_BILIBILI_URL?.trim(),
       icon: Bilibili,
     },
     {
       name: "GitHub",
-      value: "Blog",
-      link: "https://github.com/",
+      link: process.env.NEXT_PUBLIC_SOCIAL_GITHUB_URL?.trim(),
       icon: Github,
     },
     {
       name: "Email",
-      value: "Send Me",
-      link: "mailto:your@email.com",
+      link: process.env.NEXT_PUBLIC_SOCIAL_EMAIL_URL?.trim(),
       icon: Email,
     },
     {
       name: "QQ",
-      value: "Talk to Me",
-      link: "#",
+      link: process.env.NEXT_PUBLIC_SOCIAL_QQ_URL?.trim(),
       icon: Qq,
     },
   ];
@@ -84,34 +80,55 @@ export async function IntroductionSection({
       {/* Find Me Card */}
       <Card title={t("find.cardTitle")}>
         <Stack className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {socialLinks.map((item) => (
-            <a
-              key={item.name}
-              href={item.link}
-              target={item.link.startsWith("mailto") ? undefined : "_blank"}
-              rel={
-                item.link.startsWith("mailto")
-                  ? undefined
-                  : "noopener noreferrer"
-              }
-              className="group relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl bg-slate-50 p-4 transition-all duration-300 hover:bg-slate-100 dark:bg-white/5 dark:hover:bg-white/10"
-            >
-              <Stack x className="relative z-10 h-full justify-between">
-                <Stack className="text-xs font-medium text-slate-400">
-                  {item.name}
+          {socialLinks.map((item) => {
+            const isDisabled = !item.link;
+
+            const content = (
+              <>
+                <Stack x className="relative z-10 h-full justify-between">
+                  <Stack className="text-xs font-medium text-slate-400">
+                    {item.name}
+                  </Stack>
                 </Stack>
-                <Stack className="text-base font-bold text-slate-700 transition-colors dark:text-slate-200">
-                  {item.value}
-                </Stack>
-              </Stack>
-              <item.icon
-                className={cn(
-                  "absolute top-[50%] right-5 aspect-square h-15 w-15 translate-y-[-50%] opacity-50 transition-transform duration-300 group-hover:scale-110",
-                  "text-slate-400 dark:text-slate-500",
-                )}
-              />
-            </a>
-          ))}
+                <item.icon
+                  className={cn(
+                    "absolute top-[50%] right-5 aspect-square h-15 w-15 translate-y-[-50%] opacity-50",
+                    isDisabled
+                      ? "text-slate-300 dark:text-slate-700"
+                      : "text-slate-400 transition-transform duration-300 group-hover:scale-110 dark:text-slate-500",
+                  )}
+                />
+              </>
+            );
+
+            if (isDisabled) {
+              return (
+                <div
+                  key={item.name}
+                  aria-disabled="true"
+                  className="relative flex h-24 cursor-not-allowed flex-col justify-between overflow-hidden rounded-2xl bg-slate-50 p-4 opacity-60 dark:bg-white/5"
+                >
+                  {content}
+                </div>
+              );
+            }
+
+            return (
+              <a
+                key={item.name}
+                href={item.link}
+                target={item.link.startsWith("mailto") ? undefined : "_blank"}
+                rel={
+                  item.link.startsWith("mailto")
+                    ? undefined
+                    : "noopener noreferrer"
+                }
+                className="group relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl bg-slate-50 p-4 transition-all duration-300 hover:bg-slate-100 dark:bg-white/5 dark:hover:bg-white/10"
+              >
+                {content}
+              </a>
+            );
+          })}
         </Stack>
       </Card>
       {/* Latest Posts */}

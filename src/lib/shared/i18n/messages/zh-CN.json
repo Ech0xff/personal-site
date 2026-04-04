@@ -4,7 +4,7 @@
     "dashboard": "控制台",
     "thoughts": "碎碎念",
     "events": "事件",
-    "description": "我的思绪一角"
+    "description": "Muyu的小窝"
   },
   "Common": {
     "unknownYear": "未知",
@@ -13,7 +13,7 @@
   "IndexHome": {
     "about": {
       "cardTitle": "你好 👋",
-      "description": "我是 Muyu，一名软件工程专业本科生，同时也是一名前端工程师，目前在成都。很高兴能在这片广阔的数字世界与你相遇。我始终相信技术是连接想象与现实的桥梁——它存在的意义不只是技术本身，而是帮助我们创造并解决问题。带着“我想理解一切”的好奇心，我享受拆解复杂系统、追溯每个工具背后底层逻辑的过程。当前我的技术栈主要包括 Next.js、Vue、TypeScript、Nuxt.js、Java、Node.js 和 Bun。"
+      "description": "我是 Muyu，一名软件工程专业本科生，同时也是一名前端工程师，目前在成都。很高兴能在这片广阔的数字世界与你相遇。我始终相信技术是连接想象与现实的桥梁——它存在的意义不只是技术本身，而是帮助我们创造并解决问题。带着“我想理解一切”的好奇心，我享受拆解复杂系统、追溯每个工具背后底层逻辑的过程。"
     },
     "find": {
       "cardTitle": "你可以在这里找到我"
@@ -87,5 +87,14 @@
     "startingOAuthLogin": "正在启动 OAuth 登录...",
     "errorLoggingInWithOAuth": "OAuth 登录失败",
     "redirectingToOAuthProvider": "正在跳转到 OAuth 提供方..."
+  },
+  "errorPage": {
+    "title": "页面出现错误",
+    "description": "系统捕获到了一个异常，你可以返回首页或重新登录后再试。",
+    "errorCode": "错误码：{code}",
+    "backHome": "返回首页",
+    "backAuth": "去登录页",
+    "redirecting": "正在跳转到错误页...",
+    "fallback": "页面发生异常，请稍后重试。"
   }
 }
