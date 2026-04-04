@@ -81,7 +81,7 @@ export default async function PostsPage({ params }: PageProps) {
             </h2>
 
             {/* List of posts for the year */}
-            <Stack y className="gap-1">
+            <Stack y>
               {groupedPosts[year]?.map((post) => (
                 <PostCard key={post.id} post={post} locale={locale} />
               ))}
