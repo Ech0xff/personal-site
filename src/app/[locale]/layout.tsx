@@ -25,6 +25,13 @@ export async function generateMetadata({
   return {
     title: t("siteTitle"),
     description: t("siteDescription"),
+    icons: {
+      icon: [
+        { url: "/icon.svg", type: "image/svg+xml" },
+      ],
+      shortcut: "/icon.svg",
+      apple: "/icon.svg",
+    },
   };
 }
 
