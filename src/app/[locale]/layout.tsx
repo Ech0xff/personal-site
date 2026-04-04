@@ -4,16 +4,29 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "sonner";
 
 import { ImageViewer } from "@/components/ui/ImageViewer";
+import { getT } from "@/lib/shared/i18n/tools";
 import { routing } from "@/lib/shared/i18n/routing";
 import { InitScript } from "@/lib/shared/themeInitScript";
 import "@/styles/globals.css";
 import "@/styles/tailwind.css";
 import "@/styles/variables.scss";
 
-export const metadata: Metadata = {
-  title: "Blog",
-  description: "Muyu‘s Nest",
-};
+interface LayoutProps {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: Pick<LayoutProps, "params">): Promise<Metadata> {
+  const { locale } = await params;
+  const t = getT("Meta", locale);
+
+  return {
+    title: t("siteTitle"),
+    description: t("siteDescription"),
+  };
+}
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -22,10 +35,7 @@ export function generateStaticParams() {
 export default async function RootLayout({
   children,
   params,
-}: Readonly<{
-  children: React.ReactNode;
-  params: Promise<{ locale: string }>;
-}>) {
+}: Readonly<LayoutProps>) {
   const { locale } = await params;
   return (
     <html lang={locale} suppressHydrationWarning>

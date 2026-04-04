@@ -1,4 +1,8 @@
 {
+  "Meta": {
+    "siteTitle": "Muyu的小窝",
+    "siteDescription": "Muyu的小窝，记录技术、生活以及二者之间的一切。"
+  },
   "Navigation": {
     "posts": "文章",
     "dashboard": "控制台",

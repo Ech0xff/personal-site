@@ -1,4 +1,8 @@
 {
+  "Meta": {
+    "siteTitle": "Muyu's Little Nest",
+    "siteDescription": "A place where technology and life intersect."
+  },
   "Navigation": {
     "posts": "POSTS",
     "dashboard": "DASHBOARD",
