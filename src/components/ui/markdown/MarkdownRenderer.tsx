@@ -7,8 +7,8 @@ import {
   useRef,
   useState,
 } from "react";
-import Markdown from "react-markdown";
 import type { Options } from "react-markdown";
+import Markdown from "react-markdown";
 
 import { Check, Copy } from "lucide-react";
 import rehypePrism from "rehype-prism-plus";
@@ -16,6 +16,7 @@ import remarkGfm from "remark-gfm";
 import { toast } from "sonner";
 
 import { cn } from "@/lib/shared/utils";
+
 import styles from "./MarkdownRenderer.module.css";
 
 interface Props {
@@ -70,8 +71,8 @@ function CodeBlockPre({
     <div
       ref={containerRef}
       className={cn(
-        "not-prose my-6 overflow-hidden rounded-2xl border shadow-[0_22px_60px_rgba(2,6,23,0.14)]",
-        "border-zinc-200/80 bg-[#f8fafc] dark:border-black/40 dark:bg-[#0f1724] dark:shadow-[0_22px_60px_rgba(2,6,23,0.32)]",
+        "not-prose my-6 overflow-hidden rounded-2xl border",
+        "border-zinc-200/80 bg-[#f8fafc] dark:border-black/40 dark:bg-[#0f1724]",
       )}
     >
       <div
@@ -89,7 +90,7 @@ function CodeBlockPre({
           className={cn(
             "inline-flex h-8 items-center gap-1 rounded-md border px-2.5 text-xs font-medium transition-colors",
             "border-zinc-300/80 bg-white/85 text-zinc-700 backdrop-blur",
-            "hover:bg-white focus:outline-none focus:ring-2 focus:ring-sky-300/35",
+            "hover:bg-white focus:ring-2 focus:ring-sky-300/35 focus:outline-none",
             "dark:border-white/10 dark:bg-white/8 dark:text-zinc-100 dark:hover:bg-white/12",
           )}
           title="Copy code"
@@ -119,7 +120,7 @@ export default function MarkdownRenderer({ content, className = "" }: Props) {
   return (
     <div
       className={cn(
-        "prose dark:prose-invert max-w-none",
+        "prose dark:prose-invert max-w-none [&>div]:shadow-none",
         styles.root,
         className,
       )}
