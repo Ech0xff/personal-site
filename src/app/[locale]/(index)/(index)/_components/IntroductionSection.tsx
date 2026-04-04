@@ -117,9 +117,9 @@ export async function IntroductionSection({
               <a
                 key={item.name}
                 href={item.link}
-                target={item.link.startsWith("mailto") ? undefined : "_blank"}
+                target={item.link?.startsWith("mailto") ? undefined : "_blank"}
                 rel={
-                  item.link.startsWith("mailto")
+                  item.link?.startsWith("mailto")
                     ? undefined
                     : "noopener noreferrer"
                 }
