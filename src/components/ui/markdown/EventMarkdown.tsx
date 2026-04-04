@@ -1,8 +1,6 @@
-import ReactMarkdown from "react-markdown";
+import MarkdownRenderer from "./MarkdownRenderer";
 
-import remarkGfm from "remark-gfm";
-
-interface EventMarkdownProps {
+interface Props {
   content: string;
   className?: string;
 }
@@ -14,12 +12,10 @@ interface EventMarkdownProps {
 export default function EventMarkdown({
   content,
   className = "",
-}: EventMarkdownProps) {
+}: Props) {
   return (
-    <div
-      className={`prose prose-sm dark:prose-invert max-w-none text-zinc-600 dark:text-zinc-300 ${className}`}
-    >
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
-    </div>
+    <MarkdownRenderer
+      content={content}
+    />
   );
 }

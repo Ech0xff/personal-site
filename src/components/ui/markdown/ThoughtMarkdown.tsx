@@ -1,8 +1,6 @@
-import ReactMarkdown from "react-markdown";
+import MarkdownRenderer from "./MarkdownRenderer";
 
-import remarkGfm from "remark-gfm";
-
-interface ThoughtMarkdownProps {
+interface Props {
   content: string;
   className?: string;
 }
@@ -14,12 +12,10 @@ interface ThoughtMarkdownProps {
 export default function ThoughtMarkdown({
   content,
   className = "",
-}: ThoughtMarkdownProps) {
+}: Props) {
   return (
-    <div
-      className={`prose prose-zinc dark:prose-invert max-w-none text-base leading-relaxed wrap-break-word text-zinc-800 dark:text-zinc-200 ${className}`}
-    >
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
-    </div>
+    <MarkdownRenderer
+      content={content}
+    />
   );
 }
