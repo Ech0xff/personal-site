@@ -1,11 +1,11 @@
 import React from "react";
 
 import {
-  CalendarDays,
-  FileText,
-  LayoutDashboard,
-  Lightbulb,
-  Menu,
+    CalendarDays,
+    FileText,
+    LayoutDashboard,
+    Lightbulb,
+    Menu,
 } from "lucide-react";
 
 import LanguageToggle from "@/components/shared/LanguageToggle";
@@ -63,7 +63,7 @@ function Navbar({ locale }: { className?: string; locale?: string }) {
         {/* Nav Items - Right aligned */}
         <Stack x className={cn("relative items-center gap-4")}>
           <DropdownPopover
-            className="sm:hidden"
+            className="md:hidden"
             trigger={
               <button>
                 <Menu className="h-5 w-5" />
@@ -73,7 +73,7 @@ function Navbar({ locale }: { className?: string; locale?: string }) {
             {navItems.map(navItemRender)}
           </DropdownPopover>
 
-          <Stack x className="hidden items-center gap-4 sm:flex">
+          <Stack x className="hidden items-center gap-4 md:flex">
             {navItems.map(navItemRender)}
           </Stack>
           <LanguageToggle />
