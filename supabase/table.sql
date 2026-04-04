@@ -77,7 +77,7 @@ DECLARE
   posts_stats JSON;
   thoughts_stats JSON;
   events_stats JSON;
-  
+
   recent_posts JSON;
   recent_thoughts JSON;
   recent_events JSON;
@@ -124,25 +124,25 @@ BEGIN
 
   SELECT COALESCE(json_agg(t), '[]'::json) INTO recent_posts
   FROM (
-    SELECT * FROM public.posts 
+    SELECT * FROM public.posts
     WHERE (status = query_status OR query_status IS NULL)
-    ORDER BY published_at DESC NULLS LAST 
+    ORDER BY published_at DESC NULLS LAST
     LIMIT recent_limit
   ) t;
 
   SELECT COALESCE(json_agg(t), '[]'::json) INTO recent_thoughts
   FROM (
-    SELECT * FROM public.thoughts 
+    SELECT * FROM public.thoughts
     WHERE (status = query_status OR query_status IS NULL)
-    ORDER BY published_at DESC NULLS LAST 
+    ORDER BY published_at DESC NULLS LAST
     LIMIT recent_limit
   ) t;
 
   SELECT COALESCE(json_agg(t), '[]'::json) INTO recent_events
   FROM (
-    SELECT * FROM public.events 
+    SELECT * FROM public.events
     WHERE (status = query_status OR query_status IS NULL)
-    ORDER BY published_at DESC NULLS LAST 
+    ORDER BY published_at DESC NULLS LAST
     LIMIT recent_limit
   ) t;
 
@@ -208,9 +208,9 @@ END;
 $$;
 
 CREATE OR REPLACE FUNCTION manage_webhook(
-  target_url text,   
-  secret_token text,    
-  table_names text[]    
+  target_url text,
+  secret_token text,
+  table_names text[]
 )
 RETURNS void
 LANGUAGE plpgsql
@@ -236,7 +236,7 @@ BEGIN
         EXECUTE FUNCTION public.send_webhook_via_pg_net(%L, %L)',
          trigger_name, t_name, target_url, headers
       );
-      
+
       RAISE NOTICE 'Webhook setup for table: %', t_name;
   END LOOP;
 END;
@@ -254,19 +254,19 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO anon, aut
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO postgres, anon, authenticated, service_role;
 GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO postgres, anon, authenticated, service_role;
 
-CREATE POLICY "POST PUBLIC" ON public.posts FOR SELECT 
+CREATE POLICY "POST PUBLIC" ON public.posts FOR SELECT
 USING (status = 'show' OR public.is_admin());
-CREATE POLICY "POST ADMIN" ON public.posts FOR ALL 
+CREATE POLICY "POST ADMIN" ON public.posts FOR ALL
 USING (public.is_admin()) WITH CHECK (public.is_admin());
 
-CREATE POLICY "THOUGHT PUBLIC" ON public.thoughts FOR SELECT 
+CREATE POLICY "THOUGHT PUBLIC" ON public.thoughts FOR SELECT
 USING (status = 'show' OR public.is_admin());
-CREATE POLICY "THOUGHT ADMIN" ON public.thoughts FOR ALL 
+CREATE POLICY "THOUGHT ADMIN" ON public.thoughts FOR ALL
 USING (public.is_admin()) WITH CHECK (public.is_admin());
 
-CREATE POLICY "EVENT PUBLIC" ON public.events FOR SELECT 
+CREATE POLICY "EVENT PUBLIC" ON public.events FOR SELECT
 USING (status = 'show' OR public.is_admin());
-CREATE POLICY "EVENT ADMIN" ON public.events FOR ALL 
+CREATE POLICY "EVENT ADMIN" ON public.events FOR ALL
 USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 CREATE POLICY "STORAGE OBJECT MANAGE" ON storage.objects FOR ALL TO authenticated
@@ -277,7 +277,7 @@ WITH CHECK (bucket_id = 'images' AND public.is_admin());
 
 INSERT INTO public.posts (title, content, author, status, published_at, tags)
 VALUES (
-  'World Hello!', 
+  'World Hello!',
   '## ~~Hello World~~ World Hello! 👋
 
 It is a pleasure to meet you in this vast digital space.
@@ -286,34 +286,34 @@ This is the very first post of my blog, marking the start of a brand-new journey
 
 Why am I here? I want this space to become my "Cyber Sanctuary." In the days to come, I’ll be documenting my thoughts, musings, and my journey of personal growth right here.
 
-About this Blog If you’re curious about how this blog was built, the source code is hosted on GitHub: 👉 [BBLF](https://github.com/yuzi-beep/BBLF)
+About this Blog If you’re curious about how this blog was built, the source code is hosted on GitHub: 👉 [Repository](https://github.com/muyu258/personal-site.git)
 
 Thanks to the generosity of Vercel and Supabase, you can easily deploy it to the cloud using the pre-written automation scripts. If you’ve ever wanted a blog of your own, trust me—it’s incredibly simple. You can kickstart your own recording journey in just a few minutes.
 
 I don''t know how long I''ll keep this up, but at least for now, I''ve started.
 
-**Keep expressing, keep loving. I hope you find a little resonance or inspiration here.I’m glad you made it this far. The journey begins—stay tuned!**', 
-  'BBLF', 
-  'show', 
-  '2025-11-04 00:00:00+00', 
+**Keep expressing, keep loving. I hope you find a little resonance or inspiration here.I’m glad you made it this far. The journey begins—stay tuned!**',
+  'Muyu',
+  'show',
+  '2025-11-04 00:00:00+00',
   ARRAY['Blog', 'Tech']
 );
 
 INSERT INTO public.thoughts (author, content, images, status, published_at)
 VALUES (
-  'BBLF', 
-  'It’s finally up and running, though it’s still ~~a bit buggy~~ a work in progress. As the saying goes: the beginning is hard, the middle is harder, and finally... well, just ship it first. Anyway, this is officially my ~~Premium Inspiration Museum~~, ~~Repository of Brilliant Ideas~~, Cyber Trash Bin from now on. Be kind! (｡•̀ᴗ-)✧', 
-  ARRAY[]::TEXT[], 
-  'show', 
+  'Muyu',
+  'It’s finally up and running, though it’s still ~~a bit buggy~~ a work in progress. As the saying goes: the beginning is hard, the middle is harder, and finally... well, just ship it first. Anyway, this is officially my ~~Premium Inspiration Museum~~, ~~Repository of Brilliant Ideas~~, Cyber Trash Bin from now on. Be kind! (｡•̀ᴗ-)✧',
+  ARRAY[]::TEXT[],
+  'show',
   '2025-11-04 00:00:00+00'
 );
 
 INSERT INTO public.events (title, content, tags, color, status, published_at)
 VALUES (
-  'Blog Officially Launched', 
-  'BBLF has officially gone live!', 
-  ARRAY['Milestone', 'Blog'], 
-  '#3B82F6', 
+  'Blog Officially Launched',
+  'Muyu has officially gone live!',
+  ARRAY['Milestone', 'Blog'],
+  '#3B82F6',
   'show',
   '2025-11-04 00:00:00+00'
 );

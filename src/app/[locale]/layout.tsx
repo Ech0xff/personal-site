@@ -11,8 +11,8 @@ import "@/styles/tailwind.css";
 import "@/styles/variables.scss";
 
 export const metadata: Metadata = {
-  title: "BBLF",
-  description: "BBLF's reef",
+  title: "Blog",
+  description: "Muyu‘s Nest",
 };
 
 export function generateStaticParams() {

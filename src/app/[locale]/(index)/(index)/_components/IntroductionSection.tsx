@@ -30,13 +30,13 @@ export async function IntroductionSection({
   const socialLinks = [
     {
       name: "Bilibili",
-      value: "BBLF",
+      value: "Blog",
       link: "https://space.bilibili.com/",
       icon: Bilibili,
     },
     {
       name: "GitHub",
-      value: "BBLF",
+      value: "Blog",
       link: "https://github.com/",
       icon: Github,
     },
@@ -149,14 +149,14 @@ export async function IntroductionSection({
         <iframe
           allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
           height="450"
-          className="w-full overflow-hidden border-none rounded-lg hidden dark:block"
+          className="hidden w-full overflow-hidden rounded-lg border-none dark:block"
           sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
           src="https://embed.music.apple.com/cn/playlist/ume/pl.u-76oNkr3CvyGz5m1?theme=dark"
         />
         <iframe
           allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
           height="450"
-          className="w-full overflow-hidden border-none rounded-lg dark:hidden"
+          className="w-full overflow-hidden rounded-lg border-none dark:hidden"
           sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
           src="https://embed.music.apple.com/cn/playlist/ume/pl.u-76oNkr3CvyGz5m1?theme=light"
         />

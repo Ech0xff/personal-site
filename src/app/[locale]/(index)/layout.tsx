@@ -50,7 +50,7 @@ function Navbar({ locale }: { className?: string; locale?: string }) {
       >
         {/* Navbar Main */}
         <Link href="/" className="flex min-w-0 flex-col">
-          <div className={cn("text-xl font-black", "sm:text-lg")}>BBLF</div>
+          <div className={cn("text-xl font-black", "sm:text-lg")}>Blog</div>
           <div
             className={cn(
               "hidden truncate text-sm text-gray-500 dark:text-gray-400",

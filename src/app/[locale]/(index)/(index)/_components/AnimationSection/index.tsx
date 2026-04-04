@@ -45,7 +45,7 @@ export default function AnimationSection() {
               className="text-center text-[5em]"
               style={{ fontFamily: '"Titan One", cursive' }}
             >
-              BBLF
+              Muyu&apos;s Nest
             </h1>
 
             <div className="my-2 h-px w-full bg-linear-to-r from-transparent via-gray-300 to-transparent dark:via-gray-700" />

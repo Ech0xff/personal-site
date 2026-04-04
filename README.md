@@ -1,4 +1,4 @@
-# BBLF - Personal Blog Platform
+# Personal Blog Platform
 
 A modern, full-featured personal blog platform built with Next.js 16, React 19, Supabase, and Tailwind CSS.
 
@@ -35,7 +35,7 @@ A modern, full-featured personal blog platform built with Next.js 16, React 19, 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yuzi-beep/BBLF.git
+git clone https://github.com/muyu258/personal-site.git
 ```
 
 ### 2. Install dependencies
@@ -107,7 +107,7 @@ bun run start
 
 ### Quick Deploy
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yuzi-beep/BBLF.git)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/muyu258/personal-site.git)
 
 ### Manual Deploy
 
@@ -133,7 +133,7 @@ DASHBOARD_SECRET_KEY=your_secure_secret_key_here
 ## 📁 Project Structure
 
 ```
-BBLF/
+base/
 ├── src/
 │   ├── app/                   # Next.js App Router pages
 │   │   ├── (index)/           # Public facing pages
