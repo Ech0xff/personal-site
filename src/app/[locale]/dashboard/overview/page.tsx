@@ -1,9 +1,15 @@
 "use client";
 
-import { MessageCircle, PenSquare, Plus } from "lucide-react";
+import { useState } from "react";
 
+import { MessageCircle, PenSquare, Plus } from "lucide-react";
+import { RefreshCw } from "lucide-react";
+import { toast } from "sonner";
+
+import Button from "@/components/ui/Button";
 import Link from "@/components/ui/Link";
 import Stack from "@/components/ui/Stack";
+import { cn } from "@/lib/shared/utils";
 
 import DashboardShell from "../_components/ui/DashboardShell";
 import { useHooks } from "./use-hooks";
@@ -33,19 +39,55 @@ const quickActions = [
 ];
 
 export default function DashboardPage() {
-  const { loading, error, stats } = useHooks();
+  const { loading, error, stats, refetch } = useHooks();
+  const [refreshingCache, setRefreshingCache] = useState(false);
+
+  const handleRefreshAllCaches = async () => {
+    setRefreshingCache(true);
+    try {
+      const response = await fetch("/api/admin/cache/revalidate-all", {
+        method: "POST",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to refresh caches");
+      }
+      await refetch();
+      toast.success("All caches refreshed.");
+    } catch {
+      toast.error("Failed to refresh caches.");
+    } finally {
+      setRefreshingCache(false);
+    }
+  };
 
   return (
     <DashboardShell title="Overview" loading={loading} error={error}>
       <Stack y className="gap-6">
         {/* Welcome Section */}
-        <Stack y>
-          <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-            Welcome back!
-          </h2>
-          <p className="mt-1 text-zinc-500 dark:text-zinc-400">
-            Here&apos;s an overview of your content.
-          </p>
+        <Stack
+          className="items-start justify-between gap-4 sm:flex-row sm:items-center"
+          y
+        >
+          <Stack y>
+            <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+              Welcome back!
+            </h2>
+            <p className="mt-1 text-zinc-500 dark:text-zinc-400">
+              Here&apos;s an overview of your content.
+            </p>
+          </Stack>
+
+          <Button
+            type="button"
+            onClick={handleRefreshAllCaches}
+            disabled={refreshingCache}
+            className="disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <RefreshCw
+              className={cn("h-4 w-4", refreshingCache && "animate-spin")}
+            />
+            {refreshingCache ? "Refreshing..." : "Refresh All Caches"}
+          </Button>
         </Stack>
 
         {/* Stats Grid */}
