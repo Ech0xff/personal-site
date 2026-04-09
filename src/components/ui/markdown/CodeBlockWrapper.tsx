@@ -1,10 +1,8 @@
 "use client";
 
-import { ComponentPropsWithoutRef, useState } from "react";
+import { ComponentPropsWithoutRef } from "react";
 
-import { Check, Copy } from "lucide-react";
-import { toast } from "sonner";
-
+import CopyButton from "@/components/ui/CopyButton";
 import { cn } from "@/lib/shared/utils";
 
 import styles from "./CodeBlockWrapper.module.css";
@@ -23,23 +21,6 @@ function CodeBlockHeader({
   rawCode?: string;
   className: string;
 }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    if (!rawCode) {
-      toast.error("No code found to copy.");
-      return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(rawCode);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      toast.error("Failed to copy code.");
-    }
-  };
-
   return (
     <div
       className={cn(
@@ -48,23 +29,7 @@ function CodeBlockHeader({
       )}
     >
       <span className="truncate">{language}</span>
-      <button
-        type="button"
-        onClick={handleCopy}
-        title="Copy code"
-        aria-label="Copy code"
-        className="inline-flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-colors hover:bg-zinc-200/80 focus:outline-none dark:hover:bg-zinc-700/80"
-      >
-        {copied ? (
-          <>
-            <Check className="h-3.5 w-3.5" /> Copied
-          </>
-        ) : (
-          <>
-            <Copy className="h-3.5 w-3.5" /> Copy
-          </>
-        )}
-      </button>
+      <CopyButton content={rawCode} className="text-xs" />
     </div>
   );
 }

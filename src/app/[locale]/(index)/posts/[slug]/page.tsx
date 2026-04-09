@@ -4,10 +4,11 @@ import { cacheTag } from "next/cache";
 import { ArrowLeft, Calendar, User } from "lucide-react";
 
 import ScrollToTopButton from "@/components/shared/ScrollToTopButton";
+import CopyButton from "@/components/ui/CopyButton";
 import Link from "@/components/ui/Link";
 import { PostMarkdown } from "@/components/ui/markdown";
-import { getT } from "@/lib/shared/i18n/tools";
 import { CACHE_TAGS } from "@/lib/server/cache";
+import { getT } from "@/lib/shared/i18n/tools";
 import { fetchPost } from "@/lib/shared/services";
 import { formatTime } from "@/lib/shared/utils";
 
@@ -69,7 +70,10 @@ export default async function PostPage({ params }: Props) {
     <article className="mx-auto w-full px-4 pt-10 pb-10">
       {/* Header */}
       <header className="mb-8">
-        <h1 className="mb-4 text-4xl leading-tight font-bold">{post.title}</h1>
+        <div className="mb-4 flex flex-col gap-4 text-4xl sm:flex-row sm:items-start sm:justify-between">
+          <h1 className="leading-tight font-bold">{post.title}</h1>
+          <CopyButton content={post.content || ""} className="text-base" />
+        </div>
 
         <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
           {post.author && (
