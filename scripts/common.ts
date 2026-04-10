@@ -54,3 +54,23 @@ export const checkYes = async (tips: string) => {
     process.exit(0);
   }
 };
+
+export const askInput = async (question: string) => {
+  const rl = createInterface({ input, output });
+
+  try {
+    return (await rl.question(question)).trim();
+  } finally {
+    rl.close();
+  }
+};
+
+export const requireEnvVars = (keys: string[]) => {
+  const missingKeys = keys.filter((key) => !process.env[key]);
+
+  if (missingKeys.length > 0) {
+    throw new Error(
+      `Missing environment variables: ${missingKeys.join(", ")}.`,
+    );
+  }
+};

@@ -10,9 +10,10 @@ export function proxy(request: NextRequest) {
 
   if (!locales.has(locale)) {
     const cookieLocale = request.cookies.get("locale")?.value;
-    const redirectLocale = cookieLocale && locales.has(cookieLocale)
-      ? cookieLocale
-      : routing.defaultLocale;
+    const redirectLocale =
+      cookieLocale && locales.has(cookieLocale)
+        ? cookieLocale
+        : routing.defaultLocale;
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = `/${redirectLocale}${pathname}`;
     return NextResponse.redirect(redirectUrl);

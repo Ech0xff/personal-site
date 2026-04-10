@@ -1,11 +1,11 @@
 import React from "react";
 
 import {
-    CalendarDays,
-    FileText,
-    LayoutDashboard,
-    Lightbulb,
-    Menu,
+  CalendarDays,
+  FileText,
+  LayoutDashboard,
+  Lightbulb,
+  Menu,
 } from "lucide-react";
 
 import LanguageToggle from "@/components/shared/LanguageToggle";

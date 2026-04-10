@@ -11,7 +11,11 @@ interface Props {
   renderActions?: (event: Event) => React.ReactNode;
 }
 
-export default function EventTimeline({ events, locale, renderActions }: Props) {
+export default function EventTimeline({
+  events,
+  locale,
+  renderActions,
+}: Props) {
   const tCommon = getT("Common", locale);
 
   // Group by year

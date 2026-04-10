@@ -1,7 +1,8 @@
 "use client";
 
-import { Save, X } from "lucide-react";
 import { usePathname } from "next/navigation";
+
+import { Save, X } from "lucide-react";
 
 import EventCard from "@/components/features/events/EventCard";
 import Stack from "@/components/ui/Stack";

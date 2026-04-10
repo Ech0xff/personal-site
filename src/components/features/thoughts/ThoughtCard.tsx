@@ -1,6 +1,6 @@
 import Image from "@/components/ui/Image";
-import ThoughtMarkdown from "@/components/ui/markdown/ThoughtMarkdown";
 import Stack from "@/components/ui/Stack";
+import ThoughtMarkdown from "@/components/ui/markdown/ThoughtMarkdown";
 import { getT } from "@/lib/shared/i18n/tools";
 import { cn } from "@/lib/shared/utils/tailwind";
 import { formatTime } from "@/lib/shared/utils/tools";

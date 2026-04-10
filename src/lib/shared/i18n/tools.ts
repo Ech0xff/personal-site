@@ -1,4 +1,5 @@
-import { cloneElement, isValidElement, ReactNode } from "react";
+import { ReactNode, cloneElement, isValidElement } from "react";
+
 import enUSMessages from "./messages/en-US.json";
 import zhCNMessages from "./messages/zh-CN.json";
 import { routing } from "./routing";
@@ -47,10 +48,7 @@ const getByPath = (
     }, dictionary);
 };
 
-const formatMessage = (
-  template: string,
-  values?: TValues,
-): string => {
+const formatMessage = (template: string, values?: TValues): string => {
   if (!values) return template;
 
   return template.replace(/\{(.*?)\}/g, (_, key: string) => {
@@ -117,10 +115,7 @@ const formatRichMessage = (
   });
 };
 
-export const getT = (
-  namespace?: string,
-  locale?: string,
-): TFunction => {
+export const getT = (namespace?: string, locale?: string): TFunction => {
   const normalizedLocale = getNormalizedLocale(locale);
   const localeDictionary =
     messages[normalizedLocale] || messages[routing.defaultLocale] || {};

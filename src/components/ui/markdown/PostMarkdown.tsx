@@ -9,9 +9,6 @@ interface Props {
  * Markdown component for Post content
  * Used in post detail pages and dashboard preview
  */
-export default function PostMarkdown({
-  content,
-  className = "",
-}: Props) {
+export default function PostMarkdown({ content, className = "" }: Props) {
   return <MarkdownRenderer content={content} className={className} />;
 }

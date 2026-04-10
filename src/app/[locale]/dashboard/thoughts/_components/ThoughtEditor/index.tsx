@@ -1,7 +1,8 @@
 "use client";
 
-import { Edit, Save, Upload, X } from "lucide-react";
 import { usePathname } from "next/navigation";
+
+import { Edit, Save, Upload, X } from "lucide-react";
 
 import ThoughtCard from "@/components/features/thoughts/ThoughtCard";
 import DropdownPopover from "@/components/ui/DropdownPopover";

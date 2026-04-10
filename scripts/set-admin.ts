@@ -1,6 +1,6 @@
 import { makeAdminClient } from "@/lib/server/supabase";
 
-import { checkYes, loadEnvByPath, loadEnvConfig } from "./common";
+import { askInput, checkYes, loadEnvByPath, requireEnvVars } from "./common";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -33,65 +33,35 @@ const findUserByEmail = async (email: string) => {
   }
 };
 
-(async () => {
-  try {
-    const targetEnv = process.argv[2];
-    const rawEmail = process.argv[3];
-    const envPath = loadEnvConfig(targetEnv);
-    loadEnvByPath(envPath);
+export const setAdmin = async (envPath: string) => {
+  loadEnvByPath(envPath);
+  requireEnvVars(["NEXT_PUBLIC_SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"]);
 
-    if (!rawEmail) {
-      console.error("❌ Missing email.");
-      process.exit(1);
-    }
+  const rawEmail = await askInput("Enter the user email: ");
+  if (!rawEmail.trim()) throw new Error("Email is required.");
 
-    const email = normalizeEmail(rawEmail);
-    if (!emailRegex.test(email)) {
-      console.error(`❌ Invalid email format: ${rawEmail}`);
-      process.exit(1);
-    }
-
-    if (
-      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-      !process.env.SUPABASE_SERVICE_ROLE_KEY
-    ) {
-      console.error(
-        "❌ Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in environment variables.",
-      );
-      process.exit(1);
-    }
-
-    await checkYes(
-      `⚠️ You are going to promote ${email} to admin in ${targetEnv} using ${envPath}.`,
-    );
-
-    const user = await findUserByEmail(email);
-    if (!user) {
-      console.error(`❌ User not found: ${email}`);
-      process.exit(1);
-    }
-
-    const { error } = await makeAdminClient().auth.admin.updateUserById(
-      user.id,
-      {
-        app_metadata: {
-          ...(user.app_metadata || {}),
-          role: "admin",
-        },
-      },
-    );
-
-    if (error) {
-      console.error(`❌ Failed to promote ${email}: ${error.message}`);
-      process.exit(1);
-    }
-
-    console.log(`✅ ${email} is now admin.`);
-  } catch (error) {
-    console.error(
-      "❌ Failed to promote user:",
-      error instanceof Error ? error.message : error,
-    );
-    process.exit(1);
+  const email = normalizeEmail(rawEmail);
+  if (!emailRegex.test(email)) {
+    throw new Error(`Invalid email format: ${rawEmail}`);
   }
-})();
+
+  await checkYes(`⚠️ Promote ${email} to admin?`);
+
+  const user = await findUserByEmail(email);
+  if (!user) {
+    throw new Error(`User not found: ${email}`);
+  }
+
+  const { error } = await makeAdminClient().auth.admin.updateUserById(user.id, {
+    app_metadata: {
+      ...(user.app_metadata || {}),
+      role: "admin",
+    },
+  });
+
+  if (error) {
+    throw new Error(`Failed to promote ${email}: ${error.message}`);
+  }
+
+  console.log(`✅ ${email} is now admin.`);
+};
