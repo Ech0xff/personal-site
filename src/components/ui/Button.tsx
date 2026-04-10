@@ -1,5 +1,4 @@
 import { ComponentPropsWithoutRef } from "react";
-import { useEffect } from "react";
 
 import { cn } from "@/lib/shared/utils";
 
