@@ -13,8 +13,8 @@ import { cn } from "@/lib/shared/utils";
 import styles from "./PreRender.module.css";
 
 interface Props extends ComponentPropsWithoutRef<"pre"> {
-  "data-raw-code"?: string;
-  "data-language"?: string;
+  code?: string;
+  language?: string;
 }
 
 function CodeBlockHeader({
@@ -41,15 +41,15 @@ function CodeBlockHeader({
 
 export function PreRender({
   children,
-  "data-raw-code": rawCode,
-  "data-language": language = "TEXT",
+  code,
+  language = "TEXT",
   ...props
 }: Props) {
   return (
     <div className="not-prose overflow-hidden rounded-xl border border-zinc-200 bg-zinc-50 text-[0.9em] dark:border-zinc-800 dark:bg-zinc-900">
       <CodeBlockHeader
         language={language}
-        rawCode={rawCode}
+        rawCode={code}
         className="border-b border-zinc-200 bg-zinc-100/90 px-3 py-1 dark:border-zinc-800 dark:bg-zinc-800/90"
       />
       <pre {...props} className={cn("p-3", styles.codeBlock)}>
@@ -84,8 +84,8 @@ export const rehypePlugins: Options["rehypePlugins"] = [
         const language = match ? match[1].toUpperCase() : "TEXT";
         node.properties = {
           ...node.properties,
-          "data-raw-code": rawCode,
-          "data-language": language,
+          code: rawCode,
+          language,
         };
       });
     };
