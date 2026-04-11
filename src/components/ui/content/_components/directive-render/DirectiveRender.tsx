@@ -12,14 +12,12 @@ import type { ContentDirectiveNode, DirectiveRenderProps } from "./types";
 
 function ErrorDirectiveMessage({ message }: { message: string }) {
   return (
-    <span className="group relative isolate inline-flex items-center align-middle text-rose-600 dark:text-rose-400">
-      <span
-        className="inline-flex items-center justify-center"
-        title={message}
-        aria-label={`Directive error: ${message}`}
-      >
-        <TriangleAlert className="h-4 w-4" aria-hidden="true" />
-      </span>
+    <span
+      className="group relative isolate inline-flex items-center align-middle text-rose-600 dark:text-rose-400"
+      title={message}
+      aria-label={`Directive error: ${message}`}
+    >
+      <TriangleAlert className="h-4 w-4" aria-hidden="true" />
     </span>
   );
 }

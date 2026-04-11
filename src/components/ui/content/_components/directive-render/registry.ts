@@ -1,4 +1,5 @@
 import cardDirectiveConfig from "./renders/CardRender";
+import metaDirectiveConfig from "./renders/MetaRender";
 import refDirectiveConfig from "./renders/RefRender";
 import type {
   DirectiveNodeType,
@@ -11,6 +12,7 @@ export const directiveRenderRegistry: DirectiveRegistrationMap = {
     [cardDirectiveConfig.directive]: cardDirectiveConfig,
   },
   textDirective: {
+    [metaDirectiveConfig.directive]: metaDirectiveConfig,
     [refDirectiveConfig.directive]: refDirectiveConfig,
   },
 };
