@@ -1,22 +1,65 @@
-// src/components/ui/markdown/MarkdownRenderer.tsx
+"use client";
+
+import { ComponentPropsWithoutRef } from "react";
 import type { Options } from "react-markdown";
-import Markdown from "react-markdown";
 
 import type { Element, Root } from "hast";
 import rehypePrism from "rehype-prism-plus";
-import remarkGfm from "remark-gfm";
 import { visit } from "unist-util-visit";
 
+import CopyButton from "@/components/ui/CopyButton";
 import { cn } from "@/lib/shared/utils";
 
-import CodeBlockWrapper from "./CodeBlockWrapper";
+import styles from "./PreRender.module.css";
 
-interface Props {
-  content: string;
-  className?: string;
+interface Props extends ComponentPropsWithoutRef<"pre"> {
+  "data-raw-code"?: string;
+  "data-language"?: string;
 }
 
-const rehypePlugins: Options["rehypePlugins"] = [
+function CodeBlockHeader({
+  language,
+  rawCode,
+  className,
+}: {
+  language: string;
+  rawCode?: string;
+  className: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex items-center justify-between gap-3 font-medium tracking-wide uppercase",
+        className,
+      )}
+    >
+      <span className="truncate">{language}</span>
+      <CopyButton content={rawCode} className="text-xs" />
+    </div>
+  );
+}
+
+export function PreRender({
+  children,
+  "data-raw-code": rawCode,
+  "data-language": language = "TEXT",
+  ...props
+}: Props) {
+  return (
+    <div className="not-prose overflow-hidden rounded-xl border border-zinc-200 bg-zinc-50 text-[0.9em] dark:border-zinc-800 dark:bg-zinc-900">
+      <CodeBlockHeader
+        language={language}
+        rawCode={rawCode}
+        className="border-b border-zinc-200 bg-zinc-100/90 px-3 py-1 dark:border-zinc-800 dark:bg-zinc-800/90"
+      />
+      <pre {...props} className={cn("p-3", styles.codeBlock)}>
+        {children}
+      </pre>
+    </div>
+  );
+}
+
+export const rehypePlugins: Options["rehypePlugins"] = [
   () => {
     return (tree: Root) => {
       visit(tree, "element", (node) => {
@@ -49,24 +92,3 @@ const rehypePlugins: Options["rehypePlugins"] = [
   },
   [rehypePrism, { ignoreMissing: true, showLineNumbers: true }],
 ];
-
-export default function MarkdownRenderer({ content, className = "" }: Props) {
-  return (
-    <div
-      className={cn(
-        "prose dark:prose-invert max-w-none [&>div]:shadow-none",
-        className,
-      )}
-    >
-      <Markdown
-        remarkPlugins={[remarkGfm]}
-        rehypePlugins={rehypePlugins}
-        components={{
-          pre: CodeBlockWrapper,
-        }}
-      >
-        {content}
-      </Markdown>
-    </div>
-  );
-}

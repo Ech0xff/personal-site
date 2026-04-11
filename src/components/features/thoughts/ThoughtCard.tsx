@@ -1,6 +1,6 @@
 import Image from "@/components/ui/Image";
 import Stack from "@/components/ui/Stack";
-import ThoughtMarkdown from "@/components/ui/markdown/ThoughtMarkdown";
+import ThoughtContent from "@/components/ui/content/ThoughtContent";
 import { getT } from "@/lib/shared/i18n/tools";
 import { cn } from "@/lib/shared/utils/tailwind";
 import { formatTime } from "@/lib/shared/utils/tools";
@@ -60,7 +60,7 @@ export default function ThoughtCard({
       </Stack>
 
       {/* Content */}
-      <ThoughtMarkdown content={thought.content} />
+      <ThoughtContent content={thought.content} />
 
       {/* Images Grid */}
       {thought.images && thought.images.length > 0 && (

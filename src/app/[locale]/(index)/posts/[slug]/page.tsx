@@ -6,7 +6,7 @@ import { ArrowLeft, Calendar, User } from "lucide-react";
 import ScrollToTopButton from "@/components/shared/ScrollToTopButton";
 import CopyButton from "@/components/ui/CopyButton";
 import Link from "@/components/ui/Link";
-import { PostMarkdown } from "@/components/ui/markdown";
+import { PostContent } from "@/components/ui/content";
 import { CACHE_TAGS } from "@/lib/server/cache";
 import { getT } from "@/lib/shared/i18n/tools";
 import { fetchPost } from "@/lib/shared/services";
@@ -108,7 +108,7 @@ export default async function PostPage({ params }: Props) {
       <hr className="my-8 border-gray-200 dark:border-gray-800" />
 
       {/* Content */}
-      <PostMarkdown content={post.content || ""} />
+      <PostContent content={post.content || ""} />
 
       {/* Footer */}
       <footer className="mt-auto">

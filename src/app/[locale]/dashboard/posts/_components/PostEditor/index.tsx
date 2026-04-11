@@ -4,7 +4,7 @@ import { Edit, Eye, Save, X } from "lucide-react";
 
 import DropdownPopover from "@/components/ui/DropdownPopover";
 import Stack from "@/components/ui/Stack";
-import { PostMarkdown } from "@/components/ui/markdown";
+import { PostContent } from "@/components/ui/content";
 import { cn } from "@/lib/shared/utils";
 
 import { BaseEditorProps } from "../../../_components/EditorProvider";
@@ -285,7 +285,7 @@ export default function PostEditor({
 
                 {/* Markdown Content Preview */}
                 {form.content ? (
-                  <PostMarkdown content={form.content} />
+                  <PostContent content={form.content} />
                 ) : (
                   <p className="text-sm text-zinc-400 italic">
                     Start writing and the preview will appear here...

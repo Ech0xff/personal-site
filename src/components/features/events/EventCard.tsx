@@ -2,7 +2,7 @@ import Stack from "@/components/ui/Stack";
 import { getT } from "@/lib/shared/i18n/tools";
 import { formatTime } from "@/lib/shared/utils/tools";
 
-import { EventMarkdown } from "../../ui/markdown";
+import { EventContent } from "../../ui/content";
 
 export type Event = {
   id: string;
@@ -47,7 +47,7 @@ export default function EventCard({
       </h3>
 
       {/* Description */}
-      {content && <EventMarkdown content={content} />}
+      {content && <EventContent content={content} />}
 
       {/* Tags */}
       <Stack x className="mt-auto flex-wrap gap-2 py-3">

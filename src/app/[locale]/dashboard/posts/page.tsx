@@ -3,6 +3,7 @@
 import { type ReactNode } from "react";
 
 import TagsList from "@/components/features/posts/TagsList";
+import Link from "@/components/ui/Link";
 import Stack from "@/components/ui/Stack";
 import { cn, formatTime } from "@/lib/shared/utils";
 
@@ -63,8 +64,13 @@ export default function Page() {
                     className="transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
                   >
                     {td(
-                      post.title,
-                      "font-medium text-zinc-900 dark:text-zinc-100",
+                      <Link
+                        href={`/posts/${post.id}`}
+                        className="font-medium text-zinc-900 transition-colors hover:text-blue-600 dark:text-zinc-100 dark:hover:text-blue-400"
+                      >
+                        {post.title}
+                      </Link>,
+                      "text-center",
                     )}
                     {td(<TagsList tags={post.tags} maxVisible={3} />)}
                     {td(
