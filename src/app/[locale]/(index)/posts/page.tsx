@@ -69,11 +69,11 @@ export default async function PostsPage({ params }: PageProps) {
         ),
       })}
     >
-      <div className="space-y-12">
+      <div className="space-y-6">
         {sortedYears.map((year) => (
           <section key={year}>
             {/* Year Title */}
-            <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-gray-800 dark:text-gray-200">
+            <h2 className="mb-3 flex items-center gap-2 text-2xl font-bold text-gray-800 dark:text-gray-200">
               {year === "Unknown" ? tCommon("unknownYear") : year}
               <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
                 ({groupedPosts[year]?.length})

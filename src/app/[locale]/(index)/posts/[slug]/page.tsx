@@ -66,7 +66,7 @@ export default async function PostPage({ params }: Props) {
   }
 
   return (
-    <article className="mx-auto w-full px-4 pt-10 pb-10">
+    <article className="mx-auto w-full flex flex-col flex-1 px-4 pt-10 pb-10">
       {/* Header */}
       <header className="mb-8">
         <div className="mb-4 flex flex-col gap-4 text-4xl sm:flex-row sm:items-start sm:justify-between">

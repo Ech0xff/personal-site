@@ -18,10 +18,7 @@ export default function TagsList({
   const hasMore = hiddenTags.length > 0;
 
   return (
-    <Stack
-      x
-      className={cn("flex-nowrap items-center gap-1", className)}
-    >
+    <Stack x className={cn("flex-nowrap items-center gap-1", className)}>
       {visibleTags.map((tag) => (
         <div
           key={tag}
