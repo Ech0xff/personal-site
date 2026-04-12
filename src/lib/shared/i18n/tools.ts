@@ -1,4 +1,4 @@
-import { ReactNode, cloneElement, isValidElement } from "react";
+import { cloneElement, isValidElement, type ReactNode } from "react";
 
 import enUSMessages from "./messages/en-US.json";
 import zhCNMessages from "./messages/zh-CN.json";

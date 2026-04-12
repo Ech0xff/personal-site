@@ -1,9 +1,8 @@
+import { Calendar, Eye, FileText, MessageCircle } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { Calendar, Eye, FileText, MessageCircle } from "lucide-react";
-
 import { fetchSummaryByBrowser } from "@/lib/client/services";
-import { BlogSummaryData } from "@/types";
+import type { BlogSummaryData } from "@/types";
 
 export const useHooks = () => {
   const [summaryData, setSummaryData] = useState<BlogSummaryData | null>(null);

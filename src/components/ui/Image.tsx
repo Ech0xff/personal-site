@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef } from "react";
+import type { ComponentPropsWithoutRef } from "react";
 
 import { cn } from "@/lib/shared/utils/tailwind";
 
@@ -45,7 +45,7 @@ export default function Image({
         </button>
 
         {/* Action button */}
-        {actionRender && actionRender()}
+        {actionRender?.()}
       </div>
     </>
   );

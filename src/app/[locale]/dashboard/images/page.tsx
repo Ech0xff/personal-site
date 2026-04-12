@@ -36,6 +36,7 @@ export default function ImagesPage() {
             className="items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 p-1 dark:border-zinc-700 dark:bg-zinc-800"
           >
             <button
+              type="button"
               onClick={() => toggleSort("createdAt")}
               className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                 sortField === "createdAt"
@@ -50,6 +51,7 @@ export default function ImagesPage() {
               )}
             </button>
             <button
+              type="button"
               onClick={() => toggleSort("size")}
               className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                 sortField === "size"

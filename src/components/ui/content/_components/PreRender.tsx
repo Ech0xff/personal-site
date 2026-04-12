@@ -1,7 +1,6 @@
-import { ComponentPropsWithoutRef } from "react";
-import type { Options } from "react-markdown";
-
 import type { Element, Root } from "hast";
+import type { ComponentPropsWithoutRef } from "react";
+import type { Options } from "react-markdown";
 import rehypePrism from "rehype-prism-plus";
 import { visit } from "unist-util-visit";
 

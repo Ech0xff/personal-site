@@ -3,7 +3,7 @@ import Stack from "@/components/ui/Stack";
 import { getT } from "@/lib/shared/i18n/tools";
 import { cn, formatTime } from "@/lib/shared/utils";
 
-import EventCard, { Event } from "./EventCard";
+import EventCard, { type Event } from "./EventCard";
 
 interface Props {
   events: Event[];

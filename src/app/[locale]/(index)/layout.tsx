@@ -1,5 +1,3 @@
-import React from "react";
-
 import {
   CalendarDays,
   FileText,
@@ -7,6 +5,7 @@ import {
   Lightbulb,
   Menu,
 } from "lucide-react";
+import type React from "react";
 
 import LanguageToggle from "@/components/shared/LanguageToggle";
 import ThemeToggle from "@/components/shared/ThemeToggle";
@@ -65,7 +64,7 @@ function Navbar({ locale }: { className?: string; locale?: string }) {
           <DropdownPopover
             className="md:hidden"
             trigger={
-              <button>
+              <button type="button">
                 <Menu className="h-5 w-5" />
               </button>
             }

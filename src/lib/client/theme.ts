@@ -9,7 +9,7 @@ const themes: readonly Theme[] = ["light", "dark", "system"] as const;
 export const toggleTheme = (theme?: Theme) => {
   if (!theme) {
     theme = getThemeFromDocument();
-    const index = themes.findIndex((t) => t === theme);
+    const index = themes.indexOf(theme);
     theme = themes[(index + 1) % themes.length];
   }
   const html = document.documentElement;

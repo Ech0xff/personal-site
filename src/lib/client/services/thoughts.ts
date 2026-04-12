@@ -5,7 +5,7 @@ import {
   saveThought,
   updateThoughtStatus,
 } from "@/lib/shared/services";
-import { Status, ThoughtInsert } from "@/types";
+import type { Status, ThoughtInsert } from "@/types";
 
 import { makeBrowserClient } from "../supabase";
 

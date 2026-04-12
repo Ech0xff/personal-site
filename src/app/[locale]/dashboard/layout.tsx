@@ -1,6 +1,3 @@
-import Link from "next/link";
-import { redirect } from "next/navigation";
-
 import {
   ArrowLeft,
   Calendar,
@@ -11,6 +8,8 @@ import {
   MessageCircle,
   UserCog,
 } from "lucide-react";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import LogoutButton from "@/components/shared/LogoutButton";
 import ThemeToggle from "@/components/shared/ThemeToggle";
@@ -105,7 +104,10 @@ async function Navbar({
           <DropdownPopover
             className="ml-auto md:hidden"
             trigger={
-              <button className="ml-auto rounded-md p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+              <button
+                type="button"
+                className="ml-auto rounded-md p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+              >
                 <Menu className="h-5 w-5" />
               </button>
             }

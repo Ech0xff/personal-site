@@ -1,6 +1,6 @@
-import { SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { Database, EventInsert, EventUpdate, Status } from "@/types";
+import type { Database, EventInsert, EventUpdate, Status } from "@/types";
 
 import { makeStaticClient } from "../supabase";
 

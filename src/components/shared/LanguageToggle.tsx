@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
-
-import { usePathname } from "next/navigation";
-
 import Cookies from "js-cookie";
 import { Languages } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 
 import { getNormalizedLocale } from "@/lib/shared/i18n";
 import { routing } from "@/lib/shared/i18n/routing";

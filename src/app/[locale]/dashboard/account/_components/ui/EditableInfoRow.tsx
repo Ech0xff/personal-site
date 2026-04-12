@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
-
 import { Check, X } from "lucide-react";
+import { useRef, useState } from "react";
 
 import Stack from "@/components/ui/Stack";
 

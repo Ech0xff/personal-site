@@ -1,6 +1,5 @@
+import type { UserIdentity } from "@supabase/supabase-js";
 import { useCallback, useEffect, useMemo, useState } from "react";
-
-import { UserIdentity } from "@supabase/supabase-js";
 import { toast } from "sonner";
 
 import { makeBrowserClient } from "@/lib/client/supabase";

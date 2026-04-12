@@ -157,8 +157,10 @@ base/
 - `bun run dev` - Start development server
 - `bun run build` - Build for production
 - `bun run start` - Start production server
-- `bun run lint` - Run ESLint
-- `bun run format` - Format code with Prettier
+- `bun run lint` - Run Biome and TypeScript checks
+- `bun run lint:fix` - Fix imports, formatting, and auto-fixable lint issues
+- `bun run format` - Format code with Biome
+- `bun run format:check` - Check Biome formatting without changing files
 - `bun run gen:types` - Generate TypeScript types from Supabase
 - `bun run gen:icons` - Generate icon components from SVGs
 

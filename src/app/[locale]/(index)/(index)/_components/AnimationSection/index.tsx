@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import Stack from "@/components/ui/Stack";
 import { cn } from "@/lib/shared/utils";

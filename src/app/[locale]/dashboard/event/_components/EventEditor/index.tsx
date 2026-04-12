@@ -1,15 +1,14 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-
 import { Save, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 import EventCard from "@/components/features/events/EventCard";
 import Stack from "@/components/ui/Stack";
 import { cn } from "@/lib/shared/utils";
-import { Status } from "@/types";
+import type { Status } from "@/types";
 
-import { BaseEditorProps } from "../../../_components/EditorProvider";
+import type { BaseEditorProps } from "../../../_components/EditorProvider";
 import DateTimeInput from "../../../_components/ui/DateTimeInput";
 import HeaderSection from "../../../_components/ui/HeaderSection";
 import SegmentedToggle from "../../../_components/ui/SegmentedToggle";
@@ -73,6 +72,7 @@ export default function EventEditor({
               disabled={isPending}
             />
             <button
+              type="button"
               onClick={handleSubmit}
               disabled={isPending}
               className="duration-300 hover:scale-110 disabled:opacity-50"
@@ -80,6 +80,7 @@ export default function EventEditor({
               <Save className="h-6 w-6" />
             </button>
             <button
+              type="button"
               onClick={onClose}
               className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
             >

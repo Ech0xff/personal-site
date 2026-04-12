@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { cacheTag } from "next/cache";
 
 import PostCard from "@/components/features/posts/PostCard";

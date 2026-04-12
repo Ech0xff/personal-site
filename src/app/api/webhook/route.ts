@@ -1,5 +1,5 @@
 import { revalidateTag } from "next/cache";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 import { CACHE_TAGS, getCollectionTagByTable } from "@/lib/server/cache";
 
@@ -42,7 +42,9 @@ export async function POST(request: NextRequest) {
         break;
     }
 
-    tags.forEach((tag) => revalidateTag(tag, "max"));
+    tags.forEach((tag) => {
+      revalidateTag(tag, "max");
+    });
 
     return NextResponse.json({
       message: "Revalidation triggered",

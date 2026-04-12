@@ -1,8 +1,7 @@
 "use client";
 
-import { ReactNode, useCallback, useEffect, useState } from "react";
-
 import { X } from "lucide-react";
+import { type ReactNode, useCallback, useEffect, useState } from "react";
 
 type Image = {
   src: string;
@@ -49,6 +48,7 @@ export function ImageViewer({ children }: { children: ReactNode }) {
         >
           {/* Close button */}
           <button
+            type="button"
             className="absolute top-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
             aria-label="Close"
           >

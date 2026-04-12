@@ -1,4 +1,4 @@
-import { Tables, TablesInsert, TablesUpdate } from "./supabase";
+import type { Tables, TablesInsert, TablesUpdate } from "./supabase";
 
 export * from "./supabase";
 

@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
-
 import { Copy, Trash2 } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import Stack from "@/components/ui/Stack";
-import { ImageFile } from "@/types";
+import type { ImageFile } from "@/types";
 
 interface ImageActionButtonsProps {
   image: ImageFile;

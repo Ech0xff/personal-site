@@ -1,6 +1,5 @@
-import type { ReactNode } from "react";
-
 import type { ContainerDirective, TextDirective } from "mdast-util-directive";
+import type { ReactNode } from "react";
 
 export type DirectiveAttributes = Record<string, string | undefined>;
 export type ContentDirectiveNode = ContainerDirective | TextDirective;

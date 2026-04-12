@@ -27,7 +27,9 @@ export async function POST() {
       tags.add(CACHE_TAGS.post(post.id));
     });
 
-    tags.forEach((tag) => revalidateTag(tag, "max"));
+    tags.forEach((tag) => {
+      revalidateTag(tag, "max");
+    });
 
     return NextResponse.json({
       message: "All caches revalidated",

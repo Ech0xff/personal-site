@@ -1,10 +1,10 @@
 "use client";
 
 import {
-  ComponentType,
-  ReactElement,
-  ReactNode,
+  type ComponentType,
   createContext,
+  type ReactElement,
+  type ReactNode,
   useContext,
   useState,
 } from "react";

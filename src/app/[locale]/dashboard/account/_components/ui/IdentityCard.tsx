@@ -1,4 +1,4 @@
-import { UserIdentity } from "@supabase/supabase-js";
+import type { UserIdentity } from "@supabase/supabase-js";
 import { Github, Link2, Link2Off, Loader2, Mail } from "lucide-react";
 
 import Stack from "@/components/ui/Stack";

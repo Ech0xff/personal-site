@@ -1,17 +1,16 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-
 import { Edit, Save, Upload, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 import ThoughtCard from "@/components/features/thoughts/ThoughtCard";
 import DropdownPopover from "@/components/ui/DropdownPopover";
 import Image from "@/components/ui/Image";
 import Stack from "@/components/ui/Stack";
 import { cn } from "@/lib/shared/utils";
-import { Status } from "@/types";
+import type { Status } from "@/types";
 
-import { BaseEditorProps } from "../../../_components/EditorProvider";
+import type { BaseEditorProps } from "../../../_components/EditorProvider";
 import AuthorInput from "../../../_components/ui/AuthorInput";
 import DateTimeInput from "../../../_components/ui/DateTimeInput";
 import HeaderSection from "../../../_components/ui/HeaderSection";
@@ -56,7 +55,7 @@ export default function ThoughtEditor({
             <DropdownPopover
               className="md:hidden"
               trigger={
-                <button className="duration-300 hover:scale-110">
+                <button type="button" className="duration-300 hover:scale-110">
                   <Edit className="h-6 w-6" />
                 </button>
               }
@@ -64,6 +63,7 @@ export default function ThoughtEditor({
               <Stack y className="gap-1">
                 <Stack x className="w-full justify-between gap-1">
                   <button
+                    type="button"
                     className="ml-3"
                     onClick={(e) => {
                       e.stopPropagation();
@@ -142,6 +142,7 @@ export default function ThoughtEditor({
               />
             </Stack>
             <button
+              type="button"
               onClick={handleSubmit}
               className="duration-300 hover:scale-110"
             >
@@ -149,6 +150,7 @@ export default function ThoughtEditor({
             </button>
 
             <button
+              type="button"
               onClick={onClose}
               className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
             >

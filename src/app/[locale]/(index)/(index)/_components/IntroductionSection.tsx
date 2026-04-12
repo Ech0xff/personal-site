@@ -3,7 +3,7 @@ import { Bilibili, Email, Github, Qq } from "@/components/icons";
 import Stack from "@/components/ui/Stack";
 import { getT } from "@/lib/shared/i18n/tools";
 import { cn } from "@/lib/shared/utils";
-import { BlogSummaryData } from "@/types";
+import type { BlogSummaryData } from "@/types";
 
 import Card from "./Card";
 
@@ -134,7 +134,7 @@ export async function IntroductionSection({
       {/* Latest Posts */}
       <Card title={t("latestPosts.cardTitle")}>
         <Stack y>
-          {posts.length == 0 && (
+          {posts.length === 0 && (
             <p style={{ textIndent: "2em" }}>{t("latestPosts.empty")}</p>
           )}
           {posts.map((post) => (
@@ -164,6 +164,7 @@ export async function IntroductionSection({
 
       <Card title={t("playlist.cardTitle")}>
         <iframe
+          title={t("playlist.cardTitle")}
           allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
           height="450"
           className="hidden w-full overflow-hidden rounded-lg border-none dark:block"
@@ -171,6 +172,7 @@ export async function IntroductionSection({
           src="https://embed.music.apple.com/cn/playlist/ume/pl.u-76oNkr3CvyGz5m1?theme=dark"
         />
         <iframe
+          title={t("playlist.cardTitle")}
           allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
           height="450"
           className="w-full overflow-hidden rounded-lg border-none dark:hidden"

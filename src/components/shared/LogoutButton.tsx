@@ -1,7 +1,7 @@
 "use client";
-import { ComponentPropsWithoutRef } from "react";
 
 import { LogOut } from "lucide-react";
+import type { ComponentPropsWithoutRef } from "react";
 import { toast } from "sonner";
 
 import { makeBrowserClient } from "@/lib/client/supabase";

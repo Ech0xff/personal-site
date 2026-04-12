@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import { fetchPostByBrowser, savePostByBrowser } from "@/lib/client/services";
-import { Status } from "@/types";
+import type { Status } from "@/types";
 
 export type ViewMode = "edit" | "preview" | "split";
 

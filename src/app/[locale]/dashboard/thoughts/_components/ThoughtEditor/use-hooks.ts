@@ -10,7 +10,7 @@ import {
   saveThoughtByBrowser,
   uploadImageByBrowser,
 } from "@/lib/client/services";
-import { Status } from "@/types";
+import type { Status } from "@/types";
 
 export type ViewMode = "edit" | "preview" | "split";
 const DEFAULT_VIEW_MODE: ViewMode = "split";

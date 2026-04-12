@@ -19,7 +19,9 @@ const menus: MenuItem[] = [
 const selectMenu = async () => {
   const rl = createInterface({ input, output });
   try {
-    menus.forEach((item, index) => console.log(`${index + 1}. ${item.label}`));
+    menus.forEach((item, index) => {
+      console.log(`${index + 1}. ${item.label}`);
+    });
     const answer = await rl.question("Enter the menu number: ");
     const selectedIndex = Number(answer.trim()) - 1;
     if (

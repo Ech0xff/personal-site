@@ -1,6 +1,6 @@
+import ThoughtContent from "@/components/ui/content/ThoughtContent";
 import Image from "@/components/ui/Image";
 import Stack from "@/components/ui/Stack";
-import ThoughtContent from "@/components/ui/content/ThoughtContent";
 import { getT } from "@/lib/shared/i18n/tools";
 import { cn } from "@/lib/shared/utils/tailwind";
 import { formatTime } from "@/lib/shared/utils/tools";
@@ -55,7 +55,7 @@ export default function ThoughtCard({
         </Stack>
 
         <Stack x className="items-center gap-2">
-          {renderActions && renderActions(thought)}
+          {renderActions?.(thought)}
         </Stack>
       </Stack>
 

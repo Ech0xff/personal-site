@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import TagsList from "@/components/features/posts/TagsList";
 import Link from "@/components/ui/Link";

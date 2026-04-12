@@ -5,7 +5,7 @@ import {
   saveEvent,
   updateEventStatus,
 } from "@/lib/shared/services";
-import { EventInsert, Status } from "@/types";
+import type { EventInsert, Status } from "@/types";
 
 import { makeBrowserClient } from "../supabase";
 

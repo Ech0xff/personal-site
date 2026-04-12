@@ -1,9 +1,7 @@
 "use client";
 
+import { MessageCircle, PenSquare, Plus, RefreshCw } from "lucide-react";
 import { useState } from "react";
-
-import { MessageCircle, PenSquare, Plus } from "lucide-react";
-import { RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
 import Button from "@/components/ui/Button";

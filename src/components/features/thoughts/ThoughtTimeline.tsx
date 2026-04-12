@@ -1,7 +1,7 @@
 import Stack from "@/components/ui/Stack";
 import { cn } from "@/lib/shared/utils";
 
-import ThoughtCard, { Thought } from "./ThoughtCard";
+import ThoughtCard, { type Thought } from "./ThoughtCard";
 
 interface Props {
   thoughts: Thought[];

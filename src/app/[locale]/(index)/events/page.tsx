@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { cacheTag } from "next/cache";
 
 import EventTimeline from "@/components/features/events/EventTimeline";

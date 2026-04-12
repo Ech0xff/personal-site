@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import { fetchEventByBrowser, saveEventByBrowser } from "@/lib/client/services";
-import { Status } from "@/types";
+import type { Status } from "@/types";
 
 type EventFormState = {
   id: string;

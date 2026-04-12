@@ -1,5 +1,5 @@
 "use client";
-import { type FormEvent } from "react";
+import type { FormEvent } from "react";
 
 import SvgGithub from "@/components/icons/Github";
 import Link from "@/components/ui/Link";

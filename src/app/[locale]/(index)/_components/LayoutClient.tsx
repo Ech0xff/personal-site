@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-
 import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 
 import Stack from "@/components/ui/Stack";
 import { cn } from "@/lib/shared/utils/tailwind";

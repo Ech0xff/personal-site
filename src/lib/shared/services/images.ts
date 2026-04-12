@@ -1,7 +1,7 @@
-import { SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { compressToWebp, computeHash } from "@/lib/shared/utils";
-import { Database } from "@/types";
+import type { Database } from "@/types";
 
 import { makeStaticClient } from "../supabase";
 
@@ -16,7 +16,7 @@ export const fetchExistingPublicUrl = async (
     search: filePath,
   });
 
-  if (data && data.some((file) => file.name === filePath)) {
+  if (data?.some((file) => file.name === filePath)) {
     const {
       data: { publicUrl },
     } = client.storage.from(BUCKET_NAME).getPublicUrl(filePath);

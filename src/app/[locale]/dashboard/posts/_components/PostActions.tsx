@@ -44,6 +44,7 @@ export default function PostActions({
         <Eye className="h-4 w-4" />
       </Link>
       <button
+        type="button"
         onClick={() => openEditor(postId)}
         className="rounded p-1.5 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
         title="Edit"
@@ -51,6 +52,7 @@ export default function PostActions({
         <Edit className="h-4 w-4" />
       </button>
       <button
+        type="button"
         onClick={handleDelete}
         className="rounded p-1.5 text-zinc-400 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
         title="Delete"

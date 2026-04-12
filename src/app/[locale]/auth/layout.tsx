@@ -1,6 +1,5 @@
-import React from "react";
-
 import { redirect } from "next/navigation";
+import type React from "react";
 
 import { makeServerClient } from "@/lib/server/supabase";
 import { ROUTES } from "@/lib/shared/routes";

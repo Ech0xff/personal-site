@@ -4,7 +4,7 @@ import Stack from "@/components/ui/Stack";
 import { CACHE_TAGS } from "@/lib/server/cache";
 import { fetchSummary } from "@/lib/shared/services";
 import { cn } from "@/lib/shared/utils";
-import { BlogSummaryData } from "@/types";
+import type { BlogSummaryData } from "@/types";
 
 import AnimationSection from "./_components/AnimationSection";
 import { IntroductionSection } from "./_components/IntroductionSection";

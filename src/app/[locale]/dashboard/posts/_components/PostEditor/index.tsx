@@ -1,13 +1,12 @@
 "use client";
 
 import { Edit, Eye, Save, X } from "lucide-react";
-
+import { PostContent } from "@/components/ui/content";
 import DropdownPopover from "@/components/ui/DropdownPopover";
 import Stack from "@/components/ui/Stack";
-import { PostContent } from "@/components/ui/content";
 import { cn } from "@/lib/shared/utils";
 
-import { BaseEditorProps } from "../../../_components/EditorProvider";
+import type { BaseEditorProps } from "../../../_components/EditorProvider";
 import AuthorInput from "../../../_components/ui/AuthorInput";
 import DateTimeInput from "../../../_components/ui/DateTimeInput";
 import HeaderSection from "../../../_components/ui/HeaderSection";
@@ -55,7 +54,7 @@ export default function PostEditor({
             <DropdownPopover
               className="md:hidden"
               trigger={
-                <button className="duration-300 hover:scale-110">
+                <button type="button" className="duration-300 hover:scale-110">
                   <Edit className="h-6 w-6" />
                 </button>
               }
@@ -131,6 +130,7 @@ export default function PostEditor({
 
             {/* Save Button */}
             <button
+              type="button"
               onClick={handleSubmit}
               disabled={isPending}
               className="duration-300 hover:scale-110 disabled:opacity-50"
@@ -139,6 +139,7 @@ export default function PostEditor({
             </button>
 
             <button
+              type="button"
               onClick={onClose}
               className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
             >

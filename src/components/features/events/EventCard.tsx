@@ -37,7 +37,7 @@ export default function EventCard({
           {formatTime(published_at, "MMM D", tCommon("unknownDate"))}
         </div>
         <Stack x className="items-center gap-2">
-          {renderActions && renderActions(event)}
+          {renderActions?.(event)}
         </Stack>
       </Stack>
 

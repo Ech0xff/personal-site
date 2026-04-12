@@ -12,7 +12,7 @@ import {
   deleteImageByBrowser,
   fetchImagesByBrowser,
 } from "@/lib/client/services";
-import { ImageFile } from "@/types";
+import type { ImageFile } from "@/types";
 
 type SortField = "createdAt" | "size";
 type SortOrder = "asc" | "desc";

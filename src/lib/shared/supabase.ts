@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 
-import { Database } from "@/types/supabase";
+import type { Database } from "@/types/supabase";
 
 let client: ReturnType<typeof createClient<Database>> | undefined;
 

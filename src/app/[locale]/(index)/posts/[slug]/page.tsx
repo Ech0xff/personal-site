@@ -1,12 +1,11 @@
-import { Metadata } from "next";
-import { cacheTag } from "next/cache";
-
 import { ArrowLeft, Calendar, User } from "lucide-react";
+import type { Metadata } from "next";
+import { cacheTag } from "next/cache";
 
 import ScrollToTopButton from "@/components/shared/ScrollToTopButton";
 import CopyButton from "@/components/ui/CopyButton";
-import Link from "@/components/ui/Link";
 import { PostContent } from "@/components/ui/content";
+import Link from "@/components/ui/Link";
 import { CACHE_TAGS } from "@/lib/server/cache";
 import { getT } from "@/lib/shared/i18n/tools";
 import { fetchPost } from "@/lib/shared/services";

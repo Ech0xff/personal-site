@@ -1,4 +1,4 @@
-import { SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import imageCompression from "browser-image-compression";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";

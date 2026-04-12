@@ -5,13 +5,12 @@ import remarkDirective from "remark-directive";
 import remarkGfm from "remark-gfm";
 
 import { cn } from "@/lib/shared/utils";
-
-import { PreRender, rehypePlugins } from "./_components/PreRender";
 import {
   DirectiveRender,
   remarkContentNodes,
 } from "./_components/directive-render";
 import { DIRECTIVE_RENDER_ELEMENT_NAME } from "./_components/directive-render/const";
+import { PreRender, rehypePlugins } from "./_components/PreRender";
 
 interface Props {
   content: string;

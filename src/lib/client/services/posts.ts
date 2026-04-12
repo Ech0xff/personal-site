@@ -5,7 +5,7 @@ import {
   savePost,
   updatePostStatus,
 } from "@/lib/shared/services";
-import { PostInsert, Status } from "@/types";
+import type { PostInsert, Status } from "@/types";
 
 import { makeBrowserClient } from "../supabase";
 

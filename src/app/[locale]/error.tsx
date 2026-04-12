@@ -9,7 +9,7 @@ interface Props {
   error: Error & { digest?: string };
 }
 
-export default function Error({ error }: Props) {
+export default function ErrorPage({ error }: Props) {
   const message =
     error.message.trim() || "An unexpected error interrupted this page.";
 

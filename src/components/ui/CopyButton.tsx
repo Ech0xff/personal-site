@@ -1,8 +1,7 @@
 "use client";
 
-import { ButtonHTMLAttributes, useState } from "react";
-
 import { Check, Copy } from "lucide-react";
+import { type ButtonHTMLAttributes, useState } from "react";
 import { toast } from "sonner";
 
 import { cn } from "@/lib/shared/utils";

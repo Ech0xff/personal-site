@@ -5,7 +5,7 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 
 import { updatePostStatusByBrowser } from "@/lib/client/services";
-import { Status } from "@/types";
+import type { Status } from "@/types";
 
 import SegmentedToggle from "../../_components/ui/SegmentedToggle";
 

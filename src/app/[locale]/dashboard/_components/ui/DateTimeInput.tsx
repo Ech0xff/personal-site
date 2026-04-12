@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
-
 import { CalendarDays } from "lucide-react";
+import { useEffect, useMemo, useRef } from "react";
 
 import {
   datetimeLocalToUtcIso,
@@ -37,6 +36,7 @@ export default function DateTimeInput({
 
   return (
     <button
+      type="button"
       disabled={disabled}
       aria-label={ariaLabel}
       title={ariaLabel}

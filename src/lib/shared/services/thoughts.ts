@@ -1,6 +1,6 @@
-import { SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { Database, Status, ThoughtInsert, ThoughtUpdate } from "@/types";
+import type { Database, Status, ThoughtInsert, ThoughtUpdate } from "@/types";
 
 import { makeStaticClient } from "../supabase";
 
