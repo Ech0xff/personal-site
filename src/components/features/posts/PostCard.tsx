@@ -29,12 +29,12 @@ export default function PostCard({ post, className, locale }: Props) {
         className,
       )}
     >
-      <Stack x className="flex-1">
+      <Stack x className="min-w-0 flex-1">
         {/* Title */}
-        <span className="mx-4">{title}</span>
-        <TagsList className="mr-auto hidden sm:flex" tags={post.tags} />
+        <span className="mx-4 min-w-0 truncate whitespace-nowrap">{title}</span>
+        <TagsList className="mr-2 hidden sm:flex" tags={post.tags} />
         {/* Date */}
-        <span className="ml-auto w-28 text-sm text-gray-400">
+        <span className="ml-auto w-28 shrink-0 whitespace-nowrap text-sm text-gray-400">
           {formatTime(published_at, "MMM D, YYYY", tCommon("unknownDate"))}
         </span>
       </Stack>
