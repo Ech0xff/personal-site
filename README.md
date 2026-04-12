@@ -8,6 +8,7 @@ A modern, full-featured personal blog platform built with Next.js 16, React 19, 
 - [x] Configure a webhook to refresh the cache.
 - [x] Separate environment
 - [x] Automated Supabase configuration
+- [x] Support PlantUML diagrams in Markdown content.
 - [ ] Use the original image hash when saving and uploading images.
 - [ ] Supports content search
 
@@ -21,6 +22,7 @@ A modern, full-featured personal blog platform built with Next.js 16, React 19, 
 - **Animations**: [Framer Motion](https://www.framer.com/motion/)
 - **Markdown**: [react-markdown](https://github.com/remarkjs/react-markdown)
 - **Syntax Highlighting**: [highlight.js](https://highlightjs.org/)
+- **PlantUML Encoding**: [fflate](https://github.com/101arrowz/fflate)
 - **Image Compression**: [browser-image-compression](https://github.com/Donaldcwl/browser-image-compression)
 - **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
 
@@ -95,6 +97,37 @@ Open [http://localhost:3000](http://localhost:3000) to view the site.
 ### 7. Access the dashboard
 
 Navigate to [http://localhost:3000/auth](http://localhost:3000/auth) and enter your `DASHBOARD_SECRET_KEY` to access the admin dashboard.
+
+## 📝 Content Rendering
+
+Post, thought, and event content is rendered from Markdown through `react-markdown`.
+
+### PlantUML diagrams
+
+Use a fenced code block with `plantuml` or `puml`:
+
+````md
+```plantuml
+@startuml
+Alice -> Bob: Hello
+Bob --> Alice: Hi
+@enduml
+```
+````
+
+The renderer encodes the PlantUML source in the browser bundle and requests SVGs directly from the public PlantUML server:
+
+```txt
+https://www.plantuml.com/plantuml/svg/{encoded}
+```
+
+PlantUML text encoding is implemented in `src/lib/shared/utils/plantuml.ts` with `fflate`. The project does not proxy PlantUML requests through a Next.js route and does not require a PlantUML environment variable.
+
+PlantUML content is compressed and encoded, not encrypted. Avoid putting private system details or sensitive architecture diagrams in public posts when using the public PlantUML server.
+
+### Image preview
+
+Images open in a full-screen preview when clicked. The preview starts at `100%`, where `100%` means the whole image is fitted inside the current viewport. Use the bottom zoom controls to enlarge or reduce the preview. When the image is larger than the viewport, the preview container supports both horizontal and vertical scrolling.
 
 ## 📦 Build for Production
 
