@@ -183,6 +183,7 @@ export default function ThoughtEditor({
                     {form.images.map((url, index) => (
                       <Image
                         key={index}
+                        framed
                         src={url}
                         alt={`Image ${index + 1}`}
                         actionRender={() => (

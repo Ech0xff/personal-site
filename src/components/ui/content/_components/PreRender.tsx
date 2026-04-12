@@ -5,8 +5,8 @@ import rehypePrism from "rehype-prism-plus";
 import { visit } from "unist-util-visit";
 
 import CopyButton from "@/components/ui/CopyButton";
-import { cn } from "@/lib/shared/utils";
-
+import { cn, encodePlantUml } from "@/lib/shared/utils";
+import Image from "../../Image";
 import styles from "./PreRender.module.css";
 
 interface Props extends ComponentPropsWithoutRef<"pre"> {
@@ -14,29 +14,9 @@ interface Props extends ComponentPropsWithoutRef<"pre"> {
   language?: string;
 }
 
-function CodeBlockHeader({
-  language,
-  rawCode,
-  className,
-}: {
-  language: string;
-  rawCode?: string;
-  className: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "flex items-center justify-between gap-3 font-medium tracking-wide uppercase",
-        className,
-      )}
-    >
-      <span className="truncate">{language}</span>
-      <CopyButton content={rawCode} className="text-xs" />
-    </div>
-  );
-}
+const PLANTUML_SERVER_URL = "https://www.plantuml.com/plantuml";
 
-export function PreRender({
+function CodeBlockRender({
   children,
   code,
   language = "TEXT",
@@ -44,16 +24,40 @@ export function PreRender({
 }: Props) {
   return (
     <div className="not-prose overflow-hidden rounded-xl border border-zinc-200 bg-zinc-50 text-[0.9em] dark:border-zinc-800 dark:bg-zinc-900">
-      <CodeBlockHeader
-        language={language}
-        rawCode={code}
-        className="border-b border-zinc-200 bg-zinc-100/90 px-3 py-1 dark:border-zinc-800 dark:bg-zinc-800/90"
-      />
+      <div className="flex items-center justify-between gap-3 border-b border-zinc-200 bg-zinc-100/90 px-3 py-1 font-medium tracking-wide uppercase dark:border-zinc-800 dark:bg-zinc-800/90">
+        <span className="truncate">{language}</span>
+        <CopyButton content={code} className="text-xs" />
+      </div>
       <pre {...props} className={cn("p-3", styles.codeBlock)}>
         {children}
       </pre>
     </div>
   );
+}
+
+function PlantUmlRender({ className, code = "" }: Props) {
+  const encoded = encodePlantUml(code);
+
+  return (
+    <Image
+      className={cn("not-prose border-none rounded-none", className)}
+      fit="contain"
+      variant="fluid"
+      src={`${PLANTUML_SERVER_URL}/svg/${encoded}`}
+      alt="PlantUML diagram"
+    />
+  );
+}
+
+export function PreRender(props: Props) {
+  const { language } = props;
+  switch (language?.toUpperCase()) {
+    case "PLANTUML":
+    case "PUML":
+      return <PlantUmlRender {...props} />;
+    default:
+      return <CodeBlockRender {...props} />;
+  }
 }
 
 export const rehypePlugins: Options["rehypePlugins"] = [

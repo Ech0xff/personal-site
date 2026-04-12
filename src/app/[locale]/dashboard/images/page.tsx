@@ -91,6 +91,7 @@ export default function ImagesPage() {
             {sortedImages.map((image) => (
               <div key={image.id} className="group/card relative">
                 <Image
+                  framed
                   src={image.url}
                   alt={image.name}
                   actionRender={() => (
