@@ -4,14 +4,10 @@ import { ArrowUp } from "lucide-react";
 
 export default function ScrollToTopButton() {
   const scrollToTop = () => {
-    // Find the main element which is the scroll container
-    const mainElement = document.querySelector("main");
-    if (mainElement) {
-      mainElement.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    }
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   return (
