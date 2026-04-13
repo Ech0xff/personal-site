@@ -1,7 +1,5 @@
 import type { Element, Root } from "hast";
 import type { ComponentPropsWithoutRef } from "react";
-import type { Options } from "react-markdown";
-import rehypePrism from "rehype-prism-plus";
 import { visit } from "unist-util-visit";
 
 import CopyButton from "@/components/ui/CopyButton";
@@ -60,36 +58,36 @@ export function PreRender(props: Props) {
   }
 }
 
-export const rehypePlugins: Options["rehypePlugins"] = [
-  () => {
-    return (tree: Root) => {
-      visit(tree, "element", (node) => {
-        if (node.tagName !== "pre") return;
-        const codeNode = node.children.find(
-          (child): child is Element =>
-            child.type === "element" && child.tagName === "code",
-        );
-        if (!codeNode) return;
-        const firstChild = codeNode.children[0];
-        const rawCode =
-          firstChild?.type === "text" ? firstChild.value : undefined;
-        if (!rawCode) return;
-        const className = codeNode.properties.className;
-        const firstClassName =
-          typeof className === "string"
-            ? className
-            : Array.isArray(className) && typeof className[0] === "string"
-              ? className[0]
-              : "";
-        const match = firstClassName.match(/language-([a-z0-9+#-]+)/i);
-        const language = match ? match[1].toUpperCase() : "TEXT";
-        node.properties = {
-          ...node.properties,
-          code: rawCode,
-          language,
-        };
-      });
-    };
-  },
-  [rehypePrism, { ignoreMissing: true, showLineNumbers: true }],
-];
+export const rehypeCodeBlockProps = () => {
+  return (tree: Root) => {
+    visit(tree, "element", (node) => {
+      if (node.tagName !== "pre") return;
+
+      const codeNode = node.children.find(
+        (child): child is Element =>
+          child.type === "element" && child.tagName === "code",
+      );
+      const code =
+        codeNode?.children[0]?.type === "text"
+          ? codeNode.children[0].value
+          : undefined;
+
+      if (!code || !codeNode) return;
+
+      const className = codeNode.properties.className;
+      const firstClassName =
+        typeof className === "string"
+          ? className
+          : Array.isArray(className) && typeof className[0] === "string"
+            ? className[0]
+            : "";
+      const language = firstClassName.match(/language-([a-z0-9+#-]+)/i)?.[1];
+
+      node.properties = {
+        ...node.properties,
+        code,
+        language,
+      };
+    });
+  };
+};

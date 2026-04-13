@@ -56,7 +56,8 @@
     "metaNotFoundTitle": "未找到文章",
     "notFoundTitle": "未找到文章",
     "notFoundDescription": "抱歉，你访问的文章不存在或已被删除。",
-    "backToPosts": "返回文章列表"
+    "backToPosts": "返回文章列表",
+    "tableOfContents": "目录"
   },
   "ThoughtCard": {
     "preview": "预览",

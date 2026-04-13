@@ -56,7 +56,8 @@
     "metaNotFoundTitle": "Post Not Found",
     "notFoundTitle": "Post Not Found",
     "notFoundDescription": "Sorry, the post you are looking for does not exist or has been deleted.",
-    "backToPosts": "Back to Posts"
+    "backToPosts": "Back to Posts",
+    "tableOfContents": "Contents"
   },
   "ThoughtCard": {
     "preview": "preview",
