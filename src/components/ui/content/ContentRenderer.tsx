@@ -1,21 +1,30 @@
 // src/components/ui/markdown/ContentRenderer.tsx
+
+import type { Options } from "react-markdown";
 import Markdown from "react-markdown";
 
+import rehypePrism from "rehype-prism-plus";
 import remarkDirective from "remark-directive";
 import remarkGfm from "remark-gfm";
 
-import { cn } from "@/lib/shared/utils";
+import { cn, rehypeHeadingIds } from "@/lib/shared/utils";
 import {
   DirectiveRender,
   remarkContentNodes,
 } from "./_components/directive-render";
 import { DIRECTIVE_RENDER_ELEMENT_NAME } from "./_components/directive-render/const";
-import { PreRender, rehypePlugins } from "./_components/PreRender";
+import { PreRender, rehypeCodeBlockProps } from "./_components/PreRender";
 
 interface Props {
   content: string;
   className?: string;
 }
+
+const rehypePlugins: Options["rehypePlugins"] = [
+  rehypeHeadingIds,
+  rehypeCodeBlockProps,
+  [rehypePrism, { ignoreMissing: true, showLineNumbers: true }],
+];
 
 export default function ContentRenderer({ content, className = "" }: Props) {
   return (
