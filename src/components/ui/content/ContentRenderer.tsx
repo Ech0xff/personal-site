@@ -1,5 +1,6 @@
 // src/components/ui/markdown/ContentRenderer.tsx
 
+import type { ComponentPropsWithoutRef } from "react";
 import type { Options } from "react-markdown";
 import Markdown from "react-markdown";
 
@@ -18,6 +19,14 @@ import { PreRender, rehypeCodeBlockProps } from "./_components/PreRender";
 interface Props {
   content: string;
   className?: string;
+}
+
+function TableRender(props: ComponentPropsWithoutRef<"table">) {
+  return (
+    <div className="overflow-x-auto">
+      <table {...props} />
+    </div>
+  );
 }
 
 const rehypePlugins: Options["rehypePlugins"] = [
@@ -40,6 +49,7 @@ export default function ContentRenderer({ content, className = "" }: Props) {
         components={
           {
             pre: PreRender,
+            table: TableRender,
             [DIRECTIVE_RENDER_ELEMENT_NAME]: DirectiveRender,
           } as Record<string, React.ElementType>
         }
