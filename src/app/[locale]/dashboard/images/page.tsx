@@ -38,7 +38,7 @@ export default function ImagesPage() {
             <button
               type="button"
               onClick={() => toggleSort("createdAt")}
-              className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+              className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 font-medium text-sm transition-colors ${
                 sortField === "createdAt"
                   ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
                   : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
@@ -53,7 +53,7 @@ export default function ImagesPage() {
             <button
               type="button"
               onClick={() => toggleSort("size")}
-              className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+              className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 font-medium text-sm transition-colors ${
                 sortField === "size"
                   ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
                   : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
@@ -67,7 +67,7 @@ export default function ImagesPage() {
 
           <Stack
             x
-            className="ml-auto items-center gap-2 text-xs font-medium text-zinc-600 dark:text-zinc-300"
+            className="ml-auto items-center gap-2 font-medium text-xs text-zinc-600 dark:text-zinc-300"
           >
             <span className="rounded-full border border-zinc-200 bg-white px-2.5 py-1 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
               {images.length} image{images.length !== 1 ? "s" : ""}
@@ -81,7 +81,7 @@ export default function ImagesPage() {
         {sortedImages.length === 0 ? (
           <Stack
             y
-            className="items-center justify-center rounded-lg border border-dashed border-zinc-300 py-12 text-zinc-500 dark:border-zinc-700 dark:text-zinc-400"
+            className="items-center justify-center rounded-lg border border-zinc-300 border-dashed py-12 text-zinc-500 dark:border-zinc-700 dark:text-zinc-400"
           >
             <HardDrive className="mb-2 h-12 w-12 opacity-50" />
             <p>No images found</p>
@@ -107,14 +107,14 @@ export default function ImagesPage() {
 
                 <div className="pointer-events-none absolute right-0 bottom-0 left-0 rounded-b-lg bg-linear-to-t from-black/70 to-transparent p-2 opacity-0 transition-opacity group-hover/card:opacity-100">
                   <p
-                    className="truncate text-xs text-white/90"
+                    className="truncate text-white/90 text-xs"
                     title={image.name}
                   >
                     {image.name}
                   </p>
                   <Stack
                     x
-                    className="items-center justify-between text-xs text-white/70"
+                    className="items-center justify-between text-white/70 text-xs"
                   >
                     <span>{formatSize(image.size)}</span>
                     <span>{formatTime(image.createdAt, "MMM D, YYYY")}</span>

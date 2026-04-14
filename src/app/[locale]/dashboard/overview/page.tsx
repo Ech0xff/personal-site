@@ -67,7 +67,7 @@ export default function DashboardPage() {
           y
         >
           <Stack y>
-            <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+            <h2 className="font-bold text-2xl text-zinc-900 dark:text-zinc-100">
               Welcome back!
             </h2>
             <p className="mt-1 text-zinc-500 dark:text-zinc-400">
@@ -101,7 +101,7 @@ export default function DashboardPage() {
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">
                     {stat.label}
                   </p>
-                  <p className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+                  <p className="font-bold text-2xl text-zinc-900 dark:text-zinc-100">
                     {stat.value}
                   </p>
                 </Stack>
@@ -112,7 +112,7 @@ export default function DashboardPage() {
 
         {/* Quick Actions */}
         <Stack y>
-          <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+          <h3 className="mb-4 font-semibold text-lg text-zinc-900 dark:text-zinc-100">
             Quick Actions
           </h3>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -140,7 +140,7 @@ export default function DashboardPage() {
 
         {/* Recent Activity Placeholder */}
         <Stack y>
-          <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+          <h3 className="mb-4 font-semibold text-lg text-zinc-900 dark:text-zinc-100">
             Recent Activity
           </h3>
           <div className="rounded-xl border border-zinc-200 bg-white p-8 text-center dark:border-zinc-800 dark:bg-zinc-900">

@@ -21,7 +21,7 @@ export default function ThoughtTimeline({
     <Stack
       y
       className={cn(
-        "my-6 gap-12 border-l border-zinc-200 py-2 pl-6 dark:border-zinc-800",
+        "my-6 gap-12 border-zinc-200 border-l py-2 pl-6 dark:border-zinc-800",
         className,
       )}
     >

@@ -16,11 +16,11 @@ import { useHooks } from "./use-hooks";
 
 const th = (title: string[]) => {
   return (
-    <tr className="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
+    <tr className="border-zinc-200 border-b bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
       {title.map((item) => (
         <th
           key={item}
-          className="px-6 py-3 text-center text-xs font-medium tracking-wider whitespace-nowrap text-zinc-500 uppercase dark:text-zinc-400"
+          className="whitespace-nowrap px-6 py-3 text-center font-medium text-xs text-zinc-500 uppercase tracking-wider dark:text-zinc-400"
         >
           {item}
         </th>

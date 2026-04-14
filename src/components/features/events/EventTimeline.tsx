@@ -46,7 +46,7 @@ export default function EventTimeline({
           <Stack y key={year} className="mb-12">
             {/* Year Title */}
             <Stack x className="mb-8 justify-center">
-              <h2 className="z-10 rounded-full bg-blue-500 px-4 py-1 text-lg font-bold text-white">
+              <h2 className="z-10 rounded-full bg-blue-500 px-4 py-1 font-bold text-lg text-white">
                 {year === "Unknown" ? tCommon("unknownYear") : year}
               </h2>
             </Stack>
@@ -66,8 +66,8 @@ export default function EventTimeline({
                   <div
                     className={cn(
                       "absolute z-10 aspect-square h-5 rounded-full duration-300",
-                      "top-0 left-1/2 -translate-1/2",
-                      "sm:top-1/2 sm:left-1/2 sm:-translate-1/2",
+                      "-translate-1/2 top-0 left-1/2",
+                      "sm:-translate-1/2 sm:top-1/2 sm:left-1/2",
                     )}
                     style={{ backgroundColor: event.color }}
                   />

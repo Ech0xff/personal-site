@@ -169,7 +169,7 @@ export default function PostEditor({
                   onChange={(e) => updateForm({ title: e.target.value })}
                   type="text"
                   placeholder="Enter post title..."
-                  className="w-full border-none text-xl font-semibold text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
+                  className="w-full border-none font-semibold text-xl text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
                 />
 
                 {/* Tags */}
@@ -226,7 +226,7 @@ export default function PostEditor({
                   value={form.content}
                   onChange={(e) => updateForm({ content: e.target.value })}
                   placeholder="Write your post content using Markdown..."
-                  className="h-full w-full resize-none bg-transparent font-mono leading-relaxed text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
+                  className="h-full w-full resize-none bg-transparent font-mono text-zinc-900 leading-relaxed outline-none placeholder:text-zinc-400 dark:text-zinc-100"
                 />
               </div>
             </Stack>
@@ -253,7 +253,7 @@ export default function PostEditor({
               <div className="min-h-0 flex-1 overflow-auto">
                 {/* Preview Title */}
                 {form.title ? (
-                  <h1 className="mb-4 text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+                  <h1 className="mb-4 font-bold text-2xl text-zinc-900 dark:text-zinc-100">
                     {form.title}
                   </h1>
                 ) : (

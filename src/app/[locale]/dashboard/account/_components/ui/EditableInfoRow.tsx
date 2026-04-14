@@ -55,7 +55,7 @@ export default function EditableInfoRow({
 
   return (
     <Stack y className="gap-1 sm:flex-row sm:items-center sm:gap-4">
-      <span className="w-36 shrink-0 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+      <span className="w-36 shrink-0 font-medium text-sm text-zinc-500 dark:text-zinc-400">
         {label}
       </span>
       <Stack x className="inline-flex items-center gap-1">
@@ -119,7 +119,7 @@ export default function EditableInfoRow({
             type="button"
             onClick={startEdit}
             disabled={saving}
-            className="text-xs font-medium text-zinc-500 transition hover:text-zinc-800 disabled:cursor-not-allowed disabled:opacity-50 dark:text-zinc-400 dark:hover:text-zinc-200"
+            className="font-medium text-xs text-zinc-500 transition hover:text-zinc-800 disabled:cursor-not-allowed disabled:opacity-50 dark:text-zinc-400 dark:hover:text-zinc-200"
           >
             Edit
           </button>

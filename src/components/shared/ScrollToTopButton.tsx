@@ -13,7 +13,7 @@ export default function ScrollToTopButton() {
   return (
     <button
       onClick={scrollToTop}
-      className="inline-flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-gray-900 dark:hover:text-gray-100"
+      className="inline-flex items-center gap-2 text-gray-500 text-sm transition-colors hover:text-gray-900 dark:hover:text-gray-100"
       type="button"
     >
       <ArrowUp className="h-4 w-4" />

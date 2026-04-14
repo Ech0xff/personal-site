@@ -31,8 +31,8 @@ export default function AnimationSection() {
       <Stack
         y
         className={cn(
-          "bg-brand-gradient absolute inset-0 h-dvh w-dvw snap-start items-center justify-center overflow-hidden transition-all",
-          "duration-300 in-data-[scrolled=true]:h-[60svh]",
+          "absolute inset-0 h-dvh w-dvw snap-start items-center justify-center overflow-hidden bg-brand-gradient transition-all",
+          "in-data-[scrolled=true]:h-[60svh] duration-300",
         )}
       >
         <AnimatedGridBackground />
@@ -53,7 +53,7 @@ export default function AnimationSection() {
             <Typewriter />
 
             <div
-              className="mt-8 text-[6em] font-black"
+              className="mt-8 font-black text-[6em]"
               style={{
                 fontFamily:
                   '"Savoye LET", "Snell Roundhand", "Segoe Script", "Gabriola", cursive',

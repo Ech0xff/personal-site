@@ -10,10 +10,10 @@ export default function EditorHeader({
   return (
     <Stack
       x
-      className="shrink-0 items-center justify-between border-b border-zinc-200 px-6 py-4 dark:border-zinc-800"
+      className="shrink-0 items-center justify-between border-zinc-200 border-b px-6 py-4 dark:border-zinc-800"
     >
       <Stack x className="min-w-0 items-center gap-4">
-        <h1 className="truncate text-xl font-semibold text-zinc-900 dark:text-zinc-100">
+        <h1 className="truncate font-semibold text-xl text-zinc-900 dark:text-zinc-100">
           {title}
         </h1>
       </Stack>

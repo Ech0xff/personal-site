@@ -38,7 +38,7 @@ interface Props {
 const cardClassName = cn(
   "not-prose my-4 flex h-32 w-full overflow-hidden rounded-lg border border-zinc-200 bg-white no-underline shadow-sm transition-colors",
   "hover:border-zinc-300 hover:bg-zinc-50",
-  "focus-visible:ring-2 focus-visible:ring-sky-500/40 focus-visible:outline-none",
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/40",
   "dark:border-zinc-600/80 dark:bg-[#18181b] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_12px_28px_rgba(0,0,0,0.32)]",
   "dark:hover:border-zinc-500 dark:hover:bg-[#202024]",
 );
@@ -77,7 +77,7 @@ function MetaError({ message, url }: { message: string; url: string }) {
       className={cn(
         "not-prose my-4 flex h-20 w-full items-center gap-3 overflow-hidden rounded-lg border border-rose-200 bg-rose-50/80 p-4 no-underline shadow-sm",
         "text-rose-950 hover:bg-rose-50",
-        "focus-visible:ring-2 focus-visible:ring-rose-500/40 focus-visible:outline-none",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500/40",
         "dark:border-rose-900/60 dark:bg-rose-950/35 dark:text-rose-100 dark:hover:bg-rose-950/50",
       )}
       href={url}
@@ -114,7 +114,7 @@ function MetaContent({
       rel="noopener noreferrer"
     >
       <span className="flex min-h-0 min-w-0 flex-1 flex-col justify-between gap-2 p-4">
-        <span className="flex min-w-0 items-center gap-2 text-xs leading-none font-medium text-zinc-500 dark:text-zinc-400">
+        <span className="flex min-w-0 items-center gap-2 font-medium text-xs text-zinc-500 leading-none dark:text-zinc-400">
           <span className="flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded bg-zinc-100 text-zinc-500 dark:bg-zinc-700 dark:text-zinc-200">
             {logoUrl ? (
               <Image
@@ -139,21 +139,21 @@ function MetaContent({
           />
         </span>
         <span className="block min-w-0 space-y-1 overflow-hidden">
-          <span className="m-0 block truncate text-base leading-snug font-semibold text-zinc-950 dark:text-zinc-50">
+          <span className="m-0 block truncate font-semibold text-base text-zinc-950 leading-snug dark:text-zinc-50">
             {cardTitle}
           </span>
           {metadata.description ? (
-            <span className="m-0 block truncate text-sm leading-5 text-zinc-600 dark:text-zinc-300">
+            <span className="m-0 block truncate text-sm text-zinc-600 leading-5 dark:text-zinc-300">
               {metadata.description}
             </span>
           ) : null}
         </span>
-        <span className="truncate text-xs leading-none text-zinc-500 dark:text-zinc-400">
+        <span className="truncate text-xs text-zinc-500 leading-none dark:text-zinc-400">
           {hostname}
         </span>
       </span>
       {imageUrl ? (
-        <span className="relative hidden w-36 shrink-0 border-l border-zinc-200 bg-zinc-100 sm:block dark:border-zinc-600/80 dark:bg-[#111113]">
+        <span className="relative hidden w-36 shrink-0 border-zinc-200 border-l bg-zinc-100 sm:block dark:border-zinc-600/80 dark:bg-[#111113]">
           <Image
             className="m-0 h-full w-full object-cover"
             src={imageUrl}

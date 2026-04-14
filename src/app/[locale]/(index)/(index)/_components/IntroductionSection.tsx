@@ -86,7 +86,7 @@ export async function IntroductionSection({
             const content = (
               <>
                 <Stack x className="relative z-10 h-full justify-between">
-                  <Stack className="text-xs font-medium text-slate-400">
+                  <Stack className="font-medium text-slate-400 text-xs">
                     {item.name}
                   </Stack>
                 </Stack>
@@ -151,10 +151,10 @@ export async function IntroductionSection({
               y
               className="rounded-2xl bg-slate-50 p-4 transition-transform duration-300 hover:scale-105 dark:bg-white/5"
             >
-              <Stack className="text-xs font-medium tracking-wider text-slate-400 uppercase">
+              <Stack className="font-medium text-slate-400 text-xs uppercase tracking-wider">
                 {item.label}
               </Stack>
-              <Stack className="mt-1 text-2xl font-bold text-slate-700 dark:text-slate-200">
+              <Stack className="mt-1 font-bold text-2xl text-slate-700 dark:text-slate-200">
                 {item.count}
               </Stack>
             </Stack>

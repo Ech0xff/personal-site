@@ -12,13 +12,13 @@ export default function ThemeToggle({ className }: { className?: string }) {
       type="button"
       onClick={toggleHandler}
       className={cn(
-        "hover:bg-theme-hover rounded-lg p-2 transition-colors",
+        "rounded-lg p-2 transition-colors hover:bg-theme-hover",
         className,
       )}
     >
-      <Sun className="hidden h-5 w-5 in-[.light]:block" />
-      <Moon className="hidden h-5 w-5 in-[.dark]:block" />
-      <Monitor className="hidden h-5 w-5 in-[.system]:block" />
+      <Sun className="in-[.light]:block hidden h-5 w-5" />
+      <Moon className="in-[.dark]:block hidden h-5 w-5" />
+      <Monitor className="in-[.system]:block hidden h-5 w-5" />
     </button>
   );
 }

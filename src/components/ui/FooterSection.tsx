@@ -5,7 +5,7 @@ export default function FooterSection() {
         <div className="h-px w-full bg-linear-to-r from-transparent via-slate-200 to-transparent dark:via-slate-800" />
       </div>
 
-      <div className="flex flex-col items-center gap-2 font-mono text-sm text-slate-400 dark:text-slate-500">
+      <div className="flex flex-col items-center gap-2 font-mono text-slate-400 text-sm dark:text-slate-500">
         <p>© 2025 Muyu. All rights reserved.</p>
         <div className="flex items-center gap-3 text-xs opacity-70">
           <span className="cursor-default transition-colors hover:text-slate-600 dark:hover:text-slate-300">

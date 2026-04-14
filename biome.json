@@ -39,6 +39,14 @@
       "performance": {
         "noImgElement": "off"
       },
+      "nursery": {
+        "useSortedClasses": {
+          "level": "warn",
+          "options": {
+            "functions": ["clsx", "cn", "cva", "tw", "tw.*"]
+          }
+        }
+      },
       "security": {
         "noDangerouslySetInnerHtml": "off"
       },
