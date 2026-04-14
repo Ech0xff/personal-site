@@ -23,7 +23,7 @@ interface Props {
 
 function TableRender(props: ComponentPropsWithoutRef<"table">) {
   return (
-    <div className="overflow-x-auto">
+    <div className="scrollbar-visible overflow-x-auto overscroll-x-contain">
       <table {...props} />
     </div>
   );
