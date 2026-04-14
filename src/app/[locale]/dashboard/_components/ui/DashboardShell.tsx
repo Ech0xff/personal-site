@@ -56,7 +56,7 @@ export default function DashboardShell({
       className={cn("relative flex-1 overflow-hidden *:p-4", className)}
     >
       <Stack x className="items-center justify-between">
-        <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+        <h2 className="font-bold text-2xl text-zinc-900 dark:text-zinc-100">
           {title}
         </h2>
         {optActions && <div>{optActions}</div>}

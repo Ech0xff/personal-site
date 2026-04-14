@@ -71,7 +71,7 @@ async function Navbar({
     <Link
       key={item.path}
       href={item.path}
-      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+      className="flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium text-sm text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
     >
       <item.icon className="h-5 w-5 shrink-0" />
       <div>{item.name}</div>
@@ -90,7 +90,7 @@ async function Navbar({
       <Stack x className="gap-2">
         <Link
           href={`/${locale}`}
-          className="flex items-center gap-2 text-lg font-semibold text-zinc-900 transition-colors hover:text-blue-600 dark:text-zinc-100 dark:hover:text-blue-400"
+          className="flex items-center gap-2 font-semibold text-lg text-zinc-900 transition-colors hover:text-blue-600 dark:text-zinc-100 dark:hover:text-blue-400"
         >
           <ArrowLeft className="h-5 w-5" />
           <div>Back</div>

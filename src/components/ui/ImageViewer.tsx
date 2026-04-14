@@ -74,11 +74,11 @@ export function ImageViewer({ children }: { children: ReactNode }) {
 
       {image && (
         <div
-          className="animate-in fixed inset-0 z-10000 bg-black/90 backdrop-blur-sm duration-200"
+          className="fixed inset-0 z-10000 animate-in bg-black/90 backdrop-blur-sm duration-200"
           onClick={close}
         >
           <div
-            className="fixed bottom-4 left-1/2 z-10 flex -translate-x-1/2 items-center overflow-hidden rounded-md border border-zinc-700 bg-zinc-950/95 text-white shadow-lg shadow-black/40 backdrop-blur-md"
+            className="fixed bottom-4 left-1/2 z-10 flex -translate-x-1/2 items-center overflow-hidden rounded-md border border-zinc-700 bg-zinc-950/95 text-white shadow-black/40 shadow-lg backdrop-blur-md"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -90,7 +90,7 @@ export function ImageViewer({ children }: { children: ReactNode }) {
             >
               <Minus className="size-5" />
             </button>
-            <span className="min-w-14 px-1 text-center text-sm font-medium tabular-nums">
+            <span className="min-w-14 px-1 text-center font-medium text-sm tabular-nums">
               {scale}%
             </span>
             <button

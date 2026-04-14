@@ -53,7 +53,7 @@ export default async function PostPage({ params }: Props) {
   if (!post || post.status !== "show") {
     return (
       <div className="py-20 text-center">
-        <h1 className="mb-4 text-3xl font-bold">{t("notFoundTitle")}</h1>
+        <h1 className="mb-4 font-bold text-3xl">{t("notFoundTitle")}</h1>
         <p className="mb-8 text-gray-500 dark:text-gray-400">
           {t("notFoundDescription")}
         </p>
@@ -73,15 +73,15 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <>
-      <article className="mx-auto w-full flex flex-col flex-1 px-4 pt-10 pb-10">
+      <article className="mx-auto flex w-full flex-1 flex-col px-4 pt-10 pb-10">
         {/* Header */}
         <header>
           <div className="mb-4 flex flex-col gap-4 text-4xl sm:flex-row sm:items-start sm:justify-between">
-            <h1 className="leading-tight font-bold">{post.title}</h1>
+            <h1 className="font-bold leading-tight">{post.title}</h1>
             <CopyButton content={content} className="text-base" />
           </div>
 
-          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+          <div className="flex flex-wrap items-center gap-4 text-gray-500 text-sm dark:text-gray-400">
             {post.author && (
               <span className="flex items-center gap-1">
                 <User className="h-4 w-4" />
@@ -102,7 +102,7 @@ export default async function PostPage({ params }: Props) {
               {post.tags.map((tag: string) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800 dark:bg-gray-800 dark:text-gray-200"
+                  className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 font-medium text-gray-800 text-xs dark:bg-gray-800 dark:text-gray-200"
                 >
                   #{tag}
                 </span>
@@ -122,7 +122,7 @@ export default async function PostPage({ params }: Props) {
           <div className="flex items-center justify-between">
             <Link
               href="/posts"
-              className="flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-gray-900 dark:hover:text-gray-100"
+              className="flex items-center gap-2 text-gray-500 text-sm transition-colors hover:text-gray-900 dark:hover:text-gray-100"
             >
               <ArrowLeft className="h-4 w-4" />
               {t("backToPosts")}

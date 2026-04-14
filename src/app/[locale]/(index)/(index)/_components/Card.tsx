@@ -9,7 +9,7 @@ export default function Card({
 }) {
   return (
     <Stack y className="z-1 w-full">
-      <h3 className="mb-4 flex items-center gap-2 text-xl font-bold">
+      <h3 className="mb-4 flex items-center gap-2 font-bold text-xl">
         <Stack className="h-5 w-1 rounded-full bg-gray-600" />
         {title}
       </h3>

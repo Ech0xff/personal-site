@@ -35,12 +35,12 @@ export default function LanguageToggle({ className }: { className?: string }) {
       href={targetPath}
       aria-label={targetLocale}
       className={cn(
-        "hover:bg-theme-hover inline-flex items-center gap-1 rounded-lg p-2 transition-colors",
+        "inline-flex items-center gap-1 rounded-lg p-2 transition-colors hover:bg-theme-hover",
         className,
       )}
     >
       <Languages className="h-4 w-4" />
-      <span className="text-xs font-medium">{label}</span>
+      <span className="font-medium text-xs">{label}</span>
     </a>
   );
 }

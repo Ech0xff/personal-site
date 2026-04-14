@@ -64,7 +64,7 @@ export default function IdentityCard({
           <Icon className="h-4 w-4" />
         </Stack>
         <Stack y>
-          <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+          <p className="font-medium text-sm text-zinc-900 dark:text-zinc-100">
             {config.label}
           </p>
           <p className="text-xs text-zinc-500 dark:text-zinc-400">
@@ -80,7 +80,7 @@ export default function IdentityCard({
           type="button"
           disabled={!canUnlink || unlinking}
           onClick={() => onUnlink(identity)}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 transition-all hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 px-3 py-1.5 font-medium text-red-600 text-xs transition-all hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
         >
           {unlinking ? (
             <Loader2 className="h-3 w-3 animate-spin" />
