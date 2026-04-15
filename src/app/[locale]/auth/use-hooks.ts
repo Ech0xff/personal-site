@@ -107,12 +107,12 @@ export const useHooks = () => {
     redirect("/auth");
   };
 
-  const handleLoginWithOauth = async () => {
+  const handleLoginWithOauth = async (provider: string) => {
     const origin = window.location.origin;
     const toastId = toast.loading(t("startingOAuthLogin"));
 
     const { data, error } = await client.auth.signInWithOAuth({
-      provider: "github",
+      provider: provider as "github" | "google",
       options: {
         redirectTo: `${origin}/api/auth/callback`,
       },

@@ -1,6 +1,5 @@
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
-import { Toaster } from "sonner";
 
 import { ImageViewer } from "@/components/ui/ImageViewer";
 import { routing } from "@/lib/shared/i18n/routing";
@@ -9,6 +8,8 @@ import { InitScript } from "@/lib/shared/themeInitScript";
 import "@/styles/globals.scss";
 import "@/styles/tailwind.css";
 import "@/styles/variables.scss";
+import { Suspense } from "react";
+import ToastWatcher from "@/features/toast-watcher";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -47,7 +48,9 @@ export default async function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: InitScript }} />
       </head>
       <body>
-        <Toaster position="top-center" richColors />
+        <Suspense fallback={null}>
+          <ToastWatcher />
+        </Suspense>
         <SpeedInsights />
         <ImageViewer>{children}</ImageViewer>
       </body>
