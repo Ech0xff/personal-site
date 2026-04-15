@@ -85,12 +85,15 @@
     "creatingAccount": "Creating account...",
     "passwordsDoNotMatch": "Passwords do not match",
     "errorRegisteringUser": "Error registering user",
+    "emailReservedForOauth": "This email is already registered.",
     "accountCreatedSuccessfully": "Account created successfully.",
     "loggingOut": "Logging out...",
     "errorLoggingOut": "Error logging out",
     "loggedOutSuccessfully": "Logged out successfully.",
     "startingOAuthLogin": "Starting OAuth login...",
     "errorLoggingInWithOAuth": "Error logging in with OAuth",
+    "oauthRequiresPrimary": "No matching account was found. Please register with your email account first.",
+    "oauthLoginFailedTryAgain": "OAuth login failed. Please try again.",
     "redirectingToOAuthProvider": "Redirecting to OAuth provider..."
   },
   "errorPage": {

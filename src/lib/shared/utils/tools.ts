@@ -98,6 +98,15 @@ export const formatSize = (bytes: number) => {
   return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
 };
 
+export const hasEmailIdentity = (user?: {
+  identities?: Array<{ provider?: string }> | null;
+}) =>
+  Boolean(user?.identities?.some((identity) => identity.provider === "email"));
+
+export const isAllowedPrimaryAccount = (user?: {
+  identities?: Array<{ provider?: string }> | null;
+}) => hasEmailIdentity(user);
+
 /** Checks if a user is logged in */
 export const checkLoggedIn = async (
   client: SupabaseClient,

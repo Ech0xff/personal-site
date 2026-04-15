@@ -1,6 +1,6 @@
 @use "@/styles/mixins" as *;
 
-.pre-render-code-block {
+:root {
   --code-fg: #24292f;
   --code-comment: #6e7781;
   --code-keyword: #cf222e;
@@ -24,7 +24,9 @@
     --code-operator: #c9d1d9;
     --code-regex: #7ee787;
   }
-  
+}
+
+.pre-render-code-block {
   color: var(--code-fg);
 
   .line-number::before {
