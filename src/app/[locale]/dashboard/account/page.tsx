@@ -1,9 +1,12 @@
 "use client";
 
 import { Shield, User as UserIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 import SectionCard from "@/components/ui/SectionCard";
 import Stack from "@/components/ui/Stack";
+import { oauthProviders, providerConfig } from "@/lib/shared/config/oauth";
+import { getT } from "@/lib/shared/i18n";
 import { formatTime } from "@/lib/shared/utils";
 
 import DashboardShell from "../_components/ui/DashboardShell";
@@ -13,6 +16,9 @@ import InfoRow from "./_components/ui/InfoRow";
 import { useAccount } from "./hooks/useAccount";
 
 export default function AccountPage() {
+  const pathname = usePathname();
+  const locale = pathname.split("/")[1];
+  const t = getT("auth", locale);
   const { accountObj, loading, handleSaveNickname, handleLink, handleUnlink } =
     useAccount();
 
@@ -82,35 +88,36 @@ export default function AccountPage() {
               </Stack>
 
               {/* Link new providers */}
-              <Stack y>
-                <p className="mb-3 font-medium text-sm text-zinc-700 dark:text-zinc-300">
-                  Link a new provider
-                </p>
-                <Stack x className="gap-2">
-                  {!accountObj.identities!.some(
-                    (identity) => identity.provider === "github",
-                  ) && (
-                    <button
-                      type="button"
-                      onClick={() => handleLink("github")}
-                      className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-4 py-2 font-medium text-sm text-zinc-900 transition-all hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
-                    >
-                      Link GitHub
-                    </button>
-                  )}
-                  {!accountObj.identities!.some(
-                    (identity) => identity.provider === "google",
-                  ) && (
-                    <button
-                      type="button"
-                      onClick={() => handleLink("google")}
-                      className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-4 py-2 font-medium text-sm text-zinc-900 transition-all hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
-                    >
-                      Link Google
-                    </button>
-                  )}
+              {oauthProviders.length > 0 && (
+                <Stack y>
+                  <p className="mb-3 font-medium text-sm text-zinc-700 dark:text-zinc-300">
+                    Link a new provider
+                  </p>
+                  <Stack x className="flex-wrap gap-2">
+                    {oauthProviders
+                      .filter(
+                        (provider) =>
+                          !accountObj.identities!.some(
+                            (identity) => identity.provider === provider,
+                          ),
+                      )
+                      .map((provider) => {
+                        const config = providerConfig[provider];
+                        return (
+                          <button
+                            key={provider}
+                            type="button"
+                            onClick={() => handleLink(provider)}
+                            className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-4 py-2 font-medium text-sm text-zinc-900 transition-all hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
+                          >
+                            <config.icon className="h-4 w-4" />
+                            {t("linkProvider", { provider: config.label })}
+                          </button>
+                        );
+                      })}
+                  </Stack>
                 </Stack>
-              </Stack>
+              )}
             </SectionCard>
           </Stack>
         </>

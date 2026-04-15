@@ -1,31 +1,10 @@
 import type { UserIdentity } from "@supabase/supabase-js";
-import { Github, Link2, Link2Off, Loader2, Mail } from "lucide-react";
-
+import { Link2, Link2Off, Loader2 } from "lucide-react";
 import Stack from "@/components/ui/Stack";
+import { providerConfig } from "@/lib/shared/config/oauth";
 
 const isPrimaryIdentity = (identity: UserIdentity) =>
   identity.provider === "email";
-
-const providerConfig: Record<
-  string,
-  { label: string; icon: React.ElementType; color: string }
-> = {
-  github: {
-    label: "GitHub",
-    icon: Github,
-    color: "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900",
-  },
-  google: {
-    label: "Google",
-    icon: Mail,
-    color: "bg-red-500 text-white",
-  },
-  email: {
-    label: "Email / Password",
-    icon: Mail,
-    color: "bg-blue-500 text-white",
-  },
-};
 
 export default function IdentityCard({
   identity,
@@ -35,7 +14,7 @@ export default function IdentityCard({
   onUnlink: (identity: UserIdentity) => void;
 }) {
   const provider = identity.provider;
-  const config = providerConfig[provider] ?? {
+  const config = providerConfig[provider as keyof typeof providerConfig] ?? {
     label: provider,
     icon: Link2,
     color: "bg-zinc-500 text-white",

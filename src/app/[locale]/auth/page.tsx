@@ -1,12 +1,8 @@
 "use client";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { FormEvent } from "react";
-import { useEffect } from "react";
 
-import { toast } from "sonner";
-
-import SvgGithub from "@/components/icons/Github";
 import Link from "@/components/ui/Link";
+import { oauthProviders, providerConfig } from "@/lib/shared/config/oauth";
 
 import { useHooks } from "./use-hooks";
 
@@ -17,29 +13,9 @@ export default function PageClient() {
     form,
     updateForm,
     handleSubmit,
-    handleLoginWithOauth: loginWithGithub,
+    handleLoginWithOauth,
     t,
   } = useHooks();
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
-  const error = searchParams.get("error");
-
-  useEffect(() => {
-    if (!error) return;
-
-    const errorMessage =
-      error === "oauth_requires_primary"
-        ? t("oauthRequiresPrimary")
-        : error === "oauth"
-          ? t("oauthLoginFailedTryAgain")
-          : null;
-
-    if (!errorMessage) return;
-
-    toast.error(errorMessage);
-    router.replace(pathname);
-  }, [error, pathname, router, t]);
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -161,29 +137,35 @@ export default function PageClient() {
           </form>
 
           {/* Divider */}
-          <div className="my-6 flex items-center gap-4">
-            <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-700" />
-            <span className="text-sm text-zinc-400 dark:text-zinc-500">
-              {t("or")}
-            </span>
-            <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-700" />
-          </div>
+          {oauthProviders.length > 0 && (
+            <>
+              <div className="my-6 flex items-center gap-4">
+                <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-700" />
+                <span className="text-sm text-zinc-400 dark:text-zinc-500">
+                  {t("or")}
+                </span>
+                <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-700" />
+              </div>
 
-          {/* GitHub OAuth */}
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              void loginWithGithub();
-            }}
-          >
-            <button
-              type="submit"
-              className="flex w-full items-center justify-center gap-3 rounded-lg border border-zinc-300 bg-white px-4 py-3 font-medium text-zinc-900 transition-all duration-200 hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-300 focus:ring-offset-2 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
-            >
-              <SvgGithub className="h-5 w-5" />
-              {t("continueWithGithub")}
-            </button>
-          </form>
+              <div className="flex flex-col gap-3">
+                {oauthProviders.map((provider) => {
+                  const config = providerConfig[provider];
+                  const Icon = config.icon;
+                  return (
+                    <button
+                      key={provider}
+                      type="button"
+                      onClick={() => void handleLoginWithOauth(provider)}
+                      className="flex w-full items-center justify-center gap-3 rounded-lg border border-zinc-300 bg-white px-4 py-3 font-medium text-zinc-900 transition-all duration-200 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
+                    >
+                      <Icon className="h-5 w-5" />
+                      {t("continueWith", { provider: config.label })}
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </div>
 
         <p className="mt-6 text-center text-sm text-zinc-500 dark:text-zinc-400">

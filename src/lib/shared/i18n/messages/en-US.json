@@ -63,6 +63,10 @@
     "preview": "preview",
     "imageAlt": "Thought image {index}"
   },
+  "ToastCodes": {
+    "oauthRequiresPrimary": "No matching account was found. Please register with your email account first.",
+    "oauthLoginFailedTryAgain": "OAuth login failed. Please try again."
+  },
   "auth": {
     "welcomeBack": "Welcome Back",
     "createAccount": "Create Account",
@@ -78,6 +82,9 @@
     "repeatYourPassword": "Repeat your password",
     "or": "or",
     "continueWithGithub": "Continue with GitHub",
+    "continueWithGoogle": "Continue with Google",
+    "continueWith": "Continue with {provider}",
+    "linkProvider": "Link {provider}",
     "backToHome": "Back to home",
     "loggingIn": "Logging in...",
     "invalidEmailOrPassword": "Invalid email or password",
@@ -92,8 +99,6 @@
     "loggedOutSuccessfully": "Logged out successfully.",
     "startingOAuthLogin": "Starting OAuth login...",
     "errorLoggingInWithOAuth": "Error logging in with OAuth",
-    "oauthRequiresPrimary": "No matching account was found. Please register with your email account first.",
-    "oauthLoginFailedTryAgain": "OAuth login failed. Please try again.",
     "redirectingToOAuthProvider": "Redirecting to OAuth provider..."
   },
   "errorPage": {
