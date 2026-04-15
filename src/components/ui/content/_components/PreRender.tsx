@@ -5,7 +5,7 @@ import { visit } from "unist-util-visit";
 import CopyButton from "@/components/ui/CopyButton";
 import { cn, encodePlantUml } from "@/lib/shared/utils";
 import Image from "../../Image";
-import styles from "./PreRender.module.css";
+import "./PreRender.scss";
 
 interface Props extends ComponentPropsWithoutRef<"pre"> {
   code?: string;
@@ -26,7 +26,10 @@ function CodeBlockRender({
         <span className="truncate">{language}</span>
         <CopyButton content={code} className="text-xs" />
       </div>
-      <pre {...props} className={cn("p-3", styles.codeBlock)}>
+      <pre
+        {...props}
+        className={cn("pre-render-code-block p-3", props.className)}
+      >
         {children}
       </pre>
     </div>
