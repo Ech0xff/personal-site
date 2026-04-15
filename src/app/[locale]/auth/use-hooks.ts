@@ -28,7 +28,8 @@ export const useHooks = () => {
   const [mode, setModeState] = useState<Mode>("login");
   const [form, setForm] = useState<AuthForm>(initialForm);
 
-  const t = getT("auth", usePathname().split("/")[1]);
+  const pathname = usePathname();
+  const t = getT("auth", pathname.split("/")[1]);
   const updateForm = (updates: Partial<AuthForm>) => {
     setForm((current) => ({ ...current, ...updates }));
   };
@@ -66,7 +67,6 @@ export const useHooks = () => {
     confirmPassword,
   }: AuthForm) => {
     const toastId = toast.loading(t("creatingAccount"));
-
     if (!email || !password) {
       toast.error(t("invalidEmailOrPassword"), { id: toastId });
       return;
@@ -77,13 +77,18 @@ export const useHooks = () => {
       return;
     }
 
-    const { error } = await client.auth.signUp({
+    const { data, error } = await client.auth.signUp({
       email,
       password,
     });
 
     if (error) {
       toast.error(t("errorRegisteringUser"), { id: toastId });
+      return;
+    }
+
+    if (data.user?.email) {
+      toast.error(t("emailReservedForOauth"), { id: toastId });
       return;
     }
 
@@ -109,7 +114,7 @@ export const useHooks = () => {
     const { data, error } = await client.auth.signInWithOAuth({
       provider: "github",
       options: {
-        redirectTo: `${origin}/auth/callback?next=/dashboard/account`,
+        redirectTo: `${origin}/api/auth/callback`,
       },
     });
 

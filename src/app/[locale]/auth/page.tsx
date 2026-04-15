@@ -1,5 +1,9 @@
 "use client";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { FormEvent } from "react";
+import { useEffect } from "react";
+
+import { toast } from "sonner";
 
 import SvgGithub from "@/components/icons/Github";
 import Link from "@/components/ui/Link";
@@ -16,6 +20,26 @@ export default function PageClient() {
     handleLoginWithOauth: loginWithGithub,
     t,
   } = useHooks();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const error = searchParams.get("error");
+
+  useEffect(() => {
+    if (!error) return;
+
+    const errorMessage =
+      error === "oauth_requires_primary"
+        ? t("oauthRequiresPrimary")
+        : error === "oauth"
+          ? t("oauthLoginFailedTryAgain")
+          : null;
+
+    if (!errorMessage) return;
+
+    toast.error(errorMessage);
+    router.replace(pathname);
+  }, [error, pathname, router, t]);
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

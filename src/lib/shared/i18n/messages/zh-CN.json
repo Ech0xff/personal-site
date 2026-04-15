@@ -85,12 +85,15 @@
     "creatingAccount": "正在创建账号...",
     "passwordsDoNotMatch": "两次输入的密码不一致",
     "errorRegisteringUser": "注册用户失败",
+    "emailReservedForOauth": "该邮箱已被注册。",
     "accountCreatedSuccessfully": "账号创建成功。",
     "loggingOut": "正在退出登录...",
     "errorLoggingOut": "退出登录失败",
     "loggedOutSuccessfully": "已退出登录。",
     "startingOAuthLogin": "正在启动 OAuth 登录...",
     "errorLoggingInWithOAuth": "OAuth 登录失败",
+    "oauthRequiresPrimary": "没有找到对应的账号，请先使用邮箱账号注册。",
+    "oauthLoginFailedTryAgain": "OAuth 登录失败，请重试。",
     "redirectingToOAuthProvider": "正在跳转到 OAuth 提供方..."
   },
   "errorPage": {

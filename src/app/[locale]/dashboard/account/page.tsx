@@ -67,17 +67,16 @@ export default function AccountPage() {
               {TitleRender("Connected Accounts", Shield)}
               <Stack y className="gap-4 pb-4">
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Manage the login methods linked to your account. You must keep
-                  at least one login method active.
+                  Email / Password is your primary account and cannot be
+                  removed. GitHub and Google are linked sign-in methods you can
+                  add or remove from this page.
                 </p>
                 {accountObj &&
                   accountObj.identities!.map((identity) => (
                     <IdentityCard
                       key={identity.id}
                       identity={identity}
-                      canUnlink={identity.provider !== "email"}
                       onUnlink={handleUnlink}
-                      unlinking={false}
                     />
                   ))}
               </Stack>
