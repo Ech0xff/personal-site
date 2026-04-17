@@ -1,10 +1,10 @@
 "use client";
 
 import { Shield, User as UserIcon } from "lucide-react";
-import { usePathname } from "next/navigation";
 
 import SectionCard from "@/components/ui/SectionCard";
 import Stack from "@/components/ui/Stack";
+import { useCurrentLocale } from "@/lib/client/locale";
 import { oauthProviders, providerConfig } from "@/lib/shared/config/oauth";
 import { getT } from "@/lib/shared/i18n";
 import { formatTime } from "@/lib/shared/utils";
@@ -16,8 +16,7 @@ import InfoRow from "./_components/ui/InfoRow";
 import { useAccount } from "./hooks/useAccount";
 
 export default function AccountPage() {
-  const pathname = usePathname();
-  const locale = pathname.split("/")[1];
+  const locale = useCurrentLocale();
   const t = getT("auth", locale);
   const { accountObj, loading, handleSaveNickname, handleLink, handleUnlink } =
     useAccount();

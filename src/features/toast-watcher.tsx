@@ -2,8 +2,9 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { Toaster, toast } from "sonner";
+
+import { useCurrentLocale } from "@/lib/client/locale";
 import { getT } from "@/lib/shared/i18n";
-import { routing } from "@/lib/shared/i18n/routing";
 import {
   readToastFromSearchParams,
   type ToastType,
@@ -13,9 +14,8 @@ export default function ToastWatcher() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
-  const locale = pathname.split("/")[1] || routing.defaultLocale;
+  const locale = useCurrentLocale();
   const t = getT("ToastCodes", locale);
-
   const payload = readToastFromSearchParams(searchParams);
 
   useEffect(() => {

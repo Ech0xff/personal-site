@@ -1,8 +1,8 @@
 "use client";
 import NextLink from "next/link";
-import { usePathname } from "next/navigation";
 
-import { routing } from "@/lib/shared/i18n/routing";
+import { useCurrentLocale } from "@/lib/client/locale";
+import { localizeHref } from "@/lib/shared/i18n";
 
 interface Props {
   children: React.ReactNode;
@@ -11,11 +11,10 @@ interface Props {
   title?: string;
 }
 export default function Link({ children, href, ...props }: Props) {
-  const pathname = usePathname();
-  const locale = pathname.split("/")[1] || routing.defaultLocale;
+  const locale = useCurrentLocale();
 
   return (
-    <NextLink href={`/${locale}${href}`} {...props}>
+    <NextLink href={localizeHref(locale, href)} {...props}>
       {children}
     </NextLink>
   );

@@ -1,7 +1,7 @@
 "use client";
-import { usePathname } from "next/navigation";
 
 import ThoughtTimeline from "@/components/features/thoughts/ThoughtTimeline";
+import { useCurrentLocale } from "@/lib/client/locale";
 
 import EditorProvider from "../_components/EditorProvider";
 import DashboardShell from "../_components/ui/DashboardShell";
@@ -11,8 +11,7 @@ import ThoughtEditor, { OpenButton } from "./_components/ThoughtEditor";
 import { useHooks } from "./use-hooks";
 
 export default function ThoughtsPage() {
-  const pathname = usePathname();
-  const locale = pathname.split("/")[1];
+  const locale = useCurrentLocale();
   const { thoughts, loading, error, syncStatus, removeThought, refetch } =
     useHooks();
 

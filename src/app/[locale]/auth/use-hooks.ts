@@ -1,12 +1,14 @@
 "use client";
 
-import { redirect, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { toast } from "sonner";
 
+import { useCurrentLocale } from "@/lib/client/locale";
 import { makeBrowserClient } from "@/lib/client/supabase";
 import { getT } from "@/lib/shared/i18n";
+import { getLocalizedRoutes } from "@/lib/shared/routes";
 
 type Mode = "login" | "register";
 
@@ -24,12 +26,12 @@ const initialForm: AuthForm = {
 
 export const useHooks = () => {
   const client = makeBrowserClient();
-
+  const router = useRouter();
+  const locale = useCurrentLocale();
+  const routes = getLocalizedRoutes(locale);
   const [mode, setModeState] = useState<Mode>("login");
   const [form, setForm] = useState<AuthForm>(initialForm);
-
-  const pathname = usePathname();
-  const t = getT("auth", pathname.split("/")[1]);
+  const t = getT("auth", locale);
   const updateForm = (updates: Partial<AuthForm>) => {
     setForm((current) => ({ ...current, ...updates }));
   };
@@ -58,7 +60,7 @@ export const useHooks = () => {
     }
 
     toast.success(t("loggedInSuccessfully"), { id: toastId });
-    redirect("/dashboard/account");
+    router.replace(routes.DASHBOARD.ACCOUNT);
   };
 
   const handleRegister = async ({
@@ -93,7 +95,7 @@ export const useHooks = () => {
     }
 
     toast.success(t("accountCreatedSuccessfully"), { id: toastId });
-    redirect("/dashboard/account");
+    router.replace(routes.DASHBOARD.ACCOUNT);
   };
 
   const handleLogout = async () => {
@@ -104,7 +106,7 @@ export const useHooks = () => {
       return;
     }
     toast.success(t("loggedOutSuccessfully"), { id: toastId });
-    redirect("/auth");
+    router.replace(routes.AUTH);
   };
 
   const handleLoginWithOauth = async (provider: string) => {
@@ -124,7 +126,7 @@ export const useHooks = () => {
     }
 
     toast.success(t("redirectingToOAuthProvider"), { id: toastId });
-    redirect(data.url);
+    window.location.assign(data.url);
   };
 
   const handleSubmit = async () => {
