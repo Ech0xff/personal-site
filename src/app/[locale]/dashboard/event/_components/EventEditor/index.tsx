@@ -1,10 +1,10 @@
 "use client";
 
 import { Save, X } from "lucide-react";
-import { usePathname } from "next/navigation";
 
 import EventCard from "@/components/features/events/EventCard";
 import Stack from "@/components/ui/Stack";
+import { useCurrentLocale } from "@/lib/client/locale";
 import { cn } from "@/lib/shared/utils";
 import type { Status } from "@/types";
 
@@ -32,8 +32,7 @@ export default function EventEditor({
   onClose,
   onSaved,
 }: BaseEditorProps) {
-  const pathname = usePathname();
-  const locale = pathname.split("/")[1];
+  const locale = useCurrentLocale();
   const {
     form,
     updateForm,

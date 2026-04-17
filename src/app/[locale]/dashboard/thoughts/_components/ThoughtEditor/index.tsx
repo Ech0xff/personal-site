@@ -1,12 +1,12 @@
 "use client";
 
 import { Edit, Save, Upload, X } from "lucide-react";
-import { usePathname } from "next/navigation";
 
 import ThoughtCard from "@/components/features/thoughts/ThoughtCard";
 import DropdownPopover from "@/components/ui/DropdownPopover";
 import Image from "@/components/ui/Image";
 import Stack from "@/components/ui/Stack";
+import { useCurrentLocale } from "@/lib/client/locale";
 import { cn } from "@/lib/shared/utils";
 import type { Status } from "@/types";
 
@@ -24,8 +24,7 @@ export default function ThoughtEditor({
   onClose,
   onSaved,
 }: BaseEditorProps) {
-  const pathname = usePathname();
-  const locale = pathname.split("/")[1];
+  const locale = useCurrentLocale();
   const {
     form,
     viewMode,

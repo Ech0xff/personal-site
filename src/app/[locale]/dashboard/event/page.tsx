@@ -1,8 +1,7 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-
 import EventTimeline from "@/components/features/events/EventTimeline";
+import { useCurrentLocale } from "@/lib/client/locale";
 
 import EditorProvider from "../_components/EditorProvider";
 import DashboardShell from "../_components/ui/DashboardShell";
@@ -12,8 +11,7 @@ import StatusToggle from "./_components/StatusToggle";
 import { useHooks } from "./use-hooks";
 
 export default function EventsPage() {
-  const pathname = usePathname();
-  const locale = pathname.split("/")[1];
+  const locale = useCurrentLocale();
   const { events, loading, error, syncStatus, removeEvent, refetch } =
     useHooks();
 

@@ -2,11 +2,11 @@
 
 import Cookies from "js-cookie";
 import { Languages } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
-import { getNormalizedLocale } from "@/lib/shared/i18n";
-import { routing } from "@/lib/shared/i18n/routing";
+import { useCurrentLocale } from "@/lib/client/locale";
+import { routing, switchLocaleInPathname } from "@/lib/shared/i18n";
 import { cn } from "@/lib/shared/utils";
 
 const localeLabelMap: Record<string, string> = {
@@ -15,14 +15,16 @@ const localeLabelMap: Record<string, string> = {
 };
 
 export default function LanguageToggle({ className }: { className?: string }) {
-  const pathSegments = usePathname().split("/").filter(Boolean);
-  const currentLocale = getNormalizedLocale(pathSegments[0]);
-
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentLocale = useCurrentLocale();
   const currentLocaleIndex = routing.locales.indexOf(currentLocale);
   const targetLocale =
     routing.locales[(currentLocaleIndex + 1) % routing.locales.length];
-
-  const targetPath = ["", targetLocale, ...pathSegments.slice(1)].join("/");
+  const search = searchParams.toString();
+  const currentHref = search ? `${pathname}?${search}` : pathname;
+  const targetPath = switchLocaleInPathname(currentHref, targetLocale);
   const label = localeLabelMap[targetLocale] || targetLocale;
 
   useEffect(() => {
@@ -30,10 +32,11 @@ export default function LanguageToggle({ className }: { className?: string }) {
   }, [currentLocale]);
 
   return (
-    <a
+    <button
+      type="button"
       title={targetLocale}
-      href={targetPath}
       aria-label={targetLocale}
+      onClick={() => router.push(targetPath)}
       className={cn(
         "inline-flex items-center gap-1 rounded-lg p-2 transition-colors hover:bg-theme-hover",
         className,
@@ -41,6 +44,6 @@ export default function LanguageToggle({ className }: { className?: string }) {
     >
       <Languages className="h-4 w-4" />
       <span className="font-medium text-xs">{label}</span>
-    </a>
+    </button>
   );
 }

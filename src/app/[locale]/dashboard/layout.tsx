@@ -16,6 +16,7 @@ import ThemeToggle from "@/components/shared/ThemeToggle";
 import DropdownPopover from "@/components/ui/DropdownPopover";
 import Stack from "@/components/ui/Stack";
 import { makeServerClient } from "@/lib/server/supabase";
+import { getLocalizedRoutes } from "@/lib/shared/routes";
 import { cn } from "@/lib/shared/utils/tailwind";
 import { getUserStatus } from "@/lib/shared/utils/tools";
 
@@ -27,42 +28,43 @@ async function Navbar({
   locale: string;
 }) {
   "use cache";
+  const routes = getLocalizedRoutes(locale);
 
   const navItems = [
     {
       isAdmin: false,
       name: "Account",
-      path: `/${locale}/dashboard/account`,
+      path: routes.DASHBOARD.ACCOUNT,
       icon: LayoutDashboard,
     },
     {
       isAdmin: true,
       name: "Overview",
-      path: `/${locale}/dashboard/overview`,
+      path: routes.DASHBOARD.OVERVIEW,
       icon: UserCog,
     },
     {
       isAdmin: true,
       name: "Posts",
-      path: `/${locale}/dashboard/posts`,
+      path: routes.DASHBOARD.POSTS,
       icon: FileText,
     },
     {
       isAdmin: true,
       name: "Thoughts",
-      path: `/${locale}/dashboard/thoughts`,
+      path: routes.DASHBOARD.THOUGHTS,
       icon: MessageCircle,
     },
     {
       isAdmin: true,
       name: "Events",
-      path: `/${locale}/dashboard/event`,
+      path: routes.DASHBOARD.EVENT,
       icon: Calendar,
     },
     {
       isAdmin: true,
       name: "Images",
-      path: `/${locale}/dashboard/images`,
+      path: routes.DASHBOARD.IMAGES,
       icon: Image,
     },
   ];
@@ -89,7 +91,7 @@ async function Navbar({
       {/* Header */}
       <Stack x className="gap-2">
         <Link
-          href={`/${locale}`}
+          href={routes.HOME}
           className="flex items-center gap-2 font-semibold text-lg text-zinc-900 transition-colors hover:text-blue-600 dark:text-zinc-100 dark:hover:text-blue-400"
         >
           <ArrowLeft className="h-5 w-5" />
@@ -136,9 +138,11 @@ export default async function Layout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
+  const routes = getLocalizedRoutes(locale);
   const client = await makeServerClient();
   const { isAuth, isAdmin } = await getUserStatus(client);
-  if (!isAuth) redirect("/auth");
+  if (!isAuth) redirect(routes.AUTH);
 
   return (
     <Stack
@@ -148,7 +152,7 @@ export default async function Layout({
         "md:flex-row md:divide-x",
       )}
     >
-      <Navbar isAdmin={isAdmin} locale={(await params).locale} />
+      <Navbar isAdmin={isAdmin} locale={locale} />
       {/* Main Content */}
       {children}
     </Stack>

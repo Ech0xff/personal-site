@@ -1,23 +1,25 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { routing } from "@/lib/shared/i18n/routing";
-
-const locales = new Set(routing.locales);
+import {
+  getLocaleFromPathname,
+  getPreferredLocale,
+  localizeHref,
+} from "@/lib/shared/i18n";
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const locale = pathname.split("/").filter(Boolean)[0];
+  const locale = getLocaleFromPathname(pathname);
 
-  if (!locales.has(locale)) {
-    const cookieLocale = request.cookies.get("locale")?.value;
-    const redirectLocale =
-      cookieLocale && locales.has(cookieLocale)
-        ? cookieLocale
-        : routing.defaultLocale;
+  if (!locale) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = `/${redirectLocale}${pathname}`;
+    const redirectLocale = getPreferredLocale(
+      request.cookies.get("locale")?.value,
+    );
+
+    redirectUrl.pathname = localizeHref(redirectLocale, pathname);
     return NextResponse.redirect(redirectUrl);
   }
+
   return NextResponse.next();
 }
 

@@ -1,17 +1,24 @@
 "use client";
 
 import { LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 import type { ComponentPropsWithoutRef } from "react";
 import { toast } from "sonner";
 
+import { useCurrentLocale } from "@/lib/client/locale";
 import { makeBrowserClient } from "@/lib/client/supabase";
+import { getLocalizedRoutes } from "@/lib/shared/routes";
 
 interface Props extends ComponentPropsWithoutRef<"button"> {
   className?: string;
 }
 
 export default function LogOutButton({ className, ...props }: Props) {
+  const router = useRouter();
+  const locale = useCurrentLocale();
+  const routes = getLocalizedRoutes(locale);
   const supabase = makeBrowserClient();
+
   const handleLogout = async () => {
     const toastId = toast.loading("Logging out...");
     supabase.auth.signOut().then(({ error }) => {
@@ -19,7 +26,7 @@ export default function LogOutButton({ className, ...props }: Props) {
         toast.error("Failed to log out", { id: toastId });
       } else {
         toast.success("Logged out successfully.", { id: toastId });
-        window.location.href = "/dashboard/account";
+        router.replace(routes.AUTH);
       }
     });
   };
