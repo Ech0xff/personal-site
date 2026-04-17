@@ -1,16 +1,19 @@
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 
 import { ImageViewer } from "@/components/ui/ImageViewer";
 import { routing } from "@/lib/shared/i18n/routing";
 import { getT } from "@/lib/shared/i18n/tools";
-import { InitScript } from "@/lib/shared/themeInitScript";
 import "@/styles/globals.scss";
 import "@/styles/tailwind.css";
 import "@/styles/variables.scss";
 import { Suspense } from "react";
 import ToastWatcher from "@/features/toast-watcher";
 
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
 interface LayoutProps {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
@@ -33,24 +36,32 @@ export async function generateMetadata({
   };
 }
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
-
 export default async function RootLayout({
   children,
   params,
 }: Readonly<LayoutProps>) {
   const { locale } = await params;
+
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: InitScript }} />
-      </head>
+    <Suspense fallback={null}>
+      <ConfigShell locale={locale}>{children}</ConfigShell>
+    </Suspense>
+  );
+}
+
+async function ConfigShell({
+  locale,
+  children,
+}: {
+  locale: string;
+  children: React.ReactNode;
+}) {
+  const cookieStore = await cookies();
+  const theme = cookieStore.get("theme")?.value || "system";
+  return (
+    <html className={theme} lang={locale}>
       <body>
-        <Suspense fallback={null}>
-          <ToastWatcher />
-        </Suspense>
+        <ToastWatcher />
         <SpeedInsights />
         <ImageViewer>{children}</ImageViewer>
       </body>
