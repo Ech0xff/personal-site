@@ -43,3 +43,8 @@ next-env.d.ts
 supabase/.temp
 .env*.local
 .worktrees/
+
+# agent
+.mcp.json
+.claude
+.playwright-mcp
