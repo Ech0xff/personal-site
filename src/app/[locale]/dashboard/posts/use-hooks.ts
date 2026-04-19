@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { fetchPostsByBrowser } from "@/lib/client/services";
-import type { Post, Status } from "@/types";
+import type { PostWithTags, Status } from "@/types";
 
 export const useHooks = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<PostWithTags[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 

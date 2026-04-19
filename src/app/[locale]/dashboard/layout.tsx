@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   Menu,
   MessageCircle,
+  Tags,
   UserCog,
 } from "lucide-react";
 import Link from "next/link";
@@ -60,6 +61,12 @@ async function Navbar({
       name: "Events",
       path: routes.DASHBOARD.EVENT,
       icon: Calendar,
+    },
+    {
+      isAdmin: true,
+      name: "Tags",
+      path: routes.DASHBOARD.TAGS,
+      icon: Tags,
     },
     {
       isAdmin: true,

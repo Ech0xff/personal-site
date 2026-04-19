@@ -11,6 +11,7 @@ import AuthorInput from "../../../_components/ui/AuthorInput";
 import DateTimeInput from "../../../_components/ui/DateTimeInput";
 import HeaderSection from "../../../_components/ui/HeaderSection";
 import SegmentedToggle from "../../../_components/ui/SegmentedToggle";
+import TagSelector from "./TagSelector";
 import { useHooks } from "./use-hooks";
 
 export { default as OpenButton } from "./OpenButton";
@@ -22,8 +23,9 @@ export default function PostEditor({
 }: BaseEditorProps) {
   const {
     form,
+    tags,
     updateForm,
-    addTag,
+    selectTag,
     removeTag,
     handleSubmit,
     viewMode,
@@ -200,20 +202,13 @@ export default function PostEditor({
                           </button>
                         </span>
                       ))}
-                      <input
-                        value={form.tagInput}
-                        onChange={(e) =>
-                          updateForm({ tagInput: e.target.value })
-                        }
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            addTag();
-                          }
+                      <TagSelector
+                        tags={tags}
+                        onSelect={(tagId: string) => {
+                          const tag = tags.find((item) => item.id === tagId);
+                          if (tag) selectTag(tag.name);
                         }}
-                        type="text"
-                        placeholder="Add tag..."
-                        className="w-20 shrink-0 rounded border border-zinc-200 bg-transparent px-2 py-0.5 text-xs text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
+                        selectedTags={form.tags}
                       />
                     </Stack>
                   </Stack>

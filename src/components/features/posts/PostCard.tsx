@@ -2,18 +2,14 @@ import Link from "@/components/ui/Link";
 import Stack from "@/components/ui/Stack";
 import { getT } from "@/lib/shared/i18n/tools";
 import { cn, formatTime } from "@/lib/shared/utils";
+import type { Post, Tag } from "@/types";
 
 import TagsList from "./TagsList";
 
-export type Post = {
-  id: string;
-  title: string | null;
-  published_at: string | null;
-  tags: string[] | null;
-};
-
 interface Props {
-  post: Post;
+  post: Post & {
+    tags: Tag[];
+  };
   className?: string;
   locale?: string;
 }

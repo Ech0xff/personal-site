@@ -4,8 +4,12 @@ import { useCallback, useEffect, useState, useTransition } from "react";
 
 import { toast } from "sonner";
 
-import { fetchPostByBrowser, savePostByBrowser } from "@/lib/client/services";
-import type { Status } from "@/types";
+import {
+  fetchPostByBrowser,
+  fetchSummaryByBrowser,
+  savePostByBrowser,
+} from "@/lib/client/services";
+import type { Status, TagWithCount } from "@/types";
 
 export type ViewMode = "edit" | "preview" | "split";
 
@@ -16,7 +20,6 @@ type PostFormState = {
   status: Status;
   published_at: string;
   tags: string[];
-  tagInput: string;
 };
 
 type UsePostEditorParams = {
@@ -32,7 +35,6 @@ const DEFAULT_FORM: PostFormState = {
   status: "show",
   published_at: "",
   tags: [],
-  tagInput: "",
 };
 
 const DEFAULT_VIEW_MODE: ViewMode = "split";
@@ -44,23 +46,28 @@ export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
   const [viewMode, setViewMode] = useState<ViewMode>(DEFAULT_VIEW_MODE);
   const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(true);
+  const [tags, setTags] = useState<TagWithCount[]>([]);
 
   const updateForm = useCallback((patch: Partial<PostFormState>) => {
     setForm((prev) => ({ ...prev, ...patch }));
   }, []);
 
   useEffect(() => {
-    if (isNewMode) {
-      setForm(DEFAULT_FORM);
-      setViewMode(DEFAULT_VIEW_MODE);
-      setIsLoading(false);
-      return;
-    }
-
-    const loadPost = async () => {
+    const loadEditorData = async () => {
       try {
+        const summary = await fetchSummaryByBrowser({
+          tagSourceTypes: ["post"],
+        });
+        setTags(summary?.tags ?? []);
+
+        if (isNewMode) {
+          setForm(DEFAULT_FORM);
+          setViewMode(DEFAULT_VIEW_MODE);
+          return;
+        }
+
         const post = await fetchPostByBrowser(id);
-        if (post) {
+        if (post !== null) {
           setForm({
             ...DEFAULT_FORM,
             title: post.title,
@@ -68,7 +75,7 @@ export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
             author: post.author,
             status: post.status,
             published_at: post.published_at,
-            tags: post.tags ?? [],
+            tags: post.tags.map((tag) => tag.name),
           });
         }
       } catch {
@@ -79,19 +86,18 @@ export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
       }
     };
 
-    loadPost();
+    loadEditorData();
   }, [id, isNewMode, onClose]);
 
-  const addTag = useCallback(() => {
-    const tag = form.tagInput.trim();
-    if (tag && !form.tags.includes(tag)) {
-      setForm((prev) => ({
+  const selectTag = useCallback((tag: string) => {
+    setForm((prev) => {
+      if (prev.tags.includes(tag)) return prev;
+      return {
         ...prev,
         tags: [...prev.tags, tag],
-        tagInput: "",
-      }));
-    }
-  }, [form.tagInput, form.tags]);
+      };
+    });
+  }, []);
 
   const removeTag = useCallback((index: number) => {
     setForm((prev) => ({
@@ -126,7 +132,6 @@ export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
           author: form.author.trim(),
           status: form.status,
           published_at: form.published_at,
-          tags: form.tags.length > 0 ? form.tags : null,
         });
 
         await onSaved();
@@ -142,8 +147,9 @@ export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
   const pageTitle = isNewMode ? "New Post" : "Edit Post";
   return {
     form,
+    tags,
     updateForm,
-    addTag,
+    selectTag,
     removeTag,
     handleSubmit,
     viewMode,

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/shared/utils/tailwind";
+import type { Tag } from "@/types";
 
 import Stack from "../../ui/Stack";
 
@@ -7,7 +8,7 @@ export default function TagsList({
   maxVisible = 3,
   className,
 }: {
-  tags: string[] | null;
+  tags?: Tag[];
   maxVisible?: number;
   className?: string;
 }) {
@@ -21,10 +22,10 @@ export default function TagsList({
     <Stack x className={cn("flex-nowrap items-center gap-1", className)}>
       {visibleTags.map((tag) => (
         <div
-          key={tag}
+          key={tag.id}
           className="shrink-0 whitespace-nowrap rounded bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
         >
-          {tag}
+          {tag.name}
         </div>
       ))}
       {hasMore && (
@@ -33,7 +34,7 @@ export default function TagsList({
             +{hiddenTags.length}
           </div>
           <div className="pointer-events-none invisible absolute bottom-full left-1/2 z-50 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-zinc-900 px-3 py-2 text-white text-xs opacity-0 shadow-lg transition-all group-hover/tooltip:visible group-hover/tooltip:opacity-100 dark:bg-zinc-700">
-            {hiddenTags.join(", ")}
+            {hiddenTags.map((tag) => tag.name).join(", ")}
             <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-zinc-900 dark:border-t-zinc-700" />
           </div>
         </div>

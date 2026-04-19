@@ -4,8 +4,12 @@ import { useCallback, useEffect, useState, useTransition } from "react";
 
 import { toast } from "sonner";
 
-import { fetchEventByBrowser, saveEventByBrowser } from "@/lib/client/services";
-import type { Status } from "@/types";
+import {
+  fetchEventByBrowser,
+  fetchSummaryByBrowser,
+  saveEventByBrowser,
+} from "@/lib/client/services";
+import type { Status, TagWithCount } from "@/types";
 
 type EventFormState = {
   id: string;
@@ -15,7 +19,6 @@ type EventFormState = {
   color: string;
   status: Status;
   tags: string[];
-  tagInput: string;
 };
 
 type UseEventEditorParams = {
@@ -32,7 +35,6 @@ const DEFAULT_FORM: EventFormState = {
   color: "blue",
   status: "show",
   tags: [],
-  tagInput: "",
 };
 
 export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
@@ -41,20 +43,25 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
   const [form, setForm] = useState<EventFormState>(DEFAULT_FORM);
   const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(true);
+  const [tags, setTags] = useState<TagWithCount[]>([]);
 
   const updateForm = useCallback((patch: Partial<EventFormState>) => {
     setForm((prev) => ({ ...prev, ...patch }));
   }, []);
 
   useEffect(() => {
-    if (isNewMode) {
-      setForm(DEFAULT_FORM);
-      setIsLoading(false);
-      return;
-    }
-
-    const loadEvent = async () => {
+    const loadEditorData = async () => {
       try {
+        const summary = await fetchSummaryByBrowser({
+          tagSourceTypes: ["event"],
+        });
+        setTags(summary?.tags ?? []);
+
+        if (isNewMode) {
+          setForm(DEFAULT_FORM);
+          return;
+        }
+
         const event = await fetchEventByBrowser(id);
         if (event) {
           setForm({
@@ -65,7 +72,7 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
             published_at: event.published_at,
             color: event.color,
             status: event.status,
-            tags: event.tags,
+            tags: event.tags.map((tag) => tag.name),
           });
         }
       } catch {
@@ -76,19 +83,18 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
       }
     };
 
-    loadEvent();
+    loadEditorData();
   }, [id, isNewMode, onClose]);
 
-  const addTag = useCallback(() => {
-    const tag = form.tagInput.trim();
-    if (tag && !form.tags.includes(tag)) {
-      setForm((prev) => ({
+  const selectTag = useCallback((tag: string) => {
+    setForm((prev) => {
+      if (prev.tags.includes(tag)) return prev;
+      return {
         ...prev,
         tags: [...prev.tags, tag],
-        tagInput: "",
-      }));
-    }
-  }, [form.tagInput, form.tags]);
+      };
+    });
+  }, []);
 
   const removeTag = useCallback((index: number) => {
     setForm((prev) => ({
@@ -112,6 +118,10 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
         isNewMode ? "Creating event..." : "Updating event...",
       );
       try {
+        const tagIds = tags
+          .filter((tag) => form.tags.includes(tag.name))
+          .map((tag) => tag.id);
+
         await saveEventByBrowser({
           id: id || undefined,
           title: form.title.trim(),
@@ -119,7 +129,7 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
           published_at: form.published_at,
           color: form.color,
           status: form.status,
-          tags: form.tags.length > 0 ? form.tags : undefined,
+          tagIds,
         });
 
         await onSaved();
@@ -135,8 +145,9 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
   const pageTitle = isNewMode ? "New Event" : "Edit Event";
   return {
     form,
+    tags,
     updateForm,
-    addTag,
+    selectTag,
     removeTag,
     handleSubmit,
     isNewMode,

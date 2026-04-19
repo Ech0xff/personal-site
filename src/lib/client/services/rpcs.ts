@@ -1,8 +1,16 @@
 import { fetchSummary } from "@/lib/shared/services/rpcs";
+import type { Status, TagSourceType } from "@/types";
 
 import { makeBrowserClient } from "../supabase";
 
-export const fetchSummaryByBrowser = async (recent_limit: number = 5) => {
+type FetchSummaryByBrowserOptions = {
+  queryStatus?: Status | null;
+  tagSourceTypes?: TagSourceType[] | null;
+};
+
+export const fetchSummaryByBrowser = async (
+  options: FetchSummaryByBrowserOptions = {},
+) => {
   const client = makeBrowserClient();
-  return fetchSummary(recent_limit, client);
+  return fetchSummary(client, options);
 };
