@@ -99,12 +99,12 @@ export default async function PostPage({ params }: Props) {
 
           {post.tags && post.tags.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
-              {post.tags.map((tag: string) => (
+              {post.tags.map((tag) => (
                 <span
-                  key={tag}
+                  key={tag.id}
                   className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 font-medium text-gray-800 text-xs dark:bg-gray-800 dark:text-gray-200"
                 >
-                  #{tag}
+                  #{tag.name}
                 </span>
               ))}
             </div>

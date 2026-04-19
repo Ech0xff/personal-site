@@ -9,9 +9,9 @@ import type { PostInsert, Status } from "@/types";
 
 import { makeBrowserClient } from "../supabase";
 
-export const fetchPostsByBrowser = async () => {
+export const fetchPostsByBrowser = async (limit?: number) => {
   const client = makeBrowserClient();
-  return fetchPosts(client);
+  return fetchPosts(client, limit);
 };
 
 export const fetchPostByBrowser = async (id: string) => {

@@ -20,7 +20,7 @@ export const fetchEventByBrowser = async (id: string) => {
 };
 
 export const saveEventByBrowser = async (
-  payload: EventInsert & { id?: string },
+  payload: EventInsert & { id?: string; tagIds?: string[] },
 ) => {
   const client = makeBrowserClient();
   return saveEvent(client, payload);

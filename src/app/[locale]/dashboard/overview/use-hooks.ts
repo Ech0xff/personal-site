@@ -11,7 +11,7 @@ export const useHooks = () => {
 
   const refetch = useCallback(async () => {
     try {
-      const data = await fetchSummaryByBrowser(5);
+      const data = await fetchSummaryByBrowser();
       setSummaryData(data);
       setError(false);
     } catch {

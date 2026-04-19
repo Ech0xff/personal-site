@@ -2,7 +2,7 @@ import { cacheTag } from "next/cache";
 
 import Stack from "@/components/ui/Stack";
 import { CACHE_TAGS } from "@/lib/server/cache";
-import { fetchSummary } from "@/lib/shared/services";
+import { fetchPosts, fetchSummary } from "@/lib/shared/services";
 import { cn } from "@/lib/shared/utils";
 import type { BlogSummaryData } from "@/types";
 
@@ -18,7 +18,10 @@ export default async function HomePage({
   cacheTag(CACHE_TAGS.summary);
 
   const { locale } = await params;
-  const data = (await fetchSummary(5)) as BlogSummaryData;
+  const [data, posts] = await Promise.all([
+    fetchSummary() as Promise<BlogSummaryData>,
+    fetchPosts(undefined, 5),
+  ]);
 
   return (
     <>
@@ -31,7 +34,7 @@ export default async function HomePage({
             "bg-linear-to-t from-(--theme-bg) from-50% to-transparent",
           )}
         />
-        <IntroductionSection locale={locale} data={data} />
+        <IntroductionSection locale={locale} data={data} posts={posts} />
       </Stack>
     </>
   );

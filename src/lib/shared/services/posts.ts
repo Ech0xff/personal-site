@@ -1,36 +1,67 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import type { Database, PostInsert, PostUpdate, Status } from "@/types";
+import type {
+  Database,
+  PostInsert,
+  PostUpdate,
+  PostWithTags,
+  Status,
+} from "@/types";
 
 import { makeStaticClient } from "../supabase";
+import { formatTags } from "./utils";
 
 export const fetchPosts = async (
   client: SupabaseClient<Database> = makeStaticClient(),
-) => {
-  const { data, error } = await client
+  limit?: number,
+): Promise<PostWithTags[]> => {
+  let query = client
     .from("posts")
-    .select("*")
+    .select(`
+      *,
+      tags:post_tags (
+        tags (
+          id,
+          name,
+          meta,
+          created_at
+        )
+      )
+    `)
     .order("published_at", { ascending: false });
+
+  if (limit !== undefined) {
+    query = query.limit(limit);
+  }
+
+  const { data, error } = await query;
   if (error) throw error;
-  const items = data || [];
-  return items.sort((a, b) => {
-    const aTs = new Date(a.published_at || 0).getTime();
-    const bTs = new Date(b.published_at || 0).getTime();
-    return bTs - aTs;
-  });
+  return data.map(formatTags);
 };
 
 export const fetchPost = async (
   id: string,
   client: SupabaseClient<Database> = makeStaticClient(),
-) => {
+): Promise<PostWithTags | null> => {
   const { data, error } = await client
     .from("posts")
-    .select("*")
+    .select(`
+      *,
+      tags:post_tags (
+        tags (
+          id,
+          name,
+          meta,
+          created_at
+        )
+      )
+    `)
     .eq("id", id)
     .single();
   if (error) throw error;
-  return data || null;
+  if (!data) return null;
+
+  return formatTags(data);
 };
 
 export const savePost = async (

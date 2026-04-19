@@ -1,7 +1,10 @@
+import type { TagWithCount } from "./aggregates";
 import type { Tables, TablesInsert, TablesUpdate } from "./supabase";
 
+export * from "./aggregates";
 export * from "./supabase";
 
+export type Tag = Tables<"tags">;
 export type Post = Tables<"posts">;
 export type Thought = Tables<"thoughts">;
 export type Event = Tables<"events">;
@@ -34,11 +37,7 @@ export interface BlogSummaryData {
     thoughts: StatsItem;
     events: StatsItem;
   };
-  recently: {
-    posts: Post[];
-    thoughts: Thought[];
-    events: Event[];
-  };
+  tags: TagWithCount[];
 }
 
 export type ImageFile = {

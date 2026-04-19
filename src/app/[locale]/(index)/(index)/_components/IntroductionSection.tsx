@@ -1,25 +1,26 @@
 import PostListItem from "@/components/features/posts/PostCard";
+import TagSphere from "@/components/features/tags/TagSphere";
 import { Bilibili, Email, Github, Qq } from "@/components/icons";
 import Stack from "@/components/ui/Stack";
 import { getT } from "@/lib/shared/i18n/tools";
 import { cn } from "@/lib/shared/utils";
-import type { BlogSummaryData } from "@/types";
+import type { BlogSummaryData, PostWithTags } from "@/types";
 
 import Card from "./Card";
 
 export async function IntroductionSection({
   locale,
   data,
+  posts,
 }: {
   locale?: string;
   data: BlogSummaryData;
+  posts: PostWithTags[];
 }) {
   const t = getT("IndexHome", locale);
 
-  const {
-    recently: { posts },
-    statistics,
-  } = data;
+  const { statistics } = data;
+  const tags = data.tags ?? [];
 
   const totalCharacters = statistics
     ? statistics.posts.show.characters +
@@ -131,34 +132,52 @@ export async function IntroductionSection({
           })}
         </Stack>
       </Card>
-      {/* Latest Posts */}
-      <Card title={t("latestPosts.cardTitle")}>
-        <Stack y>
-          {posts.length === 0 && (
-            <p style={{ textIndent: "2em" }}>{t("latestPosts.empty")}</p>
-          )}
-          {posts.map((post) => (
-            <PostListItem key={post.id} post={post} locale={locale} />
-          ))}
-        </Stack>
-      </Card>
       {/* Stats Card */}
       <Card title={t("stats.cardTitle")}>
-        <Stack className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {statsItems.map((item) => (
+        <Stack className="grid gap-4 md:grid-cols-2">
+          <Stack
+            y
+            className="aspect-square min-h-0 gap-4 rounded-2xl bg-slate-50 p-4 dark:bg-white/5"
+          >
+            <Stack className="grid shrink-0 grid-cols-2 gap-3">
+              {statsItems.map((item) => (
+                <Stack
+                  key={item.label}
+                  y
+                  className="justify-between rounded-xl bg-white p-4 transition-transform duration-300 hover:scale-105 dark:bg-zinc-950/40"
+                >
+                  <Stack className="font-medium text-slate-400 text-xs uppercase tracking-wider">
+                    {item.label}
+                  </Stack>
+                  <Stack className="font-bold text-2xl text-slate-700 dark:text-slate-200">
+                    {item.count}
+                  </Stack>
+                </Stack>
+              ))}
+            </Stack>
             <Stack
-              key={item.label}
               y
-              className="rounded-2xl bg-slate-50 p-4 transition-transform duration-300 hover:scale-105 dark:bg-white/5"
+              className="min-h-0 flex-1 rounded-xl bg-white p-4 dark:bg-zinc-950/40"
             >
-              <Stack className="font-medium text-slate-400 text-xs uppercase tracking-wider">
-                {item.label}
-              </Stack>
-              <Stack className="mt-1 font-bold text-2xl text-slate-700 dark:text-slate-200">
-                {item.count}
+              <h4 className="mb-3 font-semibold text-slate-700 text-sm dark:text-slate-200">
+                {t("latestPosts.cardTitle")}
+              </h4>
+              <Stack y className="min-h-0 flex-1 overflow-auto">
+                {posts.length === 0 && (
+                  <p className="text-slate-400 text-sm">
+                    {t("latestPosts.empty")}
+                  </p>
+                )}
+                {posts.map((post) => (
+                  <PostListItem key={post.id} post={post} locale={locale} />
+                ))}
               </Stack>
             </Stack>
-          ))}
+          </Stack>
+
+          <Stack className="aspect-square min-h-0 overflow-hidden rounded-2xl bg-slate-50 p-4 dark:bg-white/5">
+            <TagSphere className="h-full w-full" tags={tags} />
+          </Stack>
         </Stack>
       </Card>
 
