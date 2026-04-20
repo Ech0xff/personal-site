@@ -126,6 +126,9 @@ export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
       );
       try {
         await savePostByBrowser({
+          tagIds: tags
+            .filter((tag) => form.tags.includes(tag.name))
+            .map((tag) => tag.id),
           id: id || undefined,
           title: form.title.trim(),
           content: form.content.trim(),

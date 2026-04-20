@@ -20,7 +20,7 @@ export const fetchPostByBrowser = async (id: string) => {
 };
 
 export const savePostByBrowser = async (
-  payload: PostInsert & { id?: string },
+  payload: PostInsert & { id?: string; tagIds?: string[] },
 ) => {
   const client = makeBrowserClient();
   return savePost(client, payload);
