@@ -9,9 +9,13 @@ import type { Json } from "@/types";
 
 import { makeServerClient } from "../supabase";
 
-export const fetchConfigByServer = async (key: string) => {
+export const fetchConfigByServer = async (
+  key: string,
+  locale?: string,
+  includeBase = false,
+) => {
   const client = await makeServerClient();
-  return fetchConfig(client, key);
+  return fetchConfig(client, key, locale, includeBase);
 };
 
 export const setConfigByServer = async (key: string, value: Json) => {
