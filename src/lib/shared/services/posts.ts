@@ -11,6 +11,8 @@ import type {
 import { makeStaticClient } from "../supabase";
 import { formatTags } from "./utils";
 
+type PostRow = Database["public"]["Tables"]["posts"]["Row"];
+
 export const fetchPosts = async (
   client: SupabaseClient<Database> = makeStaticClient(),
   limit?: number,
@@ -66,27 +68,51 @@ export const fetchPost = async (
 
 export const savePost = async (
   client: SupabaseClient<Database>,
-  payload: PostInsert & { id?: string },
+  payload: PostInsert & { id?: string; tagIds?: string[] },
 ) => {
+  const { tagIds, ...postPayload } = payload;
+  let post: PostRow;
+
   if (payload.id) {
-    const { id, ...rest } = payload;
+    const rest = { ...postPayload };
+    delete rest.id;
     const { data, error } = await client
       .from("posts")
       .update(rest as PostUpdate)
-      .eq("id", id)
+      .eq("id", payload.id)
       .select("*")
       .single();
     if (error) throw error;
-    return data;
+    post = data;
+  } else {
+    const { data, error } = await client
+      .from("posts")
+      .insert(postPayload)
+      .select("*")
+      .single();
+    if (error) throw error;
+    post = data;
   }
 
-  const { data, error } = await client
-    .from("posts")
-    .insert(payload)
-    .select("*")
-    .single();
-  if (error) throw error;
-  return data;
+  if (tagIds !== undefined) {
+    const { error: deleteError } = await client
+      .from("post_tags")
+      .delete()
+      .eq("post_id", post.id);
+    if (deleteError) throw deleteError;
+
+    if (tagIds.length > 0) {
+      const { error: insertError } = await client.from("post_tags").insert(
+        tagIds.map((tagId) => ({
+          post_id: post.id,
+          tag_id: tagId,
+        })),
+      );
+      if (insertError) throw insertError;
+    }
+  }
+
+  return post;
 };
 
 export const updatePostStatus = async (
