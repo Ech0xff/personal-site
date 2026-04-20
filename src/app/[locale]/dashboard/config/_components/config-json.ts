@@ -15,11 +15,14 @@ export const parseConfigJsonResult = (text: string): ConfigJsonParseResult => {
   }
 };
 
+export const formatConfigJsonValue = (value: Json) =>
+  JSON.stringify(value, null, 2);
+
 export const formatConfigJson = (text: string) => {
   const result = parseConfigJsonResult(text);
   if (!result.ok) {
     throw new Error(result.error);
   }
 
-  return JSON.stringify(result.value, null, 2);
+  return formatConfigJsonValue(result.value);
 };

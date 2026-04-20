@@ -14,6 +14,8 @@ export default function DashboardPage() {
   const {
     loading,
     error,
+    configScope,
+    setConfigScope,
     configText,
     setConfigText,
     validationError,
@@ -32,6 +34,32 @@ export default function DashboardPage() {
       error={error}
       optActions={
         <Stack x className="items-center gap-2">
+          <Stack
+            x
+            className="items-center gap-1 rounded-lg bg-zinc-100 p-1 dark:bg-zinc-800"
+          >
+            {[
+              ["common", "common"],
+              ["zh_CN", "zh_CN"],
+              ["en_US", "en_US"],
+            ].map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() =>
+                  setConfigScope(value as "common" | "zh_CN" | "en_US")
+                }
+                className={cn(
+                  "rounded-md px-3 py-1.5 font-medium text-sm transition-colors",
+                  configScope === value
+                    ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-950 dark:text-zinc-100"
+                    : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100",
+                )}
+              >
+                {label}
+              </button>
+            ))}
+          </Stack>
           <Button
             type="button"
             onClick={handleFormat}

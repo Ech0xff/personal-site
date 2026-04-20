@@ -2,6 +2,10 @@ import PostListItem from "@/components/features/posts/PostCard";
 import TagSphere from "@/components/features/tags/TagSphere";
 import { Bilibili, Email, Github, Qq } from "@/components/icons";
 import Stack from "@/components/ui/Stack";
+import {
+  getThemedPlaylistUrl,
+  type SiteConfig,
+} from "@/lib/shared/config/site";
 import { getT } from "@/lib/shared/i18n/tools";
 import { cn } from "@/lib/shared/utils";
 import type { BlogSummaryData, PostWithTags } from "@/types";
@@ -12,10 +16,12 @@ export async function IntroductionSection({
   locale,
   data,
   posts,
+  config,
 }: {
   locale?: string;
   data: BlogSummaryData;
   posts: PostWithTags[];
+  config: SiteConfig;
 }) {
   const t = getT("IndexHome", locale);
 
@@ -27,26 +33,27 @@ export async function IntroductionSection({
       statistics.thoughts.show.characters +
       statistics.events.show.characters
     : 0;
+  const playlist = config.playlist.trim();
 
   const socialLinks = [
     {
       name: "Bilibili",
-      link: process.env.NEXT_PUBLIC_SOCIAL_BILIBILI_URL?.trim(),
+      link: config.socialLinks.bilibili.trim(),
       icon: Bilibili,
     },
     {
       name: "GitHub",
-      link: process.env.NEXT_PUBLIC_SOCIAL_GITHUB_URL?.trim(),
+      link: config.socialLinks.github.trim(),
       icon: Github,
     },
     {
       name: "Email",
-      link: process.env.NEXT_PUBLIC_SOCIAL_EMAIL_URL?.trim(),
+      link: config.socialLinks.email.trim(),
       icon: Email,
     },
     {
       name: "QQ",
-      link: process.env.NEXT_PUBLIC_SOCIAL_QQ_URL?.trim(),
+      link: config.socialLinks.qq.trim(),
       icon: Qq,
     },
   ];
@@ -74,9 +81,7 @@ export async function IntroductionSection({
     <Stack y className="mb-8 gap-8 px-4">
       {/* About Card */}
       <Card title={t("about.cardTitle")}>
-        <p className="indent-8 text-sm leading-relaxed">
-          {t("about.description")}
-        </p>
+        <p className="indent-8 text-sm leading-relaxed">{config.aboutMe}</p>
       </Card>
       {/* Find Me Card */}
       <Card title={t("find.cardTitle")}>
@@ -181,24 +186,26 @@ export async function IntroductionSection({
         </Stack>
       </Card>
 
-      <Card title={t("playlist.cardTitle")}>
-        <iframe
-          title={t("playlist.cardTitle")}
-          allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
-          height="450"
-          className="hidden w-full overflow-hidden rounded-lg border-none dark:block"
-          sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-          src="https://embed.music.apple.com/cn/playlist/ume/pl.u-76oNkr3CvyGz5m1?theme=dark"
-        />
-        <iframe
-          title={t("playlist.cardTitle")}
-          allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
-          height="450"
-          className="w-full overflow-hidden rounded-lg border-none dark:hidden"
-          sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-          src="https://embed.music.apple.com/cn/playlist/ume/pl.u-76oNkr3CvyGz5m1?theme=light"
-        />
-      </Card>
+      {playlist && (
+        <Card title={t("playlist.cardTitle")}>
+          <iframe
+            title={t("playlist.cardTitle")}
+            allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
+            height="450"
+            className="hidden w-full overflow-hidden rounded-lg border-none dark:block"
+            sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+            src={getThemedPlaylistUrl(playlist, "dark")}
+          />
+          <iframe
+            title={t("playlist.cardTitle")}
+            allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
+            height="450"
+            className="w-full overflow-hidden rounded-lg border-none dark:hidden"
+            sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+            src={getThemedPlaylistUrl(playlist, "light")}
+          />
+        </Card>
+      )}
     </Stack>
   );
 }

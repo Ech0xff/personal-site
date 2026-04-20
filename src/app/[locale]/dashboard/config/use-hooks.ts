@@ -7,18 +7,32 @@ import {
   setConfigByBrowser,
 } from "@/lib/client/services";
 import {
+  defaultSiteConfig,
+  parseSiteConfig,
+  SITE_CONFIG_KEY,
+} from "@/lib/shared/config/site";
+import { getLocaleConfigKey } from "@/lib/shared/services/configs";
+import {
   formatConfigJson,
+  formatConfigJsonValue,
   parseConfigJsonResult,
 } from "./_components/config-json";
 
-const CONFIG_KEY = "site";
-const EMPTY_CONFIG = "{}";
+export type ConfigScope = "common" | "zh_CN" | "en_US";
 
-const stringifyConfig = (value: unknown) =>
-  JSON.stringify(value ?? {}, null, 2) || EMPTY_CONFIG;
+const getConfigKey = (scope: ConfigScope) => {
+  if (scope === "common") return SITE_CONFIG_KEY;
+  return getLocaleConfigKey(SITE_CONFIG_KEY, scope);
+};
+
+const getDefaultConfig = (scope: ConfigScope) =>
+  scope === "common" ? defaultSiteConfig : {};
 
 export const useHooks = () => {
-  const [configText, setConfigText] = useState(EMPTY_CONFIG);
+  const [configScope, setConfigScope] = useState<ConfigScope>("common");
+  const [configText, setConfigText] = useState(
+    formatConfigJsonValue(defaultSiteConfig),
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -67,8 +81,15 @@ export const useHooks = () => {
 
   const refetch = useCallback(async () => {
     try {
-      const data = await fetchConfigByBrowser(CONFIG_KEY);
-      const nextText = stringifyConfig(data);
+      const data =
+        configScope === "common"
+          ? await fetchConfigByBrowser(SITE_CONFIG_KEY)
+          : await fetchConfigByBrowser(SITE_CONFIG_KEY, configScope);
+      const config =
+        configScope === "common"
+          ? parseSiteConfig(data)
+          : (data ?? getDefaultConfig(configScope));
+      const nextText = formatConfigJsonValue(config);
       setConfigText(nextText);
       setError(false);
     } catch {
@@ -76,7 +97,7 @@ export const useHooks = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [configScope]);
 
   useEffect(() => {
     refetch();
@@ -99,18 +120,19 @@ export const useHooks = () => {
 
     setSaving(true);
     try {
-      const savedValue = await setConfigByBrowser(CONFIG_KEY, result.value);
-      const nextText = stringifyConfig(savedValue);
-      setConfigText(nextText);
+      await setConfigByBrowser(getConfigKey(configScope), result.value);
+      setConfigText(formatConfigJsonValue(result.value));
     } finally {
       setSaving(false);
     }
-  }, [configText]);
+  }, [configScope, configText]);
 
   return {
     loading,
     error,
     refetch,
+    configScope,
+    setConfigScope,
     configText,
     setConfigText,
     validationError,

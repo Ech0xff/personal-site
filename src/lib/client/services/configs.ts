@@ -7,9 +7,13 @@ import type { Json } from "@/types";
 
 import { makeBrowserClient } from "../supabase";
 
-export const fetchConfigByBrowser = async (key: string) => {
+export const fetchConfigByBrowser = async (
+  key: string,
+  locale?: string,
+  includeBase = false,
+) => {
   const client = makeBrowserClient();
-  return fetchConfig(client, key);
+  return fetchConfig(client, key, locale, includeBase);
 };
 
 export const setConfigByBrowser = async (key: string, value: Json) => {
