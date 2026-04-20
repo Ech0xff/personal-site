@@ -1,18 +1,75 @@
-import { Calendar, Eye, FileText, MessageCircle } from "lucide-react";
+import { json, jsonParseLinter } from "@codemirror/lang-json";
+import { linter, lintGutter } from "@codemirror/lint";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
+import {
+  fetchConfigByBrowser,
+  setConfigByBrowser,
+} from "@/lib/client/services";
+import {
+  formatConfigJson,
+  parseConfigJsonResult,
+} from "./_components/config-json";
 
-import { fetchSummaryByBrowser } from "@/lib/client/services";
-import type { BlogSummaryData } from "@/types";
+const CONFIG_KEY = "site";
+const EMPTY_CONFIG = "{}";
+
+const stringifyConfig = (value: unknown) =>
+  JSON.stringify(value ?? {}, null, 2) || EMPTY_CONFIG;
 
 export const useHooks = () => {
-  const [summaryData, setSummaryData] = useState<BlogSummaryData | null>(null);
+  const [configText, setConfigText] = useState(EMPTY_CONFIG);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const [refreshingCache, setRefreshingCache] = useState(false);
+  const configEditorExtensions = useMemo(
+    () => [json(), lintGutter(), linter(jsonParseLinter())],
+    [],
+  );
+
+  const handleRefreshAllCaches = async () => {
+    setRefreshingCache(true);
+    try {
+      const response = await fetch("/api/admin/cache/revalidate-all", {
+        method: "POST",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to refresh caches");
+      }
+      await refetch();
+      toast.success("All caches refreshed.");
+    } catch {
+      toast.error("Failed to refresh caches.");
+    } finally {
+      setRefreshingCache(false);
+    }
+  };
+
+  const handleFormat = () => {
+    try {
+      formatConfig();
+      toast.success("Config formatted.");
+    } catch {
+      toast.error("Fix the JSON before formatting.");
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      await saveConfig();
+      toast.success("Config saved.");
+    } catch {
+      toast.error("Failed to save config.");
+    }
+  };
 
   const refetch = useCallback(async () => {
     try {
-      const data = await fetchSummaryByBrowser();
-      setSummaryData(data);
+      const data = await fetchConfigByBrowser(CONFIG_KEY);
+      const nextText = stringifyConfig(data);
+      setConfigText(nextText);
       setError(false);
     } catch {
       setError(true);
@@ -25,50 +82,46 @@ export const useHooks = () => {
     refetch();
   }, [refetch]);
 
-  const stats = useMemo(
-    () => [
-      {
-        label: "Total Posts",
-        value:
-          (summaryData?.statistics.posts.show.count ?? 0) +
-            (summaryData?.statistics.posts.hide.count ?? 0) || "—",
-        icon: FileText,
-      },
-      {
-        label: "Total Thoughts",
-        value:
-          (summaryData?.statistics.thoughts.show.count ?? 0) +
-            (summaryData?.statistics.thoughts.hide.count ?? 0) || "—",
-        icon: MessageCircle,
-      },
-      {
-        label: "Total Events",
-        value:
-          (summaryData?.statistics.events.show.count ?? 0) +
-            (summaryData?.statistics.events.hide.count ?? 0) || "—",
-        icon: Calendar,
-      },
-      {
-        label: "Total Characters",
-        value:
-          (
-            (summaryData?.statistics.posts.show.characters ?? 0) +
-            (summaryData?.statistics.posts.hide.characters ?? 0) +
-            (summaryData?.statistics.thoughts.show.characters ?? 0) +
-            (summaryData?.statistics.thoughts.hide.characters ?? 0) +
-            (summaryData?.statistics.events.show.characters ?? 0) +
-            (summaryData?.statistics.events.hide.characters ?? 0)
-          ).toLocaleString() || "—",
-        icon: Eye,
-      },
-    ],
-    [summaryData],
+  const parseResult = useMemo(
+    () => parseConfigJsonResult(configText),
+    [configText],
   );
+
+  const validationError = parseResult.ok ? null : parseResult.error;
+
+  const formatConfig = useCallback(() => {
+    setConfigText(formatConfigJson(configText));
+  }, [configText]);
+
+  const saveConfig = useCallback(async () => {
+    const result = parseConfigJsonResult(configText);
+    if (!result.ok) 
+      throw new Error(result.error);
+
+    setSaving(true);
+    try {
+      const savedValue = await setConfigByBrowser(CONFIG_KEY, result.value);
+      const nextText = stringifyConfig(savedValue);
+      setConfigText(nextText);
+    } finally {
+      setSaving(false);
+    }
+  }, [configText]);
 
   return {
     loading,
     error,
-    stats,
     refetch,
+    configText,
+    setConfigText,
+    validationError,
+    saving,
+    formatConfig,
+    saveConfig,
+    handleRefreshAllCaches,
+    handleFormat,
+    handleSave,
+    refreshingCache,
+    configEditorExtensions,
   };
 };

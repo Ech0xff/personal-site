@@ -17,6 +17,7 @@ export async function POST() {
   try {
     const posts = await fetchPosts(client);
     const tags = new Set<string>([
+      CACHE_TAGS.config,
       CACHE_TAGS.summary,
       CACHE_TAGS.posts,
       CACHE_TAGS.thoughts,

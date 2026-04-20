@@ -1,6 +1,10 @@
 "server-only";
 
-import { deleteConfig, fetchConfig, setConfig } from "@/lib/shared/services/configs";
+import {
+  deleteConfig,
+  fetchConfig,
+  setConfig,
+} from "@/lib/shared/services/configs";
 import type { Json } from "@/types";
 
 import { makeServerClient } from "../supabase";
@@ -18,4 +22,4 @@ export const setConfigByServer = async (key: string, value: Json) => {
 export const deleteConfigByServer = async (key: string) => {
   const client = await makeServerClient();
   return deleteConfig(client, key);
-}
+};
