@@ -1,4 +1,5 @@
 export const CACHE_TAGS = {
+  config: "blog:config",
   summary: "blog:summary",
   posts: "blog:posts",
   thoughts: "blog:thoughts",

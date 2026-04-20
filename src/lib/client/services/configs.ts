@@ -3,6 +3,7 @@ import {
   fetchConfig,
   setConfig,
 } from "@/lib/shared/services/configs";
+import type { Json } from "@/types";
 
 import { makeBrowserClient } from "../supabase";
 
@@ -11,7 +12,7 @@ export const fetchConfigByBrowser = async (key: string) => {
   return fetchConfig(client, key);
 };
 
-export const setConfigByBrowser = async (key: string, value: any) => {
+export const setConfigByBrowser = async (key: string, value: Json) => {
   const client = makeBrowserClient();
   return setConfig(client, key, value);
 };

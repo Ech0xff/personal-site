@@ -1,154 +1,90 @@
 "use client";
 
-import { MessageCircle, PenSquare, Plus, RefreshCw } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+import { RefreshCw } from "lucide-react";
 
 import Button from "@/components/ui/Button";
-import Link from "@/components/ui/Link";
+import CodeMirrorEditor from "@/components/ui/CodeMirrorEditor";
 import Stack from "@/components/ui/Stack";
 import { cn } from "@/lib/shared/utils";
 
 import DashboardShell from "../_components/ui/DashboardShell";
 import { useHooks } from "./use-hooks";
 
-const quickActions = [
-  {
-    title: "New Post",
-    description: "Create a new blog post",
-    href: "/dashboard/posts",
-    icon: PenSquare,
-    color: "bg-blue-50 dark:bg-blue-900/20",
-  },
-  {
-    title: "New Thought",
-    description: "Share a quick thought",
-    href: "/dashboard/thoughts",
-    icon: MessageCircle,
-    color: "bg-purple-50 dark:bg-purple-900/20",
-  },
-  {
-    title: "New Event",
-    description: "Add a timeline event",
-    href: "/dashboard/event",
-    icon: Plus,
-    color: "bg-green-50 dark:bg-green-900/20",
-  },
-];
-
 export default function DashboardPage() {
-  const { loading, error, stats, refetch } = useHooks();
-  const [refreshingCache, setRefreshingCache] = useState(false);
-
-  const handleRefreshAllCaches = async () => {
-    setRefreshingCache(true);
-    try {
-      const response = await fetch("/api/admin/cache/revalidate-all", {
-        method: "POST",
-      });
-      if (!response.ok) {
-        throw new Error("Failed to refresh caches");
-      }
-      await refetch();
-      toast.success("All caches refreshed.");
-    } catch {
-      toast.error("Failed to refresh caches.");
-    } finally {
-      setRefreshingCache(false);
-    }
-  };
+  const {
+    loading,
+    error,
+    configText,
+    setConfigText,
+    validationError,
+    saving,
+    handleRefreshAllCaches,
+    refreshingCache,
+    handleFormat,
+    handleSave,
+    configEditorExtensions,
+  } = useHooks();
 
   return (
-    <DashboardShell title="Overview" loading={loading} error={error}>
-      <Stack y className="gap-6">
-        {/* Welcome Section */}
+    <DashboardShell
+      title="Overview"
+      loading={loading}
+      error={error}
+      optActions={
+        <Button
+          type="button"
+          onClick={handleRefreshAllCaches}
+          disabled={refreshingCache}
+          className="disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <RefreshCw
+            className={cn("h-4 w-4", refreshingCache && "animate-spin")}
+          />
+          {refreshingCache ? "Refreshing..." : "Refresh All Caches"}
+        </Button>
+      }
+    >
+      <Stack y className="min-h-0 flex-1 gap-4">
         <Stack
-          className="items-start justify-between gap-4 sm:flex-row sm:items-center"
+          className="items-start justify-between gap-3 sm:flex-row sm:items-center"
           y
         >
-          <Stack y>
-            <h2 className="font-bold text-2xl text-zinc-900 dark:text-zinc-100">
-              Welcome back!
-            </h2>
-            <p className="mt-1 text-zinc-500 dark:text-zinc-400">
-              Here&apos;s an overview of your content.
-            </p>
+          <Stack y className="min-h-15 gap-1">
+            <h3 className="font-semibold text-lg text-zinc-900 dark:text-zinc-100">
+              Config JSON
+            </h3>
+            {validationError && (
+              <p className={cn("shrink-0 text-red-500 text-sm")}>
+                {validationError}
+              </p>
+            )}
           </Stack>
 
-          <Button
-            type="button"
-            onClick={handleRefreshAllCaches}
-            disabled={refreshingCache}
-            className="disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            <RefreshCw
-              className={cn("h-4 w-4", refreshingCache && "animate-spin")}
-            />
-            {refreshingCache ? "Refreshing..." : "Refresh All Caches"}
-          </Button>
-        </Stack>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat) => (
-            <div
-              key={stat.label}
-              className="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900"
+          <Stack x className="gap-2">
+            <Button
+              type="button"
+              onClick={handleFormat}
+              disabled={Boolean(validationError)}
+              className="bg-zinc-900 hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
             >
-              <Stack x className="items-center gap-3">
-                <stat.icon className="h-6 w-6 shrink-0 text-zinc-500 dark:text-zinc-400" />
-                <Stack y>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    {stat.label}
-                  </p>
-                  <p className="font-bold text-2xl text-zinc-900 dark:text-zinc-100">
-                    {stat.value}
-                  </p>
-                </Stack>
-              </Stack>
-            </div>
-          ))}
-        </div>
-
-        {/* Quick Actions */}
-        <Stack y>
-          <h3 className="mb-4 font-semibold text-lg text-zinc-900 dark:text-zinc-100">
-            Quick Actions
-          </h3>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {quickActions.map((action) => (
-              <Link
-                key={action.title}
-                href={action.href}
-                className={`group rounded-xl border border-zinc-200 p-6 transition-all hover:border-zinc-300 hover:shadow-md dark:border-zinc-800 dark:hover:border-zinc-700 ${action.color}`}
-              >
-                <Stack x className="items-center gap-4">
-                  <action.icon className="h-8 w-8 shrink-0 text-zinc-600 dark:text-zinc-300" />
-                  <Stack y>
-                    <h4 className="font-semibold text-zinc-900 group-hover:text-blue-600 dark:text-zinc-100 dark:group-hover:text-blue-400">
-                      {action.title}
-                    </h4>
-                    <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                      {action.description}
-                    </p>
-                  </Stack>
-                </Stack>
-              </Link>
-            ))}
-          </div>
+              Format
+            </Button>
+            <Button
+              type="button"
+              onClick={handleSave}
+              disabled={Boolean(validationError) || saving}
+              className="disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {saving ? "Saving..." : "Save Config"}
+            </Button>
+          </Stack>
         </Stack>
 
-        {/* Recent Activity Placeholder */}
-        <Stack y>
-          <h3 className="mb-4 font-semibold text-lg text-zinc-900 dark:text-zinc-100">
-            Recent Activity
-          </h3>
-          <div className="rounded-xl border border-zinc-200 bg-white p-8 text-center dark:border-zinc-800 dark:bg-zinc-900">
-            <p className="text-zinc-500 dark:text-zinc-400">
-              No recent activity to show.
-            </p>
-          </div>
-        </Stack>
+        <CodeMirrorEditor
+          value={configText}
+          extensions={configEditorExtensions}
+          onChange={setConfigText}
+        />
       </Stack>
     </DashboardShell>
   );
