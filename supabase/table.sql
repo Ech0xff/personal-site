@@ -55,6 +55,12 @@ CREATE TABLE public.tags (
 );
 CREATE UNIQUE INDEX idx_tags_name_lower ON public.tags(lower(name));
 
+CREATE TABLE public.configs (
+  key TEXT PRIMARY KEY,
+  value JSONB NOT NULL DEFAULT '{}'::jsonb,
+  CONSTRAINT configs_key_not_blank CHECK (btrim(key) <> '')
+);
+
 CREATE TABLE public.post_tags (
   post_id UUID NOT NULL REFERENCES public.posts(id) ON DELETE CASCADE,
   tag_id UUID NOT NULL REFERENCES public.tags(id) ON DELETE CASCADE,
@@ -291,6 +297,7 @@ ALTER TABLE public.posts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.thoughts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tags ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.configs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.post_tags ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.thought_tags ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.event_tags ENABLE ROW LEVEL SECURITY;
@@ -319,6 +326,11 @@ USING (public.is_admin()) WITH CHECK (public.is_admin());
 CREATE POLICY "TAG PUBLIC" ON public.tags FOR SELECT
 USING (true);
 CREATE POLICY "TAG ADMIN" ON public.tags FOR ALL
+USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+CREATE POLICY "CONFIG PUBLIC" ON public.configs FOR SELECT
+USING (true);
+CREATE POLICY "CONFIG ADMIN" ON public.configs FOR ALL
 USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 CREATE POLICY "POST TAG PUBLIC" ON public.post_tags FOR SELECT
