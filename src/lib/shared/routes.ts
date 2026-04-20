@@ -14,7 +14,7 @@ export const ROUTES = {
 
   // Dashboard routes
   DASHBOARD: {
-    OVERVIEW: "/dashboard/overview",
+    CONIFG: "/dashboard/config",
     POSTS: "/dashboard/posts",
     THOUGHTS: "/dashboard/thoughts",
     EVENT: "/dashboard/event",
@@ -35,7 +35,7 @@ export const getLocalizedRoutes = (locale: string) => {
     EVENTS: localizeHref(normalizedLocale, ROUTES.EVENTS),
     AUTH: localizeHref(normalizedLocale, ROUTES.AUTH),
     DASHBOARD: {
-      OVERVIEW: localizeHref(normalizedLocale, ROUTES.DASHBOARD.OVERVIEW),
+      Config: localizeHref(normalizedLocale, ROUTES.DASHBOARD.CONIFG),
       POSTS: localizeHref(normalizedLocale, ROUTES.DASHBOARD.POSTS),
       THOUGHTS: localizeHref(normalizedLocale, ROUTES.DASHBOARD.THOUGHTS),
       EVENT: localizeHref(normalizedLocale, ROUTES.DASHBOARD.EVENT),

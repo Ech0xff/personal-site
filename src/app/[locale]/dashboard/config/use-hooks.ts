@@ -95,8 +95,7 @@ export const useHooks = () => {
 
   const saveConfig = useCallback(async () => {
     const result = parseConfigJsonResult(configText);
-    if (!result.ok) 
-      throw new Error(result.error);
+    if (!result.ok) throw new Error(result.error);
 
     setSaving(true);
     try {

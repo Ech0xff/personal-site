@@ -40,8 +40,8 @@ async function Navbar({
     },
     {
       isAdmin: true,
-      name: "Overview",
-      path: routes.DASHBOARD.OVERVIEW,
+      name: "Config",
+      path: routes.DASHBOARD.Config,
       icon: UserCog,
     },
     {
