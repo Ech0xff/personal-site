@@ -14,6 +14,21 @@ export type Database = {
   }
   public: {
     Tables: {
+      configs: {
+        Row: {
+          key: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          value?: Json
+        }
+        Update: {
+          key?: string
+          value?: Json
+        }
+        Relationships: []
+      }
       event_tags: {
         Row: {
           event_id: string
