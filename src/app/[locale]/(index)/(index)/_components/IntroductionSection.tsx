@@ -1,75 +1,52 @@
-import PostListItem from "@/components/features/posts/PostCard";
-import TagSphere from "@/components/features/tags/TagSphere";
-import { Bilibili, Email, Github, Qq } from "@/components/icons";
+import ContributionCalendar from "@/components/features/contributions/ContributionCalendar";
+import TagMarquee from "@/components/features/tags/TagMarquee";
+import ContentRenderer from "@/components/ui/content/ContentRenderer";
 import Stack from "@/components/ui/Stack";
 import {
   getThemedPlaylistUrl,
   type SiteConfig,
 } from "@/lib/shared/config/site";
 import { getT } from "@/lib/shared/i18n/tools";
-import { cn } from "@/lib/shared/utils";
-import type { BlogSummaryData, PostWithTags } from "@/types";
+import type { BlogSummaryData, RecentActivityItem } from "@/types";
 
 import Card from "./Card";
+import RecentActivityList from "./RecentActivityList";
 
 export async function IntroductionSection({
   locale,
   data,
-  posts,
+  recentActivity,
   config,
 }: {
   locale?: string;
   data: BlogSummaryData;
-  posts: PostWithTags[];
+  recentActivity: RecentActivityItem[];
   config: SiteConfig;
 }) {
   const t = getT("IndexHome", locale);
 
-  const { statistics } = data;
   const tags = data.tags ?? [];
+  const lightLanguagesCardImage =
+    "https://github-readme-stats.vercel.app/api/top-langs/?username=muyu258&hide_border=true&layout=compact";
+  const darkLanguagesCardImage =
+    "https://github-readme-stats.vercel.app/api/top-langs/?username=muyu258&theme=tokyonight&hide_border=true&layout=compact";
 
-  const totalCharacters = statistics
-    ? statistics.posts.show.characters +
-      statistics.thoughts.show.characters +
-      statistics.events.show.characters
-    : 0;
+  const totalCharacters =
+    data.posts.characters + data.thoughts.characters + data.events.characters;
   const playlist = config.playlist.trim();
-
-  const socialLinks = [
-    {
-      name: "Bilibili",
-      link: config.socialLinks.bilibili.trim(),
-      icon: Bilibili,
-    },
-    {
-      name: "GitHub",
-      link: config.socialLinks.github.trim(),
-      icon: Github,
-    },
-    {
-      name: "Email",
-      link: config.socialLinks.email.trim(),
-      icon: Email,
-    },
-    {
-      name: "QQ",
-      link: config.socialLinks.qq.trim(),
-      icon: Qq,
-    },
-  ];
 
   const statsItems = [
     {
       label: t("stats.posts"),
-      count: statistics.posts.show.count,
+      count: data.posts.count,
     },
     {
       label: t("stats.thoughts"),
-      count: statistics.thoughts.show.count,
+      count: data.thoughts.count,
     },
     {
-      label: t("stats.articles"),
-      count: statistics.events.show.count,
+      label: t("stats.events"),
+      count: data.events.count,
     },
     {
       label: t("stats.characters"),
@@ -78,110 +55,67 @@ export async function IntroductionSection({
   ];
 
   return (
-    <Stack y className="mb-8 gap-8 px-4">
+    <Stack
+      y
+      className="mx-auto mb-8 w-[calc(100svw-2*var(--layout-padding-x))] gap-8 px-4"
+    >
       {/* About Card */}
       <Card title={t("about.cardTitle")}>
-        <p className="indent-8 text-sm leading-relaxed">{config.aboutMe}</p>
-      </Card>
-      {/* Find Me Card */}
-      <Card title={t("find.cardTitle")}>
-        <Stack className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {socialLinks.map((item) => {
-            const isDisabled = !item.link;
-
-            const content = (
-              <>
-                <Stack x className="relative z-10 h-full justify-between">
-                  <Stack className="font-medium text-slate-400 text-xs">
-                    {item.name}
-                  </Stack>
-                </Stack>
-                <item.icon
-                  className={cn(
-                    "absolute top-[50%] right-5 aspect-square h-15 w-15 translate-y-[-50%] opacity-50",
-                    isDisabled
-                      ? "text-slate-300 dark:text-slate-700"
-                      : "text-slate-400 transition-transform duration-300 group-hover:scale-110 dark:text-slate-500",
-                  )}
-                />
-              </>
-            );
-
-            if (isDisabled) {
-              return (
-                <div
-                  key={item.name}
-                  aria-disabled="true"
-                  className="relative flex h-24 cursor-not-allowed flex-col justify-between overflow-hidden rounded-2xl bg-slate-50 p-4 opacity-60 dark:bg-white/5"
-                >
-                  {content}
-                </div>
-              );
-            }
-
-            return (
-              <a
-                key={item.name}
-                href={item.link}
-                target={item.link?.startsWith("mailto") ? undefined : "_blank"}
-                rel={
-                  item.link?.startsWith("mailto")
-                    ? undefined
-                    : "noopener noreferrer"
-                }
-                className="group relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl bg-slate-50 p-4 transition-all duration-300 hover:bg-slate-100 dark:bg-white/5 dark:hover:bg-white/10"
-              >
-                {content}
-              </a>
-            );
-          })}
+        <Stack y className="rounded-2xl p-4">
+          <ContentRenderer content={config.aboutMe} />
         </Stack>
       </Card>
+
+      <Card title={t("recentActivity.cardTitle")}>
+        <RecentActivityList locale={locale} items={recentActivity} />
+      </Card>
+
       {/* Stats Card */}
       <Card title={t("stats.cardTitle")}>
-        <Stack className="grid gap-4 md:grid-cols-2">
-          <Stack
-            y
-            className="aspect-square min-h-0 gap-4 rounded-2xl bg-slate-50 p-4 dark:bg-white/5"
-          >
-            <Stack className="grid shrink-0 grid-cols-2 gap-3">
-              {statsItems.map((item) => (
-                <Stack
-                  key={item.label}
-                  y
-                  className="justify-between rounded-xl bg-white p-4 transition-transform duration-300 hover:scale-105 dark:bg-zinc-950/40"
-                >
-                  <Stack className="font-medium text-slate-400 text-xs uppercase tracking-wider">
-                    {item.label}
-                  </Stack>
-                  <Stack className="font-bold text-2xl text-slate-700 dark:text-slate-200">
-                    {item.count}
-                  </Stack>
-                </Stack>
-              ))}
-            </Stack>
+        <Stack y className="gap-4">
+          <ContributionCalendar
+            locale={locale}
+            posts={data.posts.contributions}
+            thoughts={data.thoughts.contributions}
+            events={data.events.contributions}
+          />
+
+          <TagMarquee tags={tags} />
+          <Stack className="grid gap-4 xl:grid-cols-2">
             <Stack
               y
-              className="min-h-0 flex-1 rounded-xl bg-white p-4 dark:bg-zinc-950/40"
+              className="h-full min-h-0 rounded-2xl bg-slate-50 p-4 dark:bg-white/5"
             >
-              <h4 className="mb-3 font-semibold text-slate-700 text-sm dark:text-slate-200">
-                {t("latestPosts.cardTitle")}
-              </h4>
-              <Stack y className="min-h-0 flex-1 overflow-auto">
-                {posts.length === 0 && (
-                  <p className="text-slate-400 text-sm">
-                    {t("latestPosts.empty")}
-                  </p>
-                )}
-                {posts.map((post) => (
-                  <PostListItem key={post.id} post={post} locale={locale} />
+              <Stack className="grid h-full flex-1 grid-cols-2 grid-rows-2 gap-3">
+                {statsItems.map((item) => (
+                  <Stack
+                    key={item.label}
+                    y
+                    className="h-full justify-between rounded-xl bg-white p-4 transition-transform duration-300 hover:scale-105 dark:bg-zinc-950/40"
+                  >
+                    <Stack className="font-medium text-slate-400 text-xs uppercase tracking-wider">
+                      {item.label}
+                    </Stack>
+                    <Stack className="font-bold text-2xl text-slate-700 dark:text-slate-200">
+                      {item.count}
+                    </Stack>
+                  </Stack>
                 ))}
               </Stack>
             </Stack>
-          </Stack>
 
-          <Stack className="aspect-square min-h-0 overflow-hidden rounded-2xl bg-slate-50 p-4 dark:bg-white/5">
-            <TagSphere className="h-full w-full" tags={tags} />
+            <Stack className="min-h-0 overflow-hidden rounded-2xl">
+              <img
+                src={lightLanguagesCardImage}
+                alt="Top languages"
+                className="h-full w-full rounded-2xl object-cover dark:hidden"
+              />
+              <img
+                src={darkLanguagesCardImage}
+                alt="Top languages"
+                className="hidden h-full w-full rounded-2xl object-cover dark:block"
+              />
+            </Stack>
           </Stack>
         </Stack>
       </Card>

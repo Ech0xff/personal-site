@@ -7,12 +7,74 @@ import {
   parseSiteConfig,
   SITE_CONFIG_KEY,
 } from "@/lib/shared/config/site";
-import { fetchConfig, fetchPosts, fetchSummary } from "@/lib/shared/services";
+import {
+  fetchConfig,
+  fetchEvents,
+  fetchPosts,
+  fetchSummary,
+  fetchThoughts,
+} from "@/lib/shared/services";
 import { cn } from "@/lib/shared/utils";
-import type { BlogSummaryData } from "@/types";
+import type { BlogSummaryData, RecentActivityItem } from "@/types";
 
 import AnimationSection from "./_components/AnimationSection";
 import { IntroductionSection } from "./_components/IntroductionSection";
+
+const MARKDOWN_IMAGE_REGEX = /!\[([^\]]*)\]\([^)]+\)/g;
+const MARKDOWN_LINK_REGEX = /\[([^\]]+)\]\([^)]+\)/g;
+const MARKDOWN_DECORATION_REGEX = /[`*_~>#-]/g;
+
+const toPlainText = (content: string) =>
+  content
+    .replace(MARKDOWN_IMAGE_REGEX, "$1")
+    .replace(MARKDOWN_LINK_REGEX, "$1")
+    .replace(MARKDOWN_DECORATION_REGEX, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+const buildRecentActivity = async (): Promise<RecentActivityItem[]> => {
+  const [posts, thoughts, events] = await Promise.all([
+    fetchPosts(undefined, 8),
+    fetchThoughts(),
+    fetchEvents(),
+  ]);
+
+  return [
+    ...posts.map(
+      (post): RecentActivityItem => ({
+        id: post.id,
+        kind: "post",
+        published_at: post.published_at,
+        tags: post.tags,
+        title: post.title,
+      }),
+    ),
+    ...thoughts.map(
+      (thought): RecentActivityItem => ({
+        id: thought.id,
+        kind: "thought",
+        published_at: thought.published_at,
+        tags: [],
+        title: toPlainText(thought.content),
+      }),
+    ),
+    ...events.map(
+      (event): RecentActivityItem => ({
+        id: event.id,
+        kind: "event",
+        published_at: event.published_at,
+        tags: event.tags,
+        title: event.title,
+      }),
+    ),
+  ]
+    .sort(
+      (a, b) =>
+        new Date(b.published_at || 0).getTime() -
+        new Date(a.published_at || 0).getTime(),
+    )
+    .slice(0, 12);
+};
 
 export default async function HomePage({
   params,
@@ -24,16 +86,16 @@ export default async function HomePage({
   cacheTag(CACHE_TAGS.config);
 
   const { locale } = await params;
-  const [data, posts, config] = await Promise.all([
+  const [data, recentActivity, config] = await Promise.all([
     fetchSummary() as Promise<BlogSummaryData>,
-    fetchPosts(undefined, 5),
+    buildRecentActivity(),
     fetchConfig(undefined, SITE_CONFIG_KEY, locale.replace("-", "_"), true),
   ]);
 
   return (
     <>
       <AnimationSection />
-      <Stack y className="group relative w-full gap-3 pt-[10svh]">
+      <Stack y className="group relative flex w-full gap-3 pt-[10svh]">
         {/* background */}
         <div
           className={cn(
@@ -44,7 +106,7 @@ export default async function HomePage({
         <IntroductionSection
           locale={locale}
           data={data}
-          posts={posts}
+          recentActivity={recentActivity}
           config={config ? parseSiteConfig(config) : defaultSiteConfig}
         />
       </Stack>

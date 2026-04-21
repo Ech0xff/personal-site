@@ -25,12 +25,35 @@
       "cardTitle": "Latest Posts",
       "empty": "No posts yet..."
     },
+    "activity": {
+      "cardTitle": "Activity"
+    },
+    "recentActivity": {
+      "cardTitle": "Recent Updates",
+      "empty": "No activity yet..."
+    },
     "stats": {
       "cardTitle": "Statistics",
+      "all": "All",
       "posts": "Posts",
       "thoughts": "Thoughts",
-      "articles": "Articles",
-      "characters": "Characters"
+      "events": "Events",
+      "characters": "Characters",
+      "contributions": "{count} contributions in the past year",
+      "summaryTitle": "This Year",
+      "summaryDescription": "{count} public notes and entries so far. Still building in public, one update at a time.",
+      "summaryActiveDays": "Active Days",
+      "summaryMainType": "Main Format",
+      "summaryTopics": "Topics",
+      "topicsTitle": "Topics in Motion",
+      "topicsDescription": "A quick look at the themes that keep surfacing across posts, thoughts, and events.",
+      "summaryTopicsBadge": "{count} topics tracked",
+      "views": "Views",
+      "unknown": "Unknown",
+      "less": "Less",
+      "more": "More",
+      "contributionCount": "contributions",
+      "contributionSingle": "contribution"
     },
     "playlist": {
       "cardTitle": "My Playlist"

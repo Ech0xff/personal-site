@@ -1,11 +1,10 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import type { BlogSummaryData, Database, Status, TagSourceType } from "@/types";
+import type { BlogSummaryData, Database, TagSourceType } from "@/types";
 
 import { makeStaticClient } from "../supabase";
 
 type FetchSummaryOptions = {
-  queryStatus?: Status | null;
   tagSourceTypes?: TagSourceType[] | null;
 };
 
@@ -14,9 +13,6 @@ export const fetchSummary = async (
   options: FetchSummaryOptions = {},
 ) => {
   const args = {
-    ...(options.queryStatus !== undefined
-      ? { query_status: options.queryStatus ?? undefined }
-      : {}),
     ...(options.tagSourceTypes !== undefined
       ? { tag_source_types: options.tagSourceTypes ?? undefined }
       : {}),

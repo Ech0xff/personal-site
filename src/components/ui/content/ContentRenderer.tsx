@@ -1,6 +1,11 @@
 // src/components/ui/markdown/ContentRenderer.tsx
 
-import type { ComponentPropsWithoutRef } from "react";
+import {
+  Children,
+  type ComponentPropsWithoutRef,
+  isValidElement,
+  type ReactNode,
+} from "react";
 import type { Options } from "react-markdown";
 import Markdown from "react-markdown";
 
@@ -19,6 +24,40 @@ import { PreRender, rehypeCodeBlockProps } from "./_components/PreRender";
 interface Props {
   content: string;
   className?: string;
+}
+
+function isWhitespaceNode(node: ReactNode) {
+  return typeof node === "string" && node.trim().length === 0;
+}
+
+function isImageParagraph(children: ReactNode) {
+  const nodes = Children.toArray(children);
+  const contentNodes = nodes.filter((node) => !isWhitespaceNode(node));
+
+  return (
+    contentNodes.length > 0 &&
+    contentNodes.every(
+      (node) =>
+        isValidElement(node) &&
+        typeof node.type === "string" &&
+        node.type === "img",
+    )
+  );
+}
+
+function ParagraphRender({
+  children,
+  ...props
+}: ComponentPropsWithoutRef<"p">) {
+  if (isImageParagraph(children)) {
+    return (
+      <div className="not-prose flex flex-wrap items-center gap-2" {...props}>
+        {Children.toArray(children).filter((node) => !isWhitespaceNode(node))}
+      </div>
+    );
+  }
+
+  return <p {...props}>{children}</p>;
 }
 
 function TableRender(props: ComponentPropsWithoutRef<"table">) {
@@ -48,6 +87,7 @@ export default function ContentRenderer({ content, className = "" }: Props) {
         rehypePlugins={rehypePlugins}
         components={
           {
+            p: ParagraphRender,
             pre: PreRender,
             table: TableRender,
             [DIRECTIVE_RENDER_ELEMENT_NAME]: DirectiveRender,

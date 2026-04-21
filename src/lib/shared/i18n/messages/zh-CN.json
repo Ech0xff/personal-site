@@ -25,12 +25,34 @@
       "cardTitle": "最新文章",
       "empty": "还没有文章..."
     },
+    "activity": {
+      "cardTitle": "活跃记录"
+    },
+    "recentActivity": {
+      "cardTitle": "最近动态",
+      "empty": "还没有动态..."
+    },
     "stats": {
       "cardTitle": "统计",
+      "all": "全部",
       "posts": "文章",
-      "thoughts": "想法",
-      "articles": "条目",
-      "characters": "字数"
+      "thoughts": "碎碎念",
+      "events": "事件",
+      "characters": "字数",
+      "contributions": "过去一年共有 {count} 次贡献",
+      "summaryTitle": "年度摘要",
+      "summaryDescription": "今年已经留下了 {count} 次公开记录，继续慢慢把想法写出来。",
+      "summaryActiveDays": "活跃天数",
+      "summaryMainType": "主要类型",
+      "summaryTopics": "标签数量",
+      "topicsTitle": "关注主题",
+      "topicsDescription": "这些关键词大致勾勒出了我最近在写什么、关注什么。",
+      "summaryTopicsBadge": "{count} 个标签",
+      "views": "浏览量",
+      "unknown": "Unknown",
+      "less": "少",
+      "more": "多",
+      "contributionCount": "次贡献"
     },
     "playlist": {
       "cardTitle": "我的歌单"

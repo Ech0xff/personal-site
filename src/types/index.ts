@@ -18,25 +18,23 @@ export type ThoughtUpdate = TablesUpdate<"thoughts">;
 export type EventInsert = TablesInsert<"events">;
 export type EventUpdate = TablesUpdate<"events">;
 
-interface StatsItem {
-  show: {
-    count: number;
-    characters: number;
-  };
-  hide: {
-    count: number;
-    characters: number;
-  };
-}
-
 export type Status = "show" | "hide" | string;
 
+export interface ContributionDay {
+  date: string;
+  count: number;
+}
+
+interface SummaryItem {
+  count: number;
+  characters: number;
+  contributions: ContributionDay[];
+}
+
 export interface BlogSummaryData {
-  statistics: {
-    posts: StatsItem;
-    thoughts: StatsItem;
-    events: StatsItem;
-  };
+  posts: SummaryItem;
+  thoughts: SummaryItem;
+  events: SummaryItem;
   tags: TagWithCount[];
 }
 
