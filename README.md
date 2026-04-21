@@ -1,108 +1,113 @@
-# Personal Blog Platform
+# Personal Site
 
-A modern, full-featured personal blog platform built with Next.js 16, React 19, Supabase, and Tailwind CSS.
+A personal site and lightweight CMS built with Next.js 16, React 19, Supabase, and Tailwind CSS 4.
 
-## 📋 Todo List
+It includes a public-facing site for posts, thoughts, and events, plus a locale-aware dashboard for content, tags, images, config, and account management.
 
-- [x] Optimize project structure.
-- [x] Configure a webhook to refresh the cache.
-- [x] Separate environment
-- [x] Automated Supabase configuration
-- [x] Support PlantUML diagrams in Markdown content.
-- [ ] Use the original image hash when saving and uploading images.
-- [ ] Supports content search
+## Features
 
-## 🛠️ Tech Stack
+- Public pages for posts, thoughts, and events
+- Dashboard for managing posts, thoughts, events, tags, images, site config, and account info
+- Supabase-backed auth, database, and storage
+- Locale-aware routing with `en-US` and `zh-CN`
+- Markdown rendering with GFM, syntax highlighting, heading anchors, and custom directives
+- PlantUML code block rendering through the public PlantUML server
+- Click-to-open image preview
+- Cache revalidation webhook for content updates
 
-- **Framework**: [Next.js 16](https://nextjs.org/) with App Router
-- **UI Library**: [React 19](https://react.dev/)
-- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
-- **Database & Storage**: [Supabase](https://supabase.com/)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **Markdown**: [react-markdown](https://github.com/remarkjs/react-markdown)
-- **Syntax Highlighting**: [highlight.js](https://highlightjs.org/)
-- **PlantUML Encoding**: [fflate](https://github.com/101arrowz/fflate)
-- **Image Compression**: [browser-image-compression](https://github.com/Donaldcwl/browser-image-compression)
-- **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
+## Tech Stack
 
-## 📋 Prerequisites
+- [Next.js 16](https://nextjs.org/) with App Router
+- [React 19](https://react.dev/)
+- [Tailwind CSS 4](https://tailwindcss.com/)
+- [Supabase](https://supabase.com/)
+- [react-markdown](https://github.com/remarkjs/react-markdown)
+- [remark-gfm](https://github.com/remarkjs/remark-gfm)
+- [remark-directive](https://github.com/remarkjs/remark-directive)
+- [rehype-prism-plus](https://github.com/timlrx/rehype-prism-plus)
+- [Framer Motion](https://www.framer.com/motion/)
+- [Lucide React](https://lucide.dev/)
+- [Bun](https://bun.sh/) for local scripts and package management
 
-- Node.js 18+ (recommended: Node.js 24)
-- npm, yarn, pnpm, or bun
-- Supabase account ([sign up here](https://supabase.com/))
+## Prerequisites
 
-## 🚀 Getting Started
+- Node.js 18+
+- Bun
+- A Supabase project
+
+## Getting Started
 
 ### 1. Clone the repository
 
 ```bash
 git clone https://github.com/muyu258/personal-site.git
+cd personal-site
 ```
 
 ### 2. Install dependencies
 
 ```bash
-# Using bun (recommended)
 bun install
-
-# Or using npm
-npm install
-
-# Or using yarn
-yarn install
-
-# Or using pnpm
-pnpm install
 ```
 
-### 3. Set up Supabase
-
-1. Create a new project on [Supabase](https://app.supabase.com/)
-2. Go to Project Settings > API to get your credentials
-3. Run the SQL commands in `supabase/table.sql` to create required tables
-4. Create a storage bucket named `images` with public access
-
-### 4. Configure environment variables
+### 3. Configure environment variables
 
 ```bash
-# Copy the example file
-cp .env.example .env.local
-
-# Edit .env.local with your actual values
+cp .env.example .env.development
 ```
 
-Required environment variables:
+Required values:
 
-- `SUPABASE_URL`: Your Supabase project URL
-- `SUPABASE_ANON_KEY`: Your Supabase anonymous key
-- `SUPABASE_PROJECT_ID`: Your Supabase project ID (for type generation)
-- `DASHBOARD_SECRET_KEY`: A secure secret key for dashboard authentication
-- `NEXT_PUBLIC_APP_TIMEZONE` (optional): IANA timezone (e.g. `America/New_York`), defaults to `America/New_York` when missing or invalid
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `DATABASE_URL`
+- `SITE_URL`
+- `WEBHOOK_SECRET`
 
-### 5. Generate TypeScript types (optional)
+Optional values:
 
-```bash
-bun run gen:types
-```
+- `NEXT_PUBLIC_APP_TIMEZONE`
+- `NEXT_PUBLIC_OAUTH_PROVIDERS`
 
-### 6. Run the development server
+The example file also works as a reference for production env setup.
+
+### 4. Set up Supabase
+
+1. Create a Supabase project.
+2. Run the SQL in `supabase/table.sql`.
+3. Create a public storage bucket named `images`.
+4. Fill in the env values from your project settings.
+
+### 5. Start the development server
 
 ```bash
 bun run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the site.
+Open [http://localhost:3000](http://localhost:3000).
 
-### 7. Access the dashboard
+### 6. Access the dashboard
 
-Navigate to [http://localhost:3000/auth](http://localhost:3000/auth) and enter your `DASHBOARD_SECRET_KEY` to access the admin dashboard.
+Open [http://localhost:3000/en-US/auth](http://localhost:3000/en-US/auth) or [http://localhost:3000/zh-CN/auth](http://localhost:3000/zh-CN/auth).
 
-## 📝 Content Rendering
+The auth page supports email/password sign-in and sign-up. OAuth providers are controlled by `NEXT_PUBLIC_OAUTH_PROVIDERS`.
 
-Post, thought, and event content is rendered from Markdown through `react-markdown`.
+Social links such as Bilibili, GitHub, email, and QQ are configured in the dashboard `Config` page through the `site` config, not through environment variables.
 
-### PlantUML diagrams
+If you need admin access for an existing user, use the interactive maintenance menu:
+
+```bash
+bun run menu dev
+```
+
+Then choose `Promote user to admin`.
+
+## Markdown Support
+
+Content is rendered with `react-markdown`, `remark-gfm`, and custom directive handling.
+
+### PlantUML
 
 Use a fenced code block with `plantuml` or `puml`:
 
@@ -115,97 +120,70 @@ Bob --> Alice: Hi
 ```
 ````
 
-The renderer encodes the PlantUML source in the browser bundle and requests SVGs directly from the public PlantUML server:
+The client compresses and encodes the source, then requests SVG output from the public PlantUML server:
 
 ```txt
 https://www.plantuml.com/plantuml/svg/{encoded}
 ```
 
-PlantUML text encoding is implemented in `src/lib/shared/utils/plantuml.ts` with `fflate`. The project does not proxy PlantUML requests through a Next.js route and does not require a PlantUML environment variable.
+Because diagrams are sent to a public service, avoid putting sensitive content in PlantUML blocks.
 
-PlantUML content is compressed and encoded, not encrypted. Avoid putting private system details or sensitive architecture diagrams in public posts when using the public PlantUML server.
+### Custom directives
 
-### Image preview
+The renderer also supports custom directives such as:
 
-Images open in a full-screen preview when clicked. The preview starts at `100%`, where `100%` means the whole image is fitted inside the current viewport. Use the bottom zoom controls to enlarge or reduce the preview. When the image is larger than the viewport, the preview container supports both horizontal and vertical scrolling.
+- `:ref[...]` for linking to posts, thoughts, events, files, or external URLs
+- `::card{title="..." tone="info"}` for callout-style content blocks
+- `:meta{url="https://..."}` for URL metadata cards
 
-## 📦 Build for Production
+## Scripts
 
-```bash
-bun run build
-bun run start
-```
+- `bun run dev` - start the Next.js dev server
+- `bun run build` - build for production
+- `bun run start` - start the production server
+- `bun run lint` - run Biome checks and `tsc --noEmit`
+- `bun run format` - apply Biome fixes
+- `bun run menu dev` - open the interactive maintenance menu with `.env.development`
+- `bun run menu prod` - open the interactive maintenance menu with `.env.production`
+- `bun run gen:types:dev` - generate Supabase types using `.env.development`
+- `bun run gen:types:prod` - generate Supabase types using `.env.production`
+- `bun run gen:icons` - regenerate icon components from `public/svg-icons`
 
-## 🚢 Deploy to Vercel
+The interactive menu currently includes:
 
-### Quick Deploy
+- Reset database
+- Rebind webhooks
+- Promote user to admin
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/muyu258/personal-site.git)
+## Project Structure
 
-### Manual Deploy
-
-1. Push your code to GitHub/GitLab/Bitbucket
-2. Go to [Vercel](https://vercel.com/) and sign in
-3. Click "New Project" and import your repository
-4. Configure environment variables:
-   - Add all variables from `.env.example`
-5. Click "Deploy"
-
-### Environment Variables for Vercel
-
-Make sure to add these in your Vercel project settings:
-
-```
-SUPABASE_URL=your_supabase_project_url
-SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-SUPABASE_PROJECT_ID=your_supabase_project_id
-DASHBOARD_SECRET_KEY=your_secure_secret_key_here
-```
-
-## 📁 Project Structure
-
-```
-base/
+```txt
+.
+├── scripts/                 # Interactive maintenance utilities
 ├── src/
-│   ├── app/                   # Next.js App Router pages
-│   │   ├── (index)/           # Public facing pages
-│   │   ├── auth/              # Authentication page
-│   │   └── dashboard/         # Admin dashboard
-│   │       ├── posts/         # Posts management
-│   │       ├── thoughts/      # Thoughts management
-│   │       ├── event/         # Events management
-│   │       └── images/        # Image gallery management
-│   ├── components/            # Reusable components
-│   ├── lib/                   # Utility functions
-│   ├── styles/                # Global styles
-│   └── types/                 # TypeScript types
-├── public/                    # Static assets
-├── supabase/                  # Supabase SQL schemas
-└── ...config files
+│   ├── app/                 # App Router pages and API routes
+│   ├── components/          # Shared UI and feature components
+│   ├── lib/                 # Client/server/shared helpers
+│   ├── styles/              # Global styles
+│   └── types/               # Shared TypeScript types
+├── supabase/
+│   └── table.sql            # Schema and database helpers
+└── public/                  # Static assets
 ```
 
-## 🎨 Available Scripts
+## Deployment Notes
 
-- `bun run dev` - Start development server
-- `bun run build` - Build for production
-- `bun run start` - Start production server
-- `bun run lint` - Run Biome and TypeScript checks
-- `bun run lint:fix` - Fix imports, formatting, and auto-fixable lint issues
-- `bun run format` - Format code with Biome
-- `bun run format:check` - Check Biome formatting without changing files
-- `bun run gen:types` - Generate TypeScript types from Supabase
-- `bun run gen:icons` - Generate icon components from SVGs
+For deployment, provide the same environment variables as local development, especially:
 
-### Maintenance Scripts (Interactive)
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `DATABASE_URL`
+- `SITE_URL`
+- `WEBHOOK_SECRET`
 
-These scripts require explicit environment selection and interactive confirmation (`yes`) before execution.
+If OAuth is enabled, make sure your Supabase auth redirect URLs include your deployed site URL and the callback route.
 
-- `bun run reset:db:dev` - Reset database + configure webhook with `.env.development`
-- `bun run reset:db:prod` - Reset database + configure webhook with `.env.production`
-- `bun run vercel:env:push:dev` - Push env vars to Vercel `development`
-- `bun run vercel:env:push:prod` - Push env vars to Vercel `production`
+## License
 
-## 📝 License
-
-This project is open source and available under the [MIT License](LICENSE).
+[MIT](LICENSE)
