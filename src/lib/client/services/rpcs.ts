@@ -1,10 +1,9 @@
 import { fetchSummary } from "@/lib/shared/services/rpcs";
-import type { Status, TagSourceType } from "@/types";
+import type { TagSourceType } from "@/types";
 
 import { makeBrowserClient } from "../supabase";
 
 type FetchSummaryByBrowserOptions = {
-  queryStatus?: Status | null;
   tagSourceTypes?: TagSourceType[] | null;
 };
 

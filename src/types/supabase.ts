@@ -238,10 +238,7 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      get_summary: {
-        Args: { query_status?: string; tag_source_types?: string[] };
-        Returns: Json;
-      };
+      get_summary: { Args: { tag_source_types?: string[] }; Returns: Json };
       is_admin: { Args: never; Returns: boolean };
       manage_webhook: {
         Args: {

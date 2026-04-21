@@ -100,89 +100,112 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 CREATE OR REPLACE FUNCTION get_summary(
-  query_status VARCHAR DEFAULT NULL,
   tag_source_types TEXT[] DEFAULT NULL
 )
 RETURNS JSON
 LANGUAGE plpgsql
 AS $$
 DECLARE
-  posts_stats JSON;
-  thoughts_stats JSON;
-  events_stats JSON;
+  posts_summary JSON;
+  thoughts_summary JSON;
+  events_summary JSON;
   tags_summary JSON;
 BEGIN
 
   SELECT json_build_object(
-    'show', json_build_object(
-      'count', COUNT(*) FILTER (WHERE status = 'show'),
-      'characters', COALESCE(SUM(LENGTH(content)) FILTER (WHERE status = 'show'), 0)
-    ),
-    'hide', json_build_object(
-      'count', COUNT(*) FILTER (WHERE status = 'hide'),
-      'characters', COALESCE(SUM(LENGTH(content)) FILTER (WHERE status = 'hide'), 0)
+    'count', COUNT(*),
+    'characters', COALESCE(SUM(LENGTH(content)), 0),
+    'contributions', (
+      WITH daily_counts AS (
+        SELECT
+          published_at::DATE AS day,
+          COUNT(*)::INTEGER AS count
+        FROM public.posts
+        GROUP BY published_at::DATE
+      )
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'date', daily_counts.day,
+            'count', daily_counts.count
+          )
+          ORDER BY daily_counts.day
+        ),
+        '[]'::JSON
+      )
+      FROM daily_counts
     )
-  ) INTO posts_stats
-  FROM public.posts
-  WHERE
-    (status = query_status OR query_status IS NULL)
-    AND (status = 'show' OR public.is_admin());
+  ) INTO posts_summary
+  FROM public.posts;
 
   SELECT json_build_object(
-    'show', json_build_object(
-      'count', COUNT(*) FILTER (WHERE status = 'show'),
-      'characters', COALESCE(SUM(LENGTH(content)) FILTER (WHERE status = 'show'), 0)
-    ),
-    'hide', json_build_object(
-      'count', COUNT(*) FILTER (WHERE status = 'hide'),
-      'characters', COALESCE(SUM(LENGTH(content)) FILTER (WHERE status = 'hide'), 0)
+    'count', COUNT(*),
+    'characters', COALESCE(SUM(LENGTH(content)), 0),
+    'contributions', (
+      WITH daily_counts AS (
+        SELECT
+          published_at::DATE AS day,
+          COUNT(*)::INTEGER AS count
+        FROM public.thoughts
+        GROUP BY published_at::DATE
+      )
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'date', daily_counts.day,
+            'count', daily_counts.count
+          )
+          ORDER BY daily_counts.day
+        ),
+        '[]'::JSON
+      )
+      FROM daily_counts
     )
-  ) INTO thoughts_stats
-  FROM public.thoughts
-  WHERE
-    (status = query_status OR query_status IS NULL)
-    AND (status = 'show' OR public.is_admin());
+  ) INTO thoughts_summary
+  FROM public.thoughts;
 
   SELECT json_build_object(
-    'show', json_build_object(
-      'count', COUNT(*) FILTER (WHERE status = 'show'),
-      'characters', COALESCE(SUM(LENGTH(content)) FILTER (WHERE status = 'show'), 0)
-    ),
-    'hide', json_build_object(
-      'count', COUNT(*) FILTER (WHERE status = 'hide'),
-      'characters', COALESCE(SUM(LENGTH(content)) FILTER (WHERE status = 'hide'), 0)
+    'count', COUNT(*),
+    'characters', COALESCE(SUM(LENGTH(content)), 0),
+    'contributions', (
+      WITH daily_counts AS (
+        SELECT
+          published_at::DATE AS day,
+          COUNT(*)::INTEGER AS count
+        FROM public.events
+        GROUP BY published_at::DATE
+      )
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'date', daily_counts.day,
+            'count', daily_counts.count
+          )
+          ORDER BY daily_counts.day
+        ),
+        '[]'::JSON
+      )
+      FROM daily_counts
     )
-  ) INTO events_stats
-  FROM public.events
-  WHERE
-    (status = query_status OR query_status IS NULL)
-    AND (status = 'show' OR public.is_admin());
+  ) INTO events_summary
+  FROM public.events;
 
   WITH tag_refs AS (
     SELECT public.post_tags.tag_id, 'post'::TEXT AS source_type
     FROM public.post_tags
     JOIN public.posts ON public.posts.id = public.post_tags.post_id
-    WHERE
-      (public.posts.status = query_status OR query_status IS NULL)
-      AND (public.posts.status = 'show' OR public.is_admin())
 
     UNION ALL
 
     SELECT public.thought_tags.tag_id, 'thought'::TEXT AS source_type
     FROM public.thought_tags
     JOIN public.thoughts ON public.thoughts.id = public.thought_tags.thought_id
-    WHERE
-      (public.thoughts.status = query_status OR query_status IS NULL)
-      AND (public.thoughts.status = 'show' OR public.is_admin())
 
     UNION ALL
 
     SELECT public.event_tags.tag_id, 'event'::TEXT AS source_type
     FROM public.event_tags
     JOIN public.events ON public.events.id = public.event_tags.event_id
-    WHERE
-      (public.events.status = query_status OR query_status IS NULL)
-      AND (public.events.status = 'show' OR public.is_admin())
   )
   SELECT COALESCE(json_agg(t), '[]'::json) INTO tags_summary
   FROM (
@@ -200,11 +223,9 @@ BEGIN
   ) t;
 
   RETURN json_build_object(
-    'statistics', json_build_object(
-      'posts', posts_stats,
-      'thoughts', thoughts_stats,
-      'events', events_stats
-    ),
+    'posts', posts_summary,
+    'thoughts', thoughts_summary,
+    'events', events_summary,
     'tags', tags_summary
   );
 
@@ -372,6 +393,24 @@ USING (public.is_admin()) WITH CHECK (public.is_admin());
 CREATE POLICY "STORAGE OBJECT MANAGE" ON storage.objects FOR ALL TO authenticated
 USING (bucket_id = 'images' AND public.is_admin())
 WITH CHECK (bucket_id = 'images' AND public.is_admin());
+
+-----------------------------------------------------------------------------------------------------
+
+INSERT INTO public.configs (key, value)
+VALUES
+  (
+    'site:en_US',
+    '{
+      "aboutMe": "I am Muyu, a Junior Software Engineering student and a Frontend Engineer currently based in Chengdu. It is a genuine pleasure to cross paths with you in this vast digital landscape. I believe technology serves as a bridge between imagination and reality-existing not for its own sake, but to empower our ability to create and solve. Guided by the spirit of \"I want to understand everything,\" I find joy in deconstructing complex systems and uncovering the underlying logic behind every tool."
+    }'::jsonb
+  ),
+  (
+    'site:zh_CN',
+    '{
+      "aboutMe": "我是 Muyu，一名软件工程专业本科生，同时也是一名前端工程师，目前在成都。很高兴能在这片广阔的数字世界与你相遇。我始终相信技术是连接想象与现实的桥梁——它存在的意义不只是技术本身，而是帮助我们创造并解决问题。带着“我想理解一切”的好奇心，我享受拆解复杂系统、追溯每个工具背后底层逻辑的过程。"
+    }'::jsonb
+  )
+ON CONFLICT (key) DO NOTHING;
 
 -----------------------------------------------------------------------------------------------------
 
