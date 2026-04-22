@@ -12,7 +12,7 @@ export default function ThemeToggle({ className }: { className?: string }) {
       type="button"
       onClick={toggleHandler}
       className={cn(
-        "rounded-lg p-2 transition-colors hover:bg-theme-hover",
+        "cursor-pointer rounded-full p-2 text-zinc-500 transition-all hover:bg-theme-hover hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100",
         className,
       )}
     >

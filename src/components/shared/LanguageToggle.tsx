@@ -38,7 +38,7 @@ export default function LanguageToggle({ className }: { className?: string }) {
       aria-label={targetLocale}
       onClick={() => router.push(targetPath)}
       className={cn(
-        "inline-flex items-center gap-1 rounded-lg p-2 transition-colors hover:bg-theme-hover",
+        "inline-flex cursor-pointer items-center gap-1 rounded-full p-2 text-zinc-500 transition-all hover:bg-theme-hover hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100",
         className,
       )}
     >

@@ -8,6 +8,14 @@ type FetchSummaryOptions = {
   tagSourceTypes?: TagSourceType[] | null;
 };
 
+export type SearchRpcRow = {
+  id: string;
+  type: "post" | "thought" | "event";
+  title: string | null;
+  snippet: string;
+  published_at: string;
+};
+
 export const fetchSummary = async (
   client: SupabaseClient<Database> = makeStaticClient(),
   options: FetchSummaryOptions = {},
@@ -20,4 +28,15 @@ export const fetchSummary = async (
   const { data, error } = await client.rpc("get_summary", args);
   if (error) throw error;
   return data as BlogSummaryData | null;
+};
+
+export const fetchSearchContent = async (
+  searchQuery: string,
+  client: SupabaseClient<Database> = makeStaticClient(),
+) => {
+  const { data, error } = await client.rpc("search_content", {
+    search_query: searchQuery,
+  });
+  if (error) throw error;
+  return (data || []) as SearchRpcRow[];
 };

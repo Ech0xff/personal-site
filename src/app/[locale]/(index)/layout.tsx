@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import type React from "react";
 
+import GlobalSearchTrigger from "@/components/features/search/GlobalSearchTrigger";
 import LanguageToggle from "@/components/shared/LanguageToggle";
 import ThemeToggle from "@/components/shared/ThemeToggle";
 import DropdownPopover from "@/components/ui/DropdownPopover";
@@ -75,6 +76,7 @@ function Navbar({ locale }: { className?: string; locale?: string }) {
           <Stack x className="hidden items-center gap-4 md:flex">
             {navItems.map(navItemRender)}
           </Stack>
+          <GlobalSearchTrigger />
           <LanguageToggle />
           {/* Dark Mode Toggle */}
           <ThemeToggle />

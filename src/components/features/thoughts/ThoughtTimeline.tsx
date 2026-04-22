@@ -29,6 +29,7 @@ export default function ThoughtTimeline({
         <ThoughtCard
           key={thought.id}
           thought={thought}
+          id={thought.id}
           locale={locale}
           index={index + 1}
           isLast={index === thoughts.length - 1}

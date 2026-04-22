@@ -5,10 +5,25 @@
   },
   "Navigation": {
     "posts": "POSTS",
+    "search": "SEARCH",
     "dashboard": "DASHBOARD",
     "thoughts": "THOUGHTS",
     "events": "EVENTS",
     "description": "Muyu's Little Nest"
+  },
+  "Search": {
+    "title": "Global Search",
+    "placeholder": "Search posts, thoughts, and events...",
+    "close": "Close search",
+    "empty": "Start typing to search across posts, thoughts, and events.",
+    "loading": "Searching...",
+    "error": "Search is temporarily unavailable. Please try again.",
+    "noResults": "No results found for \"{query}\".",
+    "types": {
+      "post": "Post",
+      "thought": "Thought",
+      "event": "Event"
+    }
   },
   "Common": {
     "unknownYear": "Unknown",

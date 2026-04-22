@@ -15,6 +15,7 @@ export type Thought = {
 
 interface Props {
   thought: Thought;
+  id?: string;
   className?: string;
   locale?: string;
   index?: number;
@@ -24,6 +25,7 @@ interface Props {
 
 export default function ThoughtCard({
   thought,
+  id,
   className,
   locale,
   index,
@@ -34,7 +36,7 @@ export default function ThoughtCard({
   const tThoughtCard = getT("ThoughtCard", locale);
 
   return (
-    <div className={cn("group", className)}>
+    <div id={id} className={cn("group scroll-mt-24", className)}>
       {/* Meta Row */}
       <Stack x className="items-center justify-between">
         <Stack
