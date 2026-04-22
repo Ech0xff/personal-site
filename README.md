@@ -75,7 +75,8 @@ The example file also works as a reference for production env setup.
 ### 4. Set up Supabase
 
 1. Create a Supabase project.
-2. Run the SQL in `supabase/table.sql`.
+2. Run the SQL in order: `supabase/schema.sql`, `supabase/rpc.sql`, `supabase/data.sql`, and `supabase/rls.sql`.
+   Optional test data lives in `supabase/data.test.sql`.
 3. Create a public storage bucket named `images`.
 4. Fill in the env values from your project settings.
 
@@ -151,7 +152,7 @@ The renderer also supports custom directives such as:
 
 The interactive menu currently includes:
 
-- Reset database
+- Reset database (optional test data)
 - Rebind webhooks
 - Promote user to admin
 
@@ -167,7 +168,11 @@ The interactive menu currently includes:
 │   ├── styles/              # Global styles
 │   └── types/               # Shared TypeScript types
 ├── supabase/
-│   └── table.sql            # Schema and database helpers
+│   ├── schema.sql           # Tables and schema setup
+│   ├── rpc.sql              # Query and helper functions
+│   ├── data.sql             # Initial data
+│   ├── data.test.sql        # Extra test data
+│   ├── rls.sql              # Grants and row-level security
 └── public/                  # Static assets
 ```
 

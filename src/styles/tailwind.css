@@ -49,11 +49,12 @@
   }
 
   .tag-marquee-track-left {
-    animation: tag-marquee-left 46s linear infinite;
+    animation: tag-marquee-left var(--tag-marquee-duration, 46s) linear infinite;
   }
 
   .tag-marquee-track-right {
-    animation: tag-marquee-right 46s linear infinite;
+    animation: tag-marquee-right var(--tag-marquee-duration, 46s) linear
+      infinite;
   }
 
   .scrollbar-visible {

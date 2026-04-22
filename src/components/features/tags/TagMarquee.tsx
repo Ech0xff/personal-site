@@ -1,6 +1,12 @@
+"use client";
+
 import { Tag } from "lucide-react";
+import type { CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { TagWithCount } from "@/types";
+
+import { getTagMarqueeDuration } from "./tag-marquee-utils";
 
 type Props = {
   tags: TagWithCount[];
@@ -38,12 +44,12 @@ function TagCard({ tag }: { tag: TagWithCount }) {
         aria-hidden="true"
       />
       <div
-        className="absolute -bottom-10 -left-10 h-16 w-16 rounded-full opacity-0 transition-all duration-500 ease-out group-hover/tag:translate-x-3 group-hover/tag:-translate-y-2 group-hover/tag:opacity-100 dark:hidden"
+        className="absolute -bottom-8 -left-8 h-16 w-16 rounded-full opacity-0 transition-all duration-500 ease-out group-hover/tag:translate-x-2 group-hover/tag:-translate-y-1 group-hover/tag:opacity-100 dark:hidden"
         style={{ backgroundColor: `${color}66` }}
         aria-hidden="true"
       />
       <div
-        className="absolute -bottom-10 -left-10 hidden h-16 w-16 rounded-full opacity-0 transition-all duration-500 ease-out group-hover/tag:translate-x-3 group-hover/tag:-translate-y-2 group-hover/tag:opacity-100 dark:block"
+        className="absolute -bottom-8 -left-8 hidden h-16 w-16 rounded-full opacity-0 transition-all duration-500 ease-out group-hover/tag:translate-x-2 group-hover/tag:-translate-y-1 group-hover/tag:opacity-100 dark:block"
         style={{ backgroundColor: `${color}b3` }}
         aria-hidden="true"
       />
@@ -59,7 +65,7 @@ function TagCard({ tag }: { tag: TagWithCount }) {
             {tag.count}
           </span>
           <Tag
-            className="h-[1.35rem] w-[1.35rem] shrink-0 rotate-[18deg] opacity-75 transition-transform duration-500 group-hover/tag:rotate-[8deg]"
+            className="h-[1.35rem] w-[1.35rem] shrink-0 rotate-[90deg] opacity-75 transition-transform duration-500 group-hover/tag:rotate-[70deg]"
             style={{
               color: `${color}aa`,
             }}
@@ -80,16 +86,44 @@ function MarqueeRow({
 }) {
   const expanded = expandRow(tags);
   const duplicated = [...expanded, ...expanded];
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [duration, setDuration] = useState<number | null>(null);
+
+  useEffect(() => {
+    const element = trackRef.current;
+    if (!element) return;
+
+    const updateDuration = () => {
+      setDuration(getTagMarqueeDuration(element.scrollWidth));
+    };
+
+    updateDuration();
+
+    if (typeof ResizeObserver === "undefined") return;
+
+    const observer = new ResizeObserver(() => {
+      updateDuration();
+    });
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="tag-marquee-row overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
       <div
+        ref={trackRef}
         className={[
           "tag-marquee-track flex w-max gap-3",
           direction === "left"
             ? "tag-marquee-track-left"
             : "tag-marquee-track-right",
         ].join(" ")}
+        style={
+          duration
+            ? ({ "--tag-marquee-duration": `${duration}s` } as CSSProperties)
+            : undefined
+        }
       >
         {duplicated.map((tag, index) => (
           <TagCard key={`${direction}-${tag.id}-${index}`} tag={tag} />

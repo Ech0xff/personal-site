@@ -57,8 +57,9 @@ export default function EventTimeline({
                 <Stack
                   x
                   key={event.id}
+                  id={event.id}
                   className={cn(
-                    "relative",
+                    "relative scroll-mt-24",
                     index % 2 === 0 ? "flex-row" : "flex-row-reverse",
                   )}
                 >
