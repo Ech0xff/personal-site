@@ -68,7 +68,6 @@ Required values:
 Optional values:
 
 - `NEXT_PUBLIC_APP_TIMEZONE`
-- `NEXT_PUBLIC_OAUTH_PROVIDERS`
 
 The example file also works as a reference for production env setup.
 
@@ -92,9 +91,9 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Open [http://localhost:3000/en-US/auth](http://localhost:3000/en-US/auth) or [http://localhost:3000/zh-CN/auth](http://localhost:3000/zh-CN/auth).
 
-The auth page supports email/password sign-in and sign-up. OAuth providers are controlled by `NEXT_PUBLIC_OAUTH_PROVIDERS`.
+The auth page supports email/password sign-in and sign-up, and the dashboard `Config` page controls which OAuth providers are available.
 
-Social links such as Bilibili, GitHub, email, and QQ are configured in the dashboard `Config` page through the `site` config, not through environment variables.
+The home page intro markdown and playlist URL are configured in the dashboard `Config` page, not through environment variables.
 
 If you need admin access for an existing user, use the interactive maintenance menu:
 

@@ -42,6 +42,7 @@
       "nursery": {
         "useSortedClasses": {
           "level": "warn",
+          "fix": "safe",
           "options": {
             "functions": ["clsx", "cn", "cva", "tw", "tw.*"]
           }

@@ -9,24 +9,75 @@ type ResetStep = {
   file: string;
 };
 
-const RESET_STEPS: ResetStep[] = [
+type ResetOptions = {
+  includeInitialData: boolean;
+  includeTestData: boolean;
+};
+
+const PRE_DATA_STEPS: ResetStep[] = [
   { label: "Rebuild schema", file: "./supabase/schema.sql" },
   { label: "Create RPC functions", file: "./supabase/rpc.sql" },
-  { label: "Insert initial data", file: "./supabase/data.sql" },
-  { label: "Apply row-level security", file: "./supabase/rls.sql" },
 ];
+
+const INITIAL_DATA_STEP: ResetStep = {
+  label: "Insert initial data",
+  file: "./supabase/data.sql",
+};
 
 const TEST_DATA_STEP: ResetStep = {
   label: "Insert test data",
   file: "./supabase/data.test.sql",
 };
 
+const POST_DATA_STEPS: ResetStep[] = [
+  { label: "Apply row-level security", file: "./supabase/rls.sql" },
+];
+
 const readSqlFile = (filePath: string) =>
   readFileSync(resolve(filePath), "utf-8");
 
-const shouldInitTestData = async () => {
-  const answer = await askInput("Initialize test data too? (y/N): ");
+const askYesNo = async (question: string) => {
+  const answer = await askInput(question);
   return ["y", "yes"].includes(answer.trim().toLowerCase());
+};
+
+const getResetOptions = async (): Promise<ResetOptions> => {
+  const includeInitialData = await askYesNo(
+    "Initialize initial data too? (y/N): ",
+  );
+  const includeTestData = includeInitialData
+    ? await askYesNo("Initialize test data too? (y/N): ")
+    : false;
+
+  return {
+    includeInitialData,
+    includeTestData,
+  };
+};
+
+export const getResetSteps = ({
+  includeInitialData,
+  includeTestData,
+}: ResetOptions) => [
+  ...PRE_DATA_STEPS,
+  ...(includeInitialData ? [INITIAL_DATA_STEP] : []),
+  ...(includeInitialData && includeTestData ? [TEST_DATA_STEP] : []),
+  ...POST_DATA_STEPS,
+];
+
+const getSkippedSteps = ({
+  includeInitialData,
+  includeTestData,
+}: ResetOptions) => {
+  if (!includeInitialData) {
+    return [INITIAL_DATA_STEP, TEST_DATA_STEP];
+  }
+
+  if (!includeTestData) {
+    return [TEST_DATA_STEP];
+  }
+
+  return [];
 };
 
 export const resetDb = async (envPath: string) => {
@@ -37,23 +88,17 @@ export const resetDb = async (envPath: string) => {
 
   try {
     await checkYes("⚠️ You are going to reset database!");
-    const includeTestData = await shouldInitTestData();
+    const options = await getResetOptions();
     sql = postgres(process.env.DATABASE_URL!);
 
-    for (const step of RESET_STEPS) {
+    for (const step of getSkippedSteps(options)) {
+      console.log(`↷ Skip ${step.label}`);
+    }
+
+    for (const step of getResetSteps(options)) {
       console.log(`▶ ${step.label}...`);
       await sql.unsafe(readSqlFile(step.file));
       console.log(`✓ ${step.label}`);
-
-      if (step.file === "./supabase/data.sql") {
-        if (includeTestData) {
-          console.log(`▶ ${TEST_DATA_STEP.label}...`);
-          await sql.unsafe(readSqlFile(TEST_DATA_STEP.file));
-          console.log(`✓ ${TEST_DATA_STEP.label}`);
-        } else {
-          console.log(`↷ Skip ${TEST_DATA_STEP.label}`);
-        }
-      }
     }
 
     console.log("✅ Database reset successfully!");

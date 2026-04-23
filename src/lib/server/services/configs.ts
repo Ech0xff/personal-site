@@ -2,6 +2,7 @@
 
 import {
   deleteConfig,
+  type FetchConfigOptions,
   fetchConfig,
   setConfig,
 } from "@/lib/shared/services/configs";
@@ -12,10 +13,10 @@ import { makeServerClient } from "../supabase";
 export const fetchConfigByServer = async (
   key: string,
   locale?: string,
-  includeBase = false,
+  options: boolean | FetchConfigOptions = {},
 ) => {
   const client = await makeServerClient();
-  return fetchConfig(client, key, locale, includeBase);
+  return fetchConfig(client, key, locale, options);
 };
 
 export const setConfigByServer = async (key: string, value: Json) => {

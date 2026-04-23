@@ -1,56 +1,72 @@
 import type { Json } from "@/types";
 
-export const SITE_CONFIG_KEY = "site";
+export const LEGACY_SITE_CONFIG_KEY = "site";
+
+export const SITE_CONFIG_KEYS = {
+  aboutMe: "site.aboutMe",
+  playlistUrl: "site.playlistUrl",
+} as const;
+
+type RawSiteConfigValues = {
+  aboutMe: Json | null;
+  playlistUrl: Json | null;
+  legacyValue?: Json | null;
+};
 
 export type SiteConfig = {
   aboutMe: string;
-  socialLinks: {
-    bilibili: string;
-    github: string;
-    email: string;
-    qq: string;
-  };
-  playlist: string;
+  playlistUrl: string;
 };
 
 export const defaultSiteConfig = {
   aboutMe: "",
-  socialLinks: {
-    bilibili: "",
-    github: "",
-    email: "",
-    qq: "",
-  },
-  playlist: "",
+  playlistUrl: "",
 } satisfies SiteConfig;
 
 const isRecord = (value: Json | null): value is Record<string, Json> =>
   Boolean(value && typeof value === "object" && !Array.isArray(value));
 
-const getString = (value: Json | undefined) =>
+const getString = (value: Json | null | undefined) =>
   typeof value === "string" ? value : "";
 
-export const parseSiteConfig = (value: Json | null): SiteConfig => {
+const getStringConfigValue = (value: Json | null | undefined) => ({
+  hasValue: typeof value === "string",
+  value: getString(value),
+});
+
+export const parseLegacySiteConfig = (value: Json | null): SiteConfig => {
   if (!isRecord(value)) return defaultSiteConfig;
 
-  const socialLinks = isRecord(value.socialLinks) ? value.socialLinks : {};
   return {
     aboutMe: getString(value.aboutMe),
-    socialLinks: {
-      bilibili: getString(socialLinks.bilibili),
-      github: getString(socialLinks.github),
-      email: getString(socialLinks.email),
-      qq: getString(socialLinks.qq),
-    },
-    playlist: getString(value.playlist),
+    playlistUrl: getString(value.playlist),
+  };
+};
+
+export const buildSiteConfig = ({
+  aboutMe,
+  playlistUrl,
+  legacyValue = null,
+}: RawSiteConfigValues): SiteConfig => {
+  const resolvedAboutMe = getStringConfigValue(aboutMe);
+  const resolvedPlaylistUrl = getStringConfigValue(playlistUrl);
+  const legacyConfig = parseLegacySiteConfig(legacyValue);
+
+  return {
+    aboutMe: resolvedAboutMe.hasValue
+      ? resolvedAboutMe.value
+      : legacyConfig.aboutMe,
+    playlistUrl: resolvedPlaylistUrl.hasValue
+      ? resolvedPlaylistUrl.value
+      : legacyConfig.playlistUrl,
   };
 };
 
 export const getThemedPlaylistUrl = (
-  playlist: string,
+  playlistUrl: string,
   theme: "dark" | "light",
 ) => {
-  const url = new URL(playlist);
+  const url = new URL(playlistUrl);
   url.searchParams.set("theme", theme);
   return url.toString();
 };
