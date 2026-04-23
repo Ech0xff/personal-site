@@ -1,11 +1,13 @@
 "use client";
 
 import { Shield, User as UserIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import SectionCard from "@/components/ui/SectionCard";
 import Stack from "@/components/ui/Stack";
 import { useCurrentLocale } from "@/lib/client/locale";
-import { oauthProviders, providerConfig } from "@/lib/shared/config/oauth";
+import { fetchAvailableOauthProvidersByBrowser } from "@/lib/client/services";
+import { type OAuthProvider, providerConfig } from "@/lib/shared/config/oauth";
 import { getT } from "@/lib/shared/i18n";
 import { formatTime } from "@/lib/shared/utils";
 
@@ -18,8 +20,25 @@ import { useAccount } from "./hooks/useAccount";
 export default function AccountPage() {
   const locale = useCurrentLocale();
   const t = getT("auth", locale);
+  const [availableOauthProviders, setAvailableOauthProviders] = useState<
+    OAuthProvider[]
+  >([]);
   const { accountObj, loading, handleSaveNickname, handleLink, handleUnlink } =
     useAccount();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void fetchAvailableOauthProvidersByBrowser(locale).then((providers) => {
+      if (!cancelled) {
+        setAvailableOauthProviders(providers);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [locale]);
 
   const TitleRender = (title: string, Icon: React.ElementType) => {
     return (
@@ -87,13 +106,13 @@ export default function AccountPage() {
               </Stack>
 
               {/* Link new providers */}
-              {oauthProviders.length > 0 && (
+              {availableOauthProviders.length > 0 && (
                 <Stack y>
                   <p className="mb-3 font-medium text-sm text-zinc-700 dark:text-zinc-300">
                     Link a new provider
                   </p>
                   <Stack x className="flex-wrap gap-2">
-                    {oauthProviders
+                    {availableOauthProviders
                       .filter(
                         (provider) =>
                           !accountObj.identities!.some(

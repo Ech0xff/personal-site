@@ -33,7 +33,7 @@ export async function IntroductionSection({
 
   const totalCharacters =
     data.posts.characters + data.thoughts.characters + data.events.characters;
-  const playlist = config.playlist.trim();
+  const playlistUrl = config.playlistUrl.trim();
 
   const statsItems = [
     {
@@ -120,7 +120,7 @@ export async function IntroductionSection({
         </Stack>
       </Card>
 
-      {playlist && (
+      {playlistUrl && (
         <Card title={t("playlist.cardTitle")}>
           <iframe
             title={t("playlist.cardTitle")}
@@ -128,7 +128,7 @@ export async function IntroductionSection({
             height="450"
             className="hidden w-full overflow-hidden rounded-lg border-none dark:block"
             sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-            src={getThemedPlaylistUrl(playlist, "dark")}
+            src={getThemedPlaylistUrl(playlistUrl, "dark")}
           />
           <iframe
             title={t("playlist.cardTitle")}
@@ -136,7 +136,7 @@ export async function IntroductionSection({
             height="450"
             className="w-full overflow-hidden rounded-lg border-none dark:hidden"
             sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-            src={getThemedPlaylistUrl(playlist, "light")}
+            src={getThemedPlaylistUrl(playlistUrl, "light")}
           />
         </Card>
       )}

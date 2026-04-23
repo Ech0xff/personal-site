@@ -1,12 +1,19 @@
 "use client";
 import type { FormEvent } from "react";
+import { useEffect, useState } from "react";
 
 import Link from "@/components/ui/Link";
-import { oauthProviders, providerConfig } from "@/lib/shared/config/oauth";
+import { useCurrentLocale } from "@/lib/client/locale";
+import { fetchAvailableOauthProvidersByBrowser } from "@/lib/client/services";
+import { type OAuthProvider, providerConfig } from "@/lib/shared/config/oauth";
 
 import { useHooks } from "./use-hooks";
 
 export default function PageClient() {
+  const locale = useCurrentLocale();
+  const [availableOauthProviders, setAvailableOauthProviders] = useState<
+    OAuthProvider[]
+  >([]);
   const {
     mode,
     setMode,
@@ -21,6 +28,20 @@ export default function PageClient() {
     event.preventDefault();
     await handleSubmit();
   };
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void fetchAvailableOauthProvidersByBrowser(locale).then((providers) => {
+      if (!cancelled) {
+        setAvailableOauthProviders(providers);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [locale]);
 
   return (
     <div className="flex min-h-dvh items-center justify-center bg-(--theme-bg) p-4">
@@ -137,7 +158,7 @@ export default function PageClient() {
           </form>
 
           {/* Divider */}
-          {oauthProviders.length > 0 && (
+          {availableOauthProviders.length > 0 && (
             <>
               <div className="my-6 flex items-center gap-4">
                 <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-700" />
@@ -148,7 +169,7 @@ export default function PageClient() {
               </div>
 
               <div className="flex flex-col gap-3">
-                {oauthProviders.map((provider) => {
+                {availableOauthProviders.map((provider) => {
                   const config = providerConfig[provider];
                   const Icon = config.icon;
                   return (

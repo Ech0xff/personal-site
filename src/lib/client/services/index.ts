@@ -1,6 +1,7 @@
 export * from "./configs";
 export * from "./events";
 export * from "./images";
+export * from "./oauth";
 export * from "./posts";
 export * from "./rpcs";
 export * from "./search";

@@ -22,13 +22,38 @@ const mergeConfig = (base: Json | null, override: Json | null): Json | null => {
 export const getLocaleConfigKey = (key: string, locale: string) =>
   `${key}:${locale}`;
 
+export type FetchConfigOptions = {
+  includeBase?: boolean;
+  strict?: boolean;
+};
+
+const normalizeFetchConfigOptions = (
+  options: boolean | FetchConfigOptions = {},
+): Required<FetchConfigOptions> =>
+  typeof options === "boolean"
+    ? { includeBase: options, strict: false }
+    : {
+        includeBase: options.includeBase ?? false,
+        strict: options.strict ?? false,
+      };
+
+export const shouldMergeBaseConfig = (
+  locale?: string,
+  options: boolean | FetchConfigOptions = {},
+) => {
+  const normalizedOptions = normalizeFetchConfigOptions(options);
+  return Boolean(
+    locale && normalizedOptions.includeBase && !normalizedOptions.strict,
+  );
+};
+
 export const fetchConfig = async (
   client: SupabaseClient<Database> = makeStaticClient(),
   key: string,
   locale?: string,
-  includeBase = false,
+  options: boolean | FetchConfigOptions = {},
 ) => {
-  if (locale && includeBase) {
+  if (locale && shouldMergeBaseConfig(locale, options)) {
     const localeKey = getLocaleConfigKey(key, locale);
     const { data, error } = await client
       .from("configs")
@@ -50,6 +75,27 @@ export const fetchConfig = async (
     .maybeSingle();
   if (error) throw error;
   return data?.value ?? null;
+};
+
+export const fetchConfigs = async (
+  client: SupabaseClient<Database> = makeStaticClient(),
+  keys: string[],
+) => {
+  const uniqueKeys = Array.from(new Set(keys.filter(Boolean)));
+  if (uniqueKeys.length === 0) return new Map<string, Json | null>();
+
+  const { data, error } = await client
+    .from("configs")
+    .select("key,value")
+    .in("key", uniqueKeys);
+  if (error) throw error;
+
+  return new Map(
+    uniqueKeys.map((key) => [
+      key,
+      data?.find((item) => item.key === key)?.value ?? null,
+    ]),
+  );
 };
 
 export const setConfig = async (

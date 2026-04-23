@@ -1,9 +1,14 @@
 import SvgGithub from "@/components/icons/Github";
 import SvgGoogle from "@/components/icons/Google";
+import type { Json } from "@/types";
 
 export type OAuthProvider = "github" | "google";
+export const AUTH_CONFIG_KEYS = {
+  oauthProviders: "auth.oauthProviders",
+  legacyOauthEnabled: "auth.oauthEnabled",
+} as const;
 
-const providerConfig: Record<
+export const providerConfig: Record<
   OAuthProvider,
   {
     label: string;
@@ -23,15 +28,23 @@ const providerConfig: Record<
   },
 };
 
-function parseProviders(): OAuthProvider[] {
-  const raw = process.env.NEXT_PUBLIC_OAUTH_PROVIDERS;
-  if (!raw) return [];
-  const providers = raw
-    .split(",")
-    .map((p) => p.trim() as OAuthProvider)
-    .filter((p) => p in providerConfig);
-  return providers.length > 0 ? providers : ["github"];
-}
+export const allOAuthProviders = Object.keys(providerConfig) as OAuthProvider[];
 
-export const oauthProviders = parseProviders();
-export { providerConfig };
+const isOAuthProvider = (value: Json | null): value is OAuthProvider =>
+  typeof value === "string" && value in providerConfig;
+
+export const resolveOauthProviders = (
+  value: Json | null,
+  providers: OAuthProvider[] = allOAuthProviders,
+) => {
+  if (value === false) return [];
+
+  if (Array.isArray(value)) {
+    return value.filter(
+      (provider): provider is OAuthProvider =>
+        isOAuthProvider(provider) && providers.includes(provider),
+    );
+  }
+
+  return providers;
+};

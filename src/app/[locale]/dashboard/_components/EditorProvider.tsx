@@ -3,11 +3,13 @@
 import {
   type ComponentType,
   createContext,
-  type ReactElement,
   type ReactNode,
+  useCallback,
   useContext,
-  useState,
+  useMemo,
 } from "react";
+
+import ModalProvider, { useModal } from "./ModalProvider";
 
 export interface BaseEditorProps {
   id: string | null;
@@ -33,45 +35,57 @@ export function useEditor() {
   return context;
 }
 
-export default function EditorProvider({
+function EditorProviderContent({
   children,
   editorComponent: Editor,
   onSaved,
 }: {
-  children: ReactElement<{ children?: ReactNode }>;
+  children: ReactNode;
   editorComponent: ComponentType<BaseEditorProps>;
   onSaved?: () => Promise<void> | void;
 }) {
-  const [showEditor, setShowEditor] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const { open, close, isOpen } = useModal();
 
-  const openEditor = (id: string | null) => {
-    setEditingId(id);
-    setShowEditor(true);
-  };
-
-  const closeEditor = async () => {
-    setShowEditor(false);
-    setEditingId(null);
-  };
-
-  return (
-    <EditorContext.Provider
-      value={{ openEditor, closeEditor, isOpen: showEditor }}
-    >
-      {children}
-      {showEditor && (
+  const openEditor = useCallback(
+    (id: string | null) => {
+      open(
         <Editor
-          key={editingId || "new"}
-          id={editingId}
-          onClose={closeEditor}
+          key={id || "new"}
+          id={id}
+          onClose={close}
           onSaved={async () => {
             await onSaved?.();
-            closeEditor();
+            close();
           }}
-          className="fixed inset-[anchor(top)_anchor(right)_anchor(bottom)_anchor(left)] z-100 [position-anchor:--dashboard]"
-        />
-      )}
-    </EditorContext.Provider>
+          className="h-full min-h-0 w-full overflow-hidden"
+        />,
+      );
+    },
+    [Editor, close, onSaved, open],
+  );
+
+  const value = useMemo(
+    () => ({
+      openEditor,
+      closeEditor: close,
+      isOpen,
+    }),
+    [close, isOpen, openEditor],
+  );
+
+  return (
+    <EditorContext.Provider value={value}>{children}</EditorContext.Provider>
+  );
+}
+
+export default function EditorProvider(props: {
+  children: ReactNode;
+  editorComponent: ComponentType<BaseEditorProps>;
+  onSaved?: () => Promise<void> | void;
+}) {
+  return (
+    <ModalProvider>
+      <EditorProviderContent {...props} />
+    </ModalProvider>
   );
 }
