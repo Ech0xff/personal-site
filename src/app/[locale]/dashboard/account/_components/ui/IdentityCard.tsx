@@ -1,7 +1,8 @@
 import type { UserIdentity } from "@supabase/supabase-js";
 import { Link2, Link2Off, Loader2 } from "lucide-react";
+
 import Stack from "@/components/ui/Stack";
-import { providerConfig } from "@/lib/shared/config/oauth";
+import { providerConfig } from "@/lib/shared/config";
 
 const isPrimaryIdentity = (identity: UserIdentity) =>
   identity.provider === "email";

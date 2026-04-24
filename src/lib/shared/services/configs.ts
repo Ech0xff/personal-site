@@ -1,107 +1,57 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
+import type { ConfigKey, ConfigValue } from "@/lib/shared/config";
 import type { Database, Json } from "@/types";
-
+import { generateConfigKey } from "../config/utils";
 import { makeStaticClient } from "../supabase";
 
-const isRecord = (value: Json | null): value is Record<string, Json> =>
-  Boolean(value && typeof value === "object" && !Array.isArray(value));
-
-const mergeConfig = (base: Json | null, override: Json | null): Json | null => {
-  if (!isRecord(base)) return override ?? base;
-  if (!isRecord(override)) return override ?? base;
-
-  return Object.fromEntries(
-    Array.from(
-      new Set([...Object.keys(base), ...Object.keys(override)]),
-      (key) => [key, mergeConfig(base[key] ?? null, override[key] ?? null)],
-    ),
-  );
+export type ConfigsMap<K extends ConfigKey> = Map<K, ConfigValue[K] | null> & {
+  get<T extends K>(key: T): ConfigValue[T] | null | undefined;
 };
 
-export const getLocaleConfigKey = (key: string, locale: string) =>
-  `${key}:${locale}`;
-
-export type FetchConfigOptions = {
-  includeBase?: boolean;
-  strict?: boolean;
-};
-
-const normalizeFetchConfigOptions = (
-  options: boolean | FetchConfigOptions = {},
-): Required<FetchConfigOptions> =>
-  typeof options === "boolean"
-    ? { includeBase: options, strict: false }
-    : {
-        includeBase: options.includeBase ?? false,
-        strict: options.strict ?? false,
-      };
-
-export const shouldMergeBaseConfig = (
-  locale?: string,
-  options: boolean | FetchConfigOptions = {},
-) => {
-  const normalizedOptions = normalizeFetchConfigOptions(options);
-  return Boolean(
-    locale && normalizedOptions.includeBase && !normalizedOptions.strict,
-  );
-};
-
-export const fetchConfig = async (
+/** Fetches multiple configuration values by their keys. */
+export const fetchConfigs = async <K extends ConfigKey>(
+  keys: readonly K[],
+  options?: {
+    locale?: string;
+    strict?: boolean;
+  },
   client: SupabaseClient<Database> = makeStaticClient(),
-  key: string,
-  locale?: string,
-  options: boolean | FetchConfigOptions = {},
-) => {
-  if (locale && shouldMergeBaseConfig(locale, options)) {
-    const localeKey = getLocaleConfigKey(key, locale);
-    const { data, error } = await client
-      .from("configs")
-      .select("key,value")
-      .in("key", [key, localeKey]);
-    if (error) throw error;
-
-    const common = data?.find((item) => item.key === key)?.value ?? null;
-    const localeConfig =
-      data?.find((item) => item.key === localeKey)?.value ?? null;
-    return mergeConfig(common, localeConfig);
+): Promise<ConfigsMap<K>> => {
+  const { locale, strict } = options || {};
+  const keySet = new Set<string>(keys);
+  if (locale) {
+    keys.forEach((key) => {
+      if (!strict) keySet.delete(key); // Remove non-locale key if strict mode is off
+      keySet.add(generateConfigKey(key, locale));
+    });
   }
-
-  const targetKey = locale ? getLocaleConfigKey(key, locale) : key;
-  const { data, error } = await client
-    .from("configs")
-    .select("value")
-    .eq("key", targetKey)
-    .maybeSingle();
-  if (error) throw error;
-  return data?.value ?? null;
-};
-
-export const fetchConfigs = async (
-  client: SupabaseClient<Database> = makeStaticClient(),
-  keys: string[],
-) => {
-  const uniqueKeys = Array.from(new Set(keys.filter(Boolean)));
-  if (uniqueKeys.length === 0) return new Map<string, Json | null>();
+  if (keySet.size === 0) {
+    return new Map<K, ConfigValue[K] | null>() as ConfigsMap<K>;
+  }
 
   const { data, error } = await client
     .from("configs")
     .select("key,value")
-    .in("key", uniqueKeys);
+    .in("key", Array.from(keySet));
   if (error) throw error;
 
   return new Map(
-    uniqueKeys.map((key) => [
+    keys.map((key) => [
       key,
-      data?.find((item) => item.key === key)?.value ?? null,
+      (data.find((item) => item.key === generateConfigKey(key, locale))
+        ?.value ??
+        data.find((item) => item.key === key)?.value ??
+        null) as ConfigValue[K] | null,
     ]),
-  );
+  ) as ConfigsMap<K>;
 };
 
+/** Sets a configuration value by its key. */
 export const setConfig = async (
-  client: SupabaseClient<Database> = makeStaticClient(),
   key: string,
   value: Json,
+  client: SupabaseClient<Database> = makeStaticClient(),
 ) => {
   const { data, error } = await client
     .from("configs")
@@ -112,6 +62,7 @@ export const setConfig = async (
   return data.value;
 };
 
+/** Deletes a configuration value by its key. */
 export const deleteConfig = async (
   client: SupabaseClient<Database> = makeStaticClient(),
   key: string,
