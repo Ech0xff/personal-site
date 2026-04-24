@@ -21,6 +21,8 @@ import { getLocalizedRoutes } from "@/lib/shared/routes";
 import { cn } from "@/lib/shared/utils/tailwind";
 import { getUserStatus } from "@/lib/shared/utils/tools";
 
+import DashboardModalOptions from "./_components/DashboardModalOptions";
+
 async function Navbar({
   isAdmin,
   locale,
@@ -159,6 +161,7 @@ export default async function Layout({
         "md:flex-row md:divide-x",
       )}
     >
+      <DashboardModalOptions />
       <Navbar isAdmin={isAdmin} locale={locale} />
       {/* Main Content */}
       {children}

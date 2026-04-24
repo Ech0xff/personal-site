@@ -4,6 +4,7 @@ import { LoaderCircle, Save, Trash2, X } from "lucide-react";
 import { type HTMLAttributes, useState } from "react";
 
 import Button from "@/components/ui/Button";
+import { useModal } from "@/components/ui/ModalProvider";
 import { cn } from "@/lib/shared/utils";
 import SegmentedToggle from "../../_components/ui/SegmentedToggle";
 
@@ -18,7 +19,6 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {
   loading: boolean;
   onLocaleChange: (locale: string) => void;
   onDelete?: () => void | Promise<void>;
-  onCancel?: () => void | Promise<void>;
   onSave?: () => void | Promise<void>;
 }
 
@@ -29,10 +29,10 @@ export default function EditorShell({
   className,
   onLocaleChange,
   onDelete,
-  onCancel,
   onSave,
 }: Props) {
   const [locale, setLocale] = useState<string>("");
+  const { close } = useModal();
 
   const handleLocaleChange = (nextLocale: string) => {
     setLocale(nextLocale);
@@ -91,8 +91,8 @@ export default function EditorShell({
         </Button>
         <Button
           type="button"
-          onClick={onCancel}
-          disabled={!onCancel}
+          onClick={() => close?.()}
+          disabled={!close}
           className="bg-zinc-200 text-zinc-700 hover:bg-zinc-300 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
         >
           <X className="h-4 w-4" />

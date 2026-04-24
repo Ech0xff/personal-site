@@ -106,6 +106,13 @@ export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
     }));
   }, []);
 
+  const deselectTag = useCallback((tag: string) => {
+    setForm((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((item) => item !== tag),
+    }));
+  }, []);
+
   const handleSubmit = () => {
     if (!form.title.trim()) {
       toast.error("Please enter a title");
@@ -154,6 +161,7 @@ export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
     updateForm,
     selectTag,
     removeTag,
+    deselectTag,
     handleSubmit,
     viewMode,
     setViewMode,

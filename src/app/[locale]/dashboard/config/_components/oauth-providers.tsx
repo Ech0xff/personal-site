@@ -36,7 +36,7 @@ export default function OauthProviders() {
 
   return (
     <EditorShell
-      className="h-[70%] w-[60%] max-w-3xl"
+      className="w-[60%] max-w-3xl"
       title={title}
       onLocaleChange={setLocale}
       onDelete={hasStoredValue ? deleteConfig : undefined}

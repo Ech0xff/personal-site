@@ -5,19 +5,17 @@ import { toast } from "sonner";
 
 import { deleteEventByBrowser } from "@/lib/client/services";
 
-import { useEditor } from "../../_components/EditorProvider";
-
 interface EventActionsProps {
   eventId: string;
+  openEditor: (id: string | null) => void;
   successCallback?: (eventId: string) => void;
 }
 
 export default function EventActions({
   eventId,
+  openEditor,
   successCallback,
 }: EventActionsProps) {
-  const { openEditor } = useEditor();
-
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this event?")) return;
     const toastId = toast.loading("Deleting event...");

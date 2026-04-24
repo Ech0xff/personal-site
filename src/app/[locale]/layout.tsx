@@ -3,13 +3,14 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 
 import { ImageViewer } from "@/components/ui/ImageViewer";
+import ModalProvider from "@/components/ui/ModalProvider";
+import ToastWatcher from "@/features/toast-watcher";
 import { routing } from "@/lib/shared/i18n/routing";
 import { getT } from "@/lib/shared/i18n/tools";
 import "@/styles/globals.scss";
 import "@/styles/tailwind.css";
 import "@/styles/variables.scss";
 import { Suspense } from "react";
-import ToastWatcher from "@/features/toast-watcher";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -60,10 +61,12 @@ async function ConfigShell({
   const theme = cookieStore.get("theme")?.value || "system";
   return (
     <html className={theme} lang={locale}>
-      <body>
-        <ToastWatcher />
-        <SpeedInsights />
-        <ImageViewer>{children}</ImageViewer>
+      <body style={{ anchorName: "--body" }}>
+        <ModalProvider>
+          <ToastWatcher />
+          <SpeedInsights />
+          <ImageViewer>{children}</ImageViewer>
+        </ModalProvider>
       </body>
     </html>
   );
