@@ -103,6 +103,13 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
     }));
   }, []);
 
+  const deselectTag = useCallback((tag: string) => {
+    setForm((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((item) => item !== tag),
+    }));
+  }, []);
+
   const handleSubmit = () => {
     if (!form.title.trim()) {
       toast.error("Title is required");
@@ -149,6 +156,7 @@ export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
     updateForm,
     selectTag,
     removeTag,
+    deselectTag,
     handleSubmit,
     isNewMode,
     isPending,

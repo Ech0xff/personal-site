@@ -5,10 +5,8 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import ModalProvider, {
-  useModal,
-} from "@/app/[locale]/dashboard/_components/ModalProvider";
 import Button from "@/components/ui/Button";
+import { useModal } from "@/components/ui/ModalProvider";
 import Stack from "@/components/ui/Stack";
 import { cn } from "@/lib/shared/utils";
 
@@ -119,9 +117,5 @@ function ConfigPageContent() {
 }
 
 export default function DashboardPage() {
-  return (
-    <ModalProvider>
-      <ConfigPageContent />
-    </ModalProvider>
-  );
+  return <ConfigPageContent />;
 }

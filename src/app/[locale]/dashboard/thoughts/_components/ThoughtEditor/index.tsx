@@ -10,7 +10,7 @@ import { useCurrentLocale } from "@/lib/client/locale";
 import { cn } from "@/lib/shared/utils";
 import type { Status } from "@/types";
 
-import type { BaseEditorProps } from "../../../_components/EditorProvider";
+import type { BaseEditorProps } from "../../../_components/editor-types";
 import AuthorInput from "../../../_components/ui/AuthorInput";
 import DateTimeInput from "../../../_components/ui/DateTimeInput";
 import HeaderSection from "../../../_components/ui/HeaderSection";

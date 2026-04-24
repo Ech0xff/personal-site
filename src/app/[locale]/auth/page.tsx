@@ -22,7 +22,7 @@ export default async function Page({
   const client = await makeServerClient();
   const { isAuth } = await getUserStatus(client);
   if (isAuth) redirect(routes.DASHBOARD.ACCOUNT);
-  
+
   const oauthProviders =
     (await fetchConfigByServer(CONFIG_KEYS.oauthProviders, locale)) ?? [];
   const t = getT("auth", locale);

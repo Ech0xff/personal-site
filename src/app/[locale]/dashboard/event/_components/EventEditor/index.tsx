@@ -8,11 +8,11 @@ import { useCurrentLocale } from "@/lib/client/locale";
 import { cn } from "@/lib/shared/utils";
 import type { Status } from "@/types";
 
-import type { BaseEditorProps } from "../../../_components/EditorProvider";
+import type { BaseEditorProps } from "../../../_components/editor-types";
 import DateTimeInput from "../../../_components/ui/DateTimeInput";
 import HeaderSection from "../../../_components/ui/HeaderSection";
 import SegmentedToggle from "../../../_components/ui/SegmentedToggle";
-import TagSelector from "../../../posts/_components/PostEditor/TagSelector";
+import TagSelector from "../../../_components/ui/TagSelector";
 import { useHooks } from "./use-hooks";
 
 const COLOR_OPTIONS = [
@@ -40,6 +40,7 @@ export default function EventEditor({
     updateForm,
     selectTag,
     removeTag,
+    deselectTag,
     handleSubmit,
     isPending,
     isLoading,
@@ -134,6 +135,7 @@ export default function EventEditor({
                 const tag = tags.find((item) => item.id === tagId);
                 if (tag) selectTag(tag.name);
               }}
+              onDeselect={deselectTag}
               selectedTags={form.tags}
             />
           </Stack>

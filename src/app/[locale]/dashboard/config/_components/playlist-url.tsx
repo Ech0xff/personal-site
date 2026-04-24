@@ -40,19 +40,14 @@ export default function PlaylistUrl() {
 
   return (
     <EditorShell
-      className="w-[70%]"
+      className="w-full max-w-6xl"
       title={title}
       onLocaleChange={setLocale}
       onDelete={hasStoredValue ? deleteConfig : undefined}
       onSave={saveConfig}
       loading={loading}
     >
-      <div
-        className={cn(
-          "flex min-h-0 flex-1 flex-col gap-4",
-          loading && "opacity-0",
-        )}
-      >
+      <div className={cn("flex flex-1 flex-col gap-4", loading && "opacity-0")}>
         <div className="flex shrink-0 flex-col gap-3 rounded-lg">
           <input
             value={playlistUrl}

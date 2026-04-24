@@ -5,19 +5,17 @@ import { toast } from "sonner";
 
 import { deleteThoughtByBrowser } from "@/lib/client/services";
 
-import { useEditor } from "../../_components/EditorProvider";
-
 interface ThoughtActionsProps {
   thoughtId: string;
+  openEditor: (id: string | null) => void;
   successCallback?: (thoughtId: string) => void;
 }
 
 export default function ThoughtActions({
   thoughtId,
+  openEditor,
   successCallback,
 }: ThoughtActionsProps) {
-  const { openEditor } = useEditor();
-
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this thought?")) return;
     const toastId = toast.loading("Deleting thought...");

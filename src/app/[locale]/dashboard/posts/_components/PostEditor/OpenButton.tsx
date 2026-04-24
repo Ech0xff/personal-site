@@ -4,11 +4,11 @@ import { Plus } from "lucide-react";
 
 import Button from "@/components/ui/Button";
 
-import { useEditor } from "../../../_components/EditorProvider";
+interface Props {
+  openEditor: (id: string | null) => void;
+}
 
-export default function NewPostButton() {
-  const { openEditor } = useEditor();
-
+export default function NewPostButton({ openEditor }: Props) {
   return (
     <Button onClick={() => openEditor(null)}>
       <Plus className="h-4 w-4" />

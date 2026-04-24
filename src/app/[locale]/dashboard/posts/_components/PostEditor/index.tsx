@@ -6,12 +6,12 @@ import DropdownPopover from "@/components/ui/DropdownPopover";
 import Stack from "@/components/ui/Stack";
 import { cn } from "@/lib/shared/utils";
 
-import type { BaseEditorProps } from "../../../_components/EditorProvider";
+import type { BaseEditorProps } from "../../../_components/editor-types";
 import AuthorInput from "../../../_components/ui/AuthorInput";
 import DateTimeInput from "../../../_components/ui/DateTimeInput";
 import HeaderSection from "../../../_components/ui/HeaderSection";
 import SegmentedToggle from "../../../_components/ui/SegmentedToggle";
-import TagSelector from "./TagSelector";
+import TagSelector from "../../../_components/ui/TagSelector";
 import { useHooks } from "./use-hooks";
 
 export { default as OpenButton } from "./OpenButton";
@@ -27,6 +27,7 @@ export default function PostEditor({
     updateForm,
     selectTag,
     removeTag,
+    deselectTag,
     handleSubmit,
     viewMode,
     setViewMode,
@@ -208,6 +209,7 @@ export default function PostEditor({
                           const tag = tags.find((item) => item.id === tagId);
                           if (tag) selectTag(tag.name);
                         }}
+                        onDeselect={deselectTag}
                         selectedTags={form.tags}
                       />
                     </Stack>

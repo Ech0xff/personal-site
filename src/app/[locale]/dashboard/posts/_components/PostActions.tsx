@@ -6,18 +6,17 @@ import { toast } from "sonner";
 import Link from "@/components/ui/Link";
 import { deletePostByBrowser } from "@/lib/client/services";
 
-import { useEditor } from "../../_components/EditorProvider";
-
 interface PostActionsProps {
   postId: string;
+  openEditor: (id: string | null) => void;
   successCallback?: (postId: string) => void;
 }
 
 export default function PostActions({
   postId,
+  openEditor,
   successCallback,
 }: PostActionsProps) {
-  const { openEditor } = useEditor();
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this post?")) return;
     const toastId = toast.loading("Deleting post...");
