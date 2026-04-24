@@ -1,13 +1,11 @@
-import { getThemedPlaylistUrl } from "@/lib/shared/config/site";
+import { CONFIG_KEYS } from "@/lib/shared/config";
+import { generatePlaylistUrl } from "@/lib/shared/config/utils";
 import { cn } from "@/lib/shared/utils";
 
-import useConfig, { resolveConfigValue } from "../_hooks/useConfig";
+import useConfig from "../_hooks/useConfig";
 import EditorShell from "./editor-shell";
 
-export type ConfigField = {
-  id: string;
-  title: string;
-};
+const title = "Playlist URL";
 
 function getPreviewUrl(
   value: string,
@@ -17,13 +15,13 @@ function getPreviewUrl(
   if (!trimmedValue) return undefined;
 
   try {
-    return getThemedPlaylistUrl(trimmedValue, theme);
+    return generatePlaylistUrl(trimmedValue, theme);
   } catch {
     return undefined;
   }
 }
 
-export default function PlaylistUrl({ id, title }: ConfigField) {
+export default function PlaylistUrl() {
   const {
     value,
     setValue,
@@ -33,12 +31,11 @@ export default function PlaylistUrl({ id, title }: ConfigField) {
     deleteConfig,
     saveConfig,
   } = useConfig({
-    id,
-    initialValue: "",
-    resolveValue: resolveConfigValue,
+    id: CONFIG_KEYS.playlistUrl,
   });
-  const lightPreviewUrl = getPreviewUrl(value, "light");
-  const darkPreviewUrl = getPreviewUrl(value, "dark");
+  const playlistUrl = typeof value === "string" ? value : "";
+  const lightPreviewUrl = getPreviewUrl(playlistUrl, "light");
+  const darkPreviewUrl = getPreviewUrl(playlistUrl, "dark");
   const hasPreview = Boolean(lightPreviewUrl && darkPreviewUrl);
 
   return (
@@ -58,7 +55,7 @@ export default function PlaylistUrl({ id, title }: ConfigField) {
       >
         <div className="flex shrink-0 flex-col gap-3 rounded-lg">
           <input
-            value={value}
+            value={playlistUrl}
             onChange={(event) => setValue(event.target.value)}
             placeholder="https://open.spotify.com/playlist/..."
             className="w-full rounded-lg border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 outline-none transition focus:border-blue-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"

@@ -2,58 +2,31 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import {
   deleteConfigByBrowser,
   fetchConfigsByBrowser,
   setConfigByBrowser,
 } from "@/lib/client/services";
-import { getLocaleConfigKey } from "@/lib/shared/services/configs";
-import type { Json } from "@/types";
+import type { ConfigKey, ConfigValue } from "@/lib/shared/config";
+import { generateConfigKey } from "@/lib/shared/config/utils";
 
-export type ResolveConfigValueArgs = {
-  key: string;
-  currentValue: Json | null;
+type UseConfigOptions<K extends ConfigKey> = {
+  id: K;
 };
 
-export const resolveConfigValue = ({ currentValue }: ResolveConfigValueArgs) =>
-  typeof currentValue === "string" ? currentValue : "";
-
-export const getConfigStorageKey = (key: string, locale: string) =>
-  locale ? getLocaleConfigKey(key, locale) : key;
-
-async function loadConfigValue(key: string, locale: string) {
-  const storageKey = getConfigStorageKey(key, locale);
-  const values = await fetchConfigsByBrowser([storageKey]);
-  const currentValue = values.get(storageKey) ?? null;
-
-  return {
-    key,
-    hasStoredValue: currentValue !== null && currentValue !== undefined,
-    currentValue,
-  };
-}
-
-type UseConfigOptions<T extends Json> = {
-  id: string;
-  initialValue: T;
-  resolveValue?: (args: ResolveConfigValueArgs) => T;
-};
-
-export default function useConfig<T extends Json>({
+export default function useConfig<K extends ConfigKey>({
   id,
-  initialValue,
-  resolveValue,
-}: UseConfigOptions<T>) {
-  const [value, setValue] = useState<T>(initialValue);
+}: UseConfigOptions<K>) {
+  const [value, setValue] = useState<ConfigValue[K] | null>(null);
   const [locale, setLocale] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [hasStoredValue, setHasStoredValue] = useState(false);
 
   const saveConfig = useCallback(async () => {
-    if (!id) return;
+    if (!id || value === null) return;
     try {
-      await setConfigByBrowser(getConfigStorageKey(id, locale), value);
+      await setConfigByBrowser(generateConfigKey(id, locale), value);
+      setHasStoredValue(true);
       toast.success("Config saved.");
     } catch {
       toast.error("Failed to save config.");
@@ -64,25 +37,22 @@ export default function useConfig<T extends Json>({
     if (!id) return;
     setLoading(true);
     try {
-      const nextConfig = await loadConfigValue(id, locale);
-      const nextValue = resolveValue
-        ? resolveValue(nextConfig)
-        : ((nextConfig.currentValue ?? initialValue) as T);
-      setHasStoredValue(nextConfig.hasStoredValue);
-      setValue(nextValue);
+      const values = await fetchConfigsByBrowser([id], { locale });
+      const value = values.get(id);
+      setValue(value ?? null);
+      setHasStoredValue(value !== null && value !== undefined);
     } catch {
       setHasStoredValue(false);
-      setValue(initialValue);
+      setValue(null);
     } finally {
       setLoading(false);
     }
-  }, [id, initialValue, locale, resolveValue]);
+  }, [id, locale]);
 
   const deleteConfig = useCallback(async () => {
     if (!id || !hasStoredValue) return;
-
     try {
-      await deleteConfigByBrowser(getConfigStorageKey(id, locale));
+      await deleteConfigByBrowser(generateConfigKey(id, locale));
       toast.success("Config deleted.");
       await getConfig();
     } catch {

@@ -1,15 +1,13 @@
 import CodeMirrorEditor from "@/components/ui/CodeMirrorEditor";
 import ContentRenderer from "@/components/ui/content/ContentRenderer";
+import { CONFIG_KEYS } from "@/lib/shared/config";
 import { cn } from "@/lib/shared/utils";
-import useConfig, { resolveConfigValue } from "../_hooks/useConfig";
+import useConfig from "../_hooks/useConfig";
 import EditorShell from "./editor-shell";
 
-export type ConfigField = {
-  id: string;
-  title: string;
-};
+const title = "About Me";
 
-export default function AboutMe({ id, title }: ConfigField) {
+export default function AboutMe() {
   const {
     value,
     setValue,
@@ -19,10 +17,10 @@ export default function AboutMe({ id, title }: ConfigField) {
     deleteConfig,
     saveConfig,
   } = useConfig({
-    id,
-    initialValue: "",
-    resolveValue: resolveConfigValue,
+    id: CONFIG_KEYS.aboutMe,
   });
+  const content = typeof value === "string" ? value : "";
+
   return (
     <EditorShell
       className="h-[80%] w-[80%]"
@@ -40,14 +38,14 @@ export default function AboutMe({ id, title }: ConfigField) {
       >
         <div className="min-h-0 overflow-hidden rounded-lg">
           <CodeMirrorEditor
-            value={value}
+            value={content}
             onChange={setValue}
             className="h-full min-h-0 overflow-auto"
           />
         </div>
         <div className="min-h-0 overflow-auto rounded-lg bg-white dark:bg-zinc-950">
           <ContentRenderer
-            content={value || "No content"}
+            content={content || "No content"}
             className="min-h-full p-4"
           />
         </div>

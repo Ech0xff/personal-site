@@ -2,15 +2,20 @@ import ContributionCalendar from "@/components/features/contributions/Contributi
 import TagMarquee from "@/components/features/tags/TagMarquee";
 import ContentRenderer from "@/components/ui/content/ContentRenderer";
 import Stack from "@/components/ui/Stack";
-import {
-  getThemedPlaylistUrl,
-  type SiteConfig,
-} from "@/lib/shared/config/site";
+import { generatePlaylistUrl } from "@/lib/shared/config/utils";
 import { getT } from "@/lib/shared/i18n/tools";
 import type { BlogSummaryData, RecentActivityItem } from "@/types";
 
 import Card from "./Card";
 import RecentActivityList from "./RecentActivityList";
+
+const getPlaylistEmbedUrl = (playlistUrl: string, theme: "dark" | "light") => {
+  try {
+    return generatePlaylistUrl(playlistUrl, theme);
+  } catch {
+    return "";
+  }
+};
 
 export async function IntroductionSection({
   locale,
@@ -21,7 +26,7 @@ export async function IntroductionSection({
   locale?: string;
   data: BlogSummaryData;
   recentActivity: RecentActivityItem[];
-  config: SiteConfig;
+  config: { aboutMe: string; playlistUrl: string };
 }) {
   const t = getT("IndexHome", locale);
 
@@ -33,7 +38,14 @@ export async function IntroductionSection({
 
   const totalCharacters =
     data.posts.characters + data.thoughts.characters + data.events.characters;
-  const playlistUrl = config.playlistUrl.trim();
+  const playlistUrl = config.playlistUrl?.trim();
+  const darkPlaylistUrl = playlistUrl
+    ? getPlaylistEmbedUrl(playlistUrl, "dark")
+    : "";
+  const lightPlaylistUrl = playlistUrl
+    ? getPlaylistEmbedUrl(playlistUrl, "light")
+    : "";
+  const hasPlaylist = Boolean(darkPlaylistUrl && lightPlaylistUrl);
 
   const statsItems = [
     {
@@ -120,7 +132,7 @@ export async function IntroductionSection({
         </Stack>
       </Card>
 
-      {playlistUrl && (
+      {hasPlaylist && (
         <Card title={t("playlist.cardTitle")}>
           <iframe
             title={t("playlist.cardTitle")}
@@ -128,7 +140,7 @@ export async function IntroductionSection({
             height="450"
             className="hidden w-full overflow-hidden rounded-lg border-none dark:block"
             sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-            src={getThemedPlaylistUrl(playlistUrl, "dark")}
+            src={darkPlaylistUrl}
           />
           <iframe
             title={t("playlist.cardTitle")}
@@ -136,7 +148,7 @@ export async function IntroductionSection({
             height="450"
             className="w-full overflow-hidden rounded-lg border-none dark:hidden"
             sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-            src={getThemedPlaylistUrl(playlistUrl, "light")}
+            src={lightPlaylistUrl}
           />
         </Card>
       )}

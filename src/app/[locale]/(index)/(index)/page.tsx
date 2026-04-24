@@ -2,13 +2,9 @@ import { cacheTag } from "next/cache";
 
 import Stack from "@/components/ui/Stack";
 import { CACHE_TAGS } from "@/lib/server/cache";
+import { CONFIG_KEYS } from "@/lib/shared/config";
 import {
-  buildSiteConfig,
-  LEGACY_SITE_CONFIG_KEY,
-  SITE_CONFIG_KEYS,
-} from "@/lib/shared/config/site";
-import {
-  fetchConfig,
+  fetchConfigs,
   fetchEvents,
   fetchPosts,
   fetchSummary,
@@ -87,15 +83,16 @@ export default async function HomePage({
 
   const { locale } = await params;
   const localeConfig = locale.replace("-", "_");
-  const [data, recentActivity, aboutMe, playlistUrl, legacyConfig] =
-    await Promise.all([
-      fetchSummary() as Promise<BlogSummaryData>,
-      buildRecentActivity(),
-      fetchConfig(undefined, SITE_CONFIG_KEYS.aboutMe, localeConfig, true),
-      fetchConfig(undefined, SITE_CONFIG_KEYS.playlistUrl),
-      fetchConfig(undefined, LEGACY_SITE_CONFIG_KEY, localeConfig, true),
-    ]);
-
+  const [data, recentActivity, configs] = await Promise.all([
+    fetchSummary() as Promise<BlogSummaryData>,
+    buildRecentActivity(),
+    fetchConfigs([CONFIG_KEYS.aboutMe, CONFIG_KEYS.playlistUrl], {
+      locale: localeConfig,
+      strict: true,
+    }),
+  ]);
+  const aboutMe = configs.get(CONFIG_KEYS.aboutMe) ?? "";
+  const playlistUrl = configs.get(CONFIG_KEYS.playlistUrl) ?? "";
   return (
     <>
       <AnimationSection />
@@ -111,11 +108,10 @@ export default async function HomePage({
           locale={locale}
           data={data}
           recentActivity={recentActivity}
-          config={buildSiteConfig({
+          config={{
             aboutMe,
             playlistUrl,
-            legacyValue: legacyConfig,
-          })}
+          }}
         />
       </Stack>
     </>

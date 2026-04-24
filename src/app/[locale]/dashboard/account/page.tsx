@@ -7,7 +7,7 @@ import SectionCard from "@/components/ui/SectionCard";
 import Stack from "@/components/ui/Stack";
 import { useCurrentLocale } from "@/lib/client/locale";
 import { fetchAvailableOauthProvidersByBrowser } from "@/lib/client/services";
-import { type OAuthProvider, providerConfig } from "@/lib/shared/config/oauth";
+import { type OAuthProvider, providerConfig } from "@/lib/shared/config";
 import { getT } from "@/lib/shared/i18n";
 import { formatTime } from "@/lib/shared/utils";
 

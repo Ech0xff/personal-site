@@ -1,32 +1,18 @@
-import { useCallback } from "react";
-
 import {
+  CONFIG_KEYS,
   type OAuthProvider,
   providerConfig,
-  resolveOauthProviders,
-} from "@/lib/shared/config/oauth";
+} from "@/lib/shared/config";
 import { cn } from "@/lib/shared/utils";
 
-import useConfig, { type ResolveConfigValueArgs } from "../_hooks/useConfig";
+import useConfig from "../_hooks/useConfig";
 import EditorShell from "./editor-shell";
 
-export type ConfigField = {
-  id: string;
-  title: string;
-};
-
 const allProviders = Object.keys(providerConfig) as OAuthProvider[];
-const defaultProviders: OAuthProvider[] = [];
+const emptyProviders: OAuthProvider[] = [];
+const title = "OAuth Providers";
 
-export default function OauthProviders({ id, title }: ConfigField) {
-  const resolveOauthProviderValue = useCallback(
-    ({ currentValue }: ResolveConfigValueArgs) =>
-      Array.isArray(currentValue)
-        ? resolveOauthProviders(currentValue, allProviders)
-        : [],
-    [],
-  );
-
+export default function OauthProviders() {
   const {
     value,
     setValue,
@@ -35,17 +21,16 @@ export default function OauthProviders({ id, title }: ConfigField) {
     hasStoredValue,
     deleteConfig,
     saveConfig,
-  } = useConfig<OAuthProvider[]>({
-    id,
-    initialValue: defaultProviders,
-    resolveValue: resolveOauthProviderValue,
+  } = useConfig({
+    id: CONFIG_KEYS.oauthProviders,
   });
+  const providers = Array.isArray(value) ? value : emptyProviders;
 
   const toggleProvider = (provider: OAuthProvider) => {
     setValue(
-      value.includes(provider)
-        ? value.filter((item) => item !== provider)
-        : [...value, provider],
+      providers.includes(provider)
+        ? providers.filter((item) => item !== provider)
+        : [...providers, provider],
     );
   };
 
@@ -67,7 +52,7 @@ export default function OauthProviders({ id, title }: ConfigField) {
         {allProviders.map((provider) => {
           const config = providerConfig[provider];
           const Icon = config.icon;
-          const enabled = value.includes(provider);
+          const enabled = providers.includes(provider);
 
           return (
             <button

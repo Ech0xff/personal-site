@@ -1,7 +1,4 @@
-import {
-  AUTH_CONFIG_KEYS,
-  resolveOauthProviders,
-} from "@/lib/shared/config/oauth";
+import { CONFIG_KEYS } from "@/lib/shared/config";
 
 import { fetchConfigByBrowser } from "./configs";
 
@@ -13,21 +10,14 @@ export const fetchAvailableOauthProvidersByBrowser = async (
   const configLocale = normalizeConfigLocale(locale);
 
   try {
-    const [value, legacyValue] = await Promise.all([
-      fetchConfigByBrowser(
-        AUTH_CONFIG_KEYS.oauthProviders,
-        configLocale,
-        Boolean(configLocale),
-      ),
-      fetchConfigByBrowser(
-        AUTH_CONFIG_KEYS.legacyOauthEnabled,
-        configLocale,
-        Boolean(configLocale),
-      ),
-    ]);
+    const value = await fetchConfigByBrowser(
+      CONFIG_KEYS.oauthProviders,
+      configLocale,
+      Boolean(configLocale),
+    );
 
-    return resolveOauthProviders(value ?? legacyValue);
+    return value ?? [];
   } catch {
-    return resolveOauthProviders(null);
+    return [];
   }
 };
