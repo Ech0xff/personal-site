@@ -14,6 +14,8 @@ import {
   useState,
 } from "react";
 
+import { cn } from "@/lib/shared/utils";
+
 export interface ModalRenderProps {
   close: () => void;
 }
@@ -21,7 +23,9 @@ export interface ModalRenderProps {
 type ModalId = string;
 
 export interface Options {
+  boundary: "viewport" | "anchor";
   positionAnchor: CSSProperties["positionAnchor"];
+  containerClassName?: string;
 }
 
 interface ModalEntry {
@@ -52,6 +56,7 @@ export default function ModalProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   const defaultOptionsRef = useRef<Options>({
+    boundary: "viewport",
     positionAnchor: "--body",
   });
   const previousPathname = useRef(pathname);
@@ -127,6 +132,8 @@ export default function ModalProvider({ children }: { children: ReactNode }) {
       <AnimatePresence>
         {modals.map((modal, index) => {
           const isTop = index === modals.length - 1;
+          const { boundary, positionAnchor, containerClassName } =
+            modal.options;
 
           return (
             <motion.div
@@ -137,11 +144,17 @@ export default function ModalProvider({ children }: { children: ReactNode }) {
               transition={{ duration: 0.18, ease: "easeOut" }}
               style={{
                 pointerEvents: isTop ? "auto" : "none",
-                positionAnchor: modal.options.positionAnchor,
+                positionAnchor:
+                  boundary === "anchor" ? positionAnchor : undefined,
                 zIndex: 100 + index * 2,
               }}
               aria-hidden={!isTop}
-              className="fixed inset-[anchor(top)_anchor(right)_anchor(bottom)_anchor(left)] bg-zinc-950/40 backdrop-blur-sm"
+              className={cn(
+                "fixed bg-zinc-950/40 backdrop-blur-sm",
+                boundary === "anchor"
+                  ? "inset-[anchor(top)_anchor(right)_anchor(bottom)_anchor(left)]"
+                  : "inset-0",
+              )}
             >
               <motion.div
                 onClick={(event) => {
@@ -155,7 +168,10 @@ export default function ModalProvider({ children }: { children: ReactNode }) {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
-                className="flex h-full min-h-0 w-full items-center justify-center"
+                className={cn(
+                  "flex h-full min-h-0 w-full items-center justify-center",
+                  containerClassName,
+                )}
               >
                 {modal.content}
               </motion.div>

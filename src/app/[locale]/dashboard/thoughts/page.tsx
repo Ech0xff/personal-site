@@ -24,7 +24,7 @@ export default function ThoughtsPage() {
         <ThoughtEditor
           key={id || "new"}
           id={id}
-          onClose={close}
+          onClose={() => close()}
           onSaved={async () => {
             await refetch();
             close();
