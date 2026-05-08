@@ -5,9 +5,9 @@ import { useModal } from "@/components/ui/ModalProvider";
 export default function DashboardModalOptions() {
   const { setDefaultOptions } = useModal();
   useEffect(() => {
-    setDefaultOptions({ positionAnchor: "--dashboard" });
+    setDefaultOptions({ boundary: "anchor", positionAnchor: "--dashboard" });
     return () => {
-      setDefaultOptions({ positionAnchor: "--body" });
+      setDefaultOptions({ boundary: "viewport", positionAnchor: "--body" });
     };
   }, [setDefaultOptions]);
   return null;

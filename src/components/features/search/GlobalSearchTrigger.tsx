@@ -3,14 +3,14 @@
 import { CalendarDays, FileText, Lightbulb, Search, X } from "lucide-react";
 import NextLink from "next/link";
 import {
-  type MouseEvent,
   type ReactNode,
+  useCallback,
   useEffect,
-  useEffectEvent,
   useRef,
   useState,
 } from "react";
 
+import { useModal } from "@/components/ui/ModalProvider";
 import Stack from "@/components/ui/Stack";
 import { useCurrentLocale } from "@/lib/client/locale";
 import { searchContentByBrowser } from "@/lib/client/services";
@@ -36,8 +36,37 @@ const RESULT_ICON_BY_TYPE: Record<SearchResult["type"], ReactNode> = {
 export default function GlobalSearchTrigger({ className }: Props) {
   const locale = useCurrentLocale();
   const tSearch = getT("Search", locale);
+  const { isOpen, open } = useModal();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const handleOpen = () => {
+    if (isOpen) return;
+
+    open(<GlobalSearchModal />, {
+      containerClassName: "items-start px-4 pt-[12vh]",
+    });
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleOpen}
+      className={cn(
+        "inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-zinc-500 transition-all hover:bg-theme-hover hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100",
+        className,
+      )}
+      aria-label={tSearch("title")}
+      title={tSearch("title")}
+    >
+      <Search size={14} aria-hidden="true" />
+    </button>
+  );
+}
+
+function GlobalSearchModal() {
+  const locale = useCurrentLocale();
+  const tSearch = getT("Search", locale);
+  const { close } = useModal();
+
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
@@ -45,43 +74,29 @@ export default function GlobalSearchTrigger({ className }: Props) {
   const [hasError, setHasError] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const closeModal = useEffectEvent(() => {
-    setIsOpen(false);
-    setQuery("");
-    setDebouncedQuery("");
-    setResults([]);
-    setHasError(false);
-    setIsLoading(false);
-  });
+  const handleClose = useCallback(() => {
+    close();
+  }, [close]);
 
   useEffect(() => {
-    if (!isOpen) return;
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     const frame = window.requestAnimationFrame(() => {
       inputRef.current?.focus();
     });
 
     return () => {
       window.cancelAnimationFrame(frame);
-      document.body.style.overflow = previousOverflow;
     };
-  }, [isOpen]);
+  }, []);
 
   useEffect(() => {
-    if (!isOpen) return;
-
     const timer = window.setTimeout(() => {
       setDebouncedQuery(normalizeSearchQuery(query));
     }, 250);
 
     return () => window.clearTimeout(timer);
-  }, [isOpen, query]);
+  }, [query]);
 
   useEffect(() => {
-    if (!isOpen) return;
-
     let isCancelled = false;
     const normalizedQuery = normalizeSearchQuery(debouncedQuery);
 
@@ -115,26 +130,7 @@ export default function GlobalSearchTrigger({ className }: Props) {
     return () => {
       isCancelled = true;
     };
-  }, [debouncedQuery, isOpen]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        closeModal();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen]);
-
-  const handleBackdropClick = (event: MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
-      closeModal();
-    }
-  };
+  }, [debouncedQuery]);
 
   const renderHighlightedText = (value: string) =>
     getSearchHighlightSegments(value, debouncedQuery).map((segment, index) => (
@@ -192,7 +188,7 @@ export default function GlobalSearchTrigger({ className }: Props) {
             <NextLink
               key={`${result.type}-${result.id}`}
               href={localizeHref(locale, result.href)}
-              onClick={() => closeModal()}
+              onClick={handleClose}
               className={cn(
                 "rounded-2xl border border-zinc-200 px-4 py-3 transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-700 dark:hover:bg-zinc-900",
                 isThought && "py-4",
@@ -247,59 +243,35 @@ export default function GlobalSearchTrigger({ className }: Props) {
   };
 
   return (
-    <>
-      <button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        className={cn(
-          "inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-zinc-500 transition-all hover:bg-theme-hover hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100",
-          className,
-        )}
-        aria-label={tSearch("title")}
-        title={tSearch("title")}
+    <div
+      className="w-full max-w-2xl rounded-[2rem] border border-zinc-200 bg-white p-4 shadow-2xl dark:border-zinc-800 dark:bg-zinc-950"
+      role="dialog"
+      aria-modal="true"
+      aria-label={tSearch("title")}
+    >
+      <Stack
+        x
+        className="items-center gap-3 rounded-2xl border border-zinc-200 px-4 py-3 dark:border-zinc-800"
       >
-        <Search size={14} aria-hidden="true" />
-      </button>
-
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-[1200] flex items-start justify-center bg-zinc-950/35 px-4 pt-[12vh] backdrop-blur-sm"
-          onClick={handleBackdropClick}
+        <Search size={18} className="shrink-0 text-zinc-400" />
+        <input
+          ref={inputRef}
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder={tSearch("placeholder")}
+          className="flex-1 bg-transparent text-sm text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100 dark:placeholder:text-zinc-500"
+        />
+        <button
+          type="button"
+          onClick={handleClose}
+          className="inline-flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-900 dark:hover:text-zinc-200"
+          aria-label={tSearch("close")}
         >
-          <div
-            className="w-full max-w-2xl rounded-[2rem] border border-zinc-200 bg-white p-4 shadow-2xl dark:border-zinc-800 dark:bg-zinc-950"
-            role="dialog"
-            aria-modal="true"
-            aria-label={tSearch("title")}
-          >
-            <Stack
-              x
-              className="items-center gap-3 rounded-2xl border border-zinc-200 px-4 py-3 dark:border-zinc-800"
-            >
-              <Search size={18} className="shrink-0 text-zinc-400" />
-              <input
-                ref={inputRef}
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder={tSearch("placeholder")}
-                className="flex-1 bg-transparent text-sm text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100 dark:placeholder:text-zinc-500"
-              />
-              <button
-                type="button"
-                onClick={closeModal}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-900 dark:hover:text-zinc-200"
-                aria-label={tSearch("close")}
-              >
-                <X size={16} />
-              </button>
-            </Stack>
+          <X size={16} />
+        </button>
+      </Stack>
 
-            <div className="mt-4 max-h-[60vh] overflow-y-auto">
-              {renderResults()}
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+      <div className="mt-4 max-h-[60vh] overflow-y-auto">{renderResults()}</div>
+    </div>
   );
 }

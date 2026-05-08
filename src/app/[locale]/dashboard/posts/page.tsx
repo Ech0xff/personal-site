@@ -49,7 +49,7 @@ export default function Page() {
         <PostEditor
           key={id || "new"}
           id={id}
-          onClose={close}
+          onClose={() => close()}
           onSaved={async () => {
             await refetch();
             close();
