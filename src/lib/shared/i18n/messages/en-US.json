@@ -45,7 +45,8 @@
     },
     "recentActivity": {
       "cardTitle": "Recent Updates",
-      "empty": "No activity yet..."
+      "empty": "No activity yet...",
+      "recordCount": "{count, plural, one {# record} other {# records}}"
     },
     "stats": {
       "cardTitle": "Statistics",
@@ -68,7 +69,16 @@
       "less": "Less",
       "more": "More",
       "contributionCount": "contributions",
-      "contributionSingle": "contribution"
+      "contributionSingle": "contribution",
+      "yearSelectorLabel": "Select contribution year",
+      "weekdays": {
+        "monday": "Mon",
+        "wednesday": "Wed",
+        "friday": "Fri"
+      }
+    },
+    "recentPlan": {
+      "title": "Recent Plans"
     },
     "playlist": {
       "cardTitle": "My Playlist"

@@ -72,11 +72,9 @@ export default function RecentActivityList({ locale = "en-US", items }: Props) {
       )}
       <div className="divide-y divide-zinc-200/60 dark:divide-zinc-800">
         {groupedActivity.map((group) => {
-          const recordText = locale.startsWith("zh")
-            ? `${group.items.length}条记录`
-            : `${group.items.length} ${
-                group.items.length === 1 ? "record" : "records"
-              }`;
+          const recordText = t("recentActivity.recordCount", {
+            count: group.items.length,
+          });
 
           return (
             <div key={group.date} className="px-2 py-3 first:pt-1">

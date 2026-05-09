@@ -22,16 +22,21 @@ export default function useConfig<K extends ConfigKey>({
   const [loading, setLoading] = useState(true);
   const [hasStoredValue, setHasStoredValue] = useState(false);
 
-  const saveConfig = useCallback(async () => {
-    if (!id || value === null) return;
-    try {
-      await setConfigByBrowser(generateConfigKey(id, locale), value);
-      setHasStoredValue(true);
-      toast.success("Config saved.");
-    } catch {
-      toast.error("Failed to save config.");
-    }
-  }, [id, locale, value]);
+  const saveConfig = useCallback(
+    async (nextValue?: ConfigValue[K]) => {
+      const valueToSave = nextValue ?? value;
+      if (!id || valueToSave === null) return;
+      try {
+        await setConfigByBrowser(generateConfigKey(id, locale), valueToSave);
+        setValue(valueToSave);
+        setHasStoredValue(true);
+        toast.success("Config saved.");
+      } catch {
+        toast.error("Failed to save config.");
+      }
+    },
+    [id, locale, value],
+  );
 
   const getConfig = useCallback(async () => {
     if (!id) return;

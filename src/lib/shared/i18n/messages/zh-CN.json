@@ -45,7 +45,8 @@
     },
     "recentActivity": {
       "cardTitle": "最近动态",
-      "empty": "还没有动态..."
+      "empty": "还没有动态...",
+      "recordCount": "{count} 条记录"
     },
     "stats": {
       "cardTitle": "统计",
@@ -67,7 +68,17 @@
       "unknown": "Unknown",
       "less": "少",
       "more": "多",
-      "contributionCount": "次贡献"
+      "contributionCount": "次贡献",
+      "contributionSingle": "次贡献",
+      "yearSelectorLabel": "选择贡献年份",
+      "weekdays": {
+        "monday": "一",
+        "wednesday": "三",
+        "friday": "五"
+      }
+    },
+    "recentPlan": {
+      "title": "最近计划"
     },
     "playlist": {
       "cardTitle": "我的歌单"

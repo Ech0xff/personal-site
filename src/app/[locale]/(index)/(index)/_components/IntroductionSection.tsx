@@ -1,7 +1,10 @@
+import { Check, CircleDashed, Clock, ListChecks, X } from "lucide-react";
+
 import ContributionCalendar from "@/components/features/contributions/ContributionCalendar";
 import TagMarquee from "@/components/features/tags/TagMarquee";
 import ContentRenderer from "@/components/ui/content/ContentRenderer";
 import Stack from "@/components/ui/Stack";
+import type { RecentPlanConfig, TaskStatus } from "@/lib/shared/config";
 import { generatePlaylistUrl } from "@/lib/shared/config/utils";
 import { getT } from "@/lib/shared/i18n/tools";
 import type { BlogSummaryData, RecentActivityItem } from "@/types";
@@ -17,6 +20,13 @@ const getPlaylistEmbedUrl = (playlistUrl: string, theme: "dark" | "light") => {
   }
 };
 
+const recentPlanStatusIcons: Record<TaskStatus, typeof Clock> = {
+  waiting: Clock,
+  pending: CircleDashed,
+  completed: Check,
+  failed: X,
+};
+
 export async function IntroductionSection({
   locale,
   data,
@@ -26,7 +36,11 @@ export async function IntroductionSection({
   locale?: string;
   data: BlogSummaryData;
   recentActivity: RecentActivityItem[];
-  config: { aboutMe: string; playlistUrl: string };
+  config: {
+    aboutMe: string;
+    playlistUrl: string;
+    recentPlan: RecentPlanConfig;
+  };
 }) {
   const t = getT("IndexHome", locale);
 
@@ -73,10 +87,32 @@ export async function IntroductionSection({
     >
       {/* About Card */}
       <Card title={t("about.cardTitle")}>
-        <Stack y className="rounded-2xl p-4">
+        <Stack y className="gap-4 rounded-2xl p-4">
           <ContentRenderer content={config.aboutMe} />
         </Stack>
       </Card>
+
+      {config.recentPlan.length > 0 && (
+        <Card title={t("recentPlan.title")}>
+          <Stack y className="gap-2 px-4">
+            {config.recentPlan.map((plan) => {
+              const StatusIcon = recentPlanStatusIcons[plan.status];
+              return (
+                <div
+                  key={`${plan.task}-${plan.createdAt}`}
+                  className="flex items-center justify-between gap-4 border-zinc-200 border-b py-3 last:border-b-0 dark:border-zinc-800"
+                >
+                  <ListChecks className="h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" />
+                  <span className="min-w-0 flex-1 text-lg text-slate-700 leading-relaxed dark:text-slate-200">
+                    {plan.task}
+                  </span>
+                  <StatusIcon className="h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" />
+                </div>
+              );
+            })}
+          </Stack>
+        </Card>
+      )}
 
       <Card title={t("recentActivity.cardTitle")}>
         <RecentActivityList locale={locale} items={recentActivity} />
