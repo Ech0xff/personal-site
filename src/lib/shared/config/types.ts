@@ -7,7 +7,75 @@ export const CONFIG_KEYS = {
   playlistUrl: "playlistUrl",
   oauthProviders: "oauthProviders",
   siteInfo: "siteInfo",
+  recentPlan: "recentPlan",
 } as const;
+
+export type TaskStatus = "waiting" | "completed" | "pending" | "failed";
+
+export type RecentPlanTask = { [key: string]: Json | undefined } & {
+  task: string;
+  status: TaskStatus;
+  createdAt: string;
+  completedAt?: string;
+};
+
+export type RecentPlanConfig = RecentPlanTask[];
+
+export const taskStatusConfig: Record<
+  TaskStatus,
+  { label: string; color: string }
+> = {
+  waiting: {
+    label: "未开始",
+    color: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200",
+  },
+  pending: {
+    label: "进行中",
+    color: "bg-blue-100 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300",
+  },
+  completed: {
+    label: "完成",
+    color:
+      "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300",
+  },
+  failed: {
+    label: "失败",
+    color: "bg-red-100 text-red-700 dark:bg-red-950/50 dark:text-red-300",
+  },
+};
+
+const taskStatuses = Object.keys(taskStatusConfig) as TaskStatus[];
+
+const isTaskStatus = (value: unknown): value is TaskStatus =>
+  typeof value === "string" && taskStatuses.includes(value as TaskStatus);
+
+export function resolveRecentPlanConfig(value: unknown): RecentPlanConfig {
+  if (!Array.isArray(value)) return [];
+
+  return value.reduce<RecentPlanConfig>((plans, item) => {
+    if (!item || typeof item !== "object" || Array.isArray(item)) return plans;
+
+    const plan = item as Record<string, unknown>;
+    if (!isNonEmptyString(plan.task) || !isTaskStatus(plan.status)) {
+      return plans;
+    }
+
+    const createdAt = isNonEmptyString(plan.createdAt)
+      ? plan.createdAt
+      : new Date().toISOString();
+    const completedAt = isNonEmptyString(plan.completedAt)
+      ? { completedAt: plan.completedAt }
+      : {};
+
+    plans.push({
+      task: plan.task,
+      status: plan.status,
+      createdAt,
+      ...completedAt,
+    });
+    return plans;
+  }, []);
+}
 
 export type SiteInfoConfig = { [key: string]: Json | undefined } & {
   title: string;
@@ -55,6 +123,7 @@ export type ConfigValue = {
   [CONFIG_KEYS.playlistUrl]: string;
   [CONFIG_KEYS.oauthProviders]: OAuthProvider[];
   [CONFIG_KEYS.siteInfo]: SiteInfoConfig;
+  [CONFIG_KEYS.recentPlan]: RecentPlanConfig;
 };
 
 export type ConfigKey = keyof ConfigValue;

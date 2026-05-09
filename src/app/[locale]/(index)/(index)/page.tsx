@@ -2,7 +2,11 @@ import { cacheTag } from "next/cache";
 
 import Stack from "@/components/ui/Stack";
 import { CACHE_TAGS } from "@/lib/server/cache";
-import { CONFIG_KEYS, resolveSiteInfoConfig } from "@/lib/shared/config";
+import {
+  CONFIG_KEYS,
+  resolveRecentPlanConfig,
+  resolveSiteInfoConfig,
+} from "@/lib/shared/config";
 import {
   fetchConfigs,
   fetchEvents,
@@ -87,7 +91,12 @@ export default async function HomePage({
     fetchSummary() as Promise<BlogSummaryData>,
     buildRecentActivity(),
     fetchConfigs(
-      [CONFIG_KEYS.aboutMe, CONFIG_KEYS.playlistUrl, CONFIG_KEYS.siteInfo],
+      [
+        CONFIG_KEYS.aboutMe,
+        CONFIG_KEYS.playlistUrl,
+        CONFIG_KEYS.siteInfo,
+        CONFIG_KEYS.recentPlan,
+      ],
       {
         locale: localeConfig,
         strict: true,
@@ -100,6 +109,9 @@ export default async function HomePage({
   const playlistUrl =
     typeof playlistUrlValue === "string" ? playlistUrlValue : "";
   const siteInfo = resolveSiteInfoConfig(configs.get(CONFIG_KEYS.siteInfo));
+  const recentPlan = resolveRecentPlanConfig(
+    configs.get(CONFIG_KEYS.recentPlan),
+  );
   return (
     <>
       <AnimationSection siteInfo={siteInfo} />
@@ -118,6 +130,7 @@ export default async function HomePage({
           config={{
             aboutMe,
             playlistUrl,
+            recentPlan,
           }}
         />
       </Stack>

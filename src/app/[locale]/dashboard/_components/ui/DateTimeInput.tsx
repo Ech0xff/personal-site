@@ -15,6 +15,7 @@ type DateTimeInputProps = {
   buttonClassName?: string;
   ariaLabel?: string;
   disabled?: boolean;
+  fallbackToNow?: boolean;
 };
 
 export default function DateTimeInput({
@@ -23,16 +24,18 @@ export default function DateTimeInput({
   className,
   ariaLabel = "Select published time",
   disabled,
+  fallbackToNow = true,
 }: DateTimeInputProps) {
   const dateInputRef = useRef<HTMLInputElement>(null);
   const fallbackNowUtc = useMemo(() => new Date().toISOString(), []);
-  const resolvedValue = toDatetimeLocalValue(value || fallbackNowUtc);
+  const fallbackValue = fallbackToNow ? fallbackNowUtc : "";
+  const resolvedValue = toDatetimeLocalValue(value || fallbackValue);
 
   useEffect(() => {
-    if (!value) {
+    if (fallbackToNow && !value) {
       onChange(fallbackNowUtc);
     }
-  }, [fallbackNowUtc, onChange, value]);
+  }, [fallbackNowUtc, fallbackToNow, onChange, value]);
 
   return (
     <button
@@ -54,7 +57,7 @@ export default function DateTimeInput({
         ref={dateInputRef}
         value={resolvedValue}
         onChange={(event) =>
-          onChange(datetimeLocalToUtcIso(event.target.value, fallbackNowUtc))
+          onChange(datetimeLocalToUtcIso(event.target.value, fallbackValue))
         }
         type="datetime-local"
         className="sr-only"

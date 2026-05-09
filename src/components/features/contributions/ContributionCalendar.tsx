@@ -36,18 +36,11 @@ const CELL_LEVEL_CLASS = [
   "bg-emerald-500 dark:bg-emerald-500",
 ];
 
-const getWeekdayLabels = (locale: string) =>
-  locale.startsWith("zh")
-    ? [
-        { index: 1, label: "一" },
-        { index: 3, label: "三" },
-        { index: 5, label: "五" },
-      ]
-    : [
-        { index: 1, label: "Mon" },
-        { index: 3, label: "Wed" },
-        { index: 5, label: "Fri" },
-      ];
+const getWeekdayLabels = (labels: string[]) => [
+  { index: 1, label: labels[0] ?? "" },
+  { index: 3, label: labels[1] ?? "" },
+  { index: 5, label: labels[2] ?? "" },
+];
 
 const formatDateKey = (date: Date) => date.toISOString().slice(0, 10);
 
@@ -197,7 +190,11 @@ export default function ContributionCalendar({
     yearEnd,
   );
   const monthLabels = buildMonthLabels(weeks, locale);
-  const weekdayLabels = getWeekdayLabels(locale);
+  const weekdayLabels = getWeekdayLabels([
+    t("stats.weekdays.monday"),
+    t("stats.weekdays.wednesday"),
+    t("stats.weekdays.friday"),
+  ]);
   const extraTopSpace = multiplyLength(base, 3);
   const gap = multiplyLength(base, 0.3);
   const weekdayLabelWidth = multiplyLength(base, 4);
@@ -321,7 +318,7 @@ export default function ContributionCalendar({
         <div className="flex flex-wrap items-center gap-2">
           <div
             role="tablist"
-            aria-label="Select contribution year"
+            aria-label={t("stats.yearSelectorLabel")}
             className="flex items-center rounded-lg bg-zinc-100 p-0.5 dark:bg-zinc-800"
           >
             {availableYears.map((year) => (

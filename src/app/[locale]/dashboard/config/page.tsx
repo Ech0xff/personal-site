@@ -14,6 +14,7 @@ import DashboardShell from "../_components/ui/DashboardShell";
 import AboutMe from "./_components/about-me";
 import OauthProviders from "./_components/oauth-providers";
 import PlaylistUrl from "./_components/playlist-url";
+import RecentPlan from "./_components/recent-plan";
 import SiteInfo from "./_components/site-info";
 
 export type ConfigField = {
@@ -34,6 +35,11 @@ export const configFields = [
     title: "About Me",
     description: "Markdown intro shown on the home page.",
     render: () => <AboutMe />,
+  },
+  {
+    title: "Recent Plans",
+    description: "Task list and progress status shown under About Me.",
+    render: () => <RecentPlan />,
   },
   {
     title: "Playlist URL",
