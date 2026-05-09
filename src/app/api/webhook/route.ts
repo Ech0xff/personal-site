@@ -1,7 +1,7 @@
 import { revalidateTag } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
 
-import { CACHE_TAGS, getCollectionTagByTable } from "@/lib/server/cache";
+import { CACHE_TAGS, TABLE_CACHE_TAGS } from "@/lib/server/cache";
 
 export async function POST(request: NextRequest) {
   const authHeader = request.headers.get("Authorization");
@@ -17,30 +17,9 @@ export async function POST(request: NextRequest) {
     const oldRecord = body?.old_record;
     const id = record?.id ?? oldRecord?.id;
 
-    const tags = new Set<string>();
-    const collectionTag =
-      table === "posts" || table === "thoughts" || table === "events"
-        ? getCollectionTagByTable(table)
-        : null;
+    const tags = new Set(TABLE_CACHE_TAGS[table] ?? []);
 
-    if (collectionTag) {
-      tags.add(collectionTag);
-      tags.add(CACHE_TAGS.summary);
-    }
-
-    switch (table) {
-      case "posts":
-        if (id) {
-          tags.add(CACHE_TAGS.post(id));
-        }
-        break;
-      case "thoughts":
-        break;
-      case "events":
-        break;
-      default:
-        break;
-    }
+    if (table === "posts" && !id) tags.add(CACHE_TAGS.post(id));
 
     tags.forEach((tag) => {
       revalidateTag(tag, "max");
