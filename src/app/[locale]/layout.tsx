@@ -1,12 +1,16 @@
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
+import { cacheTag } from "next/cache";
 import { cookies } from "next/headers";
 
 import { ImageViewer } from "@/components/ui/ImageViewer";
 import ModalProvider from "@/components/ui/ModalProvider";
 import ToastWatcher from "@/features/toast-watcher";
+import { CACHE_TAGS } from "@/lib/server/cache";
+import { CONFIG_KEYS, resolveSiteInfoConfig } from "@/lib/shared/config";
 import { routing } from "@/lib/shared/i18n/routing";
 import { getT } from "@/lib/shared/i18n/tools";
+import { fetchConfigs } from "@/lib/shared/services";
 import "@/styles/globals.scss";
 import "@/styles/tailwind.css";
 import "@/styles/variables.scss";
@@ -23,11 +27,20 @@ interface LayoutProps {
 export async function generateMetadata({
   params,
 }: Pick<LayoutProps, "params">): Promise<Metadata> {
+  "use cache";
+  cacheTag(CACHE_TAGS.config);
+
   const { locale } = await params;
+  const localeConfig = locale.replace("-", "_");
   const t = getT("Meta", locale);
+  const configs = await fetchConfigs([CONFIG_KEYS.siteInfo], {
+    locale: localeConfig,
+    strict: true,
+  });
+  const siteInfo = resolveSiteInfoConfig(configs.get(CONFIG_KEYS.siteInfo));
 
   return {
-    title: t("siteTitle"),
+    title: siteInfo.title,
     description: t("siteDescription"),
     icons: {
       icon: [{ url: "/icon.svg", type: "image/svg+xml" }],

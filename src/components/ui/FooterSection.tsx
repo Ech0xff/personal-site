@@ -1,4 +1,4 @@
-export default function FooterSection() {
+export default function FooterSection({ filing }: { filing: string }) {
   return (
     <footer className="mt-auto flex w-full flex-col items-center justify-center gap-6 pb-8">
       <div className="mx-auto w-full max-w-2xl px-4">
@@ -6,7 +6,7 @@ export default function FooterSection() {
       </div>
 
       <div className="flex flex-col items-center gap-2 font-mono text-slate-400 text-sm dark:text-slate-500">
-        <p>© 2025 Muyu. All rights reserved.</p>
+        <p>{filing}</p>
         <div className="flex items-center gap-3 text-xs opacity-70">
           <span className="cursor-default transition-colors hover:text-slate-600 dark:hover:text-slate-300">
             Designed by Muyu

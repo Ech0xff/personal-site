@@ -5,6 +5,7 @@ import {
   Lightbulb,
   Menu,
 } from "lucide-react";
+import { cacheTag } from "next/cache";
 import type React from "react";
 
 import GlobalSearchTrigger from "@/components/features/search/GlobalSearchTrigger";
@@ -14,7 +15,10 @@ import DropdownPopover from "@/components/ui/DropdownPopover";
 import FooterSection from "@/components/ui/FooterSection";
 import Link from "@/components/ui/Link";
 import Stack from "@/components/ui/Stack";
+import { CACHE_TAGS } from "@/lib/server/cache";
+import { CONFIG_KEYS, resolveSiteInfoConfig } from "@/lib/shared/config";
 import { getT } from "@/lib/shared/i18n/tools";
+import { fetchConfigs } from "@/lib/shared/services";
 import { cn } from "@/lib/shared/utils";
 
 import LayoutClient from "./_components/LayoutClient";
@@ -94,11 +98,20 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   "use cache";
+  cacheTag(CACHE_TAGS.config);
+
   const { locale } = await params;
+  const localeConfig = locale.replace("-", "_");
+  const configs = await fetchConfigs([CONFIG_KEYS.siteInfo], {
+    locale: localeConfig,
+    strict: true,
+  });
+  const siteInfo = resolveSiteInfoConfig(configs.get(CONFIG_KEYS.siteInfo));
+
   return (
     <LayoutClient navbar={<Navbar locale={locale} />}>
       {children}
-      <FooterSection />
+      <FooterSection filing={siteInfo.filing} />
     </LayoutClient>
   );
 }

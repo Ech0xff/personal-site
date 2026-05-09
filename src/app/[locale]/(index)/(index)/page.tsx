@@ -2,7 +2,7 @@ import { cacheTag } from "next/cache";
 
 import Stack from "@/components/ui/Stack";
 import { CACHE_TAGS } from "@/lib/server/cache";
-import { CONFIG_KEYS } from "@/lib/shared/config";
+import { CONFIG_KEYS, resolveSiteInfoConfig } from "@/lib/shared/config";
 import {
   fetchConfigs,
   fetchEvents,
@@ -86,16 +86,23 @@ export default async function HomePage({
   const [data, recentActivity, configs] = await Promise.all([
     fetchSummary() as Promise<BlogSummaryData>,
     buildRecentActivity(),
-    fetchConfigs([CONFIG_KEYS.aboutMe, CONFIG_KEYS.playlistUrl], {
-      locale: localeConfig,
-      strict: true,
-    }),
+    fetchConfigs(
+      [CONFIG_KEYS.aboutMe, CONFIG_KEYS.playlistUrl, CONFIG_KEYS.siteInfo],
+      {
+        locale: localeConfig,
+        strict: true,
+      },
+    ),
   ]);
-  const aboutMe = configs.get(CONFIG_KEYS.aboutMe) ?? "";
-  const playlistUrl = configs.get(CONFIG_KEYS.playlistUrl) ?? "";
+  const aboutMeValue = configs.get(CONFIG_KEYS.aboutMe);
+  const playlistUrlValue = configs.get(CONFIG_KEYS.playlistUrl);
+  const aboutMe = typeof aboutMeValue === "string" ? aboutMeValue : "";
+  const playlistUrl =
+    typeof playlistUrlValue === "string" ? playlistUrlValue : "";
+  const siteInfo = resolveSiteInfoConfig(configs.get(CONFIG_KEYS.siteInfo));
   return (
     <>
-      <AnimationSection />
+      <AnimationSection siteInfo={siteInfo} />
       <Stack y className="group relative flex w-full gap-3 pt-[10svh]">
         {/* background */}
         <div

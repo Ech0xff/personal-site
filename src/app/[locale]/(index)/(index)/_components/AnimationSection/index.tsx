@@ -1,6 +1,7 @@
 import type React from "react";
 
 import Stack from "@/components/ui/Stack";
+import type { SiteInfoConfig } from "@/lib/shared/config";
 import { cn } from "@/lib/shared/utils";
 
 import Typewriter from "./Typewriter";
@@ -25,7 +26,11 @@ function AnimatedGridBackground({
   );
 }
 
-export default function AnimationSection() {
+export default function AnimationSection({
+  siteInfo,
+}: {
+  siteInfo: SiteInfoConfig;
+}) {
   return (
     <>
       <Stack
@@ -45,12 +50,12 @@ export default function AnimationSection() {
               className="text-center text-[5em]"
               style={{ fontFamily: '"Titan One", cursive' }}
             >
-              Muyu&apos;s Nest
+              {siteInfo.hero}
             </h1>
 
             <div className="my-2 h-px w-full bg-linear-to-r from-transparent via-gray-300 to-transparent dark:via-gray-700" />
 
-            <Typewriter />
+            <Typewriter texts={siteInfo.typing} />
 
             <div
               className="mt-8 font-black text-[6em]"
@@ -59,7 +64,7 @@ export default function AnimationSection() {
                   '"Savoye LET", "Snell Roundhand", "Segoe Script", "Gabriola", cursive',
               }}
             >
-              Let&apos;s create something cool.
+              {siteInfo.bio}
             </div>
           </Stack>
         </Stack>

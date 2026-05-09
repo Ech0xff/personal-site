@@ -14,6 +14,7 @@ import DashboardShell from "../_components/ui/DashboardShell";
 import AboutMe from "./_components/about-me";
 import OauthProviders from "./_components/oauth-providers";
 import PlaylistUrl from "./_components/playlist-url";
+import SiteInfo from "./_components/site-info";
 
 export type ConfigField = {
   key: string;
@@ -23,6 +24,12 @@ export type ConfigField = {
 };
 
 export const configFields = [
+  {
+    title: "Site Info",
+    description:
+      "Site title, hero copy, typewriter text, bio, and filing footer.",
+    render: () => <SiteInfo />,
+  },
   {
     title: "About Me",
     description: "Markdown intro shown on the home page.",
