@@ -1,20 +1,24 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import Stack from "@/components/ui/Stack";
+import { DEFAULT_SITE_INFO } from "@/lib/shared/config";
 
-export default function Typewriter() {
+export default function Typewriter({ texts }: { texts: string[] }) {
+  const typingTexts = useMemo(
+    () => (texts.length > 0 ? texts : DEFAULT_SITE_INFO.typing),
+    [texts],
+  );
+  const typingTextCount = typingTexts.length;
   const [currentText, setCurrentText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [typingSpeed, setTypingSpeed] = useState(100);
 
   useEffect(() => {
-    const texts = [
-      "N 30.57° | E 104.06° | UTC/GMT +08:00",
-      'echo "Hello World"',
-    ];
-    const fullText = texts[currentIndex] || "";
+    if (typingTextCount === 0) return;
+
+    const fullText = typingTexts[currentIndex] || "";
 
     const timer = setTimeout(() => {
       if (isDeleting) {
@@ -30,13 +34,20 @@ export default function Typewriter() {
         setIsDeleting(true);
       } else if (isDeleting && currentText === "") {
         setIsDeleting(false);
-        setCurrentIndex((prev) => (prev + 1) % texts.length);
+        setCurrentIndex((prev) => (prev + 1) % typingTextCount);
         setTypingSpeed(500);
       }
     }, typingSpeed);
 
     return () => clearTimeout(timer);
-  }, [currentText, isDeleting, currentIndex, typingSpeed]);
+  }, [
+    currentText,
+    isDeleting,
+    currentIndex,
+    typingSpeed,
+    typingTexts,
+    typingTextCount,
+  ]);
 
   return (
     <Stack
