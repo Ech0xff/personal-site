@@ -45,10 +45,6 @@ export async function IntroductionSection({
   const t = getT("IndexHome", locale);
 
   const tags = data.tags ?? [];
-  const lightLanguagesCardImage =
-    "https://github-readme-stats.vercel.app/api/top-langs/?username=muyu258&hide_border=true&layout=compact";
-  const darkLanguagesCardImage =
-    "https://github-readme-stats.vercel.app/api/top-langs/?username=muyu258&theme=tokyonight&hide_border=true&layout=compact";
 
   const totalCharacters =
     data.posts.characters + data.thoughts.characters + data.events.characters;
@@ -92,28 +88,6 @@ export async function IntroductionSection({
         </Stack>
       </Card>
 
-      {config.recentPlan.length > 0 && (
-        <Card title={t("recentPlan.title")}>
-          <Stack y className="gap-2 px-4">
-            {config.recentPlan.map((plan) => {
-              const StatusIcon = recentPlanStatusIcons[plan.status];
-              return (
-                <div
-                  key={`${plan.task}-${plan.createdAt}`}
-                  className="flex items-center justify-between gap-4 border-zinc-200 border-b py-3 last:border-b-0 dark:border-zinc-800"
-                >
-                  <ListChecks className="h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" />
-                  <span className="min-w-0 flex-1 text-lg text-slate-700 leading-relaxed dark:text-slate-200">
-                    {plan.task}
-                  </span>
-                  <StatusIcon className="h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" />
-                </div>
-              );
-            })}
-          </Stack>
-        </Card>
-      )}
-
       <Card title={t("recentActivity.cardTitle")}>
         <RecentActivityList locale={locale} items={recentActivity} />
       </Card>
@@ -152,17 +126,36 @@ export async function IntroductionSection({
               </Stack>
             </Stack>
 
-            <Stack className="min-h-0 overflow-hidden rounded-2xl">
-              <img
-                src={lightLanguagesCardImage}
-                alt="Top languages"
-                className="h-full w-full rounded-2xl object-cover dark:hidden"
-              />
-              <img
-                src={darkLanguagesCardImage}
-                alt="Top languages"
-                className="hidden h-full w-full rounded-2xl object-cover dark:block"
-              />
+            <Stack
+              y
+              className="min-h-0 gap-2 rounded-2xl bg-slate-50 p-4 dark:bg-white/5"
+            >
+              <Stack className="font-medium text-slate-400 text-xs uppercase tracking-wider">
+                {t("recentPlan.title")}
+              </Stack>
+              <Stack y className="min-h-0 flex-1 gap-2">
+                {config.recentPlan.length > 0 ? (
+                  config.recentPlan.map((plan) => {
+                    const StatusIcon = recentPlanStatusIcons[plan.status];
+                    return (
+                      <div
+                        key={`${plan.task}-${plan.createdAt}`}
+                        className="flex items-center justify-between gap-4 border-zinc-200 border-b py-3 last:border-b-0 dark:border-zinc-800"
+                      >
+                        <ListChecks className="h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" />
+                        <span className="min-w-0 flex-1 text-lg text-slate-700 leading-relaxed dark:text-slate-200">
+                          {plan.task}
+                        </span>
+                        <StatusIcon className="h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" />
+                      </div>
+                    );
+                  })
+                ) : (
+                  <Stack className="flex h-full min-h-32 items-center justify-center rounded-xl border border-zinc-200 border-dashed px-4 text-center text-slate-400 dark:border-zinc-800 dark:text-slate-500">
+                    {t("recentPlan.empty")}
+                  </Stack>
+                )}
+              </Stack>
             </Stack>
           </Stack>
         </Stack>
