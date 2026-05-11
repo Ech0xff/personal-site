@@ -47,7 +47,7 @@ export default function SegmentedToggle<T extends string>({
             type="button"
             onClick={() => onChange(option.value)}
             className={cn(
-              "rounded-md transition-all",
+              "whitespace-nowrap rounded-md transition-all",
               buttonSizeClass,
               isActive
                 ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
