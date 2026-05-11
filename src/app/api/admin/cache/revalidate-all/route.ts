@@ -29,7 +29,7 @@ export async function POST() {
     });
 
     tags.forEach((tag) => {
-      revalidateTag(tag, "max");
+      revalidateTag(tag, { expire: 0 });
     });
 
     return NextResponse.json({
