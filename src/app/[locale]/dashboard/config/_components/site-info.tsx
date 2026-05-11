@@ -27,13 +27,13 @@ export default function SiteInfo() {
     deleteConfig,
     saveConfig,
   } = useConfig({
-    id: CONFIG_KEYS.siteInfo,
+    key: CONFIG_KEYS.siteInfo,
   });
   const [content, setContent] = useState(formatSiteInfo(DEFAULT_SITE_INFO));
   const [parseError, setParseError] = useState(false);
 
   useEffect(() => {
-    setContent(formatSiteInfo(resolveSiteInfoConfig(value)));
+    setContent(formatSiteInfo(value));
     setParseError(false);
   }, [value]);
 

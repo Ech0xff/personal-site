@@ -13,10 +13,9 @@ import { makeServerClient } from "../supabase";
 export const fetchConfigByServer = async <K extends ConfigKey>(
   key: K,
   locale?: string,
-  strict = false,
 ): Promise<ConfigValue[K] | null> => {
   const client = await makeServerClient();
-  const configs = await fetchConfigs([key], { locale, strict }, client);
+  const configs = await fetchConfigs([key], { locale }, client);
   return configs.get(key) ?? null;
 };
 

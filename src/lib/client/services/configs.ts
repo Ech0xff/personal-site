@@ -11,10 +11,9 @@ import { makeBrowserClient } from "../supabase";
 export const fetchConfigByBrowser = async <K extends ConfigKey>(
   key: K,
   locale?: string,
-  strict = false,
 ): Promise<ConfigValue[K] | null> => {
   const client = makeBrowserClient();
-  const configs = await fetchConfigs([key], { locale, strict }, client);
+  const configs = await fetchConfigs([key], { locale }, client);
   return configs.get(key) ?? null;
 };
 
@@ -27,7 +26,6 @@ export const fetchConfigsByBrowser = async <K extends ConfigKey>(
   keys: readonly K[],
   options: {
     locale?: string;
-    strict?: boolean;
   } = {},
 ) => {
   const client = makeBrowserClient();

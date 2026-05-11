@@ -1,12 +1,9 @@
 "use client";
 
 import { Check, CircleDashed, Clock, Plus, Trash2, X } from "lucide-react";
-import { useEffect, useState } from "react";
 import {
   CONFIG_KEYS,
-  type RecentPlanConfig,
   type RecentPlanTask,
-  resolveRecentPlanConfig,
   type TaskStatus,
 } from "@/lib/shared/config";
 import { cn } from "@/lib/shared/utils";
@@ -36,36 +33,33 @@ const createPlanTask = (): RecentPlanTask => ({
 export default function RecentPlan() {
   const {
     value,
+    setValue,
     setLocale,
     loading,
     hasStoredValue,
     deleteConfig,
     saveConfig,
   } = useConfig({
-    id: CONFIG_KEYS.recentPlan,
+    key: CONFIG_KEYS.recentPlan,
   });
-  const [plans, setPlans] = useState<RecentPlanConfig>([]);
-
-  useEffect(() => {
-    setPlans(resolveRecentPlanConfig(value));
-  }, [value]);
+  const plans = value;
 
   const updatePlan = (index: number, nextPlan: RecentPlanTask) => {
-    setPlans(
-      plans.map((plan, planIndex) => (planIndex === index ? nextPlan : plan)),
+    setValue(
+      value.map((plan, planIndex) => (planIndex === index ? nextPlan : plan)),
     );
   };
 
   const addPlan = () => {
-    setPlans([...plans, createPlanTask()]);
+    setValue([...value, createPlanTask()]);
   };
 
   const removePlan = (index: number) => {
-    setPlans(plans.filter((_, planIndex) => planIndex !== index));
+    setValue(value.filter((_, planIndex) => planIndex !== index));
   };
 
   const handleSave = () => {
-    return saveConfig(plans);
+    return saveConfig();
   };
 
   return (

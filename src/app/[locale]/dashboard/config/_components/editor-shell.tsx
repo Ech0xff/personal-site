@@ -5,6 +5,7 @@ import { type HTMLAttributes, useState } from "react";
 
 import Button from "@/components/ui/Button";
 import { useModal } from "@/components/ui/ModalProvider";
+import { type Locale, routing } from "@/lib/shared/i18n/routing";
 import { cn } from "@/lib/shared/utils";
 import SegmentedToggle from "../../_components/ui/SegmentedToggle";
 
@@ -17,7 +18,7 @@ export type ConfigField = {
 export interface Props extends HTMLAttributes<HTMLDivElement> {
   title: string;
   loading: boolean;
-  onLocaleChange: (locale: string) => void;
+  onLocaleChange: (locale: Locale) => void;
   onDelete?: () => void | Promise<void>;
   onSave?: () => void | Promise<void>;
 }
@@ -31,10 +32,10 @@ export default function EditorShell({
   onDelete,
   onSave,
 }: Props) {
-  const [locale, setLocale] = useState<string>("");
+  const [locale, setLocale] = useState<Locale>(routing.defaultLocale);
   const { close } = useModal();
 
-  const handleLocaleChange = (nextLocale: string) => {
+  const handleLocaleChange = (nextLocale: Locale) => {
     setLocale(nextLocale);
     onLocaleChange(nextLocale);
   };
@@ -53,11 +54,10 @@ export default function EditorShell({
         <SegmentedToggle
           value={locale}
           onChange={handleLocaleChange}
-          options={[
-            { value: "", label: "default" },
-            { value: "zh_CN", label: "zh_CN" },
-            { value: "en_US", label: "en_US" },
-          ]}
+          options={routing.locales.map((locale) => ({
+            value: locale,
+            label: locale,
+          }))}
           size="sm"
         />
       </div>
@@ -100,7 +100,7 @@ export default function EditorShell({
         </Button>
         <Button
           type="button"
-          onClick={onSave}
+          onClick={() => onSave?.()}
           disabled={!onSave}
           className="disabled:cursor-not-allowed disabled:opacity-50"
         >

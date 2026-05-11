@@ -31,11 +31,10 @@ export default function PlaylistUrl() {
     deleteConfig,
     saveConfig,
   } = useConfig({
-    id: CONFIG_KEYS.playlistUrl,
+    key: CONFIG_KEYS.playlistUrl,
   });
-  const playlistUrl = typeof value === "string" ? value : "";
-  const lightPreviewUrl = getPreviewUrl(playlistUrl, "light");
-  const darkPreviewUrl = getPreviewUrl(playlistUrl, "dark");
+  const lightPreviewUrl = getPreviewUrl(value, "light");
+  const darkPreviewUrl = getPreviewUrl(value, "dark");
   const hasPreview = Boolean(lightPreviewUrl && darkPreviewUrl);
 
   return (
@@ -50,7 +49,7 @@ export default function PlaylistUrl() {
       <div className={cn("flex flex-1 flex-col gap-4", loading && "opacity-0")}>
         <div className="flex shrink-0 flex-col gap-3 rounded-lg">
           <input
-            value={playlistUrl}
+            value={value}
             onChange={(event) => setValue(event.target.value)}
             placeholder="https://open.spotify.com/playlist/..."
             className="w-full rounded-lg border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 outline-none transition focus:border-blue-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
