@@ -4,7 +4,7 @@ import ContributionCalendar from "@/components/features/contributions/Contributi
 import TagMarquee from "@/components/features/tags/TagMarquee";
 import ContentRenderer from "@/components/ui/content/ContentRenderer";
 import Stack from "@/components/ui/Stack";
-import type { RecentPlanConfig, TaskStatus } from "@/lib/shared/config";
+import type { RecentPlan } from "@/lib/shared/config";
 import { generatePlaylistUrl } from "@/lib/shared/config/utils";
 import { getT } from "@/lib/shared/i18n/tools";
 import type { BlogSummaryData, RecentActivityItem } from "@/types";
@@ -20,7 +20,7 @@ const getPlaylistEmbedUrl = (playlistUrl: string, theme: "dark" | "light") => {
   }
 };
 
-const recentPlanStatusIcons: Record<TaskStatus, typeof Clock> = {
+const recentPlanStatusIcons: Record<RecentPlan["status"], typeof Clock> = {
   waiting: Clock,
   pending: CircleDashed,
   completed: Check,
@@ -39,7 +39,7 @@ export async function IntroductionSection({
   config: {
     aboutMe: string;
     playlistUrl: string;
-    recentPlan: RecentPlanConfig;
+    recentPlan: RecentPlan[];
   };
 }) {
   const t = getT("IndexHome", locale);
