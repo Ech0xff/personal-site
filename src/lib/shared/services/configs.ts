@@ -1,18 +1,23 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import type { ConfigKey, ConfigValue } from "@/lib/shared/config";
+import {
+  type ConfigKey,
+  type ConfigValue,
+  DEFAULT_CONFIG,
+} from "@/lib/shared/config";
 import { routing } from "@/lib/shared/i18n/routing";
 import { getNormalizedLocale } from "@/lib/shared/i18n/tools";
 import type { Database, Json } from "@/types";
 import { generateConfigKey } from "../config/utils";
 import { makeStaticClient } from "../supabase";
 
-export type ConfigsMap<K extends ConfigKey> = Map<
-  K,
-  ConfigValue[K] | undefined
+export type ConfigsMap<K extends ConfigKey> = Omit<
+  Map<K, ConfigValue[K]>,
+  "get"
 > & {
-  get<T extends K>(key: T): ConfigValue[T] | null | undefined;
+  get<T extends K>(key: T): ConfigValue[T];
 };
+
 
 /** Fetches multiple configuration values by their keys. */
 export const fetchConfigs = async <K extends ConfigKey>(
@@ -42,7 +47,8 @@ export const fetchConfigs = async <K extends ConfigKey>(
   return new Map(
     keys.map((key) => [
       key,
-      data.find((item) => item.key === generateConfigKey(key, locale))?.value,
+      data.find((item) => item.key === generateConfigKey(key, locale))?.value ??
+        DEFAULT_CONFIG[key],
     ]),
   ) as ConfigsMap<K>;
 };

@@ -16,7 +16,7 @@ import FooterSection from "@/components/ui/FooterSection";
 import Link from "@/components/ui/Link";
 import Stack from "@/components/ui/Stack";
 import { CACHE_TAGS } from "@/lib/server/cache";
-import { CONFIG_KEYS, resolveSiteInfoConfig } from "@/lib/shared/config";
+import { CONFIG_KEYS } from "@/lib/shared/config";
 import { getT } from "@/lib/shared/i18n/tools";
 import { fetchConfigs } from "@/lib/shared/services";
 import { cn } from "@/lib/shared/utils";
@@ -104,7 +104,7 @@ export default async function Layout({
   const configs = await fetchConfigs([CONFIG_KEYS.siteInfo], {
     locale,
   });
-  const siteInfo = resolveSiteInfoConfig(configs.get(CONFIG_KEYS.siteInfo));
+  const siteInfo = configs.get(CONFIG_KEYS.siteInfo);
 
   return (
     <LayoutClient navbar={<Navbar locale={locale} />}>

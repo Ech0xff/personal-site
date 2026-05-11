@@ -56,7 +56,7 @@ CREATE UNIQUE INDEX idx_tags_name_lower ON public.tags(lower(name));
 
 CREATE TABLE public.configs (
   key TEXT PRIMARY KEY,
-  value JSONB NOT NULL DEFAULT '{}'::jsonb,
+  value JSON NOT NULL DEFAULT '{}'::json,
   CONSTRAINT configs_key_not_blank CHECK (btrim(key) <> '')
 );
 

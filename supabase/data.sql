@@ -5,19 +5,19 @@ INSERT INTO public.configs (key, value)
 VALUES
   (
     'aboutMe:en-US',
-    to_jsonb($$I am Muyu, a Junior Software Engineering student and a Frontend Engineer currently based in Chengdu. It is a genuine pleasure to cross paths with you in this vast digital landscape. I believe technology serves as a bridge between imagination and reality-existing not for its own sake, but to empower our ability to create and solve. Guided by the spirit of "I want to understand everything," I find joy in deconstructing complex systems and uncovering the underlying logic behind every tool.$$::text)
+    to_json($$I am Muyu, a Junior Software Engineering student and a Frontend Engineer currently based in Chengdu. It is a genuine pleasure to cross paths with you in this vast digital landscape. I believe technology serves as a bridge between imagination and reality-existing not for its own sake, but to empower our ability to create and solve. Guided by the spirit of "I want to understand everything," I find joy in deconstructing complex systems and uncovering the underlying logic behind every tool.$$::text)
   ),
   (
     'aboutMe:zh-CN',
-    to_jsonb($$我是 Muyu，一名软件工程专业本科生，同时也是一名前端工程师，目前在成都。很高兴能在这片广阔的数字世界与你相遇。我始终相信技术是连接想象与现实的桥梁——它存在的意义不只是技术本身，而是帮助我们创造并解决问题。带着“我想理解一切”的好奇心，我享受拆解复杂系统、追溯每个工具背后底层逻辑的过程。$$::text)
+    to_json($$我是 Muyu，一名软件工程专业本科生，同时也是一名前端工程师，目前在成都。很高兴能在这片广阔的数字世界与你相遇。我始终相信技术是连接想象与现实的桥梁——它存在的意义不只是技术本身，而是帮助我们创造并解决问题。带着“我想理解一切”的好奇心，我享受拆解复杂系统、追溯每个工具背后底层逻辑的过程。$$::text)
   ),
   (
     'playlistUrl:en-US',
-    to_jsonb(''::text)
+    to_json(''::text)
   ),
   (
     'oauthProviders:en-US',
-    to_jsonb(ARRAY['github', 'google']::text[])
+    to_json(ARRAY['github', 'google']::text[])
   )
 ON CONFLICT (key) DO NOTHING;
 

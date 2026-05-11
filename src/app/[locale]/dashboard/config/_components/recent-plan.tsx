@@ -1,11 +1,7 @@
 "use client";
 
 import { Check, CircleDashed, Clock, Plus, Trash2, X } from "lucide-react";
-import {
-  CONFIG_KEYS,
-  type RecentPlanTask,
-  type TaskStatus,
-} from "@/lib/shared/config";
+import { CONFIG_KEYS, type RecentPlan } from "@/lib/shared/config";
 import { cn } from "@/lib/shared/utils";
 
 import useConfig from "../_hooks/useConfig";
@@ -14,7 +10,7 @@ import EditorShell from "./editor-shell";
 const title = "Recent Plans";
 
 const statusOptions: Array<{
-  value: TaskStatus;
+  value: RecentPlan["status"];
   label: string;
   icon: typeof Clock;
 }> = [
@@ -24,13 +20,7 @@ const statusOptions: Array<{
   { value: "failed", label: "Failed", icon: X },
 ];
 
-const createPlanTask = (): RecentPlanTask => ({
-  task: "",
-  status: "waiting",
-  createdAt: new Date().toISOString(),
-});
-
-export default function RecentPlan() {
+export default function RecentPlanEditor() {
   const {
     value,
     setValue,
@@ -42,16 +32,22 @@ export default function RecentPlan() {
   } = useConfig({
     key: CONFIG_KEYS.recentPlan,
   });
-  const plans = value;
 
-  const updatePlan = (index: number, nextPlan: RecentPlanTask) => {
+  const updatePlan = (index: number, nextPlan: RecentPlan) => {
     setValue(
       value.map((plan, planIndex) => (planIndex === index ? nextPlan : plan)),
     );
   };
 
   const addPlan = () => {
-    setValue([...value, createPlanTask()]);
+    setValue([
+      ...value,
+      {
+        task: "",
+        status: "waiting",
+        createdAt: new Date().toString(),
+      },
+    ]);
   };
 
   const removePlan = (index: number) => {
@@ -78,7 +74,7 @@ export default function RecentPlan() {
         )}
       >
         <div className="min-h-0 flex-1 space-y-3 overflow-auto pr-1">
-          {plans.length === 0 ? (
+          {value.length === 0 ? (
             <button
               type="button"
               onClick={addPlan}
@@ -90,7 +86,7 @@ export default function RecentPlan() {
               <span className="font-medium text-sm">Create first plan</span>
             </button>
           ) : (
-            plans.map((plan, index) => (
+            value.map((plan, index) => (
               <div
                 key={`${plan.createdAt}-${index}`}
                 className="rounded-2xl border border-zinc-200 bg-white/80 p-3 shadow-sm transition hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/80 dark:hover:border-zinc-700"
@@ -142,7 +138,7 @@ export default function RecentPlan() {
             ))
           )}
 
-          {plans.length > 0 && (
+          {value.length > 0 && (
             <button
               type="button"
               onClick={addPlan}

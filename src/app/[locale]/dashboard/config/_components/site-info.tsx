@@ -3,24 +3,15 @@
 import { useEffect, useState } from "react";
 
 import CodeMirrorEditor from "@/components/ui/CodeMirrorEditor";
-import {
-  CONFIG_KEYS,
-  DEFAULT_SITE_INFO,
-  resolveSiteInfoConfig,
-  type SiteInfoConfig,
-} from "@/lib/shared/config";
+import { CONFIG_KEYS } from "@/lib/shared/config";
 import useConfig from "../_hooks/useConfig";
 import EditorShell from "./editor-shell";
 
 const title = "Site Info";
 
-const formatSiteInfo = (value: SiteInfoConfig) =>
-  JSON.stringify(value, null, 2);
-
 export default function SiteInfo() {
   const {
     value,
-    setValue,
     setLocale,
     loading,
     hasStoredValue,
@@ -29,19 +20,18 @@ export default function SiteInfo() {
   } = useConfig({
     key: CONFIG_KEYS.siteInfo,
   });
-  const [content, setContent] = useState(formatSiteInfo(DEFAULT_SITE_INFO));
+  const [content, setContent] = useState(JSON.stringify(value, null, 2));
   const [parseError, setParseError] = useState(false);
 
   useEffect(() => {
-    setContent(formatSiteInfo(value));
+    setContent(JSON.stringify(value, null, 2));
     setParseError(false);
   }, [value]);
 
-  const handleChange = (nextValue: string) => {
-    setContent(nextValue);
+  const handSave = () => {
     try {
-      setValue(resolveSiteInfoConfig(JSON.parse(nextValue)));
-      setParseError(false);
+      const parsed = JSON.parse(content);
+      return saveConfig(parsed);
     } catch {
       setParseError(true);
     }
@@ -53,14 +43,14 @@ export default function SiteInfo() {
       title={title}
       onLocaleChange={setLocale}
       onDelete={hasStoredValue ? deleteConfig : undefined}
-      onSave={parseError ? undefined : saveConfig}
+      onSave={parseError ? undefined : handSave}
       loading={loading}
     >
       <div className="flex min-h-0 flex-1 flex-col gap-2">
         <div className="min-h-0 flex-1 overflow-hidden rounded-lg">
           <CodeMirrorEditor
             value={content}
-            onChange={handleChange}
+            onChange={setContent}
             className="h-full min-h-0 overflow-auto"
           />
         </div>
