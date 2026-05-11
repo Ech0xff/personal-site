@@ -143,7 +143,7 @@ export async function IntroductionSection({
                         className="flex items-center justify-between gap-4 border-zinc-200 border-b py-3 last:border-b-0 dark:border-zinc-800"
                       >
                         <ListChecks className="h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" />
-                        <span className="min-w-0 flex-1 text-lg text-slate-700 leading-relaxed dark:text-slate-200">
+                        <span className="min-w-0 flex-1 truncate text-lg text-slate-700 dark:text-slate-200">
                           {plan.task}
                         </span>
                         <StatusIcon className="h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" />
