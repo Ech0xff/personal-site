@@ -38,7 +38,11 @@ export default function useConfig<K extends ConfigKey>({
 
   const saveConfig = useCallback(async () => {
     try {
-      await setConfigByBrowser(generateConfigKey(key, locale), value);
+      const newValue = await setConfigByBrowser(
+        generateConfigKey(key, locale),
+        value,
+      );
+      setValue(newValue);
       setHasStoredValue(true);
       toast.success("Config saved.");
     } catch (e) {
@@ -49,10 +53,13 @@ export default function useConfig<K extends ConfigKey>({
   const getConfig = useCallback(async () => {
     setLoading(true);
     try {
-      const values = await fetchConfigsByBrowser([key], { locale });
+      const values = await fetchConfigsByBrowser([key], {
+        locale,
+        strict: true,
+      });
       const value = values.get(key);
-      setValue(value ?? defaultConfigValues[key]);
-      setHasStoredValue(value !== null && value !== undefined);
+      setValue(value !== undefined ? value : defaultConfigValues[key]);
+      setHasStoredValue(value !== undefined);
     } catch {
       setHasStoredValue(false);
       setValue(defaultConfigValues[key]);

@@ -7,7 +7,10 @@ import type { Database, Json } from "@/types";
 import { generateConfigKey } from "../config/utils";
 import { makeStaticClient } from "../supabase";
 
-export type ConfigsMap<K extends ConfigKey> = Map<K, ConfigValue[K] | null> & {
+export type ConfigsMap<K extends ConfigKey> = Map<
+  K,
+  ConfigValue[K] | undefined
+> & {
   get<T extends K>(key: T): ConfigValue[T] | null | undefined;
 };
 
@@ -16,14 +19,18 @@ export const fetchConfigs = async <K extends ConfigKey>(
   keys: readonly K[],
   options?: {
     locale?: string;
+    strict?: boolean;
   },
   client: SupabaseClient<Database> = makeStaticClient(),
 ): Promise<ConfigsMap<K>> => {
   const locale = getNormalizedLocale(options?.locale);
+  const strict = options?.strict ?? false;
   const keySet = new Set<string>();
   keys.forEach((key) => {
     keySet.add(generateConfigKey(key, locale));
-    keySet.add(generateConfigKey(key, routing.defaultLocale));
+    if (!strict) {
+      keySet.add(generateConfigKey(key, routing.defaultLocale));
+    }
   });
 
   const { data, error } = await client
@@ -35,20 +42,15 @@ export const fetchConfigs = async <K extends ConfigKey>(
   return new Map(
     keys.map((key) => [
       key,
-      (data.find((item) => item.key === generateConfigKey(key, locale))
-        ?.value ??
-        data.find(
-          (item) => item.key === generateConfigKey(key, routing.defaultLocale),
-        )?.value ??
-        null) as ConfigValue[K] | null,
+      data.find((item) => item.key === generateConfigKey(key, locale))?.value,
     ]),
   ) as ConfigsMap<K>;
 };
 
 /** Sets a configuration value by its key. */
-export const setConfig = async (
+export const setConfig = async <T extends Json>(
   key: string,
-  value: Json,
+  value: T,
   client: SupabaseClient<Database> = makeStaticClient(),
 ) => {
   const { data, error } = await client
@@ -57,7 +59,7 @@ export const setConfig = async (
     .select("value")
     .single();
   if (error) throw error;
-  return data.value;
+  return data.value as T;
 };
 
 /** Deletes a configuration value by its key. */

@@ -17,7 +17,10 @@ export const fetchConfigByBrowser = async <K extends ConfigKey>(
   return configs.get(key) ?? null;
 };
 
-export const setConfigByBrowser = async (key: string, value: Json) => {
+export const setConfigByBrowser = async <T extends Json>(
+  key: string,
+  value: T,
+) => {
   const client = makeBrowserClient();
   return setConfig(key, value, client);
 };
@@ -26,6 +29,7 @@ export const fetchConfigsByBrowser = async <K extends ConfigKey>(
   keys: readonly K[],
   options: {
     locale?: string;
+    strict?: boolean;
   } = {},
 ) => {
   const client = makeBrowserClient();
