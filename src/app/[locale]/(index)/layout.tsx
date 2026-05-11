@@ -101,10 +101,8 @@ export default async function Layout({
   cacheTag(CACHE_TAGS.config);
 
   const { locale } = await params;
-  const localeConfig = locale.replace("-", "_");
   const configs = await fetchConfigs([CONFIG_KEYS.siteInfo], {
-    locale: localeConfig,
-    strict: true,
+    locale,
   });
   const siteInfo = resolveSiteInfoConfig(configs.get(CONFIG_KEYS.siteInfo));
 

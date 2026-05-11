@@ -74,7 +74,6 @@ export default async function HomePage({
   cacheTag(CACHE_TAGS.config);
 
   const { locale } = await params;
-  const localeConfig = locale.replace("-", "_");
   const [data, recentActivity, configs] = await Promise.all([
     fetchSummary() as Promise<BlogSummaryData>,
     buildRecentActivity(),
@@ -86,8 +85,7 @@ export default async function HomePage({
         CONFIG_KEYS.recentPlan,
       ],
       {
-        locale: localeConfig,
-        strict: true,
+        locale,
       },
     ),
   ]);

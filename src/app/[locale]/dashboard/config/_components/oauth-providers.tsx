@@ -9,7 +9,6 @@ import useConfig from "../_hooks/useConfig";
 import EditorShell from "./editor-shell";
 
 const allProviders = Object.keys(providerConfig) as OAuthProvider[];
-const emptyProviders: OAuthProvider[] = [];
 const title = "OAuth Providers";
 
 export default function OauthProviders() {
@@ -22,9 +21,9 @@ export default function OauthProviders() {
     deleteConfig,
     saveConfig,
   } = useConfig({
-    id: CONFIG_KEYS.oauthProviders,
+    key: CONFIG_KEYS.oauthProviders,
   });
-  const providers = Array.isArray(value) ? value : emptyProviders;
+  const providers = value;
 
   const toggleProvider = (provider: OAuthProvider) => {
     setValue(

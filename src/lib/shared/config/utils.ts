@@ -1,3 +1,5 @@
+import { type Locale, routing } from "@/lib/shared/i18n/routing";
+
 export const generatePlaylistUrl = (
   playlistUrl: string,
   theme: "dark" | "light",
@@ -7,6 +9,9 @@ export const generatePlaylistUrl = (
   return url.toString();
 };
 
-export const generateConfigKey = (key: string, locale?: string) => {
-  return locale ? `${key}:${locale}` : key;
+export const generateConfigKey = (
+  key: string,
+  locale: Locale = routing.defaultLocale,
+) => {
+  return `${key}:${locale}`;
 };

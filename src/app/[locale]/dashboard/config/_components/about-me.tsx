@@ -17,9 +17,8 @@ export default function AboutMe() {
     deleteConfig,
     saveConfig,
   } = useConfig({
-    id: CONFIG_KEYS.aboutMe,
+    key: CONFIG_KEYS.aboutMe,
   });
-  const content = typeof value === "string" ? value : "";
 
   return (
     <EditorShell
@@ -38,14 +37,14 @@ export default function AboutMe() {
       >
         <div className="min-h-0 overflow-hidden rounded-lg">
           <CodeMirrorEditor
-            value={content}
+            value={value}
             onChange={setValue}
             className="h-full min-h-0 overflow-auto"
           />
         </div>
         <div className="min-h-0 overflow-auto rounded-lg bg-white dark:bg-zinc-950">
           <ContentRenderer
-            content={content || "No content"}
+            content={value || "No content"}
             className="min-h-full p-4"
           />
         </div>

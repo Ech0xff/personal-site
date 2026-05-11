@@ -7,63 +7,70 @@ import {
   fetchConfigsByBrowser,
   setConfigByBrowser,
 } from "@/lib/client/services";
-import type { ConfigKey, ConfigValue } from "@/lib/shared/config";
+import {
+  CONFIG_KEYS,
+  type ConfigKey,
+  type ConfigValue,
+  DEFAULT_SITE_INFO,
+} from "@/lib/shared/config";
 import { generateConfigKey } from "@/lib/shared/config/utils";
+import { type Locale, routing } from "@/lib/shared/i18n/routing";
 
 type UseConfigOptions<K extends ConfigKey> = {
-  id: K;
+  key: K;
 };
 
+const defaultConfigValues = {
+  [CONFIG_KEYS.aboutMe]: "",
+  [CONFIG_KEYS.playlistUrl]: "",
+  [CONFIG_KEYS.oauthProviders]: [],
+  [CONFIG_KEYS.siteInfo]: DEFAULT_SITE_INFO,
+  [CONFIG_KEYS.recentPlan]: [],
+} satisfies ConfigValue;
+
 export default function useConfig<K extends ConfigKey>({
-  id,
+  key,
 }: UseConfigOptions<K>) {
-  const [value, setValue] = useState<ConfigValue[K] | null>(null);
-  const [locale, setLocale] = useState<string>("");
+  const [value, setValue] = useState<ConfigValue[K]>(defaultConfigValues[key]);
+  const [locale, setLocale] = useState<Locale>(routing.defaultLocale);
   const [loading, setLoading] = useState(true);
   const [hasStoredValue, setHasStoredValue] = useState(false);
 
-  const saveConfig = useCallback(
-    async (nextValue?: ConfigValue[K]) => {
-      const valueToSave = nextValue ?? value;
-      if (!id || valueToSave === null) return;
-      try {
-        await setConfigByBrowser(generateConfigKey(id, locale), valueToSave);
-        setValue(valueToSave);
-        setHasStoredValue(true);
-        toast.success("Config saved.");
-      } catch {
-        toast.error("Failed to save config.");
-      }
-    },
-    [id, locale, value],
-  );
+  const saveConfig = useCallback(async () => {
+    try {
+      await setConfigByBrowser(generateConfigKey(key, locale), value);
+      setHasStoredValue(true);
+      toast.success("Config saved.");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Failed to save config.");
+    }
+  }, [key, locale, value]);
 
   const getConfig = useCallback(async () => {
-    if (!id) return;
     setLoading(true);
     try {
-      const values = await fetchConfigsByBrowser([id], { locale });
-      const value = values.get(id);
-      setValue(value ?? null);
+      const values = await fetchConfigsByBrowser([key], { locale });
+      const value = values.get(key);
+      setValue(value ?? defaultConfigValues[key]);
       setHasStoredValue(value !== null && value !== undefined);
     } catch {
       setHasStoredValue(false);
-      setValue(null);
+      setValue(defaultConfigValues[key]);
     } finally {
       setLoading(false);
     }
-  }, [id, locale]);
+  }, [key, locale]);
 
   const deleteConfig = useCallback(async () => {
-    if (!id || !hasStoredValue) return;
+    if (!hasStoredValue) return;
     try {
-      await deleteConfigByBrowser(generateConfigKey(id, locale));
+      await deleteConfigByBrowser(generateConfigKey(key, locale));
       toast.success("Config deleted.");
       await getConfig();
     } catch {
       toast.error("Failed to delete config.");
     }
-  }, [getConfig, hasStoredValue, id, locale]);
+  }, [getConfig, hasStoredValue, key, locale]);
 
   useEffect(() => {
     let ignore = false;

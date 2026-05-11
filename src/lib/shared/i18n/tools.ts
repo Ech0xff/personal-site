@@ -2,7 +2,7 @@ import { cloneElement, isValidElement, type ReactNode } from "react";
 
 import enUSMessages from "./messages/en-US.json";
 import zhCNMessages from "./messages/zh-CN.json";
-import { routing } from "./routing";
+import { type Locale, routing } from "./routing";
 
 type Primitive = string | number | boolean | null;
 interface Dictionary {
@@ -19,12 +19,12 @@ type TFunction = ((key: string, values?: TValues) => string) & {
   rich: (key: string, values?: TRichValues) => ReactNode;
 };
 
-const messages: Record<string, Dictionary> = {
+const messages: Record<Locale, Dictionary> = {
   "en-US": enUSMessages as Dictionary,
   "zh-CN": zhCNMessages as Dictionary,
 };
 
-export const getNormalizedLocale = (locale?: string) => {
+export const getNormalizedLocale = (locale?: string): Locale => {
   if (!locale) return routing.defaultLocale;
   return routing.locales.includes(locale) ? locale : routing.defaultLocale;
 };

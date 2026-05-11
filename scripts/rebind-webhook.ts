@@ -18,7 +18,7 @@ export const rebindWebhook = async (envPath: string) => {
   const { error } = await makeAdminClient().rpc("manage_webhook", {
     target_url: targetUrl,
     secret_token: process.env.WEBHOOK_SECRET!,
-    table_names: ["posts", "thoughts", "events"],
+    table_names: ["configs", "posts", "thoughts", "events"],
   });
 
   if (error) throw new Error(`Failed to rebind webhook: ${error.message}`);

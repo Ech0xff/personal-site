@@ -1,6 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { ConfigKey, ConfigValue } from "@/lib/shared/config";
+import { routing } from "@/lib/shared/i18n/routing";
+import { getNormalizedLocale } from "@/lib/shared/i18n/tools";
 import type { Database, Json } from "@/types";
 import { generateConfigKey } from "../config/utils";
 import { makeStaticClient } from "../supabase";
@@ -14,21 +16,15 @@ export const fetchConfigs = async <K extends ConfigKey>(
   keys: readonly K[],
   options?: {
     locale?: string;
-    strict?: boolean;
   },
   client: SupabaseClient<Database> = makeStaticClient(),
 ): Promise<ConfigsMap<K>> => {
-  const { locale, strict } = options || {};
-  const keySet = new Set<string>(keys);
-  if (locale) {
-    keys.forEach((key) => {
-      if (!strict) keySet.delete(key); // Remove non-locale key if strict mode is off
-      keySet.add(generateConfigKey(key, locale));
-    });
-  }
-  if (keySet.size === 0) {
-    return new Map<K, ConfigValue[K] | null>() as ConfigsMap<K>;
-  }
+  const locale = getNormalizedLocale(options?.locale);
+  const keySet = new Set<string>();
+  keys.forEach((key) => {
+    keySet.add(generateConfigKey(key, locale));
+    keySet.add(generateConfigKey(key, routing.defaultLocale));
+  });
 
   const { data, error } = await client
     .from("configs")
@@ -41,7 +37,9 @@ export const fetchConfigs = async <K extends ConfigKey>(
       key,
       (data.find((item) => item.key === generateConfigKey(key, locale))
         ?.value ??
-        data.find((item) => item.key === key)?.value ??
+        data.find(
+          (item) => item.key === generateConfigKey(key, routing.defaultLocale),
+        )?.value ??
         null) as ConfigValue[K] | null,
     ]),
   ) as ConfigsMap<K>;

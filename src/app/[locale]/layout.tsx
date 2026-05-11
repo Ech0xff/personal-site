@@ -31,11 +31,9 @@ export async function generateMetadata({
   cacheTag(CACHE_TAGS.config);
 
   const { locale } = await params;
-  const localeConfig = locale.replace("-", "_");
   const t = getT("Meta", locale);
   const configs = await fetchConfigs([CONFIG_KEYS.siteInfo], {
-    locale: localeConfig,
-    strict: true,
+    locale,
   });
   const siteInfo = resolveSiteInfoConfig(configs.get(CONFIG_KEYS.siteInfo));
 
