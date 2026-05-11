@@ -78,7 +78,8 @@
       }
     },
     "recentPlan": {
-      "title": "最近计划"
+      "title": "最近计划",
+      "empty": "还没有计划"
     },
     "playlist": {
       "cardTitle": "我的歌单"

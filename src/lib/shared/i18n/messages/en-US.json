@@ -78,7 +78,8 @@
       }
     },
     "recentPlan": {
-      "title": "Recent Plans"
+      "title": "Recent Plans",
+      "empty": "No plans yet"
     },
     "playlist": {
       "cardTitle": "My Playlist"
