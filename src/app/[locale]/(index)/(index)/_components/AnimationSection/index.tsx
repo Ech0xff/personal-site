@@ -1,7 +1,7 @@
 import type React from "react";
 
 import Stack from "@/components/ui/Stack";
-import type { SiteInfoConfig } from "@/lib/shared/config";
+import type { ConfigValue } from "@/lib/shared/config";
 import { cn } from "@/lib/shared/utils";
 
 import Typewriter from "./Typewriter";
@@ -29,7 +29,7 @@ function AnimatedGridBackground({
 export default function AnimationSection({
   siteInfo,
 }: {
-  siteInfo: SiteInfoConfig;
+  siteInfo: ConfigValue["siteInfo"];
 }) {
   return (
     <>
