@@ -11,6 +11,17 @@ const HEADING_REGEX = /^(#{1,6})\s+(.+?)\s*#*\s*$/;
 const MARKDOWN_LINK_REGEX = /\[([^\]]+)\]\([^)]+\)/g;
 const MARKDOWN_IMAGE_REGEX = /!\[([^\]]*)\]\([^)]+\)/g;
 const MARKDOWN_DECORATION_REGEX = /[`*_~]/g;
+const PREVIEW_MARKDOWN_DECORATION_REGEX = /[`*_~>#-]/g;
+const DIRECTIVE_WITH_LABEL_REGEX =
+  /:{1,3}[A-Za-z][\w-]*\[([^\]]*)\](?:\{[^}]*\})?/g;
+const DIRECTIVE_WITH_ATTRIBUTES_REGEX =
+  /:{1,3}[A-Za-z][\w-]*(?:\([^)]*\))?\{[^}]*\}/g;
+const DIRECTIVE_MARKER_REGEX = /^:{3,}\s*[A-Za-z][\w-]*.*$/gm;
+const DIRECTIVE_CLOSING_MARKER_REGEX = /^:{3,}\s*$/gm;
+const HTML_TAG_REGEX = /<[^>]+>/g;
+const LINE_MARKER_REGEX = /^\s*(?:#{1,6}|[-*+]\s+|\d+\.\s+|>\s*)/gm;
+const PUNCTUATION_SPACING_REGEX = /\s+([.,;:!?])/g;
+const WHITESPACE_REGEX = /\s+/g;
 const NON_SLUG_CHARACTER_REGEX = /[^\p{L}\p{N}\s-]/gu;
 const HEADING_SCROLL_MARGIN_CLASS = "scroll-mt-24";
 
@@ -39,6 +50,21 @@ const normalizeHeadingText = (text: string) =>
     .replace(MARKDOWN_IMAGE_REGEX, "$1")
     .replace(MARKDOWN_LINK_REGEX, "$1")
     .replace(MARKDOWN_DECORATION_REGEX, "")
+    .trim();
+
+export const toPreviewText = (content: string) =>
+  content
+    .replace(DIRECTIVE_WITH_LABEL_REGEX, "$1")
+    .replace(DIRECTIVE_WITH_ATTRIBUTES_REGEX, "")
+    .replace(DIRECTIVE_MARKER_REGEX, "")
+    .replace(DIRECTIVE_CLOSING_MARKER_REGEX, "")
+    .replace(MARKDOWN_IMAGE_REGEX, "$1")
+    .replace(MARKDOWN_LINK_REGEX, "$1")
+    .replace(HTML_TAG_REGEX, " ")
+    .replace(LINE_MARKER_REGEX, "")
+    .replace(PREVIEW_MARKDOWN_DECORATION_REGEX, " ")
+    .replace(WHITESPACE_REGEX, " ")
+    .replace(PUNCTUATION_SPACING_REGEX, "$1")
     .trim();
 
 export const getMarkdownHeadings = (content: string): MarkdownHeading[] => {

@@ -14,23 +14,11 @@ import {
   fetchSummary,
   fetchThoughts,
 } from "@/lib/shared/services";
-import { cn } from "@/lib/shared/utils";
+import { cn, toPreviewText } from "@/lib/shared/utils";
 import type { BlogSummaryData, RecentActivityItem } from "@/types";
 
 import AnimationSection from "./_components/AnimationSection";
 import { IntroductionSection } from "./_components/IntroductionSection";
-
-const MARKDOWN_IMAGE_REGEX = /!\[([^\]]*)\]\([^)]+\)/g;
-const MARKDOWN_LINK_REGEX = /\[([^\]]+)\]\([^)]+\)/g;
-const MARKDOWN_DECORATION_REGEX = /[`*_~>#-]/g;
-
-const toPlainText = (content: string) =>
-  content
-    .replace(MARKDOWN_IMAGE_REGEX, "$1")
-    .replace(MARKDOWN_LINK_REGEX, "$1")
-    .replace(MARKDOWN_DECORATION_REGEX, " ")
-    .replace(/\s+/g, " ")
-    .trim();
 
 const buildRecentActivity = async (): Promise<RecentActivityItem[]> => {
   const [posts, thoughts, events] = await Promise.all([
@@ -55,7 +43,7 @@ const buildRecentActivity = async (): Promise<RecentActivityItem[]> => {
         kind: "thought",
         published_at: thought.published_at,
         tags: [],
-        title: toPlainText(thought.content),
+        title: toPreviewText(thought.content),
       }),
     ),
     ...events.map(
