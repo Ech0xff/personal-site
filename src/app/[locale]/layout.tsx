@@ -7,7 +7,7 @@ import { ImageViewer } from "@/components/ui/ImageViewer";
 import ModalProvider from "@/components/ui/ModalProvider";
 import ToastWatcher from "@/features/toast-watcher";
 import { CACHE_TAGS } from "@/lib/server/cache";
-import { CONFIG_KEYS, resolveSiteInfoConfig } from "@/lib/shared/config";
+import { CONFIG_KEYS } from "@/lib/shared/config";
 import { routing } from "@/lib/shared/i18n/routing";
 import { getT } from "@/lib/shared/i18n/tools";
 import { fetchConfigs } from "@/lib/shared/services";
@@ -35,10 +35,10 @@ export async function generateMetadata({
   const configs = await fetchConfigs([CONFIG_KEYS.siteInfo], {
     locale,
   });
-  const siteInfo = resolveSiteInfoConfig(configs.get(CONFIG_KEYS.siteInfo));
+  const { title } = configs.get(CONFIG_KEYS.siteInfo)!;
 
   return {
-    title: siteInfo.title,
+    title,
     description: t("siteDescription"),
     icons: {
       icon: [{ url: "/icon.svg", type: "image/svg+xml" }],

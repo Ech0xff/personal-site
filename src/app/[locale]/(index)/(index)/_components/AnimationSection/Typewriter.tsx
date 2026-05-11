@@ -2,13 +2,9 @@
 import { useEffect, useMemo, useState } from "react";
 
 import Stack from "@/components/ui/Stack";
-import { DEFAULT_SITE_INFO } from "@/lib/shared/config";
 
 export default function Typewriter({ texts }: { texts: string[] }) {
-  const typingTexts = useMemo(
-    () => (texts.length > 0 ? texts : DEFAULT_SITE_INFO.typing),
-    [texts],
-  );
+  const typingTexts = useMemo(() => texts, [texts]);
   const typingTextCount = typingTexts.length;
   const [currentText, setCurrentText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
