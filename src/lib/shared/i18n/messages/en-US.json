@@ -19,6 +19,10 @@
     "loading": "Searching...",
     "error": "Search is temporarily unavailable. Please try again.",
     "noResults": "No results found for \"{query}\".",
+    "advanced": {
+      "title": "Advanced",
+      "searchRawText": "Search raw text"
+    },
     "types": {
       "post": "Post",
       "thought": "Thought",

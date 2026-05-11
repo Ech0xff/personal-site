@@ -1,3 +1,5 @@
+import { toPreviewText } from "@/lib/shared/utils";
+
 export type SearchResultType = "post" | "thought" | "event";
 
 export interface SearchResult {
@@ -5,14 +7,13 @@ export interface SearchResult {
   type: SearchResultType;
   title: string;
   snippet: string;
+  rawTitle?: string;
+  rawSnippet?: string;
   href: string;
   publishedAt: string;
 }
 
 const WHITESPACE_REGEX = /\s+/g;
-const MARKDOWN_IMAGE_REGEX = /!\[([^\]]*)\]\([^)]+\)/g;
-const MARKDOWN_LINK_REGEX = /\[([^\]]+)\]\([^)]+\)/g;
-const MARKDOWN_DECORATION_REGEX = /[`*_~>#-]/g;
 const REGEX_SPECIAL_CHARACTERS = /[.*+?^${}()|[\]\\]/g;
 
 export interface SearchHighlightSegment {
@@ -26,14 +27,6 @@ export const normalizeSearchQuery = (value: string) =>
 const escapeForRegex = (value: string) =>
   value.replace(REGEX_SPECIAL_CHARACTERS, "\\$&");
 
-const stripMarkdown = (value: string) =>
-  value
-    .replace(MARKDOWN_IMAGE_REGEX, "$1")
-    .replace(MARKDOWN_LINK_REGEX, "$1")
-    .replace(MARKDOWN_DECORATION_REGEX, " ")
-    .replace(WHITESPACE_REGEX, " ")
-    .trim();
-
 const trimSnippetEdge = (value: string) =>
   value.replace(/^[\s.,;:!?-]+|[\s.,;:!?-]+$/g, "");
 const trimPartialLeadingWord = (value: string) => value.replace(/^\S*\s+/, "");
@@ -44,7 +37,7 @@ export const createSearchSnippet = (
   query: string,
   maxLength = 120,
 ) => {
-  const plainText = stripMarkdown(value);
+  const plainText = toPreviewText(value);
   if (!plainText) return "";
 
   if (plainText.length <= maxLength) return plainText;

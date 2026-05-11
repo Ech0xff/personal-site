@@ -72,6 +72,7 @@ function GlobalSearchModal() {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [searchRawText, setSearchRawText] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleClose = useCallback(() => {
@@ -112,7 +113,7 @@ function GlobalSearchModal() {
     setIsLoading(true);
     setHasError(false);
 
-    searchContentByBrowser(normalizedQuery)
+    searchContentByBrowser(normalizedQuery, { searchRawText })
       .then((nextResults) => {
         if (isCancelled) return;
         setResults(nextResults);
@@ -130,7 +131,7 @@ function GlobalSearchModal() {
     return () => {
       isCancelled = true;
     };
-  }, [debouncedQuery]);
+  }, [debouncedQuery, searchRawText]);
 
   const renderHighlightedText = (value: string) =>
     getSearchHighlightSegments(value, debouncedQuery).map((segment, index) => (
@@ -198,7 +199,7 @@ function GlobalSearchModal() {
                 <div className="min-w-0 flex-1">
                   {result.title ? (
                     <div className="line-clamp-1 font-semibold text-zinc-900 dark:text-zinc-100">
-                      {renderHighlightedText(result.title)}
+                      {renderHighlightedText(result.rawTitle ?? result.title)}
                     </div>
                   ) : null}
                   <p
@@ -209,7 +210,7 @@ function GlobalSearchModal() {
                         : "line-clamp-3 text-[15px] text-zinc-700 leading-7 dark:text-zinc-200",
                     )}
                   >
-                    {renderHighlightedText(result.snippet)}
+                    {renderHighlightedText(result.rawSnippet ?? result.snippet)}
                   </p>
                 </div>
 
@@ -270,6 +271,22 @@ function GlobalSearchModal() {
           <X size={16} />
         </button>
       </Stack>
+
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-3 px-1">
+        <span className="text-xs text-zinc-500 dark:text-zinc-400">
+          {tSearch("advanced.title")}
+        </span>
+        <label className="inline-flex cursor-pointer items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
+          <input
+            type="checkbox"
+            checked={searchRawText}
+            onChange={(event) => setSearchRawText(event.target.checked)}
+            className="peer sr-only"
+          />
+          <span className="relative h-5 w-9 rounded-full bg-zinc-200 transition-colors after:absolute after:top-0.5 after:left-0.5 after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-transform peer-checked:bg-emerald-500 peer-checked:after:translate-x-4 dark:bg-zinc-800" />
+          <span>{tSearch("advanced.searchRawText")}</span>
+        </label>
+      </div>
 
       <div className="mt-4 max-h-[60vh] overflow-y-auto">{renderResults()}</div>
     </div>
