@@ -4,6 +4,7 @@ import { ROUTES } from "#lib/shared/routes";
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  reactCompiler: true,
   reactStrictMode: false,
   async redirects() {
     return [
