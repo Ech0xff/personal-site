@@ -3,16 +3,15 @@
 import { Save, X } from "lucide-react";
 
 import EventCard from "@/components/features/events/EventCard";
+import SegmentedToggle from "@/components/ui/SegmentedToggle";
 import Stack from "@/components/ui/Stack";
 import { useCurrentLocale } from "@/lib/client/locale";
 import { cn } from "@/lib/shared/utils";
 import type { Status } from "@/types";
-
+import DateTimeInput from "../../../_components/editor/DateTimeInput";
+import HeaderSection from "../../../_components/editor/HeaderSection";
 import type { BaseEditorProps } from "../../../_components/editor-types";
-import DateTimeInput from "../../../_components/ui/DateTimeInput";
-import HeaderSection from "../../../_components/ui/HeaderSection";
-import SegmentedToggle from "../../../_components/ui/SegmentedToggle";
-import TagSelector from "../../../_components/ui/TagSelector";
+import TagSelector from "../../../_components/tags/TagSelector";
 import { useHooks } from "./use-hooks";
 
 const COLOR_OPTIONS = [

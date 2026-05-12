@@ -10,7 +10,7 @@ import { useModal } from "@/components/ui/ModalProvider";
 import Stack from "@/components/ui/Stack";
 import { cn } from "@/lib/shared/utils";
 
-import DashboardShell from "../_components/ui/DashboardShell";
+import DashboardShell from "../_components/layout/DashboardShell";
 import AboutMe from "./_components/about-me";
 import OauthProviders from "./_components/oauth-providers";
 import PlaylistUrl from "./_components/playlist-url";

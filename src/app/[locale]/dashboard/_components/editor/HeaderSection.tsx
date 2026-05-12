@@ -1,6 +1,6 @@
 import Stack from "@/components/ui/Stack";
 
-export default function EditorHeader({
+export default function HeaderSection({
   title,
   children,
 }: {

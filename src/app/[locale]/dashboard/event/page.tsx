@@ -6,7 +6,7 @@ import EventTimeline from "@/components/features/events/EventTimeline";
 import { useModal } from "@/components/ui/ModalProvider";
 import { useCurrentLocale } from "@/lib/client/locale";
 
-import DashboardShell from "../_components/ui/DashboardShell";
+import DashboardShell from "../_components/layout/DashboardShell";
 import EventActions from "./_components/EventActions";
 import EventEditor, { OpenButton } from "./_components/EventEditor";
 import StatusToggle from "./_components/StatusToggle";

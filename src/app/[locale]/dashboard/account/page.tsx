@@ -11,7 +11,7 @@ import { type OAuthProvider, providerConfig } from "@/lib/shared/config";
 import { getT } from "@/lib/shared/i18n";
 import { formatTime } from "@/lib/shared/utils";
 
-import DashboardShell from "../_components/ui/DashboardShell";
+import DashboardShell from "../_components/layout/DashboardShell";
 import EditableInfoRow from "./_components/ui/EditableInfoRow";
 import IdentityCard from "./_components/ui/IdentityCard";
 import InfoRow from "./_components/ui/InfoRow";
