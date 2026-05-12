@@ -11,7 +11,7 @@ import type { Json, TagWithCount } from "@/types";
 
 type JsonObject = { [key: string]: Json | undefined };
 
-export const useHooks = () => {
+export const useTags = () => {
   const [tags, setTags] = useState<TagWithCount[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);

@@ -8,7 +8,7 @@ import { formatSize, formatTime } from "@/lib/shared/utils/tools";
 
 import DashboardShell from "../_components/layout/DashboardShell";
 import ImageActionRender from "./_components/ImageActionRender";
-import { useHooks } from "./use-hooks";
+import { useImages } from "./useImages";
 
 export default function ImagesPage() {
   const {
@@ -22,7 +22,7 @@ export default function ImagesPage() {
     isPending,
     toggleSort,
     handleDelete,
-  } = useHooks();
+  } = useImages();
 
   const SortIcon = sortOrder === "asc" ? ArrowUpAZ : ArrowDownAZ;
   const totalSize = images.reduce((sum, image) => sum + image.size, 0);

@@ -18,7 +18,6 @@ export type ConfigsMap<K extends ConfigKey> = Omit<
   get<T extends K>(key: T): ConfigValue[T];
 };
 
-
 /** Fetches multiple configuration values by their keys. */
 export const fetchConfigs = async <K extends ConfigKey>(
   keys: readonly K[],

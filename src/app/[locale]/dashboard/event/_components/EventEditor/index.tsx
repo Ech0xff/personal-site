@@ -12,7 +12,7 @@ import DateTimeInput from "../../../_components/editor/DateTimeInput";
 import HeaderSection from "../../../_components/editor/HeaderSection";
 import type { BaseEditorProps } from "../../../_components/editor-types";
 import TagSelector from "../../../_components/tags/TagSelector";
-import { useHooks } from "./use-hooks";
+import { useEventEditor } from "./useEventEditor";
 
 const COLOR_OPTIONS = [
   { value: "#3B82F6", label: "Blue" },
@@ -44,7 +44,7 @@ export default function EventEditor({
     isPending,
     isLoading,
     pageTitle,
-  } = useHooks({ id, onSaved, onClose });
+  } = useEventEditor({ id, onSaved, onClose });
 
   return (
     <Stack

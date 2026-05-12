@@ -11,7 +11,7 @@ import DateTimeInput from "../../../_components/editor/DateTimeInput";
 import HeaderSection from "../../../_components/editor/HeaderSection";
 import type { BaseEditorProps } from "../../../_components/editor-types";
 import TagSelector from "../../../_components/tags/TagSelector";
-import { useHooks } from "./use-hooks";
+import { usePostEditor } from "./usePostEditor";
 
 export { default as OpenButton } from "./OpenButton";
 export default function PostEditor({
@@ -33,7 +33,7 @@ export default function PostEditor({
     isPending,
     isLoading,
     pageTitle,
-  } = useHooks({
+  } = usePostEditor({
     id,
     onSaved,
     onClose,

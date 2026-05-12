@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { fetchEventsByBrowser } from "@/lib/client/services";
 import type { EventWithTags as DashboardEvent, Status } from "@/types";
 
-export const useHooks = () => {
+export const useEvents = () => {
   const [events, setEvents] = useState<DashboardEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);

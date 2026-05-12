@@ -39,7 +39,11 @@ const DEFAULT_FORM: PostFormState = {
 
 const DEFAULT_VIEW_MODE: ViewMode = "split";
 
-export const useHooks = ({ id, onSaved, onClose }: UsePostEditorParams) => {
+export const usePostEditor = ({
+  id,
+  onSaved,
+  onClose,
+}: UsePostEditorParams) => {
   const isNewMode = id === null;
 
   const [form, setForm] = useState<PostFormState>(DEFAULT_FORM);

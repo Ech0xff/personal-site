@@ -6,7 +6,7 @@ import {
 import { cn } from "@/lib/shared/utils";
 
 import useConfig from "../_hooks/useConfig";
-import EditorShell from "./editor-shell";
+import EditorShell from "./EditorShell";
 
 const allProviders = Object.keys(providerConfig) as OAuthProvider[];
 const title = "OAuth Providers";

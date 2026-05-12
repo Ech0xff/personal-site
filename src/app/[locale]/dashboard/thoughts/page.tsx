@@ -10,12 +10,12 @@ import DashboardShell from "../_components/layout/DashboardShell";
 import StatusToggle from "./_components/StatusToggle";
 import ThoughtActions from "./_components/ThoughtActions";
 import ThoughtEditor, { OpenButton } from "./_components/ThoughtEditor";
-import { useHooks } from "./use-hooks";
+import { useThoughts } from "./useThoughts";
 
 export default function ThoughtsPage() {
   const locale = useCurrentLocale();
   const { thoughts, loading, error, syncStatus, removeThought, refetch } =
-    useHooks();
+    useThoughts();
   const { open, close } = useModal();
 
   const openEditor = useCallback(
