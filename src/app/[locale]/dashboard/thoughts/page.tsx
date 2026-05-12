@@ -5,9 +5,10 @@ import { useCallback } from "react";
 import ThoughtTimeline from "@/components/features/thoughts/ThoughtTimeline";
 import { useModal } from "@/components/ui/ModalProvider";
 import { useCurrentLocale } from "@/lib/client/locale";
+import { updateThoughtStatusByBrowser } from "@/lib/client/services";
 
 import DashboardShell from "../_components/layout/DashboardShell";
-import StatusToggle from "./_components/StatusToggle";
+import StatusToggle from "../_components/status/StatusToggle";
 import ThoughtActions from "./_components/ThoughtActions";
 import ThoughtEditor, { OpenButton } from "./_components/ThoughtEditor";
 import { useThoughts } from "./useThoughts";
@@ -50,9 +51,11 @@ export default function ThoughtsPage() {
           return (
             <>
               <StatusToggle
-                thoughtId={thought.id}
                 status={thought.status}
-                successCallback={syncStatus}
+                onChange={async (nextStatus) => {
+                  await updateThoughtStatusByBrowser(thought.id, nextStatus);
+                  syncStatus(thought.id, nextStatus);
+                }}
               />
               <ThoughtActions
                 thoughtId={thought.id}

@@ -3,32 +3,30 @@
 import { useTransition } from "react";
 
 import { toast } from "sonner";
+
 import SegmentedToggle from "@/components/ui/SegmentedToggle";
-import { updateThoughtStatusByBrowser } from "@/lib/client/services";
 import type { Status } from "@/types";
 
 interface StatusToggleProps {
-  thoughtId: string;
   status: Status;
-  successCallback?: (thoughtId: string, nextStatus: Status) => void;
+  onChange: (nextStatus: Status) => Promise<void> | void;
+  disabled?: boolean;
 }
 
 export default function StatusToggle({
-  thoughtId,
   status,
-  successCallback,
+  onChange,
+  disabled,
 }: StatusToggleProps) {
   const [isPending, startTransition] = useTransition();
-  const currentStatus: Status = status;
 
   const handleChange = (nextStatus: Status) => {
-    if (nextStatus === currentStatus) return;
+    if (nextStatus === status) return;
 
     startTransition(async () => {
       const toastId = toast.loading("Updating status...");
       try {
-        await updateThoughtStatusByBrowser(thoughtId, nextStatus);
-        if (successCallback) successCallback(thoughtId, nextStatus);
+        await onChange(nextStatus);
         toast.success("Status updated successfully.", { id: toastId });
       } catch (error) {
         toast.error(
@@ -41,14 +39,14 @@ export default function StatusToggle({
 
   return (
     <SegmentedToggle
-      value={currentStatus}
+      value={status}
       onChange={handleChange}
       options={[
         { value: "hide", label: "Hide" },
         { value: "show", label: "Show" },
       ]}
       size="sm"
-      disabled={isPending}
+      disabled={disabled || isPending}
     />
   );
 }
