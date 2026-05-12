@@ -1,4 +1,4 @@
-import ThoughtContent from "@/components/ui/content/ThoughtContent";
+import ThoughtContent from "@/components/features/content/ThoughtContent";
 import Image from "@/components/ui/Image";
 import Stack from "@/components/ui/Stack";
 import { getT } from "@/lib/shared/i18n/tools";

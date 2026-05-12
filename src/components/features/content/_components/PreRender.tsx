@@ -3,8 +3,8 @@ import type { ComponentPropsWithoutRef } from "react";
 import { visit } from "unist-util-visit";
 
 import CopyButton from "@/components/ui/CopyButton";
+import Image from "@/components/ui/Image";
 import { cn, encodePlantUml } from "@/lib/shared/utils";
-import Image from "../../Image";
 import "./PreRender.scss";
 
 interface Props extends ComponentPropsWithoutRef<"pre"> {

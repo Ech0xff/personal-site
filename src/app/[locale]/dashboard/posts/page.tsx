@@ -9,10 +9,11 @@ import Stack from "@/components/ui/Stack";
 import { updatePostStatusByBrowser } from "@/lib/client/services";
 import { cn, formatTime } from "@/lib/shared/utils";
 
+import OpenEditorButton from "../_components/editor/OpenEditorButton";
 import DashboardShell from "../_components/layout/DashboardShell";
 import StatusToggle from "../_components/status/StatusToggle";
 import PostActions from "./_components/PostActions";
-import PostEditor, { OpenButton } from "./_components/PostEditor";
+import PostEditor from "./_components/PostEditor";
 import { usePosts } from "./usePosts";
 
 const th = (title: string[]) => {
@@ -65,7 +66,7 @@ export default function Page() {
   return (
     <DashboardShell
       title="Posts"
-      optActions={<OpenButton openEditor={openEditor} />}
+      optActions={<OpenEditorButton label="New Post" openEditor={openEditor} />}
       loading={loading}
       error={error}
     >
