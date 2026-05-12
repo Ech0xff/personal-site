@@ -7,7 +7,7 @@ import TagSphere from "@/components/features/tags/TagSphere";
 import Stack from "@/components/ui/Stack";
 import type { Json, TagWithCount } from "@/types";
 
-import DashboardShell from "../_components/ui/DashboardShell";
+import DashboardShell from "../_components/layout/DashboardShell";
 import { useHooks } from "./use-hooks";
 
 type TagForm = {

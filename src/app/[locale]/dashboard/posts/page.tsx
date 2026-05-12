@@ -8,7 +8,7 @@ import { useModal } from "@/components/ui/ModalProvider";
 import Stack from "@/components/ui/Stack";
 import { cn, formatTime } from "@/lib/shared/utils";
 
-import DashboardShell from "../_components/ui/DashboardShell";
+import DashboardShell from "../_components/layout/DashboardShell";
 import PostActions from "./_components/PostActions";
 import PostEditor, { OpenButton } from "./_components/PostEditor";
 import StatusToggle from "./_components/StatusToggle";

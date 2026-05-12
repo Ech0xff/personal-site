@@ -5,9 +5,9 @@ import { type HTMLAttributes, useState } from "react";
 
 import Button from "@/components/ui/Button";
 import { useModal } from "@/components/ui/ModalProvider";
+import SegmentedToggle from "@/components/ui/SegmentedToggle";
 import { type Locale, routing } from "@/lib/shared/i18n/routing";
 import { cn } from "@/lib/shared/utils";
-import SegmentedToggle from "../../_components/ui/SegmentedToggle";
 
 export type ConfigField = {
   key: string;

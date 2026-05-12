@@ -6,7 +6,7 @@ import ThoughtTimeline from "@/components/features/thoughts/ThoughtTimeline";
 import { useModal } from "@/components/ui/ModalProvider";
 import { useCurrentLocale } from "@/lib/client/locale";
 
-import DashboardShell from "../_components/ui/DashboardShell";
+import DashboardShell from "../_components/layout/DashboardShell";
 import StatusToggle from "./_components/StatusToggle";
 import ThoughtActions from "./_components/ThoughtActions";
 import ThoughtEditor, { OpenButton } from "./_components/ThoughtEditor";
