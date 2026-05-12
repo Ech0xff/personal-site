@@ -5,11 +5,12 @@ import { useCallback } from "react";
 import EventTimeline from "@/components/features/events/EventTimeline";
 import { useModal } from "@/components/ui/ModalProvider";
 import { useCurrentLocale } from "@/lib/client/locale";
+import { updateEventStatusByBrowser } from "@/lib/client/services";
 
 import DashboardShell from "../_components/layout/DashboardShell";
+import StatusToggle from "../_components/status/StatusToggle";
 import EventActions from "./_components/EventActions";
 import EventEditor, { OpenButton } from "./_components/EventEditor";
-import StatusToggle from "./_components/StatusToggle";
 import { useEvents } from "./useEvents";
 
 export default function EventsPage() {
@@ -49,9 +50,11 @@ export default function EventsPage() {
         renderActions={(event) => (
           <>
             <StatusToggle
-              eventId={event.id}
               status={event.status}
-              successCallback={syncStatus}
+              onChange={async (nextStatus) => {
+                await updateEventStatusByBrowser(event.id, nextStatus);
+                syncStatus(event.id, nextStatus);
+              }}
             />
             <EventActions
               eventId={event.id}

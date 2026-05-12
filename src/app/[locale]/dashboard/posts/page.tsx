@@ -6,12 +6,13 @@ import TagsList from "@/components/features/posts/TagsList";
 import Link from "@/components/ui/Link";
 import { useModal } from "@/components/ui/ModalProvider";
 import Stack from "@/components/ui/Stack";
+import { updatePostStatusByBrowser } from "@/lib/client/services";
 import { cn, formatTime } from "@/lib/shared/utils";
 
 import DashboardShell from "../_components/layout/DashboardShell";
+import StatusToggle from "../_components/status/StatusToggle";
 import PostActions from "./_components/PostActions";
 import PostEditor, { OpenButton } from "./_components/PostEditor";
-import StatusToggle from "./_components/StatusToggle";
 import { usePosts } from "./usePosts";
 
 const th = (title: string[]) => {
@@ -93,9 +94,11 @@ export default function Page() {
                   {td(<TagsList tags={post.tags} maxVisible={3} />)}
                   {td(
                     <StatusToggle
-                      postId={post.id}
                       status={post.status}
-                      successCallback={syncStatus}
+                      onChange={async (nextStatus) => {
+                        await updatePostStatusByBrowser(post.id, nextStatus);
+                        syncStatus(post.id, nextStatus);
+                      }}
                     />,
                   )}
                   {td(
