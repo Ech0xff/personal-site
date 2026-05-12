@@ -14,7 +14,7 @@ import AuthorInput from "../../../_components/editor/AuthorInput";
 import DateTimeInput from "../../../_components/editor/DateTimeInput";
 import HeaderSection from "../../../_components/editor/HeaderSection";
 import type { BaseEditorProps } from "../../../_components/editor-types";
-import { useHooks } from "./use-hooks";
+import { useThoughtEditor } from "./useThoughtEditor";
 
 export { default as OpenButton } from "./OpenButton";
 export default function ThoughtEditor({
@@ -39,7 +39,7 @@ export default function ThoughtEditor({
     isLoading,
     pageTitle,
     handleSubmit,
-  } = useHooks({ id, onSaved, onClose });
+  } = useThoughtEditor({ id, onSaved, onClose });
 
   return (
     <Stack y className={cn("min- bg-white dark:bg-zinc-900", className)}>

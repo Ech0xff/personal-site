@@ -5,7 +5,7 @@ import { CONFIG_KEYS, type RecentPlan } from "@/lib/shared/config";
 import { cn } from "@/lib/shared/utils";
 
 import useConfig from "../_hooks/useConfig";
-import EditorShell from "./editor-shell";
+import EditorShell from "./EditorShell";
 
 const title = "Recent Plans";
 

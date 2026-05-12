@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import CodeMirrorEditor from "@/components/ui/CodeMirrorEditor";
 import { CONFIG_KEYS } from "@/lib/shared/config";
 import useConfig from "../_hooks/useConfig";
-import EditorShell from "./editor-shell";
+import EditorShell from "./EditorShell";
 
 const title = "Site Info";
 

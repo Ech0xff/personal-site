@@ -11,11 +11,11 @@ import Stack from "@/components/ui/Stack";
 import { cn } from "@/lib/shared/utils";
 
 import DashboardShell from "../_components/layout/DashboardShell";
-import AboutMe from "./_components/about-me";
-import OauthProviders from "./_components/oauth-providers";
-import PlaylistUrl from "./_components/playlist-url";
-import RecentPlanEditor from "./_components/recent-plan";
-import SiteInfo from "./_components/site-info";
+import AboutMe from "./_components/AboutMe";
+import OauthProviders from "./_components/OauthProviders";
+import PlaylistUrl from "./_components/PlaylistUrl";
+import RecentPlanEditor from "./_components/RecentPlanEditor";
+import SiteInfo from "./_components/SiteInfo";
 
 export type ConfigField = {
   key: string;

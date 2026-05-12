@@ -17,7 +17,7 @@ import type { ImageFile } from "@/types";
 type SortField = "createdAt" | "size";
 type SortOrder = "asc" | "desc";
 
-export const useHooks = () => {
+export const useImages = () => {
   const [images, setImages] = useState<ImageFile[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);

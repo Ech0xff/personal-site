@@ -12,7 +12,7 @@ import DashboardShell from "../_components/layout/DashboardShell";
 import PostActions from "./_components/PostActions";
 import PostEditor, { OpenButton } from "./_components/PostEditor";
 import StatusToggle from "./_components/StatusToggle";
-import { useHooks } from "./use-hooks";
+import { usePosts } from "./usePosts";
 
 const th = (title: string[]) => {
   return (
@@ -40,7 +40,7 @@ const td = (children: ReactNode, className?: string) => {
 };
 
 export default function Page() {
-  const { posts, error, loading, syncStatus, removePost, refetch } = useHooks();
+  const { posts, error, loading, syncStatus, removePost, refetch } = usePosts();
   const { open, close } = useModal();
 
   const openEditor = useCallback(

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { fetchThoughtsByBrowser } from "@/lib/client/services";
 import type { Status, Thought } from "@/types";
 
-export const useHooks = () => {
+export const useThoughts = () => {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);

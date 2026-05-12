@@ -10,12 +10,12 @@ import DashboardShell from "../_components/layout/DashboardShell";
 import EventActions from "./_components/EventActions";
 import EventEditor, { OpenButton } from "./_components/EventEditor";
 import StatusToggle from "./_components/StatusToggle";
-import { useHooks } from "./use-hooks";
+import { useEvents } from "./useEvents";
 
 export default function EventsPage() {
   const locale = useCurrentLocale();
   const { events, loading, error, syncStatus, removeEvent, refetch } =
-    useHooks();
+    useEvents();
   const { open, close } = useModal();
 
   const openEditor = useCallback(

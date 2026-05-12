@@ -41,7 +41,11 @@ const DEFAULT_FORM: ThoughtFormState = {
   published_at: "",
 };
 
-export const useHooks = ({ id, onSaved, onClose }: UseThoughtEditorParams) => {
+export const useThoughtEditor = ({
+  id,
+  onSaved,
+  onClose,
+}: UseThoughtEditorParams) => {
   const isNewMode = id === null;
   const fileInputRef = useRef<HTMLInputElement>(null);
 

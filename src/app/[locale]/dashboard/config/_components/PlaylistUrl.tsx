@@ -3,7 +3,7 @@ import { generatePlaylistUrl } from "@/lib/shared/config/utils";
 import { cn } from "@/lib/shared/utils";
 
 import useConfig from "../_hooks/useConfig";
-import EditorShell from "./editor-shell";
+import EditorShell from "./EditorShell";
 
 const title = "Playlist URL";
 

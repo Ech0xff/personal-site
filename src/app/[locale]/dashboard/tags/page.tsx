@@ -8,7 +8,7 @@ import Stack from "@/components/ui/Stack";
 import type { Json, TagWithCount } from "@/types";
 
 import DashboardShell from "../_components/layout/DashboardShell";
-import { useHooks } from "./use-hooks";
+import { useTags } from "./useTags";
 
 type TagForm = {
   id?: string;
@@ -19,13 +19,7 @@ type TagForm = {
 type JsonObject = { [key: string]: Json | undefined };
 
 export default function TagsPage() {
-  const {
-    tags: displayTags,
-    loading,
-    error,
-    createTag,
-    updateTag,
-  } = useHooks();
+  const { tags: displayTags, loading, error, createTag, updateTag } = useTags();
   const [formError, setFormError] = useState("");
   const [saving, setSaving] = useState(false);
   const [tagForm, setTagForm] = useState<TagForm | null>(null);

@@ -37,7 +37,11 @@ const DEFAULT_FORM: EventFormState = {
   tags: [],
 };
 
-export const useHooks = ({ id, onSaved, onClose }: UseEventEditorParams) => {
+export const useEventEditor = ({
+  id,
+  onSaved,
+  onClose,
+}: UseEventEditorParams) => {
   const isNewMode = id === null;
 
   const [form, setForm] = useState<EventFormState>(DEFAULT_FORM);
