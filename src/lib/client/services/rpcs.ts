@@ -1,5 +1,5 @@
-import { fetchSearchContent, fetchSummary } from "@/lib/shared/services/rpcs";
-import type { TagSourceType } from "@/types";
+import { fetchSearchContent, fetchSummary } from "#lib/shared/services/rpcs";
+import type { TagSourceType } from "#types";
 
 import { makeBrowserClient } from "../supabase";
 

@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { cacheTag } from "next/cache";
 
-import PostCard from "@/components/features/posts/PostCard";
-import Stack from "@/components/ui/Stack";
-import { CACHE_TAGS } from "@/lib/server/cache";
-import { getT } from "@/lib/shared/i18n/tools";
-import { fetchPosts } from "@/lib/shared/services";
-import { makeStaticClient } from "@/lib/shared/supabase";
-import { formatTime } from "@/lib/shared/utils";
+import PostCard from "#components/features/posts/PostCard";
+import Stack from "#components/ui/Stack";
+import { CACHE_TAGS } from "#lib/server/cache";
+import { getT } from "#lib/shared/i18n/tools";
+import { fetchPosts } from "#lib/shared/services";
+import { makeStaticClient } from "#lib/shared/supabase";
+import { formatTime } from "#lib/shared/utils";
 
 import CollectionBody from "../_components/CollectionBody";
 

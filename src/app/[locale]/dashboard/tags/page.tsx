@@ -3,9 +3,9 @@
 import { Plus, Save, Tags, X } from "lucide-react";
 import { useState } from "react";
 
-import TagSphere from "@/components/features/tags/TagSphere";
-import Stack from "@/components/ui/Stack";
-import type { Json, TagWithCount } from "@/types";
+import TagSphere from "#components/features/tags/TagSphere";
+import Stack from "#components/ui/Stack";
+import type { Json, TagWithCount } from "#types";
 
 import DashboardShell from "../_components/layout/DashboardShell";
 import { useTags } from "./useTags";

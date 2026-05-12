@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo } from "react";
 
-import { makeBrowserClient } from "@/lib/client/supabase";
-import { getUserStatus } from "@/lib/shared/utils";
+import { makeBrowserClient } from "#lib/client/supabase";
+import { getUserStatus } from "#lib/shared/utils";
 
 type Props = {
   value: string;

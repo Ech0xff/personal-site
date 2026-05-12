@@ -5,9 +5,9 @@ import { Languages } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
-import { useCurrentLocale } from "@/lib/client/locale";
-import { routing, switchLocaleInPathname } from "@/lib/shared/i18n";
-import { cn } from "@/lib/shared/utils";
+import { useCurrentLocale } from "#lib/client/locale";
+import { routing, switchLocaleInPathname } from "#lib/shared/i18n";
+import { cn } from "#lib/shared/utils";
 
 const localeLabelMap: Record<string, string> = {
   "en-US": "EN",

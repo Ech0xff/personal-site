@@ -1,6 +1,6 @@
 import React, { useId } from "react";
 
-import { cn } from "@/lib/shared/utils";
+import { cn } from "#lib/shared/utils";
 
 import Stack from "./Stack";
 

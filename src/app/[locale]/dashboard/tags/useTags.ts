@@ -6,8 +6,8 @@ import {
   createTagByBrowser,
   fetchSummaryByBrowser,
   updateTagByBrowser,
-} from "@/lib/client/services";
-import type { Json, TagWithCount } from "@/types";
+} from "#lib/client/services";
+import type { Json, TagWithCount } from "#types";
 
 type JsonObject = { [key: string]: Json | undefined };
 

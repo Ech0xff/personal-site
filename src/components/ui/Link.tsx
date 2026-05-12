@@ -1,8 +1,8 @@
 "use client";
 import NextLink from "next/link";
 
-import { useCurrentLocale } from "@/lib/client/locale";
-import { localizeHref } from "@/lib/shared/i18n";
+import { useCurrentLocale } from "#lib/client/locale";
+import { localizeHref } from "#lib/shared/i18n";
 
 interface Props {
   children: React.ReactNode;

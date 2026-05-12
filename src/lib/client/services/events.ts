@@ -4,8 +4,8 @@ import {
   fetchEvents,
   saveEvent,
   updateEventStatus,
-} from "@/lib/shared/services";
-import type { EventInsert, Status } from "@/types";
+} from "#lib/shared/services";
+import type { EventInsert, Status } from "#types";
 
 import { makeBrowserClient } from "../supabase";
 

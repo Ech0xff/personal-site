@@ -2,17 +2,17 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { cacheTag } from "next/cache";
 import { cookies } from "next/headers";
-import ToastWatcher from "@/components/features/ToastWatcher";
-import { ImageViewer } from "@/components/ui/ImageViewer";
-import ModalProvider from "@/components/ui/ModalProvider";
-import { CACHE_TAGS } from "@/lib/server/cache";
-import { CONFIG_KEYS } from "@/lib/shared/config";
-import { routing } from "@/lib/shared/i18n/routing";
-import { getT } from "@/lib/shared/i18n/tools";
-import { fetchConfigs } from "@/lib/shared/services";
-import "@/styles/globals.scss";
-import "@/styles/tailwind.css";
-import "@/styles/variables.scss";
+import ToastWatcher from "#components/features/ToastWatcher";
+import { ImageViewer } from "#components/ui/ImageViewer";
+import ModalProvider from "#components/ui/ModalProvider";
+import { CACHE_TAGS } from "#lib/server/cache";
+import { CONFIG_KEYS } from "#lib/shared/config";
+import { routing } from "#lib/shared/i18n/routing";
+import { getT } from "#lib/shared/i18n/tools";
+import { fetchConfigs } from "#lib/shared/services";
+import "#styles/globals.scss";
+import "#styles/tailwind.css";
+import "#styles/variables.scss";
 import { Suspense } from "react";
 
 interface LayoutProps {

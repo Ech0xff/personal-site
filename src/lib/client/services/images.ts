@@ -3,7 +3,7 @@ import {
   fetchImages,
   uploadImage,
   uploadImageFromUrl,
-} from "@/lib/shared/services";
+} from "#lib/shared/services";
 
 import { makeBrowserClient } from "../supabase";
 

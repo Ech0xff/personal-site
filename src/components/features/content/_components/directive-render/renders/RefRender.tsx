@@ -7,7 +7,7 @@ import {
   Quote,
 } from "lucide-react";
 
-import { cn } from "@/lib/shared/utils";
+import { cn } from "#lib/shared/utils";
 
 import type { DirectiveAttributes, RenderProps } from "../types";
 

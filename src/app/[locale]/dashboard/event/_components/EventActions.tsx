@@ -3,7 +3,7 @@
 import { Edit, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-import { deleteEventByBrowser } from "@/lib/client/services";
+import { deleteEventByBrowser } from "#lib/client/services";
 
 interface EventActionsProps {
   eventId: string;

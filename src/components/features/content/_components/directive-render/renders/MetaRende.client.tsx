@@ -5,7 +5,7 @@ import { ExternalLink, Globe2 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 
-import { cn } from "@/lib/shared/utils";
+import { cn } from "#lib/shared/utils";
 
 type MicrolinkImage = {
   url?: string;

@@ -2,7 +2,7 @@
 
 import { Plus } from "lucide-react";
 
-import Button from "@/components/ui/Button";
+import Button from "#components/ui/Button";
 
 interface Props {
   label: string;

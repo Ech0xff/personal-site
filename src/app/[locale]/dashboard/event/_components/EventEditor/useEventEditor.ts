@@ -8,8 +8,8 @@ import {
   fetchEventByBrowser,
   fetchSummaryByBrowser,
   saveEventByBrowser,
-} from "@/lib/client/services";
-import type { Status, TagWithCount } from "@/types";
+} from "#lib/client/services";
+import type { Status, TagWithCount } from "#types";
 
 type EventFormState = {
   id: string;

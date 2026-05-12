@@ -1,6 +1,6 @@
-import { CONFIG_KEYS } from "@/lib/shared/config";
-import { generatePlaylistUrl } from "@/lib/shared/config/utils";
-import { cn } from "@/lib/shared/utils";
+import { CONFIG_KEYS } from "#lib/shared/config";
+import { generatePlaylistUrl } from "#lib/shared/config/utils";
+import { cn } from "#lib/shared/utils";
 
 import useConfig from "../_hooks/useConfig";
 import EditorShell from "./EditorShell";

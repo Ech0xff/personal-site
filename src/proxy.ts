@@ -4,7 +4,7 @@ import {
   getLocaleFromPathname,
   getPreferredLocale,
   localizeHref,
-} from "@/lib/shared/i18n";
+} from "#lib/shared/i18n";
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

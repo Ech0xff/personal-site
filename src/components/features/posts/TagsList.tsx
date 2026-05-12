@@ -1,5 +1,5 @@
-import { cn } from "@/lib/shared/utils/tailwind";
-import type { Tag } from "@/types";
+import { cn } from "#lib/shared/utils/tailwind";
+import type { Tag } from "#types";
 
 import Stack from "../../ui/Stack";
 

@@ -1,8 +1,8 @@
-import Link from "@/components/ui/Link";
-import Stack from "@/components/ui/Stack";
-import { getT } from "@/lib/shared/i18n/tools";
-import { cn, formatTime } from "@/lib/shared/utils";
-import type { Post, Tag } from "@/types";
+import Link from "#components/ui/Link";
+import Stack from "#components/ui/Stack";
+import { getT } from "#lib/shared/i18n/tools";
+import { cn, formatTime } from "#lib/shared/utils";
+import type { Post, Tag } from "#types";
 
 import TagsList from "./TagsList";
 

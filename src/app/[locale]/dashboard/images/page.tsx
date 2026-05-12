@@ -2,9 +2,9 @@
 
 import { ArrowDownAZ, ArrowUpAZ, Calendar, HardDrive } from "lucide-react";
 
-import Image from "@/components/ui/Image";
-import Stack from "@/components/ui/Stack";
-import { formatSize, formatTime } from "@/lib/shared/utils/tools";
+import Image from "#components/ui/Image";
+import Stack from "#components/ui/Stack";
+import { formatSize, formatTime } from "#lib/shared/utils/tools";
 
 import DashboardShell from "../_components/layout/DashboardShell";
 import ImageActionRender from "./_components/ImageActionRender";

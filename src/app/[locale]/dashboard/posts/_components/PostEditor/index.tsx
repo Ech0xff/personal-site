@@ -1,11 +1,11 @@
 "use client";
 
 import { Edit, Eye, Save, X } from "lucide-react";
-import { PostContent } from "@/components/features/content";
-import DropdownPopover from "@/components/ui/DropdownPopover";
-import SegmentedToggle from "@/components/ui/SegmentedToggle";
-import Stack from "@/components/ui/Stack";
-import { cn } from "@/lib/shared/utils";
+import { PostContent } from "#components/features/content";
+import DropdownPopover from "#components/ui/DropdownPopover";
+import SegmentedToggle from "#components/ui/SegmentedToggle";
+import Stack from "#components/ui/Stack";
+import { cn } from "#lib/shared/utils";
 import AuthorInput from "../../../_components/editor/AuthorInput";
 import DateTimeInput from "../../../_components/editor/DateTimeInput";
 import HeaderSection from "../../../_components/editor/HeaderSection";

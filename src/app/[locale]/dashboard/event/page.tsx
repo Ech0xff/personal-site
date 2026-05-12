@@ -2,10 +2,10 @@
 
 import { useCallback } from "react";
 
-import EventTimeline from "@/components/features/events/EventTimeline";
-import { useModal } from "@/components/ui/ModalProvider";
-import { useCurrentLocale } from "@/lib/client/locale";
-import { updateEventStatusByBrowser } from "@/lib/client/services";
+import EventTimeline from "#components/features/events/EventTimeline";
+import { useModal } from "#components/ui/ModalProvider";
+import { useCurrentLocale } from "#lib/client/locale";
+import { updateEventStatusByBrowser } from "#lib/client/services";
 
 import OpenEditorButton from "../_components/editor/OpenEditorButton";
 import DashboardShell from "../_components/layout/DashboardShell";

@@ -3,8 +3,8 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
-import Stack from "@/components/ui/Stack";
-import { cn } from "@/lib/shared/utils/tailwind";
+import Stack from "#components/ui/Stack";
+import { cn } from "#lib/shared/utils/tailwind";
 
 function NavbarController() {
   const sentinelRef = useRef<HTMLDivElement>(null);

@@ -1,5 +1,5 @@
-import { createTag, updateTag } from "@/lib/shared/services/tags";
-import type { TablesInsert, TablesUpdate } from "@/types";
+import { createTag, updateTag } from "#lib/shared/services/tags";
+import type { TablesInsert, TablesUpdate } from "#types";
 
 import { makeBrowserClient } from "../supabase";
 

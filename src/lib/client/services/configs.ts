@@ -1,10 +1,10 @@
-import type { ConfigKey, ConfigValue } from "@/lib/shared/config";
+import type { ConfigKey, ConfigValue } from "#lib/shared/config";
 import {
   deleteConfig,
   fetchConfigs,
   setConfig,
-} from "@/lib/shared/services/configs";
-import type { Json } from "@/types";
+} from "#lib/shared/services/configs";
+import type { Json } from "#types";
 
 import { makeBrowserClient } from "../supabase";
 

@@ -1,8 +1,8 @@
-import { EventContent } from "@/components/features/content";
-import Stack from "@/components/ui/Stack";
-import { getT } from "@/lib/shared/i18n/tools";
-import { formatTime } from "@/lib/shared/utils/tools";
-import type { Tag } from "@/types";
+import { EventContent } from "#components/features/content";
+import Stack from "#components/ui/Stack";
+import { getT } from "#lib/shared/i18n/tools";
+import { formatTime } from "#lib/shared/utils/tools";
+import type { Tag } from "#types";
 
 type EventTag = Tag | string;
 const defaultTagColor = "#71717a";

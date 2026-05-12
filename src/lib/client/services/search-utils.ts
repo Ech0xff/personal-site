@@ -1,4 +1,4 @@
-import { toPreviewText } from "@/lib/shared/utils";
+import { toPreviewText } from "#lib/shared/utils";
 
 export type SearchResultType = "post" | "thought" | "event";
 

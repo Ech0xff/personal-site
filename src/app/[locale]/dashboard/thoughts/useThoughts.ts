@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { fetchThoughtsByBrowser } from "@/lib/client/services";
-import type { Status, Thought } from "@/types";
+import { fetchThoughtsByBrowser } from "#lib/client/services";
+import type { Status, Thought } from "#types";
 
 export const useThoughts = () => {
   const [thoughts, setThoughts] = useState<Thought[]>([]);

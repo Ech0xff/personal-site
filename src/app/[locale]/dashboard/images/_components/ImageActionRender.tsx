@@ -4,8 +4,8 @@ import { Copy, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import Stack from "@/components/ui/Stack";
-import type { ImageFile } from "@/types";
+import Stack from "#components/ui/Stack";
+import type { ImageFile } from "#types";
 
 interface ImageActionButtonsProps {
   image: ImageFile;

@@ -1,5 +1,5 @@
-import Stack from "@/components/ui/Stack";
-import { cn } from "@/lib/shared/utils";
+import Stack from "#components/ui/Stack";
+import { cn } from "#lib/shared/utils";
 
 import ThoughtCard, { type Thought } from "./ThoughtCard";
 

@@ -3,8 +3,8 @@
 import { Loader2 } from "lucide-react";
 import type { ComponentPropsWithoutRef } from "react";
 
-import Stack from "@/components/ui/Stack";
-import { cn } from "@/lib/shared/utils";
+import Stack from "#components/ui/Stack";
+import { cn } from "#lib/shared/utils";
 
 interface Props extends ComponentPropsWithoutRef<"div"> {
   children: React.ReactNode;

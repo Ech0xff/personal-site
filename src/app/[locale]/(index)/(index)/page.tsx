@@ -1,17 +1,17 @@
 import { cacheTag } from "next/cache";
 
-import Stack from "@/components/ui/Stack";
-import { CACHE_TAGS } from "@/lib/server/cache";
-import { CONFIG_KEYS } from "@/lib/shared/config";
+import Stack from "#components/ui/Stack";
+import { CACHE_TAGS } from "#lib/server/cache";
+import { CONFIG_KEYS } from "#lib/shared/config";
 import {
   fetchConfigs,
   fetchEvents,
   fetchPosts,
   fetchSummary,
   fetchThoughts,
-} from "@/lib/shared/services";
-import { cn, toPreviewText } from "@/lib/shared/utils";
-import type { BlogSummaryData, RecentActivityItem } from "@/types";
+} from "#lib/shared/services";
+import { cn, toPreviewText } from "#lib/shared/utils";
+import type { BlogSummaryData, RecentActivityItem } from "#types";
 
 import AnimationSection from "./_components/AnimationSection";
 import { IntroductionSection } from "./_components/IntroductionSection";

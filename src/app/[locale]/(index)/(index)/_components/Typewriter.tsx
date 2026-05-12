@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import Stack from "@/components/ui/Stack";
+import Stack from "#components/ui/Stack";
 
 export default function HeroTypewriter() {
   const [currentText, setCurrentText] = useState("");

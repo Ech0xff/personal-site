@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { getT } from "@/lib/shared/i18n/tools";
-import type { ContributionDay } from "@/types";
+import { getT } from "#lib/shared/i18n/tools";
+import type { ContributionDay } from "#types";
 
 type Props = {
   locale?: string;

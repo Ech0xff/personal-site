@@ -4,10 +4,10 @@ import {
   type ConfigKey,
   type ConfigValue,
   DEFAULT_CONFIG,
-} from "@/lib/shared/config";
-import { routing } from "@/lib/shared/i18n/routing";
-import { getNormalizedLocale } from "@/lib/shared/i18n/tools";
-import type { Database, Json } from "@/types";
+} from "#lib/shared/config";
+import { routing } from "#lib/shared/i18n/routing";
+import { getNormalizedLocale } from "#lib/shared/i18n/tools";
+import type { Database, Json } from "#types";
 import { generateConfigKey } from "../config/utils";
 import { makeStaticClient } from "../supabase";
 

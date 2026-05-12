@@ -1,9 +1,9 @@
-import ThoughtContent from "@/components/features/content/ThoughtContent";
-import Image from "@/components/ui/Image";
-import Stack from "@/components/ui/Stack";
-import { getT } from "@/lib/shared/i18n/tools";
-import { cn } from "@/lib/shared/utils/tailwind";
-import { formatTime } from "@/lib/shared/utils/tools";
+import ThoughtContent from "#components/features/content/ThoughtContent";
+import Image from "#components/ui/Image";
+import Stack from "#components/ui/Stack";
+import { getT } from "#lib/shared/i18n/tools";
+import { cn } from "#lib/shared/utils/tailwind";
+import { formatTime } from "#lib/shared/utils/tools";
 
 export type Thought = {
   id: string;

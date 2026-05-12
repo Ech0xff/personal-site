@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import type { BlogSummaryData, Database, TagSourceType } from "@/types";
+import type { BlogSummaryData, Database, TagSourceType } from "#types";
 
 import { makeStaticClient } from "../supabase";
 

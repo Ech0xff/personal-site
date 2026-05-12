@@ -11,8 +11,8 @@ import { toast } from "sonner";
 import {
   deleteImageByBrowser,
   fetchImagesByBrowser,
-} from "@/lib/client/services";
-import type { ImageFile } from "@/types";
+} from "#lib/client/services";
+import type { ImageFile } from "#types";
 
 type SortField = "createdAt" | "size";
 type SortOrder = "asc" | "desc";

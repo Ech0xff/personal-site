@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 
-import Stack from "@/components/ui/Stack";
+import Stack from "#components/ui/Stack";
 
 export default function Typewriter({ texts }: { texts: string[] }) {
   const typingTexts = useMemo(() => texts, [texts]);

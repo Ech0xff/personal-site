@@ -2,7 +2,7 @@
 
 import { useParams, usePathname } from "next/navigation";
 
-import { getLocaleFromPathname, normalizeLocale } from "@/lib/shared/i18n";
+import { getLocaleFromPathname, normalizeLocale } from "#lib/shared/i18n";
 
 export const useCurrentLocale = () => {
   const params = useParams<{ locale?: string }>();

@@ -1,4 +1,4 @@
-import { CONFIG_KEYS } from "@/lib/shared/config";
+import { CONFIG_KEYS } from "#lib/shared/config";
 
 import { fetchConfigByBrowser } from "./configs";
 

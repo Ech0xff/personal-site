@@ -14,7 +14,7 @@ import {
   useState,
 } from "react";
 
-import { cn } from "@/lib/shared/utils";
+import { cn } from "#lib/shared/utils";
 
 export interface ModalRenderProps {
   close: () => void;
