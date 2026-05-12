@@ -7,10 +7,11 @@ import { useModal } from "@/components/ui/ModalProvider";
 import { useCurrentLocale } from "@/lib/client/locale";
 import { updateThoughtStatusByBrowser } from "@/lib/client/services";
 
+import OpenEditorButton from "../_components/editor/OpenEditorButton";
 import DashboardShell from "../_components/layout/DashboardShell";
 import StatusToggle from "../_components/status/StatusToggle";
 import ThoughtActions from "./_components/ThoughtActions";
-import ThoughtEditor, { OpenButton } from "./_components/ThoughtEditor";
+import ThoughtEditor from "./_components/ThoughtEditor";
 import { useThoughts } from "./useThoughts";
 
 export default function ThoughtsPage() {
@@ -42,7 +43,9 @@ export default function ThoughtsPage() {
       title="Thoughts"
       loading={loading}
       error={error}
-      optActions={<OpenButton openEditor={openEditor} />}
+      optActions={
+        <OpenEditorButton label="New Thought" openEditor={openEditor} />
+      }
     >
       <ThoughtTimeline
         thoughts={thoughts}

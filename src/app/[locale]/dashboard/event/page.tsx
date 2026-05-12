@@ -7,10 +7,11 @@ import { useModal } from "@/components/ui/ModalProvider";
 import { useCurrentLocale } from "@/lib/client/locale";
 import { updateEventStatusByBrowser } from "@/lib/client/services";
 
+import OpenEditorButton from "../_components/editor/OpenEditorButton";
 import DashboardShell from "../_components/layout/DashboardShell";
 import StatusToggle from "../_components/status/StatusToggle";
 import EventActions from "./_components/EventActions";
-import EventEditor, { OpenButton } from "./_components/EventEditor";
+import EventEditor from "./_components/EventEditor";
 import { useEvents } from "./useEvents";
 
 export default function EventsPage() {
@@ -42,7 +43,9 @@ export default function EventsPage() {
       title="Events"
       loading={loading}
       error={error}
-      optActions={<OpenButton openEditor={openEditor} />}
+      optActions={
+        <OpenEditorButton label="New Event" openEditor={openEditor} />
+      }
     >
       <EventTimeline
         events={events}

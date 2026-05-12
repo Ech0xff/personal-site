@@ -1,5 +1,5 @@
+import ContentRenderer from "@/components/features/content/ContentRenderer";
 import CodeMirrorEditor from "@/components/ui/CodeMirrorEditor";
-import ContentRenderer from "@/components/ui/content/ContentRenderer";
 import { CONFIG_KEYS } from "@/lib/shared/config";
 import { cn } from "@/lib/shared/utils";
 import useConfig from "../_hooks/useConfig";

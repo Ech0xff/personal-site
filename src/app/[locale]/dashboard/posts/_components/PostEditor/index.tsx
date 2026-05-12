@@ -1,7 +1,7 @@
 "use client";
 
 import { Edit, Eye, Save, X } from "lucide-react";
-import { PostContent } from "@/components/ui/content";
+import { PostContent } from "@/components/features/content";
 import DropdownPopover from "@/components/ui/DropdownPopover";
 import SegmentedToggle from "@/components/ui/SegmentedToggle";
 import Stack from "@/components/ui/Stack";
@@ -13,7 +13,6 @@ import type { BaseEditorProps } from "../../../_components/editor-types";
 import TagSelector from "../../../_components/tags/TagSelector";
 import { usePostEditor } from "./usePostEditor";
 
-export { default as OpenButton } from "./OpenButton";
 export default function PostEditor({
   id,
   className,

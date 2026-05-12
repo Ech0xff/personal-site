@@ -1,5 +1,3 @@
-// src/components/ui/markdown/ContentRenderer.tsx
-
 import {
   Children,
   type ComponentPropsWithoutRef,

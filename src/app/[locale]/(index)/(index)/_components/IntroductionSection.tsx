@@ -1,8 +1,7 @@
 import { Check, CircleDashed, Clock, ListChecks, X } from "lucide-react";
-
+import ContentRenderer from "@/components/features/content/ContentRenderer";
 import ContributionCalendar from "@/components/features/contributions/ContributionCalendar";
 import TagMarquee from "@/components/features/tags/TagMarquee";
-import ContentRenderer from "@/components/ui/content/ContentRenderer";
 import Stack from "@/components/ui/Stack";
 import type { RecentPlan } from "@/lib/shared/config";
 import { generatePlaylistUrl } from "@/lib/shared/config/utils";

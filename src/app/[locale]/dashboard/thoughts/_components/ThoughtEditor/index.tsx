@@ -16,7 +16,6 @@ import HeaderSection from "../../../_components/editor/HeaderSection";
 import type { BaseEditorProps } from "../../../_components/editor-types";
 import { useThoughtEditor } from "./useThoughtEditor";
 
-export { default as OpenButton } from "./OpenButton";
 export default function ThoughtEditor({
   id,
   className,

@@ -25,7 +25,6 @@ const COLOR_OPTIONS = [
   { value: "#6B7280", label: "Gray" },
 ];
 
-export { default as OpenButton } from "./OpenButton";
 export default function EventEditor({
   id,
   className,
