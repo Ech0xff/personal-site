@@ -20,7 +20,7 @@ export default function SectionCard({
     <Stack
       y
       className={cn(
-        "overflow-hidden rounded-xl border border-zinc-200 bg-white *:p-4 dark:border-zinc-800 dark:bg-zinc-900",
+        "overflow-hidden rounded-xl border border-(--border-default) bg-(--surface-card) *:p-4",
         className,
       )}
       divide={divide}

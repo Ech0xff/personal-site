@@ -1,30 +1,32 @@
 @use "../../../../styles/mixins" as *;
 
-:root {
-  --code-fg: #24292f;
-  --code-comment: #6e7781;
-  --code-keyword: #cf222e;
-  --code-string: #0a3069;
-  --code-function: #8250df;
-  --code-class: #953800;
-  --code-variable: #24292f;
-  --code-number: #0550ae;
-  --code-operator: #57606a;
-  --code-regex: #116329;
+$code-theme-light: (
+  code-fg: #24292f,
+  code-comment: #6e7781,
+  code-keyword: #cf222e,
+  code-string: #0a3069,
+  code-function: #8250df,
+  code-class: #953800,
+  code-variable: #24292f,
+  code-number: #0550ae,
+  code-operator: #57606a,
+  code-regex: #116329,
+);
 
-  @include theme-controller {
-    --code-fg: #e6edf3;
-    --code-comment: #8b949e;
-    --code-keyword: #ff7b72;
-    --code-string: #a5d6ff;
-    --code-function: #d2a8ff;
-    --code-class: #ffa657;
-    --code-variable: #e6edf3;
-    --code-number: #79c0ff;
-    --code-operator: #c9d1d9;
-    --code-regex: #7ee787;
-  }
-}
+$code-theme-dark: (
+  code-fg: #e6edf3,
+  code-comment: #8b949e,
+  code-keyword: #ff7b72,
+  code-string: #a5d6ff,
+  code-function: #d2a8ff,
+  code-class: #ffa657,
+  code-variable: #e6edf3,
+  code-number: #79c0ff,
+  code-operator: #c9d1d9,
+  code-regex: #7ee787,
+);
+
+@include emit-themed-vars($code-theme-light, $code-theme-dark);
 
 .pre-render-code-block {
   color: var(--code-fg);

@@ -1,0 +1,15 @@
+@use "../../../styles/mixins" as *;
+
+$search-theme-light: (
+  search-highlight-bg: rgba(253, 230, 138, 0.8),
+  search-highlight-text: #18181b,
+  search-text-subtle: #d4d4d8,
+);
+
+$search-theme-dark: (
+  search-highlight-bg: rgba(252, 211, 77, 0.75),
+  search-highlight-text: #18181b,
+  search-text-subtle: #52525b,
+);
+
+@include emit-themed-vars($search-theme-light, $search-theme-dark);

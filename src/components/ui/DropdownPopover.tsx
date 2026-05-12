@@ -39,7 +39,7 @@ export default function DropdownPopover({
         id={popoverId}
         popover="auto"
         className={cn(
-          "pointer-events-none fixed z-10 mt-2 flex -translate-x-1/2 scale-50 flex-col items-center rounded-md border border-zinc-200 bg-white px-2 py-1 text-zinc-700 opacity-0 shadow-sm duration-200 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200",
+          "pointer-events-none fixed z-10 mt-2 flex -translate-x-1/2 scale-50 flex-col items-center rounded-md border border-(--border-default) bg-(--surface-card) px-2 py-1 text-(--text-secondary) opacity-0 shadow-sm duration-200",
           "open:pointer-events-auto open:scale-100 open:opacity-100",
           popoverClassName,
         )}

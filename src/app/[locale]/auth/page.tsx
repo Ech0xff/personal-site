@@ -35,11 +35,11 @@ export default async function Page({
       </div>
 
       <div className="w-full max-w-md">
-        <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-8 shadow-xl dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="rounded-2xl border border-(--border-default) bg-(--surface-card) p-8 shadow-xl">
           <PageClient oauthProviders={oauthProviders} locale={locale} />
         </div>
 
-        <p className="mt-6 text-center text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mt-6 text-center text-(--text-muted) text-sm">
           <Link
             href={routes.HOME}
             className="transition-colors hover:text-blue-500"

@@ -1,0 +1,13 @@
+@use "../../../../../styles/mixins" as *;
+
+$tag-selector-theme-light: (
+  tag-selector-surface: rgba(255, 255, 255, 0.95),
+  tag-selector-badge-surface: rgba(255, 255, 255, 0.7),
+);
+
+$tag-selector-theme-dark: (
+  tag-selector-surface: rgba(24, 24, 27, 0.95),
+  tag-selector-badge-surface: rgba(9, 9, 11, 0.4),
+);
+
+@include emit-themed-vars($tag-selector-theme-light, $tag-selector-theme-dark);

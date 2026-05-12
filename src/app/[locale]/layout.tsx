@@ -10,7 +10,6 @@ import { CONFIG_KEYS } from "#lib/shared/config";
 import { routing } from "#lib/shared/i18n/routing";
 import { getT } from "#lib/shared/i18n/tools";
 import { fetchConfigs } from "#lib/shared/services";
-import "#styles/globals.scss";
 import "#styles/tailwind.css";
 import "#styles/variables.scss";
 import { Suspense } from "react";

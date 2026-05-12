@@ -1,11 +1,21 @@
-@mixin theme-controller {
-  &.dark {
-    @content;
+@mixin emit-css-vars($tokens) {
+  @each $name, $value in $tokens {
+    --#{$name}: #{$value};
+  }
+}
+
+@mixin emit-themed-vars($light, $dark) {
+  :root {
+    @include emit-css-vars($light);
   }
 
-  &.system {
-    @media (prefers-color-scheme: dark) {
-      @content;
+  :root.dark {
+    @include emit-css-vars($dark);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root.system {
+      @include emit-css-vars($dark);
     }
   }
 }

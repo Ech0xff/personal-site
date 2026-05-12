@@ -33,7 +33,7 @@ export default function SegmentedToggle<T extends string>({
   return (
     <Stack
       className={cn(
-        "flex w-min items-center rounded-lg bg-zinc-100 dark:bg-zinc-800",
+        "flex w-min items-center rounded-lg bg-(--surface-muted)",
         wrapperSizeClass,
         disabled && "opacity-60",
         className,
@@ -50,8 +50,8 @@ export default function SegmentedToggle<T extends string>({
               "whitespace-nowrap rounded-md transition-all",
               buttonSizeClass,
               isActive
-                ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
-                : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300",
+                ? "bg-(--surface-selected) text-(--text-primary) shadow"
+                : "text-(--text-muted) hover:text-(--text-secondary)",
               disabled && "pointer-events-none",
               buttonClassName,
             )}

@@ -140,24 +140,24 @@ export default function PageClient({ oauthProviders, locale }: Props) {
   return (
     <>
       <div className="mb-8 text-center">
-        <h1 className="mb-2 font-bold text-3xl text-zinc-900 dark:text-zinc-100">
+        <h1 className="mb-2 font-bold text-(--text-primary) text-3xl">
           {mode === "login" ? t("welcomeBack") : t("createAccount")}
         </h1>
-        <p className="text-zinc-500 dark:text-zinc-400">
+        <p className="text-(--text-muted)">
           {mode === "login"
             ? t("signInToYourAccount")
             : t("signUpForNewAccount")}
         </p>
       </div>
 
-      <div className="mb-6 flex rounded-lg bg-zinc-200 p-1 dark:bg-zinc-800">
+      <div className="mb-6 flex rounded-lg bg-(--surface-muted) p-1">
         <button
           type="button"
           onClick={() => setMode("login")}
           className={`flex-1 rounded-md px-4 py-2 font-medium text-sm transition-all duration-200 ${
             mode === "login"
-              ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-zinc-100"
-              : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
+              ? "bg-(--surface-selected) text-(--text-primary) shadow-sm"
+              : "text-(--text-muted) hover:text-(--text-secondary)"
           }`}
         >
           {t("signIn")}
@@ -167,8 +167,8 @@ export default function PageClient({ oauthProviders, locale }: Props) {
           onClick={() => setMode("register")}
           className={`flex-1 rounded-md px-4 py-2 font-medium text-sm transition-all duration-200 ${
             mode === "register"
-              ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-zinc-100"
-              : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
+              ? "bg-(--surface-selected) text-(--text-primary) shadow-sm"
+              : "text-(--text-muted) hover:text-(--text-secondary)"
           }`}
         >
           {t("signUp")}
@@ -179,7 +179,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
         <div>
           <label
             htmlFor="email"
-            className="mb-2 block font-medium text-sm text-zinc-700 dark:text-zinc-300"
+            className="mb-2 block font-medium text-(--text-secondary) text-sm"
           >
             {t("email")}
           </label>
@@ -188,7 +188,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
             name="email"
             type="email"
             placeholder={t("enterYourEmail")}
-            className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
+            className="w-full rounded-lg border border-(--border-strong) bg-(--surface-input) px-4 py-3 text-(--text-primary) transition-all duration-200 placeholder:text-(--text-placeholder) focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
             autoFocus
             value={form.email}
@@ -199,7 +199,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
         <div>
           <label
             htmlFor="password"
-            className="mb-2 block font-medium text-sm text-zinc-700 dark:text-zinc-300"
+            className="mb-2 block font-medium text-(--text-secondary) text-sm"
           >
             {t("password")}
           </label>
@@ -208,7 +208,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
             name="password"
             type="password"
             placeholder={t("enterYourPassword")}
-            className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
+            className="w-full rounded-lg border border-(--border-strong) bg-(--surface-input) px-4 py-3 text-(--text-primary) transition-all duration-200 placeholder:text-(--text-placeholder) focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
             value={form.password}
             onChange={(event) => updateForm({ password: event.target.value })}
@@ -219,7 +219,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
           <div>
             <label
               htmlFor="confirmPassword"
-              className="mb-2 block font-medium text-sm text-zinc-700 dark:text-zinc-300"
+              className="mb-2 block font-medium text-(--text-secondary) text-sm"
             >
               {t("confirmPassword")}
             </label>
@@ -228,7 +228,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
               name="confirmPassword"
               type="password"
               placeholder={t("repeatYourPassword")}
-              className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
+              className="w-full rounded-lg border border-(--border-strong) bg-(--surface-input) px-4 py-3 text-(--text-primary) transition-all duration-200 placeholder:text-(--text-placeholder) focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
               value={form.confirmPassword}
               onChange={(event) =>
@@ -249,11 +249,9 @@ export default function PageClient({ oauthProviders, locale }: Props) {
       {oauthProviders.length > 0 && (
         <>
           <div className="my-6 flex items-center gap-4">
-            <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-700" />
-            <span className="text-sm text-zinc-400 dark:text-zinc-500">
-              {t("or")}
-            </span>
-            <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-700" />
+            <div className="h-px flex-1 bg-(--border-default)" />
+            <span className="text-(--text-placeholder) text-sm">{t("or")}</span>
+            <div className="h-px flex-1 bg-(--border-default)" />
           </div>
 
           <div className="flex flex-col gap-3">
@@ -265,7 +263,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
                   key={provider}
                   type="button"
                   onClick={() => void handleLoginWithOauth(provider)}
-                  className="flex w-full items-center justify-center gap-3 rounded-lg border border-zinc-300 bg-white px-4 py-3 font-medium text-zinc-900 transition-all duration-200 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
+                  className="flex w-full items-center justify-center gap-3 rounded-lg border border-(--border-strong) bg-(--surface-input) px-4 py-3 font-medium text-(--text-primary) transition-all duration-200 hover:bg-(--surface-hover)"
                 >
                   <Icon className="h-5 w-5" />
                   {t("continueWith", { provider: config.label })}

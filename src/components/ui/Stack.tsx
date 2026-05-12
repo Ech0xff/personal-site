@@ -24,7 +24,7 @@ export default function Stack({
   return (
     <div
       className={cn(
-        "divide-zinc-200 border-zinc-200 dark:divide-zinc-800 dark:border-zinc-800",
+        "divide-(--border-default) border-(--border-default)",
         divideClass,
         layoutClass,
         className,
