@@ -2,10 +2,9 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { cacheTag } from "next/cache";
 import { cookies } from "next/headers";
-
+import ToastWatcher from "@/components/features/ToastWatcher";
 import { ImageViewer } from "@/components/ui/ImageViewer";
 import ModalProvider from "@/components/ui/ModalProvider";
-import ToastWatcher from "@/features/toast-watcher";
 import { CACHE_TAGS } from "@/lib/server/cache";
 import { CONFIG_KEYS } from "@/lib/shared/config";
 import { routing } from "@/lib/shared/i18n/routing";
@@ -16,12 +15,13 @@ import "@/styles/tailwind.css";
 import "@/styles/variables.scss";
 import { Suspense } from "react";
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
 interface LayoutProps {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
+}
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
 }
 
 export async function generateMetadata({
