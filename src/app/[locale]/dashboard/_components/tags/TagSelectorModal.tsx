@@ -2,10 +2,10 @@
 
 import { Search, Tag, X } from "lucide-react";
 import { type KeyboardEvent, useMemo, useState } from "react";
-import { useModal } from "@/components/ui/ModalProvider";
-import Stack from "@/components/ui/Stack";
-import { cn } from "@/lib/shared/utils";
-import type { TagWithCount } from "@/types";
+import { useModal } from "#components/ui/ModalProvider";
+import Stack from "#components/ui/Stack";
+import { cn } from "#lib/shared/utils";
+import type { TagWithCount } from "#types";
 
 export type TagSelectorFilterMode = "all" | "unselected" | "selected";
 

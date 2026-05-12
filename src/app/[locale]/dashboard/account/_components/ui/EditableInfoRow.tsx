@@ -3,7 +3,7 @@
 import { Check, X } from "lucide-react";
 import { useRef, useState } from "react";
 
-import Stack from "@/components/ui/Stack";
+import Stack from "#components/ui/Stack";
 
 type EditableInfoRowProps = {
   label: string;

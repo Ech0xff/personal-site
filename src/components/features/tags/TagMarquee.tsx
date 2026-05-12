@@ -4,7 +4,7 @@ import { Tag } from "lucide-react";
 import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
 
-import type { TagWithCount } from "@/types";
+import type { TagWithCount } from "#types";
 
 import { getTagMarqueeDuration } from "./tag-marquee-utils";
 

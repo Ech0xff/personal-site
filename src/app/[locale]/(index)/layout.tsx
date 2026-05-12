@@ -8,18 +8,18 @@ import {
 import { cacheTag } from "next/cache";
 import type React from "react";
 
-import GlobalSearchTrigger from "@/components/features/search/GlobalSearchTrigger";
-import LanguageToggle from "@/components/shared/LanguageToggle";
-import ThemeToggle from "@/components/shared/ThemeToggle";
-import DropdownPopover from "@/components/ui/DropdownPopover";
-import FooterSection from "@/components/ui/FooterSection";
-import Link from "@/components/ui/Link";
-import Stack from "@/components/ui/Stack";
-import { CACHE_TAGS } from "@/lib/server/cache";
-import { CONFIG_KEYS } from "@/lib/shared/config";
-import { getT } from "@/lib/shared/i18n/tools";
-import { fetchConfigs } from "@/lib/shared/services";
-import { cn } from "@/lib/shared/utils";
+import GlobalSearchTrigger from "#components/features/search/GlobalSearchTrigger";
+import LanguageToggle from "#components/shared/LanguageToggle";
+import ThemeToggle from "#components/shared/ThemeToggle";
+import DropdownPopover from "#components/ui/DropdownPopover";
+import FooterSection from "#components/ui/FooterSection";
+import Link from "#components/ui/Link";
+import Stack from "#components/ui/Stack";
+import { CACHE_TAGS } from "#lib/server/cache";
+import { CONFIG_KEYS } from "#lib/shared/config";
+import { getT } from "#lib/shared/i18n/tools";
+import { fetchConfigs } from "#lib/shared/services";
+import { cn } from "#lib/shared/utils";
 
 import LayoutClient from "./_components/LayoutClient";
 import "./layout.scss";

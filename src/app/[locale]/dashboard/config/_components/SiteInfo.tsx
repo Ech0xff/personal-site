@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-import CodeMirrorEditor from "@/components/ui/CodeMirrorEditor";
-import { CONFIG_KEYS } from "@/lib/shared/config";
+import CodeMirrorEditor from "#components/ui/CodeMirrorEditor";
+import { CONFIG_KEYS } from "#lib/shared/config";
 import useConfig from "../_hooks/useConfig";
 import EditorShell from "./EditorShell";
 

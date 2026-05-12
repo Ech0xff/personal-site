@@ -9,8 +9,8 @@ import {
   isValidImageFile,
   saveThoughtByBrowser,
   uploadImageByBrowser,
-} from "@/lib/client/services";
-import type { Status } from "@/types";
+} from "#lib/client/services";
+import type { Status } from "#types";
 
 export type ViewMode = "edit" | "preview" | "split";
 const DEFAULT_VIEW_MODE: ViewMode = "split";

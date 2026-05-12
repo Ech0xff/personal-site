@@ -1,8 +1,8 @@
 import type React from "react";
 
-import Stack from "@/components/ui/Stack";
-import type { ConfigValue } from "@/lib/shared/config";
-import { cn } from "@/lib/shared/utils";
+import Stack from "#components/ui/Stack";
+import type { ConfigValue } from "#lib/shared/config";
+import { cn } from "#lib/shared/utils";
 
 import Typewriter from "./Typewriter";
 import "./index.scss";

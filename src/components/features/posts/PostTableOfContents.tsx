@@ -3,8 +3,8 @@
 import { List } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import type { MarkdownHeading } from "@/lib/shared/utils/markdown";
-import { cn } from "@/lib/shared/utils/tailwind";
+import type { MarkdownHeading } from "#lib/shared/utils/markdown";
+import { cn } from "#lib/shared/utils/tailwind";
 
 const ACTIVE_HEADING_OFFSET = 104;
 interface Props {

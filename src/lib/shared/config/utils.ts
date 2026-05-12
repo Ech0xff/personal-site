@@ -1,4 +1,4 @@
-import { type Locale, routing } from "@/lib/shared/i18n/routing";
+import { type Locale, routing } from "#lib/shared/i18n/routing";
 
 export const generatePlaylistUrl = (
   playlistUrl: string,

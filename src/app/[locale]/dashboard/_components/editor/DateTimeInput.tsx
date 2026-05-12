@@ -3,10 +3,7 @@
 import { CalendarDays } from "lucide-react";
 import { useEffect, useMemo, useRef } from "react";
 
-import {
-  datetimeLocalToUtcIso,
-  toDatetimeLocalValue,
-} from "@/lib/shared/utils";
+import { datetimeLocalToUtcIso, toDatetimeLocalValue } from "#lib/shared/utils";
 
 type DateTimeInputProps = {
   value: string;

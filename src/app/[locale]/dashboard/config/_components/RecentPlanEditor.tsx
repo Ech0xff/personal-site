@@ -1,8 +1,8 @@
 "use client";
 
 import { Check, CircleDashed, Clock, Plus, Trash2, X } from "lucide-react";
-import { CONFIG_KEYS, type RecentPlan } from "@/lib/shared/config";
-import { cn } from "@/lib/shared/utils";
+import { CONFIG_KEYS, type RecentPlan } from "#lib/shared/config";
+import { cn } from "#lib/shared/utils";
 
 import useConfig from "../_hooks/useConfig";
 import EditorShell from "./EditorShell";

@@ -1,7 +1,7 @@
-export type { SearchRpcRow } from "@/lib/shared/services/rpcs";
+export type { SearchRpcRow } from "#lib/shared/services/rpcs";
 
-import type { SearchRpcRow } from "@/lib/shared/services/rpcs";
-import { toPreviewText } from "@/lib/shared/utils";
+import type { SearchRpcRow } from "#lib/shared/services/rpcs";
+import { toPreviewText } from "#lib/shared/utils";
 
 import { fetchSearchContentByBrowser } from "./rpcs";
 import {

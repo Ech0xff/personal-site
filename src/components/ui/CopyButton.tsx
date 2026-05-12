@@ -4,7 +4,7 @@ import { Check, Copy } from "lucide-react";
 import { type ButtonHTMLAttributes, useState } from "react";
 import { toast } from "sonner";
 
-import { cn } from "@/lib/shared/utils";
+import { cn } from "#lib/shared/utils";
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   content?: string;

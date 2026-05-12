@@ -1,10 +1,10 @@
 import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
-import { CACHE_TAGS } from "@/lib/server/cache";
-import { makeServerClient } from "@/lib/server/supabase";
-import { fetchPosts } from "@/lib/shared/services";
-import { getUserStatus } from "@/lib/shared/utils/tools";
+import { CACHE_TAGS } from "#lib/server/cache";
+import { makeServerClient } from "#lib/server/supabase";
+import { fetchPosts } from "#lib/shared/services";
+import { getUserStatus } from "#lib/shared/utils/tools";
 
 export async function POST() {
   const client = await makeServerClient();

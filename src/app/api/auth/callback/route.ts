@@ -1,10 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { makeAdminClient, makeServerClient } from "@/lib/server/supabase";
-import { getPreferredLocale } from "@/lib/shared/i18n";
-import { getLocalizedRoutes } from "@/lib/shared/routes";
-import { hasEmailIdentity } from "@/lib/shared/utils/tools";
-import { appendToastToUrl } from "@/lib/shared/utils/url-toast";
+import { makeAdminClient, makeServerClient } from "#lib/server/supabase";
+import { getPreferredLocale } from "#lib/shared/i18n";
+import { getLocalizedRoutes } from "#lib/shared/routes";
+import { hasEmailIdentity } from "#lib/shared/utils/tools";
+import { appendToastToUrl } from "#lib/shared/utils/url-toast";
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);

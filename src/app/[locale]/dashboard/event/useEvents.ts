@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { fetchEventsByBrowser } from "@/lib/client/services";
-import type { EventWithTags as DashboardEvent, Status } from "@/types";
+import { fetchEventsByBrowser } from "#lib/client/services";
+import type { EventWithTags as DashboardEvent, Status } from "#types";
 
 export const useEvents = () => {
   const [events, setEvents] = useState<DashboardEvent[]>([]);

@@ -2,10 +2,10 @@
 
 import { useCallback } from "react";
 
-import ThoughtTimeline from "@/components/features/thoughts/ThoughtTimeline";
-import { useModal } from "@/components/ui/ModalProvider";
-import { useCurrentLocale } from "@/lib/client/locale";
-import { updateThoughtStatusByBrowser } from "@/lib/client/services";
+import ThoughtTimeline from "#components/features/thoughts/ThoughtTimeline";
+import { useModal } from "#components/ui/ModalProvider";
+import { useCurrentLocale } from "#lib/client/locale";
+import { updateThoughtStatusByBrowser } from "#lib/client/services";
 
 import OpenEditorButton from "../_components/editor/OpenEditorButton";
 import DashboardShell from "../_components/layout/DashboardShell";

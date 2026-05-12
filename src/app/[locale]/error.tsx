@@ -2,8 +2,8 @@
 
 import { AlertTriangle, Home } from "lucide-react";
 
-import Link from "@/components/ui/Link";
-import Stack from "@/components/ui/Stack";
+import Link from "#components/ui/Link";
+import Stack from "#components/ui/Stack";
 
 interface Props {
   error: Error & { digest?: string };

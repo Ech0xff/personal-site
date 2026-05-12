@@ -8,8 +8,8 @@ import {
   fetchPostByBrowser,
   fetchSummaryByBrowser,
   savePostByBrowser,
-} from "@/lib/client/services";
-import type { Status, TagWithCount } from "@/types";
+} from "#lib/client/services";
+import type { Status, TagWithCount } from "#types";
 
 export type ViewMode = "edit" | "preview" | "split";
 

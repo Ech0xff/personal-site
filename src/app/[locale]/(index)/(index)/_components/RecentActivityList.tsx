@@ -1,9 +1,9 @@
 import { CalendarDays, FileText, GitBranch, Lightbulb } from "lucide-react";
 
-import Link from "@/components/ui/Link";
-import { getT } from "@/lib/shared/i18n/tools";
-import { formatTime } from "@/lib/shared/utils";
-import type { RecentActivityItem } from "@/types";
+import Link from "#components/ui/Link";
+import { getT } from "#lib/shared/i18n/tools";
+import { formatTime } from "#lib/shared/utils";
+import type { RecentActivityItem } from "#types";
 
 type Props = {
   locale?: string;

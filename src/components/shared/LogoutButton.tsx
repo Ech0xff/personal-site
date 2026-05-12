@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import type { ComponentPropsWithoutRef } from "react";
 import { toast } from "sonner";
 
-import { useCurrentLocale } from "@/lib/client/locale";
-import { makeBrowserClient } from "@/lib/client/supabase";
-import { getLocalizedRoutes } from "@/lib/shared/routes";
+import { useCurrentLocale } from "#lib/client/locale";
+import { makeBrowserClient } from "#lib/client/supabase";
+import { getLocalizedRoutes } from "#lib/shared/routes";
 
 interface Props extends ComponentPropsWithoutRef<"button"> {
   className?: string;

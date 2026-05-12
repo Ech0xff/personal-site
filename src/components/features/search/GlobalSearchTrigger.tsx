@@ -10,18 +10,18 @@ import {
   useState,
 } from "react";
 
-import { useModal } from "@/components/ui/ModalProvider";
-import Stack from "@/components/ui/Stack";
-import { useCurrentLocale } from "@/lib/client/locale";
-import { searchContentByBrowser } from "@/lib/client/services";
+import { useModal } from "#components/ui/ModalProvider";
+import Stack from "#components/ui/Stack";
+import { useCurrentLocale } from "#lib/client/locale";
+import { searchContentByBrowser } from "#lib/client/services";
 import {
   getSearchHighlightSegments,
   normalizeSearchQuery,
   type SearchResult,
-} from "@/lib/client/services/search-utils";
-import { localizeHref } from "@/lib/shared/i18n";
-import { getT } from "@/lib/shared/i18n/tools";
-import { cn, formatTime } from "@/lib/shared/utils";
+} from "#lib/client/services/search-utils";
+import { localizeHref } from "#lib/shared/i18n";
+import { getT } from "#lib/shared/i18n/tools";
+import { cn, formatTime } from "#lib/shared/utils";
 
 interface Props {
   className?: string;

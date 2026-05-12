@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import LanguageToggle from "@/components/shared/LanguageToggle";
-import ThemeToggle from "@/components/shared/ThemeToggle";
-import { fetchConfigByServer } from "@/lib/server/services";
-import { makeServerClient } from "@/lib/server/supabase";
-import { CONFIG_KEYS } from "@/lib/shared/config";
-import { getT } from "@/lib/shared/i18n";
-import { getLocalizedRoutes } from "@/lib/shared/routes";
-import { getUserStatus } from "@/lib/shared/utils/tools";
+import LanguageToggle from "#components/shared/LanguageToggle";
+import ThemeToggle from "#components/shared/ThemeToggle";
+import { fetchConfigByServer } from "#lib/server/services";
+import { makeServerClient } from "#lib/server/supabase";
+import { CONFIG_KEYS } from "#lib/shared/config";
+import { getT } from "#lib/shared/i18n";
+import { getLocalizedRoutes } from "#lib/shared/routes";
+import { getUserStatus } from "#lib/shared/utils/tools";
 
 import PageClient from "./page.client";
 

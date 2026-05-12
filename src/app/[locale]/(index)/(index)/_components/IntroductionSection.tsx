@@ -1,12 +1,12 @@
 import { Check, CircleDashed, Clock, ListChecks, X } from "lucide-react";
-import ContentRenderer from "@/components/features/content/ContentRenderer";
-import ContributionCalendar from "@/components/features/contributions/ContributionCalendar";
-import TagMarquee from "@/components/features/tags/TagMarquee";
-import Stack from "@/components/ui/Stack";
-import type { RecentPlan } from "@/lib/shared/config";
-import { generatePlaylistUrl } from "@/lib/shared/config/utils";
-import { getT } from "@/lib/shared/i18n/tools";
-import type { BlogSummaryData, RecentActivityItem } from "@/types";
+import ContentRenderer from "#components/features/content/ContentRenderer";
+import ContributionCalendar from "#components/features/contributions/ContributionCalendar";
+import TagMarquee from "#components/features/tags/TagMarquee";
+import Stack from "#components/ui/Stack";
+import type { RecentPlan } from "#lib/shared/config";
+import { generatePlaylistUrl } from "#lib/shared/config/utils";
+import { getT } from "#lib/shared/i18n/tools";
+import type { BlogSummaryData, RecentActivityItem } from "#types";
 
 import Card from "./Card";
 import RecentActivityList from "./RecentActivityList";

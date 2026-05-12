@@ -1,6 +1,6 @@
 // consts.ts
-import SvgGithub from "@/components/icons/Github";
-import SvgGoogle from "@/components/icons/Google";
+import SvgGithub from "#components/icons/Github";
+import SvgGoogle from "#components/icons/Google";
 import type { ConfigKey, ConfigsMap, OAuthProvider } from "./types";
 
 export const CONFIG_KEYS = {

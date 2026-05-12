@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef } from "react";
 
-import { cn } from "@/lib/shared/utils/tailwind";
+import { cn } from "#lib/shared/utils/tailwind";
 
 interface Props extends ComponentPropsWithoutRef<"div"> {
   /** Image source URL. */

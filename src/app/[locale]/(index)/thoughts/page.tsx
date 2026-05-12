@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { cacheTag } from "next/cache";
 
-import ThoughtTimeline from "@/components/features/thoughts/ThoughtTimeline";
-import { CACHE_TAGS } from "@/lib/server/cache";
-import { getT } from "@/lib/shared/i18n/tools";
-import { fetchThoughts } from "@/lib/shared/services";
-import { makeStaticClient } from "@/lib/shared/supabase";
+import ThoughtTimeline from "#components/features/thoughts/ThoughtTimeline";
+import { CACHE_TAGS } from "#lib/server/cache";
+import { getT } from "#lib/shared/i18n/tools";
+import { fetchThoughts } from "#lib/shared/services";
+import { makeStaticClient } from "#lib/shared/supabase";
 
 import CollectionBody from "../_components/CollectionBody";
 

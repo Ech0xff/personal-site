@@ -6,14 +6,14 @@ import {
   deleteConfigByBrowser,
   fetchConfigsByBrowser,
   setConfigByBrowser,
-} from "@/lib/client/services";
+} from "#lib/client/services";
 import {
   type ConfigKey,
   type ConfigValue,
   DEFAULT_CONFIG,
-} from "@/lib/shared/config";
-import { generateConfigKey } from "@/lib/shared/config/utils";
-import { type Locale, routing } from "@/lib/shared/i18n/routing";
+} from "#lib/shared/config";
+import { generateConfigKey } from "#lib/shared/config/utils";
+import { type Locale, routing } from "#lib/shared/i18n/routing";
 
 type UseConfigOptions<K extends ConfigKey> = {
   key: K;

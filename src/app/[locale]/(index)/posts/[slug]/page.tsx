@@ -1,15 +1,15 @@
 import { ArrowLeft, Calendar, User } from "lucide-react";
 import type { Metadata } from "next";
 import { cacheTag } from "next/cache";
-import { PostContent } from "@/components/features/content";
-import PostTableOfContents from "@/components/features/posts/PostTableOfContents";
-import ScrollToTopButton from "@/components/shared/ScrollToTopButton";
-import CopyButton from "@/components/ui/CopyButton";
-import Link from "@/components/ui/Link";
-import { CACHE_TAGS } from "@/lib/server/cache";
-import { getT } from "@/lib/shared/i18n/tools";
-import { fetchPost } from "@/lib/shared/services";
-import { formatTime, getMarkdownHeadings } from "@/lib/shared/utils";
+import { PostContent } from "#components/features/content";
+import PostTableOfContents from "#components/features/posts/PostTableOfContents";
+import ScrollToTopButton from "#components/shared/ScrollToTopButton";
+import CopyButton from "#components/ui/CopyButton";
+import Link from "#components/ui/Link";
+import { CACHE_TAGS } from "#lib/server/cache";
+import { getT } from "#lib/shared/i18n/tools";
+import { fetchPost } from "#lib/shared/services";
+import { formatTime, getMarkdownHeadings } from "#lib/shared/utils";
 
 const getPostData = async (slug: string) => {
   "use cache";

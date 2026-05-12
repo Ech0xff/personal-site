@@ -4,12 +4,12 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { Toaster, toast } from "sonner";
 
-import { useCurrentLocale } from "@/lib/client/locale";
-import { getT } from "@/lib/shared/i18n";
+import { useCurrentLocale } from "#lib/client/locale";
+import { getT } from "#lib/shared/i18n";
 import {
   readToastFromSearchParams,
   type ToastType,
-} from "@/lib/shared/utils/url-toast";
+} from "#lib/shared/utils/url-toast";
 
 export default function ToastWatcher() {
   const searchParams = useSearchParams();

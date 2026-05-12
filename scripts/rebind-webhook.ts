@@ -1,4 +1,4 @@
-import { makeAdminClient } from "@/lib/server/supabase";
+import { makeAdminClient } from "#lib/server/supabase";
 
 import { askInput, checkYes, loadEnvByPath, requireEnvVars } from "./common";
 

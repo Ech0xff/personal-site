@@ -5,10 +5,10 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { makeBrowserClient } from "@/lib/client/supabase";
-import { type OAuthProvider, providerConfig } from "@/lib/shared/config";
-import { getT } from "@/lib/shared/i18n";
-import { getLocalizedRoutes } from "@/lib/shared/routes";
+import { makeBrowserClient } from "#lib/client/supabase";
+import { type OAuthProvider, providerConfig } from "#lib/shared/config";
+import { getT } from "#lib/shared/i18n";
+import { getLocalizedRoutes } from "#lib/shared/routes";
 
 interface Props {
   oauthProviders: OAuthProvider[];

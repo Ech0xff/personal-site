@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { cacheTag } from "next/cache";
 
-import EventTimeline from "@/components/features/events/EventTimeline";
-import { CACHE_TAGS } from "@/lib/server/cache";
-import { getT } from "@/lib/shared/i18n/tools";
-import { fetchEvents } from "@/lib/shared/services";
-import { makeStaticClient } from "@/lib/shared/supabase";
+import EventTimeline from "#components/features/events/EventTimeline";
+import { CACHE_TAGS } from "#lib/server/cache";
+import { getT } from "#lib/shared/i18n/tools";
+import { fetchEvents } from "#lib/shared/services";
+import { makeStaticClient } from "#lib/shared/supabase";
 
 import CollectionBody from "../_components/CollectionBody";
 

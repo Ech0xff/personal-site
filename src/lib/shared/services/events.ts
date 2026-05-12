@@ -6,7 +6,7 @@ import type {
   EventUpdate,
   EventWithTags,
   Status,
-} from "@/types";
+} from "#types";
 
 import { makeStaticClient } from "../supabase";
 import { formatTags } from "./utils";

@@ -1,8 +1,8 @@
 "use client";
 import { Monitor, Moon, Sun } from "lucide-react";
 
-import { toggleTheme } from "@/lib/client/theme";
-import { cn } from "@/lib/shared/utils";
+import { toggleTheme } from "#lib/client/theme";
+import { cn } from "#lib/shared/utils";
 
 export default function ThemeToggle({ className }: { className?: string }) {
   const toggleHandler = () => toggleTheme();

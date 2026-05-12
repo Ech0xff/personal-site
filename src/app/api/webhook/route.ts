@@ -1,7 +1,7 @@
 import { revalidateTag } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
 
-import { CACHE_TAGS, TABLE_CACHE_TAGS } from "@/lib/server/cache";
+import { CACHE_TAGS, TABLE_CACHE_TAGS } from "#lib/server/cache";
 
 export async function POST(request: NextRequest) {
   const authHeader = request.headers.get("Authorization");

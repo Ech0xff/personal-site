@@ -3,11 +3,11 @@
 import { LoaderCircle, Save, Trash2, X } from "lucide-react";
 import { type HTMLAttributes, useState } from "react";
 
-import Button from "@/components/ui/Button";
-import { useModal } from "@/components/ui/ModalProvider";
-import SegmentedToggle from "@/components/ui/SegmentedToggle";
-import { type Locale, routing } from "@/lib/shared/i18n/routing";
-import { cn } from "@/lib/shared/utils";
+import Button from "#components/ui/Button";
+import { useModal } from "#components/ui/ModalProvider";
+import SegmentedToggle from "#components/ui/SegmentedToggle";
+import { type Locale, routing } from "#lib/shared/i18n/routing";
+import { cn } from "#lib/shared/utils";
 
 export type ConfigField = {
   key: string;

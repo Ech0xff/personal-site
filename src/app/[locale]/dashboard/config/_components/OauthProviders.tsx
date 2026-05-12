@@ -2,8 +2,8 @@ import {
   CONFIG_KEYS,
   type OAuthProvider,
   providerConfig,
-} from "@/lib/shared/config";
-import { cn } from "@/lib/shared/utils";
+} from "#lib/shared/config";
+import { cn } from "#lib/shared/utils";
 
 import useConfig from "../_hooks/useConfig";
 import EditorShell from "./EditorShell";

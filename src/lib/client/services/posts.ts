@@ -4,8 +4,8 @@ import {
   fetchPosts,
   savePost,
   updatePostStatus,
-} from "@/lib/shared/services";
-import type { PostInsert, Status } from "@/types";
+} from "#lib/shared/services";
+import type { PostInsert, Status } from "#types";
 
 import { makeBrowserClient } from "../supabase";
 

@@ -12,14 +12,14 @@ import {
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import LogoutButton from "@/components/shared/LogoutButton";
-import ThemeToggle from "@/components/shared/ThemeToggle";
-import DropdownPopover from "@/components/ui/DropdownPopover";
-import Stack from "@/components/ui/Stack";
-import { makeServerClient } from "@/lib/server/supabase";
-import { getLocalizedRoutes } from "@/lib/shared/routes";
-import { cn } from "@/lib/shared/utils/tailwind";
-import { getUserStatus } from "@/lib/shared/utils/tools";
+import LogoutButton from "#components/shared/LogoutButton";
+import ThemeToggle from "#components/shared/ThemeToggle";
+import DropdownPopover from "#components/ui/DropdownPopover";
+import Stack from "#components/ui/Stack";
+import { makeServerClient } from "#lib/server/supabase";
+import { getLocalizedRoutes } from "#lib/shared/routes";
+import { cn } from "#lib/shared/utils/tailwind";
+import { getUserStatus } from "#lib/shared/utils/tools";
 
 import DashboardModalOptions from "./_components/DashboardModalOptions";
 

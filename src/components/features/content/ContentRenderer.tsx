@@ -11,7 +11,7 @@ import rehypePrism from "rehype-prism-plus";
 import remarkDirective from "remark-directive";
 import remarkGfm from "remark-gfm";
 
-import { cn, rehypeHeadingIds } from "@/lib/shared/utils";
+import { cn, rehypeHeadingIds } from "#lib/shared/utils";
 import {
   DirectiveRender,
   remarkContentNodes,

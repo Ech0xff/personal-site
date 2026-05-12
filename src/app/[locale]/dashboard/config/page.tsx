@@ -5,10 +5,10 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import Button from "@/components/ui/Button";
-import { useModal } from "@/components/ui/ModalProvider";
-import Stack from "@/components/ui/Stack";
-import { cn } from "@/lib/shared/utils";
+import Button from "#components/ui/Button";
+import { useModal } from "#components/ui/ModalProvider";
+import Stack from "#components/ui/Stack";
+import { cn } from "#lib/shared/utils";
 
 import DashboardShell from "../_components/layout/DashboardShell";
 import AboutMe from "./_components/AboutMe";

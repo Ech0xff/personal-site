@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { compressToWebp, computeHash } from "@/lib/shared/utils";
-import type { Database } from "@/types";
+import { compressToWebp, computeHash } from "#lib/shared/utils";
+import type { Database } from "#types";
 
 import { makeStaticClient } from "../supabase";
 

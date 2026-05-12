@@ -2,12 +2,12 @@
 
 import { type ReactNode, useCallback } from "react";
 
-import TagsList from "@/components/features/posts/TagsList";
-import Link from "@/components/ui/Link";
-import { useModal } from "@/components/ui/ModalProvider";
-import Stack from "@/components/ui/Stack";
-import { updatePostStatusByBrowser } from "@/lib/client/services";
-import { cn, formatTime } from "@/lib/shared/utils";
+import TagsList from "#components/features/posts/TagsList";
+import Link from "#components/ui/Link";
+import { useModal } from "#components/ui/ModalProvider";
+import Stack from "#components/ui/Stack";
+import { updatePostStatusByBrowser } from "#lib/client/services";
+import { cn, formatTime } from "#lib/shared/utils";
 
 import OpenEditorButton from "../_components/editor/OpenEditorButton";
 import DashboardShell from "../_components/layout/DashboardShell";

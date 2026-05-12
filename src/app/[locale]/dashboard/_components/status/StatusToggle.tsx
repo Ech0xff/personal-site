@@ -4,8 +4,8 @@ import { useTransition } from "react";
 
 import { toast } from "sonner";
 
-import SegmentedToggle from "@/components/ui/SegmentedToggle";
-import type { Status } from "@/types";
+import SegmentedToggle from "#components/ui/SegmentedToggle";
+import type { Status } from "#types";
 
 interface StatusToggleProps {
   status: Status;

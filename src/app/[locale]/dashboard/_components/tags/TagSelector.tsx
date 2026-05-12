@@ -2,8 +2,8 @@
 
 import { Tag } from "lucide-react";
 
-import Button from "@/components/ui/Button";
-import { useModal } from "@/components/ui/ModalProvider";
+import Button from "#components/ui/Button";
+import { useModal } from "#components/ui/ModalProvider";
 
 import TagSelectorModal, { type TagSelectorProps } from "./TagSelectorModal";
 
