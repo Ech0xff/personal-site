@@ -1,13 +1,16 @@
 @use "../../../../../../styles/mixins" as *;
 
-:root {
-  --grid-main: rgba(24, 24, 27, 0.1);
-  --grid-sub: rgba(24, 24, 27, 0.04);
-  @include theme-controller {
-    --grid-main: rgba(244, 244, 245, 0.1);
-    --grid-sub: rgba(244, 244, 245, 0.03);
-  }
-}
+$grid-theme-light: (
+  grid-main: rgba(24, 24, 27, 0.1),
+  grid-sub: rgba(24, 24, 27, 0.04),
+);
+
+$grid-theme-dark: (
+  grid-main: rgba(244, 244, 245, 0.1),
+  grid-sub: rgba(244, 244, 245, 0.03),
+);
+
+@include emit-themed-vars($grid-theme-light, $grid-theme-dark);
 
 @keyframes scroll-grid {
   0% {

@@ -50,7 +50,7 @@ export default function CopyButton({
       title={idleLabel}
       aria-label={idleLabel}
       className={cn(
-        "inline-flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1 font-medium transition-colors hover:bg-zinc-200/80 focus:outline-none dark:hover:bg-zinc-700/80",
+        "inline-flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1 font-medium transition-colors hover:bg-(--surface-hover) focus:outline-none",
         className,
       )}
       {...props}

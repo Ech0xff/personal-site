@@ -100,7 +100,7 @@ export default function TagsPage() {
       <Stack y className="flex-1 gap-4">
         <Stack
           x
-          className="items-center justify-between gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
+          className="items-center justify-between gap-3 rounded-xl border border-(--border-default) bg-(--surface-card) px-4 py-3 text-(--text-secondary) text-sm"
         >
           <Stack x className="items-center gap-2">
             <Tags className="h-4 w-4" />
@@ -112,7 +112,7 @@ export default function TagsPage() {
             type="button"
             onClick={openCreateModal}
             disabled={saving}
-            className="inline-flex items-center gap-1 rounded border border-zinc-200 px-2 py-1 font-medium text-zinc-700 transition-colors hover:border-zinc-300 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:bg-zinc-800"
+            className="inline-flex items-center gap-1 rounded border border-(--border-default) px-2 py-1 font-medium text-(--text-secondary) transition-colors hover:border-(--border-strong) hover:bg-(--surface-hover)"
           >
             <Plus className="h-4 w-4" />
             Add tag
@@ -131,24 +131,24 @@ export default function TagsPage() {
         <div className="fixed inset-0 z-50 grid place-items-center bg-zinc-950/40 px-4 backdrop-blur-sm">
           <Stack
             y
-            className="w-full max-w-md gap-4 rounded-lg border border-zinc-200 bg-white p-5 shadow-xl dark:border-zinc-800 dark:bg-zinc-950"
+            className="w-full max-w-md gap-4 rounded-lg border border-(--border-default) bg-(--surface-panel) p-5 shadow-xl"
             role="dialog"
             aria-modal="true"
             aria-label={isEditing ? "Edit tag" : "Add tag"}
           >
             <Stack x className="items-center justify-between gap-3">
               <Stack y>
-                <h2 className="font-semibold text-lg text-zinc-900 dark:text-zinc-100">
+                <h2 className="font-semibold text-(--text-primary) text-lg">
                   {isEditing ? "Edit tag" : "Add tag"}
                 </h2>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                <p className="text-(--text-muted) text-sm">
                   Update name and meta fields.
                 </p>
               </Stack>
               <button
                 type="button"
                 onClick={closeModal}
-                className="rounded p-1 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+                className="rounded p-1 text-(--text-muted) transition-colors hover:bg-(--surface-hover) hover:text-(--text-primary)"
                 aria-label="Close"
               >
                 <X className="h-5 w-5" />
@@ -159,7 +159,7 @@ export default function TagsPage() {
               <Stack y className="gap-1">
                 <label
                   htmlFor="tag-id"
-                  className="font-medium text-sm text-zinc-700 dark:text-zinc-300"
+                  className="font-medium text-(--text-secondary) text-sm"
                 >
                   ID
                 </label>
@@ -167,7 +167,7 @@ export default function TagsPage() {
                   id="tag-id"
                   value={tagForm.id}
                   readOnly
-                  className="rounded border border-zinc-200 bg-zinc-100 px-3 py-2 text-sm text-zinc-500 outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400"
+                  className="rounded border border-(--border-default) bg-(--surface-muted) px-3 py-2 text-(--text-muted) text-sm outline-none"
                 />
               </Stack>
             ) : null}
@@ -175,7 +175,7 @@ export default function TagsPage() {
             <Stack y className="gap-1">
               <label
                 htmlFor="tag-name"
-                className="font-medium text-sm text-zinc-700 dark:text-zinc-300"
+                className="font-medium text-(--text-secondary) text-sm"
               >
                 Name
               </label>
@@ -187,7 +187,7 @@ export default function TagsPage() {
                     form ? { ...form, name: event.target.value } : form,
                   )
                 }
-                className="rounded border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors focus:border-blue-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
+                className="rounded border border-(--border-default) bg-(--surface-input) px-3 py-2 text-(--text-primary) text-sm outline-none transition-colors focus:border-blue-500"
                 placeholder="Tag name"
               />
             </Stack>
@@ -195,7 +195,7 @@ export default function TagsPage() {
             <Stack y className="gap-1">
               <label
                 htmlFor="tag-meta"
-                className="font-medium text-sm text-zinc-700 dark:text-zinc-300"
+                className="font-medium text-(--text-secondary) text-sm"
               >
                 Meta
               </label>
@@ -207,7 +207,7 @@ export default function TagsPage() {
                     form ? { ...form, meta: event.target.value } : form,
                   )
                 }
-                className="min-h-36 resize-y rounded border border-zinc-200 bg-white px-3 py-2 font-mono text-sm text-zinc-900 outline-none transition-colors focus:border-blue-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
+                className="min-h-36 resize-y rounded border border-(--border-default) bg-(--surface-input) px-3 py-2 font-mono text-(--text-primary) text-sm outline-none transition-colors focus:border-blue-500"
                 spellCheck={false}
               />
             </Stack>
@@ -220,7 +220,7 @@ export default function TagsPage() {
               <button
                 type="button"
                 onClick={closeModal}
-                className="rounded border border-zinc-200 px-3 py-2 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-900"
+                className="rounded border border-(--border-default) px-3 py-2 text-(--text-secondary) text-sm transition-colors hover:bg-(--surface-hover)"
               >
                 Cancel
               </button>
@@ -228,7 +228,7 @@ export default function TagsPage() {
                 type="button"
                 onClick={saveTag}
                 disabled={saving}
-                className="inline-flex items-center gap-2 rounded bg-zinc-900 px-3 py-2 text-sm text-white transition-colors hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
+                className="inline-flex items-center gap-2 rounded bg-(--surface-inverse) px-3 py-2 text-(--text-inverse) text-sm transition-colors hover:bg-(--surface-inverse-hover)"
               >
                 <Save className="h-4 w-4" />
                 {saving ? "Saving..." : "Save"}
