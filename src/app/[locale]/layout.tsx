@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { cacheTag } from "next/cache";
 import { cookies } from "next/headers";
 import ToastWatcher from "#components/features/ToastWatcher";
+import { ThemeHelper, ThemeProvider } from "#components/providers/theme";
 import { ImageViewer } from "#components/ui/ImageViewer";
 import ModalProvider from "#components/ui/ModalProvider";
 import { CACHE_TAGS } from "#lib/server/cache";
@@ -68,15 +69,18 @@ async function ConfigShell({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
-  const theme = cookieStore.get("theme")?.value || "system";
+  const theme = ThemeHelper.format(cookieStore.get("theme")?.value);
+
   return (
     <html className={theme} lang={locale}>
       <body style={{ anchorName: "--body" }}>
-        <ModalProvider>
-          <ToastWatcher />
-          <SpeedInsights />
-          <ImageViewer>{children}</ImageViewer>
-        </ModalProvider>
+        <ThemeProvider initialTheme={theme}>
+          <ModalProvider>
+            <ToastWatcher />
+            <SpeedInsights />
+            <ImageViewer>{children}</ImageViewer>
+          </ModalProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

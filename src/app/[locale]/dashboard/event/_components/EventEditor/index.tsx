@@ -3,6 +3,7 @@
 import { Save, X } from "lucide-react";
 
 import EventCard from "#components/features/events/EventCard";
+import CodeMirrorEditor from "#components/ui/CodeMirrorEditor";
 import SegmentedToggle from "#components/ui/SegmentedToggle";
 import Stack from "#components/ui/Stack";
 import { useCurrentLocale } from "#lib/client/locale";
@@ -140,18 +141,15 @@ export default function EventEditor({
           <Stack
             y
             divide={true}
-            className="flex-1 overflow-hidden p-0! *:flex-1 *:overflow-auto *:p-4"
+            className="flex-1 overflow-hidden p-0! *:flex-1 *:overflow-auto"
           >
-            <Stack x>
-              <textarea
-                value={form.content}
-                onChange={(e) => updateForm({ content: e.target.value })}
-                placeholder="Event content..."
-                className="w-full resize-none rounded-lg bg-transparent text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
-              />
-            </Stack>
+            <CodeMirrorEditor
+              value={form.content}
+              onChange={(content) => updateForm({ content })}
+              placeholder="Event content..."
+            />
 
-            <Stack x>
+            <Stack x className="p-4">
               <EventCard event={form} locale={locale} />
             </Stack>
           </Stack>
