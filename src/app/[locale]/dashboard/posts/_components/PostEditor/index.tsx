@@ -2,6 +2,7 @@
 
 import { Edit, Eye, Save, X } from "lucide-react";
 import { PostContent } from "#components/features/content";
+import CodeMirrorEditor from "#components/ui/CodeMirrorEditor";
 import DropdownPopover from "#components/ui/DropdownPopover";
 import SegmentedToggle from "#components/ui/SegmentedToggle";
 import Stack from "#components/ui/Stack";
@@ -154,7 +155,7 @@ export default function PostEditor({
             <Stack
               y
               divide={true}
-              className={`overflow-hidden *:p-4 ${
+              className={`overflow-hidden ${
                 viewMode === "preview"
                   ? "hidden"
                   : viewMode === "split"
@@ -163,7 +164,7 @@ export default function PostEditor({
               }`}
             >
               {/* Editor Header */}
-              <Stack y className="shrink-0 gap-3">
+              <Stack y className="shrink-0 gap-3 p-4">
                 {/* Title Input */}
                 <input
                   value={form.title}
@@ -216,14 +217,13 @@ export default function PostEditor({
               </Stack>
 
               {/* Content Editor */}
-              <div className="min-h-0 flex-1">
-                <textarea
-                  value={form.content}
-                  onChange={(e) => updateForm({ content: e.target.value })}
-                  placeholder="Write your post content using Markdown..."
-                  className="h-full w-full resize-none bg-transparent font-mono text-zinc-900 leading-relaxed outline-none placeholder:text-zinc-400 dark:text-zinc-100"
-                />
-              </div>
+
+              <CodeMirrorEditor
+                value={form.content}
+                onChange={(content) => updateForm({ content })}
+                className="min-h-0 flex-1"
+                placeholder="Write your post content using Markdown..."
+              />
             </Stack>
 
             {/* Right: Preview Panel */}
