@@ -2,7 +2,7 @@
 
 import { Edit, Eye, Save, X } from "lucide-react";
 import { PostContent } from "#components/features/content";
-import CodeMirrorEditor from "#components/ui/CodeMirrorEditor";
+import { MarkdownEditor } from "#components/ui/codemirror";
 import DropdownPopover from "#components/ui/DropdownPopover";
 import SegmentedToggle from "#components/ui/SegmentedToggle";
 import Stack from "#components/ui/Stack";
@@ -218,8 +218,9 @@ export default function PostEditor({
 
               {/* Content Editor */}
 
-              <CodeMirrorEditor
+              <MarkdownEditor
                 value={form.content}
+                mode="live"
                 onChange={(content) => updateForm({ content })}
                 className="min-h-0 flex-1"
                 placeholder="Write your post content using Markdown..."

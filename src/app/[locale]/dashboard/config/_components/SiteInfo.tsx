@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import CodeMirrorEditor from "#components/ui/CodeMirrorEditor";
+import { JsonEditor } from "#components/ui/codemirror";
 import { CONFIG_KEYS } from "#lib/shared/config";
 import useConfig from "../_hooks/useConfig";
 import EditorShell from "./EditorShell";
@@ -48,7 +48,7 @@ export default function SiteInfo() {
     >
       <div className="flex min-h-0 flex-1 flex-col gap-2">
         <div className="min-h-0 flex-1 overflow-hidden rounded-lg">
-          <CodeMirrorEditor
+          <JsonEditor
             value={content}
             onChange={setContent}
             className="h-full min-h-0 overflow-auto"

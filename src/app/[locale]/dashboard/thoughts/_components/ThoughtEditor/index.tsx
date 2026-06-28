@@ -3,7 +3,7 @@
 import { Edit, Save, Upload, X } from "lucide-react";
 
 import ThoughtCard from "#components/features/thoughts/ThoughtCard";
-import CodeMirrorEditor from "#components/ui/CodeMirrorEditor";
+import { MarkdownEditor } from "#components/ui/codemirror";
 import DropdownPopover from "#components/ui/DropdownPopover";
 import Image from "#components/ui/Image";
 import SegmentedToggle from "#components/ui/SegmentedToggle";
@@ -167,11 +167,12 @@ export default function ThoughtEditor({
             >
               {/* Content and Upload Button Row */}
               <Stack y className="min-h-0 flex-1 gap-2">
-                <CodeMirrorEditor
+                <MarkdownEditor
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
                   value={form.content}
+                  mode="live"
                   onChange={(content) => updateForm({ content })}
                   placeholder="What's on your mind..."
                 />
