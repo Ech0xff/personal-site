@@ -3,7 +3,7 @@
 import { Save, X } from "lucide-react";
 
 import EventCard from "#components/features/events/EventCard";
-import CodeMirrorEditor from "#components/ui/CodeMirrorEditor";
+import { MarkdownEditor } from "#components/ui/codemirror";
 import SegmentedToggle from "#components/ui/SegmentedToggle";
 import Stack from "#components/ui/Stack";
 import { useCurrentLocale } from "#lib/client/locale";
@@ -143,8 +143,9 @@ export default function EventEditor({
             divide={true}
             className="flex-1 overflow-hidden p-0! *:flex-1 *:overflow-auto"
           >
-            <CodeMirrorEditor
+            <MarkdownEditor
               value={form.content}
+              mode="live"
               onChange={(content) => updateForm({ content })}
               placeholder="Event content..."
             />

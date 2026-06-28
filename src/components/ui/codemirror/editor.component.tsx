@@ -1,34 +1,41 @@
 "use client";
 
+import type { Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
+import type { ReactCodeMirrorProps } from "@uiw/react-codemirror";
 import CodeMirror from "@uiw/react-codemirror";
-import {
-  type ComponentPropsWithoutRef,
-  type Ref,
-  useImperativeHandle,
-} from "react";
+import type { Ref } from "react";
+import { useImperativeHandle, useMemo } from "react";
 import { useTheme } from "#components/providers/theme";
 import { cn } from "#lib/shared/utils";
 
-interface Handle {
+export interface EditorHandle {
   clear: () => void;
 }
 
-interface Props extends Omit<ComponentPropsWithoutRef<"div">, "onChange"> {
+export interface EditorProps
+  extends Omit<ReactCodeMirrorProps, "basicSetup" | "extensions" | "onChange"> {
   value: string;
-  placeholder?: string;
+  extensions?: Extension;
   onChange: (value: string) => void;
-  ref?: Ref<Handle>;
+  ref?: Ref<EditorHandle>;
 }
 
-export default function CodeMirrorEditor({
+export function Editor({
   value,
   placeholder,
+  extensions = [],
   onChange,
   className,
   ref,
-}: Props) {
+  ...props
+}: EditorProps) {
   const { resolvedTheme } = useTheme();
+
+  const editorExtensions = useMemo(
+    () => [EditorView.lineWrapping, extensions],
+    [extensions],
+  );
 
   useImperativeHandle(ref, () => ({
     clear() {
@@ -38,6 +45,7 @@ export default function CodeMirrorEditor({
 
   return (
     <CodeMirror
+      {...props}
       value={value}
       placeholder={placeholder}
       height="100%"
@@ -51,7 +59,7 @@ export default function CodeMirrorEditor({
         highlightSelectionMatches: true,
         lineNumbers: true,
       }}
-      extensions={[EditorView.lineWrapping]}
+      extensions={editorExtensions}
       onChange={onChange}
       className={cn(
         "h-full min-h-0 w-full [&_.cm-editor]:outline-none!",

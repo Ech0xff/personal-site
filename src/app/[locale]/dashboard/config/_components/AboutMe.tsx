@@ -1,5 +1,5 @@
 import ContentRenderer from "#components/features/content/ContentRenderer";
-import CodeMirrorEditor from "#components/ui/CodeMirrorEditor";
+import { MarkdownEditor } from "#components/ui/codemirror";
 import { CONFIG_KEYS } from "#lib/shared/config";
 import { cn } from "#lib/shared/utils";
 import useConfig from "../_hooks/useConfig";
@@ -36,8 +36,9 @@ export default function AboutMe() {
         )}
       >
         <div className="min-h-0 overflow-hidden rounded-lg">
-          <CodeMirrorEditor
+          <MarkdownEditor
             value={value}
+            mode="live"
             onChange={setValue}
             className="h-full min-h-0 overflow-auto"
           />
