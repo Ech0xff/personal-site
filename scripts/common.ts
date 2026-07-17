@@ -1,7 +1,8 @@
-import dotenv from "dotenv";
 import { resolve } from "path";
 import { stdin as input, stdout as output } from "process";
 import { createInterface } from "readline/promises";
+
+import dotenv from "dotenv";
 
 export const loadEnvConfig = (targetEnv: string) => {
   const envPathMap: Record<string, string> = {

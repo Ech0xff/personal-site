@@ -44,7 +44,7 @@ export default function AccountPage() {
     return (
       <Stack x className="items-center gap-3">
         <Icon className="h-4 w-4" />
-        <h3 className="font-semibold text-base text-zinc-900 dark:text-zinc-100">
+        <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
           {title}
         </h3>
       </Stack>
@@ -108,7 +108,7 @@ export default function AccountPage() {
               {/* Link new providers */}
               {availableOauthProviders.length > 0 && (
                 <Stack y>
-                  <p className="mb-3 font-medium text-sm text-zinc-700 dark:text-zinc-300">
+                  <p className="mb-3 text-sm font-medium text-zinc-700 dark:text-zinc-300">
                     Link a new provider
                   </p>
                   <Stack x className="flex-wrap gap-2">
@@ -126,7 +126,7 @@ export default function AccountPage() {
                             key={provider}
                             type="button"
                             onClick={() => handleLink(provider)}
-                            className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-4 py-2 font-medium text-sm text-zinc-900 transition-all hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
+                            className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-900 transition-all hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
                           >
                             <config.icon className="h-4 w-4" />
                             {t("linkProvider", { provider: config.label })}

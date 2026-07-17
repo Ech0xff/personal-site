@@ -1,5 +1,3 @@
-"use client";
-
 import { Edit, Save, Upload, X } from "lucide-react";
 
 import ThoughtCard from "#components/features/thoughts/ThoughtCard";
@@ -11,10 +9,11 @@ import Stack from "#components/ui/Stack";
 import { useCurrentLocale } from "#lib/client/locale";
 import { cn } from "#lib/shared/utils";
 import type { Status } from "#types";
+
+import type { BaseEditorProps } from "../../../_components/editor-types";
 import AuthorInput from "../../../_components/editor/AuthorInput";
 import DateTimeInput from "../../../_components/editor/DateTimeInput";
 import HeaderSection from "../../../_components/editor/HeaderSection";
-import type { BaseEditorProps } from "../../../_components/editor-types";
 import { useThoughtEditor } from "./useThoughtEditor";
 
 export default function ThoughtEditor({
@@ -191,7 +190,7 @@ export default function ThoughtEditor({
                               e.stopPropagation();
                               removeImage(index);
                             }}
-                            className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-all hover:bg-red-600 group-hover/lightbox:opacity-100"
+                            className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-all group-hover/lightbox:opacity-100 hover:bg-red-600"
                           >
                             <X className="h-3 w-3" />
                           </button>

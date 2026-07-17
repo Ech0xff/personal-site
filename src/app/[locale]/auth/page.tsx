@@ -39,7 +39,7 @@ export default async function Page({
           <PageClient oauthProviders={oauthProviders} locale={locale} />
         </div>
 
-        <p className="mt-6 text-center text-(--text-muted) text-sm">
+        <p className="mt-6 text-center text-sm text-(--text-muted)">
           <Link
             href={routes.HOME}
             className="transition-colors hover:text-blue-500"

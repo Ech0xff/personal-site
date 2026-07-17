@@ -1,5 +1,6 @@
 "use client";
 import { useEffect } from "react";
+
 import { useModal } from "#components/ui/ModalProvider";
 
 export default function DashboardModalOptions() {

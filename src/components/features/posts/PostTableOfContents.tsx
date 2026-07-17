@@ -101,7 +101,7 @@ export default function PostTableOfContents({
             key={heading.id}
             data-heading-id={heading.id}
             className={cn(
-              "relative border-zinc-200 border-l py-1 pl-3 hover:border-sky-500 dark:border-zinc-700 hover:dark:border-sky-300",
+              "relative border-l border-zinc-200 py-1 pl-3 hover:border-sky-500 dark:border-zinc-700 hover:dark:border-sky-300",
               activeId === heading.id && "border-sky-500 dark:border-sky-300",
             )}
           >

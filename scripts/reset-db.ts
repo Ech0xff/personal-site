@@ -1,5 +1,6 @@
 import { readFileSync } from "fs";
 import { resolve } from "path";
+
 import postgres from "postgres";
 
 import { askInput, checkYes, loadEnvByPath, requireEnvVars } from "./common";

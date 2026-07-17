@@ -1,4 +1,5 @@
 import { Check, CircleDashed, Clock, ListChecks, X } from "lucide-react";
+
 import ContentRenderer from "#components/features/content/ContentRenderer";
 import ContributionCalendar from "#components/features/contributions/ContributionCalendar";
 import TagMarquee from "#components/features/tags/TagMarquee";
@@ -114,10 +115,10 @@ export async function IntroductionSection({
                     y
                     className="h-full justify-between rounded-xl bg-white p-4 transition-transform duration-300 hover:scale-105 dark:bg-zinc-950/40"
                   >
-                    <Stack className="font-medium text-slate-400 text-xs uppercase tracking-wider">
+                    <Stack className="text-xs font-medium tracking-wider text-slate-400 uppercase">
                       {item.label}
                     </Stack>
-                    <Stack className="font-bold text-2xl text-slate-700 dark:text-slate-200">
+                    <Stack className="text-2xl font-bold text-slate-700 dark:text-slate-200">
                       {item.count}
                     </Stack>
                   </Stack>
@@ -129,7 +130,7 @@ export async function IntroductionSection({
               y
               className="min-h-0 gap-2 rounded-2xl bg-slate-50 p-4 dark:bg-white/5"
             >
-              <Stack className="font-medium text-slate-400 text-xs uppercase tracking-wider">
+              <Stack className="text-xs font-medium tracking-wider text-slate-400 uppercase">
                 {t("recentPlan.title")}
               </Stack>
               <Stack y className="min-h-0 flex-1 gap-2">
@@ -139,7 +140,7 @@ export async function IntroductionSection({
                     return (
                       <div
                         key={`${plan.task}-${plan.createdAt}`}
-                        className="flex items-center justify-between gap-4 border-zinc-200 border-b py-3 last:border-b-0 dark:border-zinc-800"
+                        className="flex items-center justify-between gap-4 border-b border-zinc-200 py-3 last:border-b-0 dark:border-zinc-800"
                       >
                         <ListChecks className="h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" />
                         <span className="min-w-0 flex-1 truncate text-lg text-slate-700 dark:text-slate-200">
@@ -150,7 +151,7 @@ export async function IntroductionSection({
                     );
                   })
                 ) : (
-                  <Stack className="flex h-full min-h-32 items-center justify-center rounded-xl border border-zinc-200 border-dashed px-4 text-center text-slate-400 dark:border-zinc-800 dark:text-slate-500">
+                  <Stack className="flex h-full min-h-32 items-center justify-center rounded-xl border border-dashed border-zinc-200 px-4 text-center text-slate-400 dark:border-zinc-800 dark:text-slate-500">
                     {t("recentPlan.empty")}
                   </Stack>
                 )}

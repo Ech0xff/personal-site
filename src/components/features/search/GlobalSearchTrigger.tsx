@@ -152,7 +152,7 @@ function GlobalSearchModal() {
   const renderResults = () => {
     if (!debouncedQuery) {
       return (
-        <div className="rounded-2xl border border-(--border-default) border-dashed px-4 py-10 text-center text-(--text-muted) text-sm">
+        <div className="rounded-2xl border border-dashed border-(--border-default) px-4 py-10 text-center text-sm text-(--text-muted)">
           {tSearch("empty")}
         </div>
       );
@@ -160,7 +160,7 @@ function GlobalSearchModal() {
 
     if (isLoading) {
       return (
-        <div className="px-2 py-8 text-center text-(--text-muted) text-sm">
+        <div className="px-2 py-8 text-center text-sm text-(--text-muted)">
           {tSearch("loading")}
         </div>
       );
@@ -168,7 +168,7 @@ function GlobalSearchModal() {
 
     if (hasError) {
       return (
-        <div className="px-2 py-8 text-center text-red-500 text-sm">
+        <div className="px-2 py-8 text-center text-sm text-red-500">
           {tSearch("error")}
         </div>
       );
@@ -176,7 +176,7 @@ function GlobalSearchModal() {
 
     if (results.length === 0) {
       return (
-        <div className="px-2 py-8 text-center text-(--text-muted) text-sm">
+        <div className="px-2 py-8 text-center text-sm text-(--text-muted)">
           {tSearch("noResults", { query: debouncedQuery })}
         </div>
       );
@@ -206,10 +206,10 @@ function GlobalSearchModal() {
                   ) : null}
                   <p
                     className={cn(
-                      "line-clamp-2 text-(--text-muted) text-sm",
+                      "line-clamp-2 text-sm text-(--text-muted)",
                       result.title
                         ? "mt-1"
-                        : "line-clamp-3 text-(--text-secondary) text-[15px] leading-7",
+                        : "line-clamp-3 text-[15px] leading-7 text-(--text-secondary)",
                     )}
                   >
                     {renderHighlightedText(result.rawSnippet ?? result.snippet)}
@@ -219,7 +219,7 @@ function GlobalSearchModal() {
                 <div className="flex shrink-0 items-center gap-3 pl-2">
                   <span
                     className={cn(
-                      "font-mono text-(--text-placeholder) text-xs",
+                      "font-mono text-xs text-(--text-placeholder)",
                       isThought && "text-(--search-text-subtle)",
                     )}
                   >
@@ -246,15 +246,15 @@ function GlobalSearchModal() {
   };
 
   return (
-    <div
-      className="w-full max-w-2xl rounded-[2rem] border border-(--border-default) bg-(--surface-panel) p-4 shadow-2xl"
-      role="dialog"
+    <dialog
+      open
+      className="m-0 w-full max-w-2xl rounded-[2rem] border border-(--border-default) bg-(--surface-panel) p-4 text-inherit shadow-2xl"
       aria-modal="true"
       aria-label={tSearch("title")}
     >
       <Stack
         x
-        className="items-center gap-3 rounded-2xl border border-(--border-default) px-4 py-3"
+        className=" items-center  gap-3 rounded-2xl border border-(--border-default) px-4 py-3"
       >
         <Search size={18} className="shrink-0 text-zinc-400" />
         <input
@@ -262,7 +262,7 @@ function GlobalSearchModal() {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder={tSearch("placeholder")}
-          className="flex-1 bg-transparent text-(--text-primary) text-sm outline-none placeholder:text-(--text-placeholder)"
+          className="flex-1 bg-transparent text-sm text-(--text-primary) outline-none placeholder:text-(--text-placeholder)"
         />
         <button
           type="button"
@@ -275,22 +275,22 @@ function GlobalSearchModal() {
       </Stack>
 
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3 px-1">
-        <span className="text-(--text-muted) text-xs">
+        <span className="text-xs text-(--text-muted)">
           {tSearch("advanced.title")}
         </span>
-        <label className="inline-flex cursor-pointer items-center gap-2 text-(--text-muted) text-xs">
+        <label className="inline-flex cursor-pointer items-center gap-2 text-xs text-(--text-muted)">
           <input
             type="checkbox"
             checked={searchRawText}
             onChange={(event) => setSearchRawText(event.target.checked)}
             className="peer sr-only"
           />
-          <span className="relative h-5 w-9 rounded-full bg-(--surface-muted) transition-colors after:absolute after:top-0.5 after:left-0.5 after:h-4 after:w-4 after:rounded-full after:bg-(--surface-card) after:transition-transform peer-checked:bg-emerald-500 peer-checked:after:translate-x-4" />
+          <span className="relative h-5 w-9 rounded-full bg-(--surface-muted) transition-colors peer-checked:bg-emerald-500 after:absolute after:top-0.5 after:left-0.5 after:h-4 after:w-4 after:rounded-full after:bg-(--surface-card) after:transition-transform peer-checked:after:translate-x-4" />
           <span>{tSearch("advanced.searchRawText")}</span>
         </label>
       </div>
 
       <div className="mt-4 max-h-[60vh] overflow-y-auto">{renderResults()}</div>
-    </div>
+    </dialog>
   );
 }

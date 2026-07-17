@@ -59,7 +59,7 @@ export default function EventCard({
       </Stack>
 
       {/* Title */}
-      <h3 className="mb-3 font-bold text-xl text-zinc-900 dark:text-zinc-50">
+      <h3 className="mb-3 text-xl font-bold text-zinc-900 dark:text-zinc-50">
         {title}
       </h3>
 
@@ -76,7 +76,7 @@ export default function EventCard({
               return (
                 <span
                   key={getTagName(tag)}
-                  className="rounded-md px-2 py-1 font-medium text-xs"
+                  className="rounded-md px-2 py-1 text-xs font-medium"
                   style={{
                     backgroundColor: tagColor + "20",
                     color: tagColor,

@@ -57,6 +57,7 @@ export default function Image({
           isFluid ? "block min-w-full" : "h-full w-full",
         )}
       >
+        {/* oxlint-disable-next-line next/no-img-element -- This viewer accepts arbitrary remote URLs and preserves natural image dimensions. */}
         <img
           src={src}
           alt={alt}

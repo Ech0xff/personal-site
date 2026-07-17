@@ -1,16 +1,16 @@
-"use client";
-
 import { Edit, Eye, Save, X } from "lucide-react";
+
 import { PostContent } from "#components/features/content";
 import { MarkdownEditor } from "#components/ui/codemirror";
 import DropdownPopover from "#components/ui/DropdownPopover";
 import SegmentedToggle from "#components/ui/SegmentedToggle";
 import Stack from "#components/ui/Stack";
 import { cn } from "#lib/shared/utils";
+
+import type { BaseEditorProps } from "../../../_components/editor-types";
 import AuthorInput from "../../../_components/editor/AuthorInput";
 import DateTimeInput from "../../../_components/editor/DateTimeInput";
 import HeaderSection from "../../../_components/editor/HeaderSection";
-import type { BaseEditorProps } from "../../../_components/editor-types";
 import TagSelector from "../../../_components/tags/TagSelector";
 import { usePostEditor } from "./usePostEditor";
 
@@ -171,7 +171,7 @@ export default function PostEditor({
                   onChange={(e) => updateForm({ title: e.target.value })}
                   type="text"
                   placeholder="Enter post title..."
-                  className="w-full border-none font-semibold text-xl text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
+                  className="w-full border-none text-xl font-semibold text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
                 />
 
                 {/* Tags */}
@@ -249,7 +249,7 @@ export default function PostEditor({
               <div className="min-h-0 flex-1 overflow-auto">
                 {/* Preview Title */}
                 {form.title ? (
-                  <h1 className="mb-4 font-bold text-2xl text-zinc-900 dark:text-zinc-100">
+                  <h1 className="mb-4 text-2xl font-bold text-zinc-900 dark:text-zinc-100">
                     {form.title}
                   </h1>
                 ) : (

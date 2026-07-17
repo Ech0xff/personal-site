@@ -94,10 +94,12 @@ const getNodeText = (node: RootContent): string => {
 };
 
 const withHeadingScrollMargin = (className: unknown) => {
-  if (Array.isArray(className))
+  if (Array.isArray(className)) {
     return [...className, HEADING_SCROLL_MARGIN_CLASS];
-  if (typeof className === "string")
+  }
+  if (typeof className === "string") {
     return [className, HEADING_SCROLL_MARGIN_CLASS];
+  }
   return [HEADING_SCROLL_MARGIN_CLASS];
 };
 

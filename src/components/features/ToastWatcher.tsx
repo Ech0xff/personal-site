@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { Toaster, toast } from "sonner";
+import { toast, Toaster } from "sonner";
 
 import { useCurrentLocale } from "#lib/client/locale";
 import { getT } from "#lib/shared/i18n";

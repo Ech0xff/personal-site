@@ -1,19 +1,21 @@
 {
-  "name": "bblf-blog",
+  "name": "personal-site",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "biome check .",
-    "typecheck": "NODE_OPTIONS=--max-old-space-size=8192 tsc --noEmit",
-    "fix": "biome check --write --unsafe .",
-    "check": "bun run lint && bun run typecheck",
-    "menu": "bun ./scripts/menu.ts",
+    "check": "bun run lint && bun run fmt && bun run typecheck",
+    "dev": "next dev",
+    "fmt": "oxfmt --check",
+    "fmt:fix": "oxfmt",
+    "gen:icons": "svgr --out-dir src/components/icons --typescript --icon --replace-attr-values \"#000=currentColor\" public/svg-icons",
     "gen:types:dev": "source .env.development && bunx supabase gen types typescript --project-id $(echo $NEXT_PUBLIC_SUPABASE_URL | sed 's/https:\\/\\///' | cut -d'.' -f1) > src/types/supabase.ts",
     "gen:types:prod": "source .env.production && bunx supabase gen types typescript --project-id $(echo $NEXT_PUBLIC_SUPABASE_URL | sed 's/https:\\/\\///' | cut -d'.' -f1) > src/types/supabase.ts",
-    "gen:icons": "svgr --out-dir src/components/icons --typescript --icon --replace-attr-values \"#000=currentColor\" public/svg-icons"
+    "lint": "oxlint .",
+    "lint:fix": "oxlint . --fix ",
+    "menu": "bun ./scripts/menu.ts",
+    "start": "next start",
+    "typecheck": "NODE_OPTIONS=--max-old-space-size=8192 tsc --noEmit"
   },
   "dependencies": {
     "@codemirror/lang-json": "^6.0.2",
@@ -47,7 +49,6 @@
     "unist-util-visit": "^5.1.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.11",
     "@svgr/cli": "^8.1.0",
     "@tailwindcss/postcss": "^4",
     "@types/js-cookie": "^3.0.6",
@@ -56,6 +57,9 @@
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "^1.0.0",
     "dotenv": "^17.3.1",
+    "eslint-plugin-simple-import-sort": "14.0.0",
+    "oxfmt": "0.59.0",
+    "oxlint": "1.74.0",
     "postcss-scss": "^4.0.9",
     "postgres": "^3.4.8",
     "tailwindcss": "^4",

@@ -36,11 +36,11 @@ export default function IdentityCard({
         </Stack>
         <Stack y>
           <Stack x className="items-center gap-2">
-            <p className="font-medium text-sm text-zinc-900 dark:text-zinc-100">
+            <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
               {config.label}
             </p>
             {isPrimaryIdentity(identity) && (
-              <span className="rounded-full bg-blue-100 px-2 py-0.5 font-medium text-[10px] text-blue-700 uppercase tracking-wide dark:bg-blue-900/30 dark:text-blue-300">
+              <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-medium tracking-wide text-blue-700 uppercase dark:bg-blue-900/30 dark:text-blue-300">
                 Primary
               </span>
             )}
@@ -58,7 +58,7 @@ export default function IdentityCard({
           type="button"
           disabled={isPrimaryIdentity(identity)}
           onClick={() => onUnlink(identity)}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 px-3 py-1.5 font-medium text-red-600 text-xs transition-all hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 transition-all hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
         >
           {isPrimaryIdentity(identity) ? (
             <Loader2 className="h-3 w-3 animate-spin" />

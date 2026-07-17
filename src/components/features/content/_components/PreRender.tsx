@@ -5,6 +5,7 @@ import { visit } from "unist-util-visit";
 import CopyButton from "#components/ui/CopyButton";
 import Image from "#components/ui/Image";
 import { cn, encodePlantUml } from "#lib/shared/utils";
+
 import "./PreRender.scss";
 
 interface Props extends ComponentPropsWithoutRef<"pre"> {
@@ -22,7 +23,7 @@ function CodeBlockRender({
 }: Props) {
   return (
     <div className="not-prose overflow-hidden rounded-xl border border-zinc-200 bg-zinc-50 text-[0.9em] dark:border-zinc-800 dark:bg-zinc-900">
-      <div className="flex items-center justify-between gap-3 border-zinc-200 border-b bg-zinc-100/90 px-3 py-1 font-medium uppercase tracking-wide dark:border-zinc-800 dark:bg-zinc-800/90">
+      <div className="flex items-center justify-between gap-3 border-b border-zinc-200 bg-zinc-100/90 px-3 py-1 font-medium tracking-wide uppercase dark:border-zinc-800 dark:bg-zinc-800/90">
         <span className="truncate">{language}</span>
         <CopyButton content={code} className="text-xs" />
       </div>

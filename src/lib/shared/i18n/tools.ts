@@ -42,8 +42,9 @@ const getByPath = (
         !accumulator ||
         typeof accumulator !== "object" ||
         Array.isArray(accumulator)
-      )
+      ) {
         return undefined;
+      }
       return accumulator[segment];
     }, dictionary);
 };
@@ -131,15 +132,17 @@ export const getT = (namespace?: string, locale?: string): TFunction => {
 
     const translated = getByPath(dictionary, key);
 
-    if (typeof translated === "string")
+    if (typeof translated === "string") {
       return formatMessage(translated, values);
+    }
 
     if (
       translated === null ||
       typeof translated === "number" ||
       typeof translated === "boolean"
-    )
+    ) {
       return String(translated);
+    }
 
     return namespace ? namespace + "." + key : key;
   };

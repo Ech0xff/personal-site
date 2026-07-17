@@ -48,7 +48,7 @@ export default function EditorShell({
       )}
     >
       <div className="flex items-center gap-2">
-        <h2 className="truncate font-semibold text-2xl text-zinc-900 dark:text-zinc-100">
+        <h2 className="truncate text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
           {title}
         </h2>
         <SegmentedToggle
@@ -72,7 +72,7 @@ export default function EditorShell({
             loading ? "opacity-100" : "pointer-events-none opacity-0",
           )}
         >
-          <div className="flex items-center gap-3 font-medium text-xl text-zinc-700 dark:text-zinc-200">
+          <div className="flex items-center gap-3 text-xl font-medium text-zinc-700 dark:text-zinc-200">
             <LoaderCircle className="h-6 w-6 animate-spin" />
             <span>Loading</span>
           </div>

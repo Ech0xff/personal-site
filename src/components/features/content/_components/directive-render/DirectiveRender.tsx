@@ -30,10 +30,11 @@ export function DirectiveRender({
 }: DirectiveRenderProps) {
   try {
     const registration = getDirectiveRegistration(directiveType, directive);
-    if (!registration)
+    if (!registration) {
       throw new Error(
         `No registration found for directive "${directive}" of type "${directiveType}"`,
       );
+    }
     registration.checkAttributes?.(attributes);
     return registration.render({
       attributes,

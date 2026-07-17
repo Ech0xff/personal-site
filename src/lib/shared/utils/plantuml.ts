@@ -19,8 +19,9 @@ function append3Bytes(bytes: number[]) {
 function encode64(data: Uint8Array) {
   let encoded = "";
 
-  for (let index = 0; index < data.length; index += 3)
+  for (let index = 0; index < data.length; index += 3) {
     encoded += append3Bytes([data[index], data[index + 1], data[index + 2]]);
+  }
 
   return encoded;
 }

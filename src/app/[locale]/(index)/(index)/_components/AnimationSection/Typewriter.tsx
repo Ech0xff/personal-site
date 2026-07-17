@@ -48,9 +48,9 @@ export default function Typewriter({ texts }: { texts: string[] }) {
   return (
     <Stack
       x
-      className="items-center gap-2 font-mono text-gray-500 tracking-widest dark:text-gray-500"
+      className="items-center gap-2 font-mono tracking-widest text-gray-500 dark:text-gray-500"
     >
-      <div className="flex items-center gap-1 font-black text-[1.2em]">
+      <div className="flex items-center gap-1 text-[1.2em] font-black">
         {currentText}
         <span className="typing-cursor">▋</span>
       </div>

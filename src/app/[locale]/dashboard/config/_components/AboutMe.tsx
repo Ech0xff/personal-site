@@ -2,6 +2,7 @@ import ContentRenderer from "#components/features/content/ContentRenderer";
 import { MarkdownEditor } from "#components/ui/codemirror";
 import { CONFIG_KEYS } from "#lib/shared/config";
 import { cn } from "#lib/shared/utils";
+
 import useConfig from "../_hooks/useConfig";
 import EditorShell from "./EditorShell";
 

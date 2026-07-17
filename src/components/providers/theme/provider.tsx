@@ -8,6 +8,7 @@ import {
   useMemo,
   useSyncExternalStore,
 } from "react";
+
 import type { ResolvedTheme, Theme } from "./constants";
 import { ThemeHelper } from "./helper";
 

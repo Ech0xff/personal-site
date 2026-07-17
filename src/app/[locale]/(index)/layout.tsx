@@ -22,6 +22,7 @@ import { fetchConfigs } from "#lib/shared/services";
 import { cn } from "#lib/shared/utils";
 
 import LayoutClient from "./_components/LayoutClient";
+
 import "./layout.scss";
 
 function Navbar({ locale }: { className?: string; locale?: string }) {
@@ -31,7 +32,11 @@ function Navbar({ locale }: { className?: string; locale?: string }) {
     { name: t("posts"), path: "/posts", icon: FileText },
     { name: t("thoughts"), path: "/thoughts", icon: Lightbulb },
     { name: t("events"), path: "/events", icon: CalendarDays },
-    { name: t("dashboard"), path: "/dashboard/account", icon: LayoutDashboard },
+    {
+      name: t("dashboard"),
+      path: "/dashboard/account",
+      icon: LayoutDashboard,
+    },
   ];
 
   const navItemRender = (item: (typeof navItems)[number]) => (
@@ -54,10 +59,10 @@ function Navbar({ locale }: { className?: string; locale?: string }) {
       >
         {/* Navbar Main */}
         <Link href="/" className="flex min-w-0 flex-col">
-          <div className={cn("font-black text-xl", "sm:text-lg")}>Blog</div>
+          <div className={cn("text-xl font-black", "sm:text-lg")}>Blog</div>
           <div
             className={cn(
-              "hidden truncate text-gray-500 text-sm dark:text-gray-400",
+              "hidden truncate text-sm text-gray-500 dark:text-gray-400",
               "sm:block",
             )}
           >

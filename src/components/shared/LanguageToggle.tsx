@@ -43,7 +43,7 @@ export default function LanguageToggle({ className }: { className?: string }) {
       )}
     >
       <Languages className="h-4 w-4" />
-      <span className="font-medium text-xs">{label}</span>
+      <span className="text-xs font-medium">{label}</span>
     </button>
   );
 }

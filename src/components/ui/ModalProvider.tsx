@@ -3,8 +3,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import {
-  type CSSProperties,
   createContext,
+  type CSSProperties,
   type ReactNode,
   useCallback,
   useContext,

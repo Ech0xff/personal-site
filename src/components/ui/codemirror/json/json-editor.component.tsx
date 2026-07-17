@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+
 import { Editor, type EditorProps } from "../editor.component";
 import { resolveExtensions } from "./json-editor.extension";
 

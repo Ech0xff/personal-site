@@ -9,6 +9,7 @@ import {
   type ViewUpdate,
 } from "@codemirror/view";
 import { GFM } from "@lezer/markdown";
+
 import * as NodeHelper from "./markdown-node.helper";
 
 const languageExtension = markdown({

@@ -58,6 +58,8 @@ export default function OauthProviders() {
               key={provider}
               type="button"
               onClick={() => toggleProvider(provider)}
+              aria-label={`${enabled ? "Disable" : "Enable"} ${config.label}`}
+              aria-pressed={enabled}
               className={cn(
                 "flex items-center justify-between rounded-2xl border border-zinc-200 bg-white px-5 py-4 text-left transition hover:border-blue-300 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-blue-700 dark:hover:bg-zinc-900",
                 enabled &&
