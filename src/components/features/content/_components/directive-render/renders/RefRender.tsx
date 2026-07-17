@@ -27,13 +27,15 @@ const checkAttributes = (attributes: DirectiveAttributes) => {
     return REF_TYPES.includes(type as RefType);
   };
 
-  if (typeof id !== "string" || id.length === 0)
+  if (typeof id !== "string" || id.length === 0) {
     throw new Error('Directive "ref" is missing required attribute "id".');
+  }
 
-  if (typeof type !== "string" || !isRefType(type))
+  if (typeof type !== "string" || !isRefType(type)) {
     throw new Error(
       'Directive "ref" is missing required attribute "type" or it is invalid.',
     );
+  }
 };
 
 const resolveRefHref = (type: RefType, id: string) => {
@@ -80,9 +82,9 @@ function render({ attributes, children }: RenderProps) {
   return (
     <a
       className={cn(
-        "inline whitespace-nowrap rounded-md align-baseline font-medium no-underline transition-colors",
+        "inline rounded-md align-baseline font-medium whitespace-nowrap no-underline transition-colors",
         "text-sky-700 decoration-sky-500/60 underline-offset-4 hover:text-sky-800 hover:underline",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/40",
+        "focus-visible:ring-2 focus-visible:ring-sky-500/40 focus-visible:outline-none",
         "dark:text-sky-300 dark:decoration-sky-300/60 dark:hover:text-sky-200",
       )}
       href={href}

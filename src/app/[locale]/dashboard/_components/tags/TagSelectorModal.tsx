@@ -2,6 +2,7 @@
 
 import { Search, Tag, X } from "lucide-react";
 import { type KeyboardEvent, useMemo, useState } from "react";
+
 import { useModal } from "#components/ui/ModalProvider";
 import Stack from "#components/ui/Stack";
 import { cn } from "#lib/shared/utils";
@@ -95,7 +96,7 @@ export default function TagSelectorModal({
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-(--accent-surface) text-(--accent)">
             <Tag className="h-5 w-5 rotate-90" />
           </span>
-          <h2 className="min-w-0 truncate font-semibold text-(--text-primary) text-lg">
+          <h2 className="min-w-0 truncate text-lg font-semibold text-(--text-primary)">
             Select Tag
           </h2>
         </Stack>
@@ -119,7 +120,7 @@ export default function TagSelectorModal({
             type="search"
             autoFocus
             placeholder="Search tags"
-            className="w-full rounded-full bg-(--surface-muted) py-2.5 pr-3 pl-9 text-(--text-primary) text-sm outline-none transition-colors placeholder:text-(--text-placeholder) focus:bg-(--surface-input) focus:ring-2 focus:ring-blue-500/25"
+            className="w-full rounded-full bg-(--surface-muted) py-2.5 pr-3 pl-9 text-sm text-(--text-primary) transition-colors outline-none placeholder:text-(--text-placeholder) focus:bg-(--surface-input) focus:ring-2 focus:ring-blue-500/25"
           />
         </label>
 
@@ -133,7 +134,7 @@ export default function TagSelectorModal({
               type="button"
               onClick={() => setFilterMode(option.value)}
               className={cn(
-                "rounded-full px-3 py-1.5 font-medium text-sm transition-colors",
+                "rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
                 filterMode === option.value
                   ? "bg-(--surface-selected) text-(--text-primary) shadow-sm"
                   : "text-(--text-muted) hover:text-(--text-secondary)",
@@ -147,11 +148,11 @@ export default function TagSelectorModal({
 
       <div className="min-h-0 flex-1 overflow-auto px-5 pb-5">
         {tags.length === 0 ? (
-          <div className="rounded-3xl bg-(--surface-muted) px-5 py-8 text-center text-(--text-placeholder) text-sm">
+          <div className="rounded-3xl bg-(--surface-muted) px-5 py-8 text-center text-sm text-(--text-placeholder)">
             No tags yet
           </div>
         ) : filteredTags.length === 0 ? (
-          <div className="rounded-3xl bg-(--surface-muted) px-5 py-8 text-center text-(--text-placeholder) text-sm">
+          <div className="rounded-3xl bg-(--surface-muted) px-5 py-8 text-center text-sm text-(--text-placeholder)">
             No matching tags
           </div>
         ) : (
@@ -165,7 +166,7 @@ export default function TagSelectorModal({
                   type="button"
                   onClick={() => toggleTag(tag)}
                   className={cn(
-                    "group inline-flex max-w-full cursor-pointer items-center gap-2 rounded-full border px-3 py-2 font-medium text-sm transition-all",
+                    "group inline-flex max-w-full cursor-pointer items-center gap-2 rounded-full border px-3 py-2 text-sm font-medium transition-all",
                     isSelected
                       ? "border border-(--accent-border) bg-(--accent-surface) text-(--accent-text) shadow-none"
                       : "border-transparent bg-(--surface-muted) text-(--text-primary) shadow-sm hover:bg-(--surface-card)",

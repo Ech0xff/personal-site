@@ -375,7 +375,7 @@ export default function TagSphere<T extends TagSphereItem>({
               }}
               type="button"
               title={`${tag.name}: ${tag.count}`}
-              className="cursor-pointer whitespace-nowrap rounded px-2 py-1 font-semibold tracking-normal transition-colors duration-200 hover:bg-zinc-900/10 hover:opacity-100 focus-visible:bg-zinc-900/10 focus-visible:outline-none dark:focus-visible:bg-white/10 dark:hover:bg-white/10"
+              className="cursor-pointer rounded px-2 py-1 font-semibold tracking-normal whitespace-nowrap transition-colors duration-200 hover:bg-zinc-900/10 hover:opacity-100 focus-visible:bg-zinc-900/10 focus-visible:outline-none dark:hover:bg-white/10 dark:focus-visible:bg-white/10"
               onBlur={() => releaseTag(tag.id)}
               onClick={() => onTagClick?.(tag)}
               onFocus={() =>

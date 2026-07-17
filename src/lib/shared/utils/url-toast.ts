@@ -40,8 +40,13 @@ export function decodeUrlToast(encoded: string): UrlToastPayload | null {
     );
     const parsed = JSON.parse(json) as unknown;
 
-    if (typeof parsed !== "object" && parsed !== null && !Array.isArray(parsed))
+    if (
+      typeof parsed !== "object" &&
+      parsed !== null &&
+      !Array.isArray(parsed)
+    ) {
       return null;
+    }
     const obj = parsed as Record<string, unknown>;
     if (typeof obj.type !== "string") return null;
     if (!toastTypes.includes(obj.type as ToastType)) return null;

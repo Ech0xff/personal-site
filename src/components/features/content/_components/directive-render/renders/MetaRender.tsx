@@ -5,8 +5,9 @@ type MetaAttributes = { url: string };
 
 const checkAttributes = (attributes: DirectiveAttributes) => {
   const { url } = attributes;
-  if (typeof url !== "string" || url.length === 0)
+  if (typeof url !== "string" || url.length === 0) {
     throw new Error('Directive "meta" is missing required attribute "url".');
+  }
   try {
     const parsedUrl = new URL(url);
     if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {

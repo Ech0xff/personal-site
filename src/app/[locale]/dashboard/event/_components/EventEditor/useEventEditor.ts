@@ -1,7 +1,4 @@
-"use client";
-
 import { useCallback, useEffect, useState, useTransition } from "react";
-
 import { toast } from "sonner";
 
 import {

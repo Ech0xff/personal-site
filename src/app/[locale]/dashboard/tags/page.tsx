@@ -100,7 +100,7 @@ export default function TagsPage() {
       <Stack y className="flex-1 gap-4">
         <Stack
           x
-          className="items-center justify-between gap-3 rounded-xl border border-(--border-default) bg-(--surface-card) px-4 py-3 text-(--text-secondary) text-sm"
+          className="items-center justify-between gap-3 rounded-xl border border-(--border-default) bg-(--surface-card) px-4 py-3 text-sm text-(--text-secondary)"
         >
           <Stack x className="items-center gap-2">
             <Tags className="h-4 w-4" />
@@ -129,19 +129,18 @@ export default function TagsPage() {
 
       {tagForm ? (
         <div className="fixed inset-0 z-50 grid place-items-center bg-zinc-950/40 px-4 backdrop-blur-sm">
-          <Stack
-            y
-            className="w-full max-w-md gap-4 rounded-lg border border-(--border-default) bg-(--surface-panel) p-5 shadow-xl"
-            role="dialog"
+          <dialog
+            open
+            className="m-0 flex w-full max-w-md flex-col gap-4 rounded-lg border border-(--border-default) bg-(--surface-panel) p-5 text-inherit shadow-xl"
             aria-modal="true"
             aria-label={isEditing ? "Edit tag" : "Add tag"}
           >
             <Stack x className="items-center justify-between gap-3">
               <Stack y>
-                <h2 className="font-semibold text-(--text-primary) text-lg">
+                <h2 className="text-lg font-semibold text-(--text-primary)">
                   {isEditing ? "Edit tag" : "Add tag"}
                 </h2>
-                <p className="text-(--text-muted) text-sm">
+                <p className="text-sm text-(--text-muted)">
                   Update name and meta fields.
                 </p>
               </Stack>
@@ -159,7 +158,7 @@ export default function TagsPage() {
               <Stack y className="gap-1">
                 <label
                   htmlFor="tag-id"
-                  className="font-medium text-(--text-secondary) text-sm"
+                  className="text-sm font-medium text-(--text-secondary)"
                 >
                   ID
                 </label>
@@ -167,7 +166,7 @@ export default function TagsPage() {
                   id="tag-id"
                   value={tagForm.id}
                   readOnly
-                  className="rounded border border-(--border-default) bg-(--surface-muted) px-3 py-2 text-(--text-muted) text-sm outline-none"
+                  className="rounded border border-(--border-default) bg-(--surface-muted) px-3 py-2 text-sm text-(--text-muted) outline-none"
                 />
               </Stack>
             ) : null}
@@ -175,7 +174,7 @@ export default function TagsPage() {
             <Stack y className="gap-1">
               <label
                 htmlFor="tag-name"
-                className="font-medium text-(--text-secondary) text-sm"
+                className="text-sm font-medium text-(--text-secondary)"
               >
                 Name
               </label>
@@ -187,7 +186,7 @@ export default function TagsPage() {
                     form ? { ...form, name: event.target.value } : form,
                   )
                 }
-                className="rounded border border-(--border-default) bg-(--surface-input) px-3 py-2 text-(--text-primary) text-sm outline-none transition-colors focus:border-blue-500"
+                className="rounded border border-(--border-default) bg-(--surface-input) px-3 py-2 text-sm text-(--text-primary) transition-colors outline-none focus:border-blue-500"
                 placeholder="Tag name"
               />
             </Stack>
@@ -195,7 +194,7 @@ export default function TagsPage() {
             <Stack y className="gap-1">
               <label
                 htmlFor="tag-meta"
-                className="font-medium text-(--text-secondary) text-sm"
+                className="text-sm font-medium text-(--text-secondary)"
               >
                 Meta
               </label>
@@ -207,20 +206,20 @@ export default function TagsPage() {
                     form ? { ...form, meta: event.target.value } : form,
                   )
                 }
-                className="min-h-36 resize-y rounded border border-(--border-default) bg-(--surface-input) px-3 py-2 font-mono text-(--text-primary) text-sm outline-none transition-colors focus:border-blue-500"
+                className="min-h-36 resize-y rounded border border-(--border-default) bg-(--surface-input) px-3 py-2 font-mono text-sm text-(--text-primary) transition-colors outline-none focus:border-blue-500"
                 spellCheck={false}
               />
             </Stack>
 
             {formError ? (
-              <p className="text-red-500 text-sm">{formError}</p>
+              <p className="text-sm text-red-500">{formError}</p>
             ) : null}
 
             <Stack x className="justify-end gap-2">
               <button
                 type="button"
                 onClick={closeModal}
-                className="rounded border border-(--border-default) px-3 py-2 text-(--text-secondary) text-sm transition-colors hover:bg-(--surface-hover)"
+                className="rounded border border-(--border-default) px-3 py-2 text-sm text-(--text-secondary) transition-colors hover:bg-(--surface-hover)"
               >
                 Cancel
               </button>
@@ -228,13 +227,13 @@ export default function TagsPage() {
                 type="button"
                 onClick={saveTag}
                 disabled={saving}
-                className="inline-flex items-center gap-2 rounded bg-(--surface-inverse) px-3 py-2 text-(--text-inverse) text-sm transition-colors hover:bg-(--surface-inverse-hover)"
+                className="inline-flex items-center gap-2 rounded bg-(--surface-inverse) px-3 py-2 text-sm text-(--text-inverse) transition-colors hover:bg-(--surface-inverse-hover)"
               >
                 <Save className="h-4 w-4" />
                 {saving ? "Saving..." : "Save"}
               </button>
             </Stack>
-          </Stack>
+          </dialog>
         </div>
       ) : null}
     </DashboardShell>

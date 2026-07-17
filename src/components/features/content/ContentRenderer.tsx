@@ -6,12 +6,12 @@ import {
 } from "react";
 import type { Options } from "react-markdown";
 import Markdown from "react-markdown";
-
 import rehypePrism from "rehype-prism-plus";
 import remarkDirective from "remark-directive";
 import remarkGfm from "remark-gfm";
 
 import { cn, rehypeHeadingIds } from "#lib/shared/utils";
+
 import {
   DirectiveRender,
   remarkContentNodes,
@@ -76,7 +76,7 @@ export default function ContentRenderer({ content, className = "" }: Props) {
   return (
     <div
       className={cn(
-        "prose dark:prose-invert max-w-none [&>div]:shadow-none",
+        "prose max-w-none dark:prose-invert [&>div]:shadow-none",
         className,
       )}
     >

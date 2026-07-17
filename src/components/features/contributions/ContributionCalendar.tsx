@@ -198,7 +198,10 @@ export default function ContributionCalendar({
   const extraTopSpace = multiplyLength(base, 3);
   const gap = multiplyLength(base, 0.3);
   const weekdayLabelWidth = multiplyLength(base, 4);
-  const axisLabelFontSize = `clamp(${multiplyLength(base, 0.9)}, 0.56rem + 0.32vw, ${multiplyLength(base, 1.18)})`;
+  const axisLabelFontSize = `clamp(${multiplyLength(
+    base,
+    0.9,
+  )}, 0.56rem + 0.32vw, ${multiplyLength(base, 1.18)})`;
   const minWidth = `calc(${weekdayLabelWidth} + ${base} * ${weeks.length} + ${gap} * ${weeks.length})`;
   const calendarGridStyle = {
     gridTemplateColumns: `${weekdayLabelWidth} repeat(${weeks.length}, minmax(${base}, 1fr))`,
@@ -232,7 +235,7 @@ export default function ContributionCalendar({
             {monthLabels.map((item) => (
               <div
                 key={`${item.start}-${item.label}`}
-                className="min-w-0 justify-self-start whitespace-nowrap font-semibold text-emerald-500 leading-none"
+                className="min-w-0 justify-self-start leading-none font-semibold whitespace-nowrap text-emerald-500"
                 style={{
                   gridColumn: `${item.start + 2} / ${item.end + 2}`,
                   gridRow: "1",
@@ -251,7 +254,7 @@ export default function ContributionCalendar({
               return (
                 <div
                   key={index}
-                  className="flex h-full items-center justify-end pr-1 font-semibold text-emerald-500 leading-none"
+                  className="flex h-full items-center justify-end pr-1 leading-none font-semibold text-emerald-500"
                   style={{
                     gridColumn: "1",
                     gridRow: `${index + 2}`,

@@ -94,8 +94,8 @@ function ConfigPageContent() {
       }
     >
       <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="border-zinc-200 border-b px-5 py-4 dark:border-zinc-800">
-          <h3 className="font-semibold text-lg text-zinc-900 dark:text-zinc-100">
+        <div className="border-b border-zinc-200 px-5 py-4 dark:border-zinc-800">
+          <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
             Config Items
           </h3>
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -111,10 +111,11 @@ function ConfigPageContent() {
               onClick={() => {
                 open(field.render());
               }}
+              aria-label={`Edit ${field.title}`}
               className="flex w-full cursor-pointer items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
             >
               <Stack y className="min-w-0 gap-1">
-                <p className="font-medium text-sm text-zinc-900 dark:text-zinc-100">
+                <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
                   {field.title}
                 </p>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">

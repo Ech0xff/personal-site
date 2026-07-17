@@ -140,7 +140,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
   return (
     <>
       <div className="mb-8 text-center">
-        <h1 className="mb-2 font-bold text-(--text-primary) text-3xl">
+        <h1 className="mb-2 text-3xl font-bold text-(--text-primary)">
           {mode === "login" ? t("welcomeBack") : t("createAccount")}
         </h1>
         <p className="text-(--text-muted)">
@@ -154,7 +154,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
         <button
           type="button"
           onClick={() => setMode("login")}
-          className={`flex-1 rounded-md px-4 py-2 font-medium text-sm transition-all duration-200 ${
+          className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 ${
             mode === "login"
               ? "bg-(--surface-selected) text-(--text-primary) shadow-sm"
               : "text-(--text-muted) hover:text-(--text-secondary)"
@@ -165,7 +165,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
         <button
           type="button"
           onClick={() => setMode("register")}
-          className={`flex-1 rounded-md px-4 py-2 font-medium text-sm transition-all duration-200 ${
+          className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 ${
             mode === "register"
               ? "bg-(--surface-selected) text-(--text-primary) shadow-sm"
               : "text-(--text-muted) hover:text-(--text-secondary)"
@@ -179,7 +179,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
         <div>
           <label
             htmlFor="email"
-            className="mb-2 block font-medium text-(--text-secondary) text-sm"
+            className="mb-2 block text-sm font-medium text-(--text-secondary)"
           >
             {t("email")}
           </label>
@@ -188,7 +188,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
             name="email"
             type="email"
             placeholder={t("enterYourEmail")}
-            className="w-full rounded-lg border border-(--border-strong) bg-(--surface-input) px-4 py-3 text-(--text-primary) transition-all duration-200 placeholder:text-(--text-placeholder) focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-(--border-strong) bg-(--surface-input) px-4 py-3 text-(--text-primary) transition-all duration-200 placeholder:text-(--text-placeholder) focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
             required
             autoFocus
             value={form.email}
@@ -199,7 +199,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
         <div>
           <label
             htmlFor="password"
-            className="mb-2 block font-medium text-(--text-secondary) text-sm"
+            className="mb-2 block text-sm font-medium text-(--text-secondary)"
           >
             {t("password")}
           </label>
@@ -208,7 +208,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
             name="password"
             type="password"
             placeholder={t("enterYourPassword")}
-            className="w-full rounded-lg border border-(--border-strong) bg-(--surface-input) px-4 py-3 text-(--text-primary) transition-all duration-200 placeholder:text-(--text-placeholder) focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-(--border-strong) bg-(--surface-input) px-4 py-3 text-(--text-primary) transition-all duration-200 placeholder:text-(--text-placeholder) focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
             required
             value={form.password}
             onChange={(event) => updateForm({ password: event.target.value })}
@@ -219,7 +219,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
           <div>
             <label
               htmlFor="confirmPassword"
-              className="mb-2 block font-medium text-(--text-secondary) text-sm"
+              className="mb-2 block text-sm font-medium text-(--text-secondary)"
             >
               {t("confirmPassword")}
             </label>
@@ -228,7 +228,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
               name="confirmPassword"
               type="password"
               placeholder={t("repeatYourPassword")}
-              className="w-full rounded-lg border border-(--border-strong) bg-(--surface-input) px-4 py-3 text-(--text-primary) transition-all duration-200 placeholder:text-(--text-placeholder) focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg border border-(--border-strong) bg-(--surface-input) px-4 py-3 text-(--text-primary) transition-all duration-200 placeholder:text-(--text-placeholder) focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
               required
               value={form.confirmPassword}
               onChange={(event) =>
@@ -240,7 +240,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
 
         <button
           type="submit"
-          className="w-full rounded-lg bg-blue-600 px-4 py-3 font-medium text-white transition-all duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full rounded-lg bg-blue-600 px-4 py-3 font-medium text-white transition-all duration-200 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         >
           {mode === "login" ? t("signIn") : t("signUp")}
         </button>
@@ -250,7 +250,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
         <>
           <div className="my-6 flex items-center gap-4">
             <div className="h-px flex-1 bg-(--border-default)" />
-            <span className="text-(--text-placeholder) text-sm">{t("or")}</span>
+            <span className="text-sm text-(--text-placeholder)">{t("or")}</span>
             <div className="h-px flex-1 bg-(--border-default)" />
           </div>
 

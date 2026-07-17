@@ -1,5 +1,3 @@
-"use client";
-
 import { Save, X } from "lucide-react";
 
 import EventCard from "#components/features/events/EventCard";
@@ -9,9 +7,10 @@ import Stack from "#components/ui/Stack";
 import { useCurrentLocale } from "#lib/client/locale";
 import { cn } from "#lib/shared/utils";
 import type { Status } from "#types";
+
+import type { BaseEditorProps } from "../../../_components/editor-types";
 import DateTimeInput from "../../../_components/editor/DateTimeInput";
 import HeaderSection from "../../../_components/editor/HeaderSection";
-import type { BaseEditorProps } from "../../../_components/editor-types";
 import TagSelector from "../../../_components/tags/TagSelector";
 import { useEventEditor } from "./useEventEditor";
 
@@ -104,6 +103,8 @@ export default function EventEditor({
                 type="button"
                 onClick={() => updateForm({ color: option.value })}
                 style={{ backgroundColor: option.value }}
+                aria-label={`Select ${option.label} color`}
+                aria-pressed={form.color === option.value}
                 className={cn("h-8 w-8 rounded-full", {
                   "ring-2 ring-blue-500 ring-offset-2":
                     form.color === option.value,

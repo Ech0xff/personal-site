@@ -52,7 +52,7 @@ export default function PlaylistUrl() {
             value={value}
             onChange={(event) => setValue(event.target.value)}
             placeholder="https://open.spotify.com/playlist/..."
-            className="w-full rounded-lg border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 outline-none transition focus:border-blue-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+            className="w-full rounded-lg border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 transition outline-none focus:border-blue-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           />
         </div>
 

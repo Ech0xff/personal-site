@@ -66,7 +66,7 @@ export default function RecentActivityList({ locale = "en-US", items }: Props) {
   return (
     <div className="scrollbar-visible max-h-[24rem] overflow-y-auto rounded-2xl pr-1">
       {groupedActivity.length === 0 && (
-        <p className="px-3 py-2 text-slate-400 text-sm">
+        <p className="px-3 py-2 text-sm text-slate-400">
           {t("recentActivity.empty")}
         </p>
       )}

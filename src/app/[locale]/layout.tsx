@@ -2,6 +2,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { cacheTag } from "next/cache";
 import { cookies } from "next/headers";
+import { Suspense } from "react";
+
 import ToastWatcher from "#components/features/ToastWatcher";
 import { ThemeHelper, ThemeProvider } from "#components/providers/theme";
 import { ImageViewer } from "#components/ui/ImageViewer";
@@ -11,9 +13,9 @@ import { CONFIG_KEYS } from "#lib/shared/config";
 import { routing } from "#lib/shared/i18n/routing";
 import { getT } from "#lib/shared/i18n/tools";
 import { fetchConfigs } from "#lib/shared/services";
+
 import "#styles/tailwind.css";
 import "#styles/variables.scss";
-import { Suspense } from "react";
 
 interface LayoutProps {
   children: React.ReactNode;

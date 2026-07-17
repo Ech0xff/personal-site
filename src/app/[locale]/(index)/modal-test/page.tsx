@@ -21,7 +21,7 @@ function ModalTestPanel({ depth }: { depth: number }) {
             <Layers className="h-5 w-5" />
           </span>
           <div>
-            <h2 className="font-semibold text-xl text-zinc-950 dark:text-zinc-50">
+            <h2 className="text-xl font-semibold text-zinc-950 dark:text-zinc-50">
               Modal Layer {depth}
             </h2>
             <p className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -39,7 +39,7 @@ function ModalTestPanel({ depth }: { depth: number }) {
         </button>
       </Stack>
 
-      <div className="flex flex-1 items-center rounded-lg border border-zinc-300 border-dashed p-4 text-sm text-zinc-600 dark:border-zinc-700 dark:text-zinc-300">
+      <div className="flex flex-1 items-center rounded-lg border border-dashed border-zinc-300 p-4 text-sm text-zinc-600 dark:border-zinc-700 dark:text-zinc-300">
         This panel is layer {depth}. Open another layer, then use Escape,
         backdrop click, or the close buttons to verify only the top layer
         closes.
@@ -70,10 +70,10 @@ export default function ModalTestPage() {
   return (
     <main className="mx-auto flex min-h-[70vh] w-full max-w-4xl flex-col justify-center gap-6 px-4 py-16">
       <Stack y className="gap-3">
-        <p className="font-medium text-blue-600 text-sm dark:text-blue-400">
+        <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
           Modal stack test
         </p>
-        <h1 className="font-bold text-4xl text-zinc-950 tracking-normal dark:text-zinc-50">
+        <h1 className="text-4xl font-bold tracking-normal text-zinc-950 dark:text-zinc-50">
           Layered Modal Sandbox
         </h1>
         <p className="max-w-2xl text-base text-zinc-600 dark:text-zinc-300">

@@ -28,8 +28,9 @@ const selectMenu = async () => {
       Number.isInteger(selectedIndex) &&
       selectedIndex >= 0 &&
       selectedIndex < menus.length
-    )
+    ) {
       return menus[selectedIndex];
+    }
     console.log("Invalid input. Please enter a valid menu number.");
   } finally {
     rl.close();

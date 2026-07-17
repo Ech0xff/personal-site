@@ -55,13 +55,13 @@ function TagCard({ tag }: { tag: TagWithCount }) {
       />
       <div className="relative grid h-full grid-rows-[1fr_auto]">
         <div
-          className="line-clamp-1 font-black text-[1.05rem] leading-none tracking-tight"
+          className="line-clamp-1 text-[1.05rem] leading-none font-black tracking-tight"
           style={{ color }}
         >
           {tag.name}
         </div>
         <div className="flex items-end justify-between gap-3">
-          <span className="relative z-10 font-bold text-lg text-slate-500 leading-none dark:text-white/55">
+          <span className="relative z-10 text-lg leading-none font-bold text-slate-500 dark:text-white/55">
             {tag.count}
           </span>
           <Tag

@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, CircleDashed, Clock, Plus, Trash2, X } from "lucide-react";
+
 import { CONFIG_KEYS, type RecentPlan } from "#lib/shared/config";
 import { cn } from "#lib/shared/utils";
 
@@ -78,12 +79,12 @@ export default function RecentPlanEditor() {
             <button
               type="button"
               onClick={addPlan}
-              className="group flex min-h-36 w-full flex-col items-center justify-center gap-3 rounded-3xl border border-zinc-300 border-dashed bg-zinc-100/40 text-zinc-500 transition hover:border-blue-400 hover:bg-blue-50/70 hover:text-blue-600 dark:border-zinc-700 dark:bg-zinc-950/30 dark:text-zinc-400 dark:hover:border-blue-500/70 dark:hover:bg-blue-950/20 dark:hover:text-blue-300"
+              className="group flex min-h-36 w-full flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-zinc-300 bg-zinc-100/40 text-zinc-500 transition hover:border-blue-400 hover:bg-blue-50/70 hover:text-blue-600 dark:border-zinc-700 dark:bg-zinc-950/30 dark:text-zinc-400 dark:hover:border-blue-500/70 dark:hover:bg-blue-950/20 dark:hover:text-blue-300"
             >
               <span className="flex h-10 w-10 items-center justify-center rounded-full border border-current/30 transition group-hover:scale-105">
                 <Plus className="h-5 w-5" />
               </span>
-              <span className="font-medium text-sm">Create first plan</span>
+              <span className="text-sm font-medium">Create first plan</span>
             </button>
           ) : (
             value.map((plan, index) => (
@@ -119,10 +120,13 @@ export default function RecentPlanEditor() {
                   <input
                     value={plan.task}
                     onChange={(event) =>
-                      updatePlan(index, { ...plan, task: event.target.value })
+                      updatePlan(index, {
+                        ...plan,
+                        task: event.target.value,
+                      })
                     }
                     placeholder="What are you planning?"
-                    className="min-w-0 flex-1 border-none bg-transparent px-1 py-0.5 font-medium text-base text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100 dark:placeholder:text-zinc-600"
+                    className="min-w-0 flex-1 border-none bg-transparent px-1 py-0.5 text-base font-medium text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100 dark:placeholder:text-zinc-600"
                   />
 
                   <button
@@ -143,7 +147,7 @@ export default function RecentPlanEditor() {
               type="button"
               onClick={addPlan}
               aria-label="Add plan"
-              className="group flex w-full items-center justify-center rounded-2xl border border-zinc-300 border-dashed py-3 text-zinc-400 transition hover:border-blue-400 hover:bg-blue-50/60 hover:text-blue-600 dark:border-zinc-700 dark:hover:border-blue-500/70 dark:hover:bg-blue-950/20 dark:hover:text-blue-300"
+              className="group flex w-full items-center justify-center rounded-2xl border border-dashed border-zinc-300 py-3 text-zinc-400 transition hover:border-blue-400 hover:bg-blue-50/60 hover:text-blue-600 dark:border-zinc-700 dark:hover:border-blue-500/70 dark:hover:bg-blue-950/20 dark:hover:text-blue-300"
             >
               <Plus className="h-5 w-5 transition group-hover:scale-110" />
             </button>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { JsonEditor } from "#components/ui/codemirror";
 import { CONFIG_KEYS } from "#lib/shared/config";
+
 import useConfig from "../_hooks/useConfig";
 import EditorShell from "./EditorShell";
 
@@ -55,7 +56,7 @@ export default function SiteInfo() {
           />
         </div>
         {parseError && (
-          <p className="text-red-600 text-sm dark:text-red-400">
+          <p className="text-sm text-red-600 dark:text-red-400">
             Invalid JSON. Fix it before saving.
           </p>
         )}

@@ -8,6 +8,7 @@ import {
 import { routing } from "#lib/shared/i18n/routing";
 import { getNormalizedLocale } from "#lib/shared/i18n/tools";
 import type { Database, Json } from "#types";
+
 import { generateConfigKey } from "../config/utils";
 import { makeStaticClient } from "../supabase";
 

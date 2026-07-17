@@ -6,6 +6,7 @@ import type { ReactCodeMirrorProps } from "@uiw/react-codemirror";
 import CodeMirror from "@uiw/react-codemirror";
 import type { Ref } from "react";
 import { useImperativeHandle, useMemo } from "react";
+
 import { useTheme } from "#components/providers/theme";
 import { cn } from "#lib/shared/utils";
 
@@ -13,8 +14,10 @@ export interface EditorHandle {
   clear: () => void;
 }
 
-export interface EditorProps
-  extends Omit<ReactCodeMirrorProps, "basicSetup" | "extensions" | "onChange"> {
+export interface EditorProps extends Omit<
+  ReactCodeMirrorProps,
+  "basicSetup" | "extensions" | "onChange"
+> {
   value: string;
   extensions?: Extension;
   onChange: (value: string) => void;
