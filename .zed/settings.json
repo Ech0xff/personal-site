@@ -1,6 +1,24 @@
 {
   "format_on_save": "on",
-  "language_servers": ["!stylelint-lsp", "!biome", "!eslint", "..."],
+  "language_servers": [
+    "!stylelint-lsp",
+    "!biome",
+    "!eslint",
+    "!dprint",
+    "!some-sass-lsp",
+    "..."
+  ],
+  "lsp": {
+    "css-language-server": {
+      "settings": {
+        "css": {
+          "lint": {
+            "unknownAtRules": "ignore"
+          }
+        }
+      }
+    }
+  },
   "languages": {
     "JavaScript": {
       "language_servers": ["oxlint"],
@@ -19,6 +37,7 @@
       "formatter": { "language_server": { "name": "oxfmt" } }
     },
     "CSS": {
+      "language_servers": ["tailwindcss-language-server"],
       "formatter": { "language_server": { "name": "oxfmt" } }
     },
     "SCSS": {
