@@ -141,8 +141,11 @@ The renderer also supports custom directives such as:
 - `bun run dev` - start the Next.js dev server
 - `bun run build` - build for production
 - `bun run start` - start the production server
-- `bun run lint` - run Biome checks and `tsc --noEmit`
-- `bun run format` - apply Biome fixes
+- `bun run lint` - run Oxlint checks
+- `bun run fmt` - check Oxfmt formatting
+- `bun run fmt:fix` - apply Oxfmt formatting
+- `bun run typecheck` - run TypeScript checks
+- `bun run test` - run Bun tests
 - `bun run menu dev` - open the interactive maintenance menu with `.env.development`
 - `bun run menu prod` - open the interactive maintenance menu with `.env.production`
 - `bun run gen:types:dev` - generate Supabase types using `.env.development`

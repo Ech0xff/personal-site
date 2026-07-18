@@ -1,0 +1,92 @@
+name: Create draft pull request
+
+on:
+  push:
+    branches:
+      - "feature/**"
+      - "bugfix/**"
+      - "hotfix/**"
+      - "release/**"
+      - "chore/**"
+      - "docs/**"
+      - "refactor/**"
+      - "test/**"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: auto-pr-${{ github.repository }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  create-pr:
+    name: Create draft pull request
+    if: ${{ !github.event.deleted && github.ref_name != github.event.repository.default_branch }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Create draft pull request when needed
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_PROMPT_DISABLED: "true"
+          REPOSITORY: ${{ github.repository }}
+          BASE_BRANCH: main
+          HEAD_BRANCH: ${{ github.ref_name }}
+          HEAD_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          set -euo pipefail
+
+          find_open_pr() {
+            gh pr list \
+              --repo "${REPOSITORY}" \
+              --head "${HEAD_BRANCH}" \
+              --base "${BASE_BRANCH}" \
+              --state open \
+              --limit 1 \
+              --json url \
+              --jq '.[0].url // empty'
+          }
+
+          existing_pr="$(find_open_pr)"
+
+          if [[ -n "${existing_pr}" ]]; then
+            printf 'Open pull request already exists: %s\n' "${existing_pr}"
+            exit 0
+          fi
+
+          pr_title="${HEAD_COMMIT_MESSAGE%%$'\n'*}"
+          pr_title="${pr_title//$'\r'/}"
+
+          if [[ -z "${pr_title}" ]]; then
+            pr_title="Draft: ${HEAD_BRANCH}"
+          fi
+
+          pr_title="${pr_title:0:256}"
+          printf -v pr_body \
+            'This draft pull request was created automatically after a push to `%s`.\n\nUpdate the title and description before marking it ready for review.' \
+            "${HEAD_BRANCH}"
+
+          if created_pr="$(gh pr create \
+            --repo "${REPOSITORY}" \
+            --base "${BASE_BRANCH}" \
+            --head "${HEAD_BRANCH}" \
+            --draft \
+            --title "${pr_title}" \
+            --body "${pr_body}" 2>&1)"; then
+            printf 'Created draft pull request: %s\n' "${created_pr}"
+            exit 0
+          fi
+
+          existing_pr="$(find_open_pr)"
+
+          if [[ -n "${existing_pr}" ]]; then
+            printf 'Open pull request was created concurrently: %s\n' "${existing_pr}"
+            exit 0
+          fi
+
+          printf '%s\n' "${created_pr}" >&2
+          exit 1

@@ -11,30 +11,22 @@ for scripts so `bun.lock` remains the only package-manager lockfile.
 
 ## Verification workflow
 
-The default validation command after code changes is:
+Run the independent, non-mutating verification commands after code changes:
 
-```sh
-bun run check
-```
-
-It runs these non-mutating checks in order:
-
-1. `bun run lint` — Oxlint.
-2. `bun run fmt` — Oxfmt formatting checks for JavaScript, TypeScript, JSON,
+1. `bun run fmt` — Oxfmt formatting checks for JavaScript, TypeScript, JSON,
    JSONC, CSS, SCSS, and Markdown. Oxfmt also sorts imports and Tailwind classes,
    including strings passed to `clsx` and `cn`.
+2. `bun run lint` — Oxlint.
 3. `bun run typecheck` — TypeScript with `tsc --noEmit`.
+4. `bun run test` — the repository's Bun tests. There is currently no separate
+   browser or end-to-end test suite.
 
 Use the smallest relevant check while iterating. After development is complete,
-run `bun run fmt:fix` and `bun run lint:fix`, then run `bun run check` to confirm
-that formatting, linting, and types pass without further changes. Run
-`bun run build` as an additional integration check for changes involving
-routing, server/client boundaries, Next.js cache behavior, metadata, or
-production bundling.
-
-There is no dedicated test script in `package.json`. Validation therefore relies
-on static checks, a production build when relevant, and targeted manual checks in
-the application. Do not claim that a test suite passed when only `check` was run.
+run `bun run fmt:fix` and `bun run lint:fix` when applicable, then run all four
+non-mutating commands above. Run `bun run build` as an optional local integration
+check for changes involving routing, server/client boundaries, Next.js cache
+behavior, metadata, or production bundling. Vercel is responsible for preview
+and production builds and deployments; GitHub Actions CI does not run the build.
 
 ## Mutating commands
 
