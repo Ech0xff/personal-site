@@ -3,14 +3,7 @@ name: Create draft pull request
 on:
   push:
     branches:
-      - "feature/**"
-      - "bugfix/**"
-      - "hotfix/**"
-      - "release/**"
-      - "chore/**"
-      - "docs/**"
-      - "refactor/**"
-      - "test/**"
+      - "**"
 
 permissions:
   contents: read
@@ -23,7 +16,7 @@ concurrency:
 jobs:
   create-pr:
     name: Create draft pull request
-    if: ${{ !github.event.deleted && github.ref_name != github.event.repository.default_branch }}
+    if: ${{ !github.event.deleted && github.ref_type == 'branch' && github.ref_name != github.event.repository.default_branch }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -36,7 +29,6 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           BASE_BRANCH: main
           HEAD_BRANCH: ${{ github.ref_name }}
-          HEAD_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
         run: |
           set -euo pipefail
 
@@ -58,11 +50,10 @@ jobs:
             exit 0
           fi
 
-          pr_title="${HEAD_COMMIT_MESSAGE%%$'\n'*}"
-          pr_title="${pr_title//$'\r'/}"
-
-          if [[ -z "${pr_title}" ]]; then
-            pr_title="Draft: ${HEAD_BRANCH}"
+          if [[ -z "${HEAD_BRANCH}" ]]; then
+            pr_title="Draft: unknown branch"
+          else
+            pr_title="Merge branch '${HEAD_BRANCH}'"
           fi
 
           pr_title="${pr_title:0:256}"

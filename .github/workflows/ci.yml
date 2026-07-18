@@ -3,9 +3,7 @@ name: Continuous integration
 on:
   push:
     branches:
-      - main
-      - "feature/**"
-      - "bugfix/**"
+      - "**"
   workflow_dispatch:
 
 permissions:
