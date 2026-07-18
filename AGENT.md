@@ -25,7 +25,7 @@ concise; put detailed technical documentation in [`DOCS`](./DOCS/).
 - Format (check only): `bun run fmt`
 - Format (auto-fix): `bun run fmt:fix`
 - Typecheck: `bun run typecheck`
-- Lint, format, and typecheck: `bun run check`
+- Test: `bun run test`
 - Open the maintenance menu: `bun run menu dev` or `bun run menu prod`
 - Generate Supabase types: `bun run gen:types:dev` or
   `bun run gen:types:prod`
