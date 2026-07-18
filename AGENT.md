@@ -58,11 +58,12 @@ and the expected validation workflow.
   invalidation paths together.
 - Do not hand-edit `src/types/supabase.ts`; regenerate it with the appropriate
   `gen:types` command.
-- Keep documentation consistent with the code. Update affected documentation in
-  the same change so architecture, commands, paths, and behavior do not become
+- Keep documentation consistent with the code. Update affected documentation in the
+  same change so architecture, commands, paths, and behavior do not become
   outdated.
-- After development is complete, run `bun run fmt:fix` and
-  `bun run lint:fix`, then run the relevant non-mutating checks.
+- Write all source-code comments and project documentation in English.
+- After completing a task, you must first run `bun run fmt:fix && bun run lint:fix`,
+  then run the relevant non-mutating checks.
 - Preserve unrelated user changes in the working tree. Avoid destructive Git
   operations unless explicitly requested.
 

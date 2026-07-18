@@ -21,12 +21,18 @@ Run the independent, non-mutating verification commands after code changes:
 4. `bun run test` — the repository's Bun tests. There is currently no separate
    browser or end-to-end test suite.
 
-Use the smallest relevant check while iterating. After development is complete,
-run `bun run fmt:fix` and `bun run lint:fix` when applicable, then run all four
-non-mutating commands above. Run `bun run build` as an optional local integration
-check for changes involving routing, server/client boundaries, Next.js cache
-behavior, metadata, or production bundling. Vercel is responsible for preview
-and production builds and deployments; GitHub Actions CI does not run the build.
+GitHub Actions runs these four checks on every branch push. The resulting
+`Verification` check is shown on the associated pull request, including draft
+pull requests. GitHub Actions does not run the production build; use the
+optional local build check below when the change affects bundling or runtime
+integration.
+
+Use the smallest relevant check while iterating. After completing a task, follow
+`AGENT.md`'s mandatory formatting and lint-fix step before running these
+non-mutating checks. `bun run build` is an optional local integration check for
+changes involving routing, server/client boundaries, Next.js cache behavior,
+metadata, or production bundling. Vercel is responsible for preview and
+production builds and deployments; GitHub Actions CI does not run the build.
 
 ## Mutating commands
 
