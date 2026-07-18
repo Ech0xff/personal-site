@@ -1,4 +1,5 @@
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Agentation } from "agentation";
 import type { Metadata } from "next";
 import { cacheTag } from "next/cache";
 import { cookies } from "next/headers";
@@ -81,6 +82,7 @@ async function ConfigShell({
             <ToastWatcher />
             <SpeedInsights />
             <ImageViewer>{children}</ImageViewer>
+            {process.env.NODE_ENV === "development" && <Agentation />}
           </ModalProvider>
         </ThemeProvider>
       </body>
