@@ -237,3 +237,4 @@ SELECT '51d99ba9-c65d-4d79-a76d-4ad66940ed68', tags.id
 FROM public.tags AS tags
 WHERE lower(tags.name) IN ('ai', 'llm', 'prompt engineering')
 ON CONFLICT DO NOTHING;
+

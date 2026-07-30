@@ -3,7 +3,6 @@ import { createInterface } from "readline/promises";
 
 import { loadEnvConfig } from "./common";
 import { rebindWebhook } from "./rebind-webhook";
-import { resetDb } from "./reset-db";
 import { setAdmin } from "./set-admin";
 
 interface MenuItem {
@@ -11,7 +10,6 @@ interface MenuItem {
   callback?: (envPath: string) => Promise<void>;
 }
 const menus: MenuItem[] = [
-  { label: "Reset database", callback: resetDb },
   { label: "Rebind webhooks", callback: rebindWebhook },
   { label: "Promote user to admin", callback: setAdmin },
 ];
