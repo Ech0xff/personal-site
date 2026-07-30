@@ -20,8 +20,13 @@
   utilities.
 - `src/styles`: global Tailwind entrypoint, theme variables, and SCSS mixins.
 - `src/types`: application types and generated Supabase database types.
-- `scripts`: interactive database and maintenance utilities.
-- `supabase`: schema, RPC, seed-data, and row-level security SQL.
+- `supabase/config.toml`: local Supabase CLI service and database configuration.
+- `supabase/schemas`: declarative tables, functions, grants, and RLS policies.
+- `supabase/migrations`: generated schema changes plus explicit bucket and
+  deployable baseline-data changes.
+- `supabase/seed.sql`: development-only local fixtures.
+- `scripts`: interactive webhook and admin maintenance utilities.
+- `supabase`: CLI configuration, versioned migrations, and local seed data.
 
 ## Routing and app shape
 
@@ -63,6 +68,21 @@
   must never be imported into client code or expose the service-role key.
 - Keep reusable query logic in shared services while constructing the correct
   Supabase client at the browser or server boundary.
+
+## Database lifecycle
+
+- PostgreSQL 17 runs locally through the Supabase CLI and Docker.
+- `bunx supabase db reset --local` owns destructive local rebuilds. Migration
+  files must not drop the public schema as a reset mechanism.
+- Declarative files under `supabase/schemas` are the maintained schema source of
+  truth. Versioned migrations remain the deployment history.
+- The initial migration contains the generated schema snapshot, public `images`
+  storage bucket, and deployable baseline content.
+- `supabase/seed.sql` is applied only to local resets and contains development
+  fixtures that must not be deployed.
+- Hosted projects advance through migration history with
+  `bunx supabase db push --linked`; application code continues to access the same
+  public database and storage interfaces.
 
 ## Caching model
 

@@ -27,8 +27,8 @@ concise; put detailed technical documentation in [`DOCS`](./DOCS/).
 - Typecheck: `bun run typecheck`
 - Test: `bun run test`
 - Open the maintenance menu: `bun run menu dev` or `bun run menu prod`
-- Generate Supabase types: `bun run gen:types:dev` or
-  `bun run gen:types:prod`
+- Run Supabase operations directly with `bunx supabase`; follow the local and
+  hosted workflows in [README](./README.md)
 - Regenerate SVG icon components: `bun run gen:icons`
 
 See [development and verification](./DOCS/DEVELOPMENT.md) for command behavior
@@ -56,8 +56,10 @@ and the expected validation workflow.
   the default locale are defined in `src/lib/shared/i18n/routing.ts`.
 - When changing cached data, update cache tags, cached consumers, and
   invalidation paths together.
-- Do not hand-edit `src/types/supabase.ts`; regenerate it with the appropriate
-  `gen:types` command.
+- Define database structure in `supabase/schemas`, generate versioned changes in
+  `supabase/migrations`, and keep local-only fixtures in `supabase/seed.sql`.
+- Do not hand-edit `src/types/supabase.ts`; regenerate it from the local Supabase
+  stack with the command documented in the README.
 - Keep documentation consistent with the code. Update affected documentation in the
   same change so architecture, commands, paths, and behavior do not become
   outdated.
