@@ -89,7 +89,7 @@ function render({ attributes, children }: RenderProps) {
       )}
       href={href}
       target="_blank"
-      rel="noopener"
+      rel="noreferrer"
     >
       <span className="mr-1 inline-block">
         <RefIcon type={type} />

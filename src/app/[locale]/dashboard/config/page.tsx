@@ -24,7 +24,7 @@ export type ConfigField = {
   render: () => ReactNode;
 };
 
-export const configFields = [
+const configFields = [
   {
     title: "Site Info",
     description:

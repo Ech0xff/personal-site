@@ -117,7 +117,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
     const toastId = toast.loading(t("startingOAuthLogin"));
 
     const { data, error } = await client.auth.signInWithOAuth({
-      provider: provider,
+      provider,
       options: {
         redirectTo: `${origin}/api/auth/callback`,
       },
