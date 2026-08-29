@@ -59,7 +59,7 @@ const formatMessage = (template: string, values?: TValues): string => {
 };
 
 const isDictionary = (value: DictionaryValue): value is Dictionary => {
-  return !!value && typeof value === "object" && !Array.isArray(value);
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 };
 
 const richTokenRegex = /<([a-zA-Z][\w-]*)>(.*?)<\/\1>/g;
@@ -109,7 +109,7 @@ const formatRichMessage = (
   }
 
   return nodes.map((node, index) => {
-    if (isValidElement(node) && node.key == null) {
+    if (isValidElement(node) && (node.key === null || node.key === undefined)) {
       return cloneElement(node, { key: `rich-${index}` });
     }
     return node;
@@ -128,7 +128,7 @@ export const getT = (namespace?: string, locale?: string): TFunction => {
     : undefined;
 
   const t = (key: string, values?: TValues) => {
-    if (!dictionary) return namespace ? namespace + "." + key : key;
+    if (!dictionary) return namespace ? `${namespace}.${key}` : key;
 
     const translated = getByPath(dictionary, key);
 
@@ -144,11 +144,11 @@ export const getT = (namespace?: string, locale?: string): TFunction => {
       return String(translated);
     }
 
-    return namespace ? namespace + "." + key : key;
+    return namespace ? `${namespace}.${key}` : key;
   };
 
   t.rich = (key: string, values?: TRichValues) => {
-    if (!dictionary) return namespace ? namespace + "." + key : key;
+    if (!dictionary) return namespace ? `${namespace}.${key}` : key;
 
     const translated = getByPath(dictionary, key);
 
@@ -164,7 +164,7 @@ export const getT = (namespace?: string, locale?: string): TFunction => {
       return String(translated);
     }
 
-    return namespace ? namespace + "." + key : key;
+    return namespace ? `${namespace}.${key}` : key;
   };
 
   return t;

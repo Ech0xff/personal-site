@@ -38,7 +38,12 @@ export const fetchImages = async (
   if (error) throw error;
 
   return (data || [])
-    .filter((file) => file.name && !file.name.endsWith("/"))
+    .filter(
+      (file): file is typeof file & { id: string; created_at: string } =>
+        file.id !== null &&
+        file.created_at !== null &&
+        !file.name.endsWith("/"),
+    )
     .map((file) => {
       const {
         data: { publicUrl },

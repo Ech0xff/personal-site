@@ -28,7 +28,7 @@ export default function DropdownPopover({
     popoverTarget: popoverId,
     style: {
       ...trigger.props.style,
-      anchorName: anchorName,
+      anchorName,
     },
   });
 

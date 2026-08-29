@@ -78,7 +78,7 @@ export default function EventCard({
                   key={getTagName(tag)}
                   className="rounded-md px-2 py-1 text-xs font-medium"
                   style={{
-                    backgroundColor: tagColor + "20",
+                    backgroundColor: `${tagColor}20`,
                     color: tagColor,
                   }}
                 >

@@ -112,7 +112,7 @@ export const checkLoggedIn = async (
   client: SupabaseClient,
 ): Promise<boolean> => {
   const { data } = await client.auth.getSession();
-  return !!data.session;
+  return Boolean(data.session);
 };
 
 /** Checks if a user is an admin */
@@ -130,7 +130,7 @@ export const getUserStatus = async (client: SupabaseClient) => {
   } = await client.auth.getSession();
   const user = session?.user;
   return {
-    isAuth: !!session,
+    isAuth: Boolean(session),
     isAdmin: user?.app_metadata.role === "admin",
     metadata: user?.user_metadata || {},
   };

@@ -16,7 +16,7 @@ Run the independent, non-mutating verification commands after code changes:
 1. `bun run fmt` — Oxfmt formatting checks for JavaScript, TypeScript, JSON,
    JSONC, CSS, SCSS, and Markdown. Oxfmt also sorts imports and Tailwind classes,
    including strings passed to `clsx` and `cn`.
-2. `bun run lint` — Oxlint.
+2. `bun run lint` — Oxlint, including type-aware TypeScript rules.
 3. `bun run typecheck` — TypeScript with `tsc --noEmit`.
 4. `bun run test` — the repository's Bun tests. There is currently no separate
    browser or end-to-end test suite.
