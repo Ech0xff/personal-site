@@ -47,7 +47,7 @@ export const loadEnvByPath = (envPath: string) => {
 
 export const checkYes = async (tips: string) => {
   const rl = createInterface({ input, output });
-  const answer = await rl.question(tips + "\nType yes to continue: ");
+  const answer = await rl.question(`${tips}\nType yes to continue: `);
   rl.close();
 
   if (answer.trim().toLowerCase() !== "yes") {
