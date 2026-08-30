@@ -1,10 +1,16 @@
-/** A translator scoped to the selected dictionary object. */
-export type Translator<Scope extends object> = {
-  <Value extends string>(select: (scope: Scope) => Value): Value;
-  scope<ChildScope extends object>(
-    select: (scope: Scope) => ChildScope,
-  ): Translator<ChildScope>;
-};
+import { assert, toMerged } from "es-toolkit";
+import { includes } from "es-toolkit/compat";
+
+import { Locale, locales } from "./i18n.const";
+import { Dictionary, PartialDictionary, Translator } from "./i18n.type";
+import { dictionary } from "./messages/default";
+
+export const defineDictionary = (overrides: PartialDictionary): Dictionary =>
+  toMerged(dictionary, overrides);
+
+export function assertLocal(locale: string): asserts locale is Locale {
+  assert(includes(locales, locale), `${locale} is not support`);
+}
 
 const createScopedT = <Scope extends object>(
   dictionary: Scope,

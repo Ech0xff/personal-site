@@ -1,4 +1,4 @@
-import { defineDictionary } from "./message.helper";
+import { defineDictionary } from "../i18n.helper";
 
 export default defineDictionary({
   meta: {

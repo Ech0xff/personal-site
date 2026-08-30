@@ -9,14 +9,21 @@ import ToastWatcher from "#components/features/ToastWatcher";
 import { ThemeHelper, ThemeProvider } from "#components/providers/theme";
 import { ImageViewer } from "#components/ui/ImageViewer";
 import ModalProvider from "#components/ui/ModalProvider";
+import { I18nProvider } from "#lib/client/i18n";
 import { CACHE_TAGS } from "#lib/server/cache";
 import { CONFIG_KEYS } from "#lib/shared/config";
-import { routing } from "#lib/shared/i18n/routing";
+import {
+  dictionaries,
+  Dictionary,
+  locales,
+  type Locale,
+} from "#lib/shared/i18n-new";
+import { assertLocal } from "#lib/shared/i18n-new/i18n.helper";
 import { getT } from "#lib/shared/i18n/tools";
-import { fetchConfigs } from "#lib/shared/services";
 
 import "#styles/tailwind.css";
 import "#styles/variables.scss";
+import { fetchConfigs } from "#lib/shared/services";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -24,7 +31,7 @@ interface LayoutProps {
 }
 
 export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
+  return locales.map((locale) => ({ locale }));
 }
 
 export async function generateMetadata({
@@ -56,19 +63,25 @@ export default async function RootLayout({
   params,
 }: Readonly<LayoutProps>) {
   const { locale } = await params;
+  assertLocal(locale);
+  const dictionary = dictionaries[locale];
 
   return (
     <Suspense fallback={null}>
-      <ConfigShell locale={locale}>{children}</ConfigShell>
+      <ConfigShell locale={locale} dictionary={dictionary}>
+        {children}
+      </ConfigShell>
     </Suspense>
   );
 }
 
 async function ConfigShell({
   locale,
+  dictionary,
   children,
 }: {
-  locale: string;
+  locale: Locale;
+  dictionary: Dictionary;
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
@@ -79,9 +92,11 @@ async function ConfigShell({
       <body style={{ anchorName: "--body" }}>
         <ThemeProvider initialTheme={theme}>
           <ModalProvider>
-            <ToastWatcher />
-            <SpeedInsights />
-            <ImageViewer>{children}</ImageViewer>
+            <I18nProvider locale={locale} dictionary={dictionary}>
+              <ToastWatcher />
+              <SpeedInsights />
+              <ImageViewer>{children}</ImageViewer>
+            </I18nProvider>
             {process.env.NODE_ENV === "development" && <Agentation />}
           </ModalProvider>
         </ThemeProvider>
