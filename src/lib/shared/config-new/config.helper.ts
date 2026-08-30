@@ -1,5 +1,7 @@
-import { ConfigDefinition } from "./config.type";
+import type { Json } from "#types";
 
-export const defineConfig = <Override, Resolved>(
+import type { ConfigDefinition } from "./config.type";
+
+export const defineConfig = <Override extends Json, Resolved>(
   definition: ConfigDefinition<Override, Resolved>,
 ) => definition;

@@ -1,78 +1,119 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import {
+  type ConfigDefinition,
   type ConfigKey,
-  type ConfigValue,
-  DEFAULT_CONFIG,
-} from "#lib/shared/config";
-import { routing } from "#lib/shared/i18n/routing";
-import { getNormalizedLocale } from "#lib/shared/i18n/tools";
+  type ConfigOverride,
+  type ConfigOverrideSnapshot,
+  CONFIG_REGISTRY,
+  CONFIG_SCOPE,
+  type ConfigSnapshot,
+} from "#lib/shared/config-new";
+import { defaultLocale, type Locale } from "#lib/shared/i18n-new";
 import type { Database, Json } from "#types";
 
-import { generateConfigKey } from "../config/utils";
-import { makeStaticClient } from "../supabase";
-
-export type ConfigsMap<K extends ConfigKey> = Omit<
-  Map<K, ConfigValue[K]>,
-  "get"
-> & {
-  get<T extends K>(key: T): ConfigValue[T];
+export type ConfigOptions = {
+  locale?: Locale;
 };
 
-/** Fetches multiple configuration values by their keys. */
-export const fetchConfigs = async <K extends ConfigKey>(
-  keys: readonly K[],
-  options?: {
-    locale?: string;
-    strict?: boolean;
-  },
-  client: SupabaseClient<Database> = makeStaticClient(),
-): Promise<ConfigsMap<K>> => {
-  const locale = getNormalizedLocale(options?.locale);
-  const strict = options?.strict ?? false;
-  const keySet = new Set<string>();
-  keys.forEach((key) => {
-    keySet.add(generateConfigKey(key, locale));
-    if (!strict) {
-      keySet.add(generateConfigKey(key, routing.defaultLocale));
-    }
-  });
+type RuntimeDefinition = ConfigDefinition<Json, unknown>;
+
+const getDefinition = (key: ConfigKey) =>
+  CONFIG_REGISTRY[key] as unknown as RuntimeDefinition;
+
+const getStorageKey = (key: ConfigKey, locale: Locale) =>
+  getDefinition(key).scope === CONFIG_SCOPE.LOCALE ? `${key}:${locale}` : key;
+
+const getDefaults = (key: ConfigKey, locale: Locale) => {
+  const definition = getDefinition(key);
+  return definition.scope === CONFIG_SCOPE.LOCALE
+    ? definition.defaults({ locale })
+    : definition.defaults();
+};
+
+const fetchStoredConfigs = async (
+  keys: readonly ConfigKey[],
+  locale: Locale,
+  client: SupabaseClient<Database>,
+) => {
+  const storageKeys = keys.map((key) => getStorageKey(key, locale));
+  if (storageKeys.length === 0) return new Map<string, Json>();
 
   const { data, error } = await client
     .from("configs")
     .select("key,value")
-    .in("key", Array.from(keySet));
+    .in("key", storageKeys);
   if (error) throw error;
 
-  return new Map(
-    keys.map((key) => [
-      key,
-      data.find((item) => item.key === generateConfigKey(key, locale))?.value ??
-        DEFAULT_CONFIG[key],
-    ]),
-  ) as ConfigsMap<K>;
+  return new Map(data.map(({ key, value }) => [key, value]));
 };
 
-/** Sets a configuration value by its key. */
-export const setConfig = async <T extends Json>(
-  key: string,
-  value: T,
-  client: SupabaseClient<Database> = makeStaticClient(),
-) => {
-  const { data, error } = await client
+export const loadConfigs = async <const Keys extends readonly ConfigKey[]>(
+  client: SupabaseClient<Database>,
+  keys: Keys,
+  options: ConfigOptions = {},
+): Promise<ConfigSnapshot<Keys[number]>> => {
+  const locale = options.locale ?? defaultLocale;
+  const storedConfigs = await fetchStoredConfigs(keys, locale, client);
+
+  return Object.fromEntries(
+    keys.map((key) => {
+      const definition = getDefinition(key);
+      const defaults = getDefaults(key, locale);
+      const stored = storedConfigs.get(getStorageKey(key, locale));
+      const value =
+        stored === undefined
+          ? defaults
+          : definition.resolve(defaults, definition.schema.parse(stored));
+
+      return [key, value];
+    }),
+  ) as ConfigSnapshot<Keys[number]>;
+};
+
+export const loadConfigOverrides = async <
+  const Keys extends readonly ConfigKey[],
+>(
+  client: SupabaseClient<Database>,
+  keys: Keys,
+  options: ConfigOptions = {},
+): Promise<ConfigOverrideSnapshot<Keys[number]>> => {
+  const locale = options.locale ?? defaultLocale;
+  const storedConfigs = await fetchStoredConfigs(keys, locale, client);
+
+  return Object.fromEntries(
+    keys.map((key) => {
+      const stored = storedConfigs.get(getStorageKey(key, locale));
+      return [
+        key,
+        stored === undefined ? null : getDefinition(key).schema.parse(stored),
+      ];
+    }),
+  ) as ConfigOverrideSnapshot<Keys[number]>;
+};
+
+export const setConfigOverride = async <K extends ConfigKey>(
+  client: SupabaseClient<Database>,
+  key: K,
+  override: ConfigOverride<K>,
+  options: ConfigOptions = {},
+): Promise<ConfigOverride<K>> => {
+  const value = getDefinition(key).schema.parse(override);
+  const storageKey = getStorageKey(key, options.locale ?? defaultLocale);
+  const { error } = await client
     .from("configs")
-    .upsert({ key, value }, { onConflict: "key" })
-    .select("value")
-    .single();
+    .upsert({ key: storageKey, value }, { onConflict: "key" });
   if (error) throw error;
-  return data.value as T;
+
+  return value as ConfigOverride<K>;
 };
 
-/** Deletes a configuration value by its key. */
-export const deleteConfig = async (
-  client: SupabaseClient<Database> = makeStaticClient(),
-  key: string,
+export const deleteConfigOverride = async (
+  client: SupabaseClient<Database>,
+  key: ConfigKey,
+  options: ConfigOptions = {},
 ) => {
-  const { error } = await client.from("configs").delete().eq("key", key);
+  const storageKey = getStorageKey(key, options.locale ?? defaultLocale);
+  const { error } = await client.from("configs").delete().eq("key", storageKey);
   if (error) throw error;
 };
