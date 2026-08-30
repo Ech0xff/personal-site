@@ -1,6 +1,6 @@
 import ContentRenderer from "#components/features/content/ContentRenderer";
 import { MarkdownEditor } from "#components/ui/codemirror";
-import { CONFIG_KEYS } from "#lib/shared/config";
+import { CONFIG_KEY } from "#lib/shared/config";
 import { cn } from "#lib/shared/utils";
 
 import useConfig from "../_hooks/useConfig";
@@ -12,19 +12,21 @@ export default function AboutMe() {
   const {
     value,
     setValue,
+    locale,
     setLocale,
     loading,
     hasStoredValue,
     deleteConfig,
     saveConfig,
   } = useConfig({
-    key: CONFIG_KEYS.aboutMe,
+    key: CONFIG_KEY.ABOUT_ME,
   });
 
   return (
     <EditorShell
       className="h-[80%] w-[80%]"
       title={title}
+      locale={locale}
       onLocaleChange={setLocale}
       onDelete={hasStoredValue ? deleteConfig : undefined}
       onSave={saveConfig}

@@ -5,10 +5,9 @@ import { useEffect, useState } from "react";
 
 import SectionCard from "#components/ui/SectionCard";
 import Stack from "#components/ui/Stack";
-import { useCurrentLocale } from "#lib/client/locale";
+import { useT } from "#lib/client/i18n";
 import { fetchAvailableOauthProvidersByBrowser } from "#lib/client/services";
 import { type OAuthProvider, providerConfig } from "#lib/shared/config";
-import { getT } from "#lib/shared/i18n";
 import { formatTime } from "#lib/shared/utils";
 
 import DashboardShell from "../_components/layout/DashboardShell";
@@ -18,8 +17,7 @@ import InfoRow from "./_components/ui/InfoRow";
 import { useAccount } from "./hooks/useAccount";
 
 export default function AccountPage() {
-  const locale = useCurrentLocale();
-  const t = getT("auth", locale);
+  const t = useT().scope((d) => d.auth);
   const [availableOauthProviders, setAvailableOauthProviders] = useState<
     OAuthProvider[]
   >([]);
@@ -29,7 +27,7 @@ export default function AccountPage() {
   useEffect(() => {
     let cancelled = false;
 
-    void fetchAvailableOauthProvidersByBrowser(locale).then((providers) => {
+    void fetchAvailableOauthProvidersByBrowser().then((providers) => {
       if (!cancelled) {
         setAvailableOauthProviders(providers);
       }
@@ -38,7 +36,7 @@ export default function AccountPage() {
     return () => {
       cancelled = true;
     };
-  }, [locale]);
+  }, []);
 
   const TitleRender = (title: string, Icon: React.ElementType) => {
     return (
@@ -129,7 +127,9 @@ export default function AccountPage() {
                             className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-900 transition-all hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
                           >
                             <config.icon className="h-4 w-4" />
-                            {t("linkProvider", { provider: config.label })}
+                            {t((d) => d.linkProvider, {
+                              provider: config.label,
+                            })}
                           </button>
                         );
                       })}

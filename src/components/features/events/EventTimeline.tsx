@@ -1,22 +1,19 @@
+"use client";
+
 import SectionCard from "#components/ui/SectionCard";
 import Stack from "#components/ui/Stack";
-import { getT } from "#lib/shared/i18n/tools";
+import { useT } from "#lib/client/i18n";
 import { cn, formatTime } from "#lib/shared/utils";
 
 import EventCard, { type Event } from "./EventCard";
 
 interface Props {
   events: Event[];
-  locale?: string;
   renderActions?: (event: Event) => React.ReactNode;
 }
 
-export default function EventTimeline({
-  events,
-  locale,
-  renderActions,
-}: Props) {
-  const tCommon = getT("Common", locale);
+export default function EventTimeline({ events, renderActions }: Props) {
+  const t = useT();
 
   // Group by year
   const groupedEvents: Record<string, Event[]> = {};
@@ -47,7 +44,7 @@ export default function EventTimeline({
             {/* Year Title */}
             <Stack x className="mb-8 justify-center">
               <h2 className="z-10 rounded-full bg-blue-500 px-4 py-1 text-lg font-bold text-white">
-                {year === "Unknown" ? tCommon("unknownYear") : year}
+                {year === "Unknown" ? t((d) => d.common.unknownYear) : year}
               </h2>
             </Stack>
 
@@ -82,11 +79,7 @@ export default function EventTimeline({
                         : "sm:ml-auto md:pl-8",
                     )}
                   >
-                    <EventCard
-                      event={event}
-                      locale={locale}
-                      renderActions={renderActions}
-                    />
+                    <EventCard event={event} renderActions={renderActions} />
                   </SectionCard>
                 </Stack>
               ))}

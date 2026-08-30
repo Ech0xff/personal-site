@@ -3,11 +3,20 @@ import type { z } from "zod";
 
 import type { Json } from "#types";
 
-import type { Locale } from "../i18n-new";
+import type { Locale } from "../i18n";
 import { CONFIG_KEY, CONFIG_SCOPE } from "./config.const";
 
 export type ConfigKey = ValueOf<typeof CONFIG_KEY>;
 export type ConfigScope = ValueOf<typeof CONFIG_SCOPE>;
+
+export type OAuthProvider = "github" | "google";
+
+export type RecentPlan = {
+  task: string;
+  status: "waiting" | "completed" | "pending" | "failed";
+  createdAt: string;
+  completedAt?: string;
+};
 
 export type ConfigLocaleContext = {
   locale: Locale;

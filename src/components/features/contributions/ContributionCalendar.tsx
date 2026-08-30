@@ -2,11 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { getT } from "#lib/shared/i18n/tools";
+import { useLocale, useT } from "#lib/client/i18n";
 import type { ContributionDay } from "#types";
 
 type Props = {
-  locale?: string;
   posts: ContributionDay[];
   thoughts: ContributionDay[];
   events: ContributionDay[];
@@ -158,13 +157,13 @@ const getAvailableYears = (contributions: Map<string, number>) => {
 };
 
 export default function ContributionCalendar({
-  locale = "en-US",
   posts,
   thoughts,
   events,
 }: Props) {
+  const locale = useLocale();
   const base = BASE_SIZE;
-  const t = getT("IndexHome", locale);
+  const t = useT().scope((d) => d.indexHome);
   const merged = useMemo(
     () => mergeContributions(posts, thoughts, events),
     [events, posts, thoughts],
@@ -191,9 +190,9 @@ export default function ContributionCalendar({
   );
   const monthLabels = buildMonthLabels(weeks, locale);
   const weekdayLabels = getWeekdayLabels([
-    t("stats.weekdays.monday"),
-    t("stats.weekdays.wednesday"),
-    t("stats.weekdays.friday"),
+    t((d) => d.stats.weekdays.monday),
+    t((d) => d.stats.weekdays.wednesday),
+    t((d) => d.stats.weekdays.friday),
   ]);
   const extraTopSpace = multiplyLength(base, 3);
   const gap = multiplyLength(base, 0.3);
@@ -321,7 +320,7 @@ export default function ContributionCalendar({
         <div className="flex flex-wrap items-center gap-2">
           <div
             role="tablist"
-            aria-label={t("stats.yearSelectorLabel")}
+            aria-label={t((d) => d.stats.yearSelectorLabel)}
             className="flex items-center rounded-lg bg-zinc-100 p-0.5 dark:bg-zinc-800"
           >
             {availableYears.map((year) => (
@@ -345,7 +344,7 @@ export default function ContributionCalendar({
         </div>
 
         <div className="flex items-center gap-2">
-          <span>{t("stats.less")}</span>
+          <span>{t((d) => d.stats.less)}</span>
           {CELL_LEVEL_CLASS.map((className, index) => (
             <div
               key={index}
@@ -357,7 +356,7 @@ export default function ContributionCalendar({
               }}
             />
           ))}
-          <span>{t("stats.more")}</span>
+          <span>{t((d) => d.stats.more)}</span>
         </div>
       </div>
     </div>

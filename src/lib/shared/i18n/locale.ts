@@ -1,6 +1,6 @@
 import { routing } from "./routing";
 
-const localeSet = new Set(routing.locales);
+const localeSet = new Set<string>(routing.locales);
 
 const ensureLeadingSlash = (value: string) => {
   if (!value) return "/";

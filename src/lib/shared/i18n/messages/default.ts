@@ -1,0 +1,181 @@
+export const dictionary = {
+  meta: {
+    siteTitle: "Ech0xff's Little Nest",
+    siteDescription: "A place where technology and life intersect.",
+  },
+  home: {
+    hero: "Ech0xff's Nest",
+    typing: ["echo 'Hello World!'"],
+    bio: "Let's create something cool.",
+  },
+  footer: {
+    filing: "© 2025 Ech0xff. All rights reserved.",
+  },
+  navigation: {
+    posts: "POSTS",
+    search: "SEARCH",
+    dashboard: "DASHBOARD",
+    thoughts: "THOUGHTS",
+    events: "EVENTS",
+    description: "Ech0xff's Little Nest",
+  },
+  search: {
+    title: "Global Search",
+    placeholder: "Search posts, thoughts, and events...",
+    close: "Close search",
+    empty: "Start typing to search across posts, thoughts, and events.",
+    loading: "Searching...",
+    error: "Search is temporarily unavailable. Please try again.",
+    noResults: 'No results found for "{query}".',
+    advanced: {
+      title: "Advanced",
+      searchRawText: "Search raw text",
+    },
+    types: {
+      post: "Post",
+      thought: "Thought",
+      event: "Event",
+    },
+  },
+  common: {
+    unknownYear: "Unknown",
+    unknownDate: "Unknown Date",
+  },
+  indexHome: {
+    about: {
+      cardTitle: "Hi there 👋",
+    },
+    find: {
+      cardTitle: "Find me on",
+    },
+    latestPosts: {
+      cardTitle: "Latest Posts",
+      empty: "No posts yet...",
+    },
+    activity: {
+      cardTitle: "Activity",
+    },
+    recentActivity: {
+      cardTitle: "Recent Updates",
+      empty: "No activity yet...",
+      recordCount: "{count, plural, one {# record} other {# records}}",
+    },
+    stats: {
+      cardTitle: "Statistics",
+      all: "All",
+      posts: "Posts",
+      thoughts: "Thoughts",
+      events: "Events",
+      characters: "Characters",
+      contributions: "{count} contributions in the past year",
+      summaryTitle: "This Year",
+      summaryDescription:
+        "{count} public notes and entries so far. Still building in public, one update at a time.",
+      summaryActiveDays: "Active Days",
+      summaryMainType: "Main Format",
+      summaryTopics: "Topics",
+      topicsTitle: "Topics in Motion",
+      topicsDescription:
+        "A quick look at the themes that keep surfacing across posts, thoughts, and events.",
+      summaryTopicsBadge: "{count} topics tracked",
+      views: "Views",
+      unknown: "Unknown",
+      less: "Less",
+      more: "More",
+      contributionCount: "contributions",
+      contributionSingle: "contribution",
+      yearSelectorLabel: "Select contribution year",
+      weekdays: {
+        monday: "Mon",
+        wednesday: "Wed",
+        friday: "Fri",
+      },
+    },
+    recentPlan: {
+      title: "Recent Plans",
+      empty: "No plans yet",
+    },
+    playlist: {
+      cardTitle: "My Playlist",
+    },
+  },
+  indexEvents: {
+    metaTitle: "Events",
+    title: "Timeline",
+    description:
+      "A timeline of memorable moments and milestones. Total <b>{total}</b> events recorded, documenting the journey.",
+  },
+  indexPosts: {
+    metaTitle: "Posts",
+    title: "Posts",
+    description:
+      "Writings and articles about tech, life, and everything in between. Total <b>{totalPosts}</b> posts, approx <b>{totalCharacters}</b> characters.",
+  },
+  indexThoughts: {
+    metaTitle: "Thoughts",
+    title: "Thoughts",
+    description:
+      "Just some random ramblings. Total <b>{totalThoughts}</b> entries, approx <b>{totalCharacters}</b> characters.",
+  },
+  postDetail: {
+    metaNotFoundTitle: "Post Not Found",
+    notFoundTitle: "Post Not Found",
+    notFoundDescription:
+      "Sorry, the post you are looking for does not exist or has been deleted.",
+    backToPosts: "Back to Posts",
+    tableOfContents: "Contents",
+  },
+  thoughtCard: {
+    preview: "preview",
+    imageAlt: "Thought image {index}",
+  },
+  toastCodes: {
+    oauthRequiresPrimary:
+      "No matching account was found. Please register with your email account first.",
+    oauthLoginFailedTryAgain: "OAuth login failed. Please try again.",
+  },
+  auth: {
+    welcomeBack: "Welcome Back",
+    createAccount: "Create Account",
+    signInToYourAccount: "Sign in to your account",
+    signUpForNewAccount: "Sign up for a new account",
+    signIn: "Sign In",
+    signUp: "Sign Up",
+    email: "Email",
+    password: "Password",
+    confirmPassword: "Confirm Password",
+    enterYourEmail: "Enter your email",
+    enterYourPassword: "Enter your password",
+    repeatYourPassword: "Repeat your password",
+    or: "or",
+    continueWithGithub: "Continue with GitHub",
+    continueWithGoogle: "Continue with Google",
+    continueWith: "Continue with {provider}",
+    linkProvider: "Link {provider}",
+    backToHome: "Back to home",
+    loggingIn: "Logging in...",
+    invalidEmailOrPassword: "Invalid email or password",
+    loggedInSuccessfully: "Logged in successfully.",
+    creatingAccount: "Creating account...",
+    passwordsDoNotMatch: "Passwords do not match",
+    errorRegisteringUser: "Error registering user",
+    emailReservedForOauth: "This email is already registered.",
+    accountCreatedSuccessfully: "Account created successfully.",
+    loggingOut: "Logging out...",
+    errorLoggingOut: "Error logging out",
+    loggedOutSuccessfully: "Logged out successfully.",
+    startingOAuthLogin: "Starting OAuth login...",
+    errorLoggingInWithOAuth: "Error logging in with OAuth",
+    redirectingToOAuthProvider: "Redirecting to OAuth provider...",
+  },
+  errorPage: {
+    title: "Something Went Wrong",
+    description:
+      "An unexpected error occurred. You can go back home or sign in again and retry.",
+    errorCode: "Error code: {code}",
+    backHome: "Back to Home",
+    backAuth: "Go to Sign In",
+    redirecting: "Redirecting to the error page...",
+    fallback: "This page crashed. Please try again later.",
+  },
+};

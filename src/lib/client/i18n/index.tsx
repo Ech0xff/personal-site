@@ -3,8 +3,7 @@
 import { assert } from "es-toolkit";
 import { createContext, useContext, useMemo } from "react";
 
-import { createT, Dictionary } from "#lib/shared/i18n-new";
-import type { Locale } from "#lib/shared/i18n-new/i18n.const";
+import { createT, type Dictionary, type Locale } from "#lib/shared/i18n";
 
 interface I18nContextValue {
   locale: Locale;
@@ -27,7 +26,7 @@ export function I18nProvider({
   return <I18nContext value={value}>{children}</I18nContext>;
 }
 
-const useI18n = () => {
+export const useI18n = () => {
   const value = useContext(I18nContext);
 
   assert(value, "useI18n must be used within I18nProvider");
@@ -36,9 +35,9 @@ const useI18n = () => {
 };
 
 export const useT = () => {
-  const { dictionary } = useI18n();
+  const { dictionary, locale } = useI18n();
 
-  return useMemo(() => createT(dictionary), [dictionary]);
+  return useMemo(() => createT(dictionary, locale), [dictionary, locale]);
 };
 
 export const useLocale = (): Locale => useI18n().locale;

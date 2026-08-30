@@ -1,6 +1,8 @@
+"use client";
+
 import Link from "#components/ui/Link";
 import Stack from "#components/ui/Stack";
-import { getT } from "#lib/shared/i18n/tools";
+import { useT } from "#lib/client/i18n";
 import { cn, formatTime } from "#lib/shared/utils";
 import type { Post, Tag } from "#types";
 
@@ -11,11 +13,10 @@ interface Props {
     tags: Tag[];
   };
   className?: string;
-  locale?: string;
 }
 
-export default function PostCard({ post, className, locale }: Props) {
-  const tCommon = getT("Common", locale);
+export default function PostCard({ post, className }: Props) {
+  const t = useT();
   const { id, title, published_at } = post;
   return (
     <Link
@@ -31,7 +32,11 @@ export default function PostCard({ post, className, locale }: Props) {
         <TagsList className="mr-2 hidden sm:flex" tags={post.tags} />
         {/* Date */}
         <span className="ml-auto w-28 shrink-0 text-sm whitespace-nowrap text-gray-400">
-          {formatTime(published_at, "MMM D, YYYY", tCommon("unknownDate"))}
+          {formatTime(
+            published_at,
+            "MMM D, YYYY",
+            t((d) => d.common.unknownDate),
+          )}
         </span>
       </Stack>
     </Link>

@@ -1,7 +1,7 @@
 "use client";
 import NextLink from "next/link";
 
-import { useCurrentLocale } from "#lib/client/locale";
+import { useLocale } from "#lib/client/i18n";
 import { localizeHref } from "#lib/shared/i18n";
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
   title?: string;
 }
 export default function Link({ children, href, ...props }: Props) {
-  const locale = useCurrentLocale();
+  const locale = useLocale();
 
   return (
     <NextLink href={localizeHref(locale, href)} {...props}>

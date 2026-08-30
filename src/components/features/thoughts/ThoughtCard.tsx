@@ -1,7 +1,9 @@
+"use client";
+
 import ThoughtContent from "#components/features/content/ThoughtContent";
 import Image from "#components/ui/Image";
 import Stack from "#components/ui/Stack";
-import { getT } from "#lib/shared/i18n/tools";
+import { useT } from "#lib/client/i18n";
 import { cn } from "#lib/shared/utils/tailwind";
 import { formatTime } from "#lib/shared/utils/tools";
 
@@ -17,7 +19,6 @@ interface Props {
   thought: Thought;
   id?: string;
   className?: string;
-  locale?: string;
   index?: number;
   isLast?: boolean;
   renderActions?: (thought: Thought) => React.ReactNode;
@@ -27,13 +28,13 @@ export default function ThoughtCard({
   thought,
   id,
   className,
-  locale,
   index,
   isLast = true,
   renderActions,
 }: Props) {
-  const tCommon = getT("Common", locale);
-  const tThoughtCard = getT("ThoughtCard", locale);
+  const translator = useT();
+  const tCommon = translator.scope((d) => d.common);
+  const tThoughtCard = translator.scope((d) => d.thoughtCard);
 
   return (
     <div id={id} className={cn("group scroll-mt-24", className)}>
@@ -44,14 +45,14 @@ export default function ThoughtCard({
           className="gap-3 font-mono text-xs text-zinc-400 dark:text-zinc-500"
         >
           <span className="font-bold text-zinc-500 dark:text-zinc-400">
-            #{index ? index : tThoughtCard("preview")}
+            #{index ? index : tThoughtCard((d) => d.preview)}
           </span>
           <span>•</span>
           <span>
             {formatTime(
               thought.published_at,
               "MM/DD, HH:mm",
-              tCommon("unknownDate"),
+              tCommon((d) => d.unknownDate),
             )}
           </span>
         </Stack>
@@ -77,7 +78,9 @@ export default function ThoughtCard({
               key={idx}
               framed
               src={img}
-              alt={tThoughtCard("imageAlt", { index: idx + 1 })}
+              alt={tThoughtCard((d) => d.imageAlt, {
+                index: idx + 1,
+              })}
             />
           ))}
         </div>

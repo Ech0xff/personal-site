@@ -3,33 +3,25 @@ import { cacheTag } from "next/cache";
 
 import ThoughtTimeline from "#components/features/thoughts/ThoughtTimeline";
 import { CACHE_TAGS } from "#lib/server/cache";
-import { getT } from "#lib/shared/i18n/tools";
+import { getScopedT } from "#lib/server/i18n";
 import { fetchThoughts } from "#lib/shared/services";
 import { makeStaticClient } from "#lib/shared/supabase";
 
 import CollectionBody from "../_components/CollectionBody";
 
-interface PageProps {
-  params: Promise<{ locale: string }>;
-}
-
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
-  const { locale } = await params;
-  const t = getT("IndexThoughts", locale);
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getScopedT((d) => d.indexThoughts);
 
   return {
-    title: t("metaTitle"),
+    title: t((d) => d.metaTitle),
   };
 }
 
-export default async function ThoughtsPage({ params }: PageProps) {
+export default async function ThoughtsPage() {
   "use cache";
   cacheTag(CACHE_TAGS.thoughts);
 
-  const { locale } = await params;
-  const t = getT("IndexThoughts", locale);
+  const t = await getScopedT((d) => d.indexThoughts);
   const client = makeStaticClient();
   const thoughts = await fetchThoughts(client);
   const totalThoughts = thoughts.length;
@@ -40,8 +32,8 @@ export default async function ThoughtsPage({ params }: PageProps) {
 
   return (
     <CollectionBody
-      title={t("title")}
-      description={t.rich("description", {
+      title={t((d) => d.title)}
+      description={t.rich((d) => d.description, {
         totalThoughts,
         totalCharacters,
         b: (chunks) => (
@@ -51,7 +43,7 @@ export default async function ThoughtsPage({ params }: PageProps) {
         ),
       })}
     >
-      <ThoughtTimeline thoughts={thoughts} locale={locale} />
+      <ThoughtTimeline thoughts={thoughts} />
     </CollectionBody>
   );
 }

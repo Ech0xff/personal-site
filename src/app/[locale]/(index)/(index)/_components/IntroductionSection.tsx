@@ -4,9 +4,8 @@ import ContentRenderer from "#components/features/content/ContentRenderer";
 import ContributionCalendar from "#components/features/contributions/ContributionCalendar";
 import TagMarquee from "#components/features/tags/TagMarquee";
 import Stack from "#components/ui/Stack";
-import type { RecentPlan } from "#lib/shared/config";
-import { generatePlaylistUrl } from "#lib/shared/config/utils";
-import { getT } from "#lib/shared/i18n/tools";
+import { getScopedT } from "#lib/server/i18n";
+import { generatePlaylistUrl, type RecentPlan } from "#lib/shared/config";
 import type { BlogSummaryData, RecentActivityItem } from "#types";
 
 import Card from "./Card";
@@ -28,12 +27,10 @@ const recentPlanStatusIcons: Record<RecentPlan["status"], typeof Clock> = {
 };
 
 export async function IntroductionSection({
-  locale,
   data,
   recentActivity,
   config,
 }: {
-  locale?: string;
   data: BlogSummaryData;
   recentActivity: RecentActivityItem[];
   config: {
@@ -42,7 +39,7 @@ export async function IntroductionSection({
     recentPlan: RecentPlan[];
   };
 }) {
-  const t = getT("IndexHome", locale);
+  const t = await getScopedT((d) => d.indexHome);
 
   const tags = data.tags ?? [];
 
@@ -59,19 +56,19 @@ export async function IntroductionSection({
 
   const statsItems = [
     {
-      label: t("stats.posts"),
+      label: t((d) => d.stats.posts),
       count: data.posts.count,
     },
     {
-      label: t("stats.thoughts"),
+      label: t((d) => d.stats.thoughts),
       count: data.thoughts.count,
     },
     {
-      label: t("stats.events"),
+      label: t((d) => d.stats.events),
       count: data.events.count,
     },
     {
-      label: t("stats.characters"),
+      label: t((d) => d.stats.characters),
       count: totalCharacters,
     },
   ];
@@ -82,21 +79,20 @@ export async function IntroductionSection({
       className="mx-auto mb-8 w-[calc(100svw-2*var(--layout-padding-x))] gap-8 px-4"
     >
       {/* About Card */}
-      <Card title={t("about.cardTitle")}>
+      <Card title={t((d) => d.about.cardTitle)}>
         <Stack y className="gap-4 rounded-2xl p-4">
           <ContentRenderer content={config.aboutMe} />
         </Stack>
       </Card>
 
-      <Card title={t("recentActivity.cardTitle")}>
-        <RecentActivityList locale={locale} items={recentActivity} />
+      <Card title={t((d) => d.recentActivity.cardTitle)}>
+        <RecentActivityList items={recentActivity} />
       </Card>
 
       {/* Stats Card */}
-      <Card title={t("stats.cardTitle")}>
+      <Card title={t((d) => d.stats.cardTitle)}>
         <Stack y className="gap-4">
           <ContributionCalendar
-            locale={locale}
             posts={data.posts.contributions}
             thoughts={data.thoughts.contributions}
             events={data.events.contributions}
@@ -131,7 +127,7 @@ export async function IntroductionSection({
               className="min-h-0 gap-2 rounded-2xl bg-slate-50 p-4 dark:bg-white/5"
             >
               <Stack className="text-xs font-medium tracking-wider text-slate-400 uppercase">
-                {t("recentPlan.title")}
+                {t((d) => d.recentPlan.title)}
               </Stack>
               <Stack y className="min-h-0 flex-1 gap-2">
                 {config.recentPlan.length > 0 ? (
@@ -152,7 +148,7 @@ export async function IntroductionSection({
                   })
                 ) : (
                   <Stack className="flex h-full min-h-32 items-center justify-center rounded-xl border border-dashed border-zinc-200 px-4 text-center text-slate-400 dark:border-zinc-800 dark:text-slate-500">
-                    {t("recentPlan.empty")}
+                    {t((d) => d.recentPlan.empty)}
                   </Stack>
                 )}
               </Stack>
@@ -162,9 +158,9 @@ export async function IntroductionSection({
       </Card>
 
       {hasPlaylist && (
-        <Card title={t("playlist.cardTitle")}>
+        <Card title={t((d) => d.playlist.cardTitle)}>
           <iframe
-            title={t("playlist.cardTitle")}
+            title={t((d) => d.playlist.cardTitle)}
             allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
             height="450"
             className="hidden w-full overflow-hidden rounded-lg border-none dark:block"
@@ -172,7 +168,7 @@ export async function IntroductionSection({
             src={darkPlaylistUrl}
           />
           <iframe
-            title={t("playlist.cardTitle")}
+            title={t((d) => d.playlist.cardTitle)}
             allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
             height="450"
             className="w-full overflow-hidden rounded-lg border-none dark:hidden"

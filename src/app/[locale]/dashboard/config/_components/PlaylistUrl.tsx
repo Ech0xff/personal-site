@@ -1,5 +1,4 @@
-import { CONFIG_KEYS } from "#lib/shared/config";
-import { generatePlaylistUrl } from "#lib/shared/config/utils";
+import { CONFIG_KEY, generatePlaylistUrl } from "#lib/shared/config";
 import { cn } from "#lib/shared/utils";
 
 import useConfig from "../_hooks/useConfig";
@@ -25,13 +24,14 @@ export default function PlaylistUrl() {
   const {
     value,
     setValue,
+    locale,
     setLocale,
     loading,
     hasStoredValue,
     deleteConfig,
     saveConfig,
   } = useConfig({
-    key: CONFIG_KEYS.playlistUrl,
+    key: CONFIG_KEY.PLAYLIST_URL,
   });
   const lightPreviewUrl = getPreviewUrl(value, "light");
   const darkPreviewUrl = getPreviewUrl(value, "dark");
@@ -41,6 +41,7 @@ export default function PlaylistUrl() {
     <EditorShell
       className="w-full max-w-6xl"
       title={title}
+      locale={locale}
       onLocaleChange={setLocale}
       onDelete={hasStoredValue ? deleteConfig : undefined}
       onSave={saveConfig}
