@@ -5,7 +5,7 @@ import { Languages } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
-import { useCurrentLocale } from "#lib/client/locale";
+import { useLocale } from "#lib/client/i18n";
 import { routing, switchLocaleInPathname } from "#lib/shared/i18n";
 import { cn } from "#lib/shared/utils";
 
@@ -18,7 +18,7 @@ export default function LanguageToggle({ className }: { className?: string }) {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const currentLocale = useCurrentLocale();
+  const currentLocale = useLocale();
   const currentLocaleIndex = routing.locales.indexOf(currentLocale);
   const targetLocale =
     routing.locales[(currentLocaleIndex + 1) % routing.locales.length];

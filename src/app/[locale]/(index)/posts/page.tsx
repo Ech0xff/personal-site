@@ -4,35 +4,28 @@ import { cacheTag } from "next/cache";
 import PostCard from "#components/features/posts/PostCard";
 import Stack from "#components/ui/Stack";
 import { CACHE_TAGS } from "#lib/server/cache";
-import { getT } from "#lib/shared/i18n/tools";
+import { getScopedT, getT } from "#lib/server/i18n";
 import { fetchPosts } from "#lib/shared/services";
 import { makeStaticClient } from "#lib/shared/supabase";
 import { formatTime } from "#lib/shared/utils";
 
 import CollectionBody from "../_components/CollectionBody";
 
-interface PageProps {
-  params: Promise<{ locale: string }>;
-}
-
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
-  const { locale } = await params;
-  const t = getT("IndexPosts", locale);
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getScopedT((d) => d.indexPosts);
 
   return {
-    title: t("metaTitle"),
+    title: t((d) => d.metaTitle),
   };
 }
 
-export default async function PostsPage({ params }: PageProps) {
+export default async function PostsPage() {
   "use cache";
   cacheTag(CACHE_TAGS.posts);
 
-  const { locale } = await params;
-  const t = getT("IndexPosts", locale);
-  const tCommon = getT("Common", locale);
+  const translator = await getT();
+  const t = translator.scope((d) => d.indexPosts);
+  const tCommon = translator.scope((d) => d.common);
   const client = makeStaticClient();
   const posts = await fetchPosts(client);
   const totalPosts = posts.length;
@@ -58,8 +51,8 @@ export default async function PostsPage({ params }: PageProps) {
 
   return (
     <CollectionBody
-      title={t("title")}
-      description={t.rich("description", {
+      title={t((d) => d.title)}
+      description={t.rich((d) => d.description, {
         totalPosts,
         totalCharacters,
         b: (chunks) => (
@@ -74,7 +67,7 @@ export default async function PostsPage({ params }: PageProps) {
           <section key={year}>
             {/* Year Title */}
             <h2 className="mb-3 flex items-center gap-2 text-2xl font-bold text-gray-800 dark:text-gray-200">
-              {year === "Unknown" ? tCommon("unknownYear") : year}
+              {year === "Unknown" ? tCommon((d) => d.unknownYear) : year}
               <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
                 ({groupedPosts[year]?.length})
               </span>
@@ -83,7 +76,7 @@ export default async function PostsPage({ params }: PageProps) {
             {/* List of posts for the year */}
             <Stack y>
               {groupedPosts[year]?.map((post) => (
-                <PostCard key={post.id} post={post} locale={locale} />
+                <PostCard key={post.id} post={post} />
               ))}
             </Stack>
           </section>

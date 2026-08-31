@@ -1,12 +1,12 @@
 "use client";
 
 import { LoaderCircle, Save, Trash2, X } from "lucide-react";
-import { type HTMLAttributes, useState } from "react";
+import type { HTMLAttributes } from "react";
 
 import Button from "#components/ui/Button";
 import { useModal } from "#components/ui/ModalProvider";
 import SegmentedToggle from "#components/ui/SegmentedToggle";
-import { type Locale, routing } from "#lib/shared/i18n/routing";
+import { locales, type Locale } from "#lib/shared/i18n";
 import { cn } from "#lib/shared/utils";
 
 export type ConfigField = {
@@ -18,7 +18,8 @@ export type ConfigField = {
 export interface Props extends HTMLAttributes<HTMLDivElement> {
   title: string;
   loading: boolean;
-  onLocaleChange: (locale: Locale) => void;
+  locale?: Locale;
+  onLocaleChange?: (locale: Locale) => void;
   onDelete?: () => void | Promise<void>;
   onSave?: () => void | Promise<void>;
 }
@@ -26,19 +27,14 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {
 export default function EditorShell({
   title,
   loading,
+  locale,
   children,
   className,
   onLocaleChange,
   onDelete,
   onSave,
 }: Props) {
-  const [locale, setLocale] = useState<Locale>(routing.defaultLocale);
   const { close } = useModal();
-
-  const handleLocaleChange = (nextLocale: Locale) => {
-    setLocale(nextLocale);
-    onLocaleChange(nextLocale);
-  };
 
   return (
     <div
@@ -51,15 +47,14 @@ export default function EditorShell({
         <h2 className="truncate text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
           {title}
         </h2>
-        <SegmentedToggle
-          value={locale}
-          onChange={handleLocaleChange}
-          options={routing.locales.map((locale) => ({
-            value: locale,
-            label: locale,
-          }))}
-          size="sm"
-        />
+        {locale && onLocaleChange ? (
+          <SegmentedToggle
+            value={locale}
+            onChange={onLocaleChange}
+            options={locales.map((value) => ({ value, label: value }))}
+            size="sm"
+          />
+        ) : null}
       </div>
 
       <div className="relative flex flex-1 overflow-hidden px-1">

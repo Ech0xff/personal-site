@@ -4,14 +4,15 @@ import { AlertTriangle, Home } from "lucide-react";
 
 import Link from "#components/ui/Link";
 import Stack from "#components/ui/Stack";
+import { useT } from "#lib/client/i18n";
 
 interface Props {
   error: Error & { digest?: string };
 }
 
 export default function ErrorPage({ error }: Props) {
-  const message =
-    error.message.trim() || "An unexpected error interrupted this page.";
+  const t = useT().scope((d) => d.errorPage);
+  const message = error.message.trim() || t((d) => d.fallback);
 
   return (
     <div className="flex h-svh w-svw items-center justify-center px-6 py-12">
@@ -25,7 +26,7 @@ export default function ErrorPage({ error }: Props) {
 
         <Stack y className="gap-2">
           <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
-            Something went wrong
+            {t((d) => d.title)}
           </h1>
           <p className="text-sm leading-6 wrap-break-word text-zinc-600 dark:text-zinc-300">
             {message}
@@ -37,7 +38,7 @@ export default function ErrorPage({ error }: Props) {
           href="/"
         >
           <Home className="size-4" />
-          Go Home
+          {t((d) => d.backHome)}
         </Link>
       </Stack>
     </div>

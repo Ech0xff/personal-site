@@ -4,7 +4,6 @@ import { useCallback } from "react";
 
 import EventTimeline from "#components/features/events/EventTimeline";
 import { useModal } from "#components/ui/ModalProvider";
-import { useCurrentLocale } from "#lib/client/locale";
 import { updateEventStatusByBrowser } from "#lib/client/services";
 
 import OpenEditorButton from "../_components/editor/OpenEditorButton";
@@ -15,7 +14,6 @@ import EventEditor from "./_components/EventEditor";
 import { useEvents } from "./useEvents";
 
 export default function EventsPage() {
-  const locale = useCurrentLocale();
   const { events, loading, error, syncStatus, removeEvent, refetch } =
     useEvents();
   const { open, close } = useModal();
@@ -49,7 +47,6 @@ export default function EventsPage() {
     >
       <EventTimeline
         events={events}
-        locale={locale}
         renderActions={(event) => (
           <>
             <StatusToggle

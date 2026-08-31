@@ -4,7 +4,6 @@ import { useCallback } from "react";
 
 import ThoughtTimeline from "#components/features/thoughts/ThoughtTimeline";
 import { useModal } from "#components/ui/ModalProvider";
-import { useCurrentLocale } from "#lib/client/locale";
 import { updateThoughtStatusByBrowser } from "#lib/client/services";
 
 import OpenEditorButton from "../_components/editor/OpenEditorButton";
@@ -15,7 +14,6 @@ import ThoughtEditor from "./_components/ThoughtEditor";
 import { useThoughts } from "./useThoughts";
 
 export default function ThoughtsPage() {
-  const locale = useCurrentLocale();
   const { thoughts, loading, error, syncStatus, removeThought, refetch } =
     useThoughts();
   const { open, close } = useModal();
@@ -49,7 +47,6 @@ export default function ThoughtsPage() {
     >
       <ThoughtTimeline
         thoughts={thoughts}
-        locale={locale}
         renderActions={(thought) => {
           return (
             <>

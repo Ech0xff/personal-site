@@ -3,33 +3,25 @@ import { cacheTag } from "next/cache";
 
 import EventTimeline from "#components/features/events/EventTimeline";
 import { CACHE_TAGS } from "#lib/server/cache";
-import { getT } from "#lib/shared/i18n/tools";
+import { getScopedT } from "#lib/server/i18n";
 import { fetchEvents } from "#lib/shared/services";
 import { makeStaticClient } from "#lib/shared/supabase";
 
 import CollectionBody from "../_components/CollectionBody";
 
-interface PageProps {
-  params: Promise<{ locale: string }>;
-}
-
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
-  const { locale } = await params;
-  const t = getT("IndexEvents", locale);
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getScopedT((d) => d.indexEvents);
 
   return {
-    title: t("metaTitle"),
+    title: t((d) => d.metaTitle),
   };
 }
 
-export default async function EventsPage({ params }: PageProps) {
+export default async function EventsPage() {
   "use cache";
   cacheTag(CACHE_TAGS.events);
 
-  const { locale } = await params;
-  const t = getT("IndexEvents", locale);
+  const t = await getScopedT((d) => d.indexEvents);
   const client = makeStaticClient();
   const events = await fetchEvents(client);
 
@@ -37,8 +29,8 @@ export default async function EventsPage({ params }: PageProps) {
 
   return (
     <CollectionBody
-      title={t("title")}
-      description={t.rich("description", {
+      title={t((d) => d.title)}
+      description={t.rich((d) => d.description, {
         total: totalEvents,
         b: (chunks) => (
           <span className="font-bold text-zinc-900 dark:text-zinc-100">
@@ -47,7 +39,7 @@ export default async function EventsPage({ params }: PageProps) {
         ),
       })}
     >
-      <EventTimeline events={events} locale={locale} />
+      <EventTimeline events={events} />
     </CollectionBody>
   );
 }

@@ -12,10 +12,10 @@ import { cn } from "#lib/shared/utils";
 
 import DashboardShell from "../_components/layout/DashboardShell";
 import AboutMe from "./_components/AboutMe";
+import DictionaryEditor from "./_components/DictionaryEditor";
 import OauthProviders from "./_components/OauthProviders";
 import PlaylistUrl from "./_components/PlaylistUrl";
 import RecentPlanEditor from "./_components/RecentPlanEditor";
-import SiteInfo from "./_components/SiteInfo";
 
 export type ConfigField = {
   key: string;
@@ -26,10 +26,10 @@ export type ConfigField = {
 
 const configFields = [
   {
-    title: "Site Info",
+    title: "Dictionary",
     description:
-      "Site title, hero copy, typewriter text, bio, and filing footer.",
-    render: () => <SiteInfo />,
+      "Translations, metadata, homepage copy, and footer content by locale.",
+    render: () => <DictionaryEditor />,
   },
   {
     title: "About Me",
@@ -48,8 +48,7 @@ const configFields = [
   },
   {
     title: "OAuth Providers",
-    description:
-      "Enable GitHub and Google login providers for the selected locale.",
+    description: "Enable GitHub and Google login providers globally.",
     render: () => <OauthProviders />,
   },
 ];

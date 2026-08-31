@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import type { ComponentPropsWithoutRef } from "react";
 import { toast } from "sonner";
 
-import { useCurrentLocale } from "#lib/client/locale";
+import { useLocale, useT } from "#lib/client/i18n";
 import { makeBrowserClient } from "#lib/client/supabase";
 import { getLocalizedRoutes } from "#lib/shared/routes";
 
@@ -15,17 +15,26 @@ interface Props extends ComponentPropsWithoutRef<"button"> {
 
 export default function LogOutButton({ className, ...props }: Props) {
   const router = useRouter();
-  const locale = useCurrentLocale();
+  const locale = useLocale();
+  const t = useT().scope((d) => d.auth);
   const routes = getLocalizedRoutes(locale);
   const supabase = makeBrowserClient();
 
   const handleLogout = async () => {
-    const toastId = toast.loading("Logging out...");
+    const toastId = toast.loading(t((d) => d.loggingOut));
     supabase.auth.signOut().then(({ error }) => {
       if (error) {
-        toast.error("Failed to log out", { id: toastId });
+        toast.error(
+          t((d) => d.errorLoggingOut),
+          { id: toastId },
+        );
       } else {
-        toast.success("Logged out successfully.", { id: toastId });
+        toast.success(
+          t((d) => d.loggedOutSuccessfully),
+          {
+            id: toastId,
+          },
+        );
         router.replace(routes.AUTH);
       }
     });

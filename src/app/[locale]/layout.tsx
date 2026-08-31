@@ -9,40 +9,30 @@ import ToastWatcher from "#components/features/ToastWatcher";
 import { ThemeHelper, ThemeProvider } from "#components/providers/theme";
 import { ImageViewer } from "#components/ui/ImageViewer";
 import ModalProvider from "#components/ui/ModalProvider";
+import { I18nProvider } from "#lib/client/i18n";
 import { CACHE_TAGS } from "#lib/server/cache";
-import { CONFIG_KEYS } from "#lib/shared/config";
-import { routing } from "#lib/shared/i18n/routing";
-import { getT } from "#lib/shared/i18n/tools";
-import { fetchConfigs } from "#lib/shared/services";
+import { getLocale, getT } from "#lib/server/i18n";
+import { type Dictionary, locales, type Locale } from "#lib/shared/i18n";
 
 import "#styles/tailwind.css";
 import "#styles/variables.scss";
-
 interface LayoutProps {
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
 }
 
 export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
+  return locales.map((locale) => ({ locale }));
 }
 
-export async function generateMetadata({
-  params,
-}: Pick<LayoutProps, "params">): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
   "use cache";
   cacheTag(CACHE_TAGS.config);
 
-  const { locale } = await params;
-  const t = getT("Meta", locale);
-  const configs = await fetchConfigs([CONFIG_KEYS.siteInfo], {
-    locale,
-  });
-  const { title } = configs.get(CONFIG_KEYS.siteInfo)!;
+  const t = await getT();
 
   return {
-    title,
-    description: t("siteDescription"),
+    title: t((d) => d.meta.siteTitle),
+    description: t((d) => d.meta.siteDescription),
     icons: {
       icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
       shortcut: "/icon.svg",
@@ -51,24 +41,26 @@ export async function generateMetadata({
   };
 }
 
-export default async function RootLayout({
-  children,
-  params,
-}: Readonly<LayoutProps>) {
-  const { locale } = await params;
+export default async function RootLayout({ children }: Readonly<LayoutProps>) {
+  const [locale, translator] = await Promise.all([getLocale(), getT()]);
+  const dictionary = translator((value) => value);
 
   return (
     <Suspense fallback={null}>
-      <ConfigShell locale={locale}>{children}</ConfigShell>
+      <ConfigShell locale={locale} dictionary={dictionary}>
+        {children}
+      </ConfigShell>
     </Suspense>
   );
 }
 
 async function ConfigShell({
   locale,
+  dictionary,
   children,
 }: {
-  locale: string;
+  locale: Locale;
+  dictionary: Dictionary;
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
@@ -79,9 +71,11 @@ async function ConfigShell({
       <body style={{ anchorName: "--body" }}>
         <ThemeProvider initialTheme={theme}>
           <ModalProvider>
-            <ToastWatcher />
-            <SpeedInsights />
-            <ImageViewer>{children}</ImageViewer>
+            <I18nProvider locale={locale} dictionary={dictionary}>
+              <ToastWatcher />
+              <SpeedInsights />
+              <ImageViewer>{children}</ImageViewer>
+            </I18nProvider>
             {process.env.NODE_ENV === "development" && <Agentation />}
           </ModalProvider>
         </ThemeProvider>
