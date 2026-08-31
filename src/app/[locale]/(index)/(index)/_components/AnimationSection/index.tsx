@@ -37,7 +37,7 @@ export default function AnimationSection({
       <Stack
         y
         className={cn(
-          "bg-brand-gradient absolute inset-0 h-dvh w-dvw snap-start items-center justify-center overflow-hidden transition-all",
+          "bg-brand-gradient absolute inset-0 h-dvh w-full max-w-full snap-start items-center justify-center overflow-hidden transition-all",
           "duration-300 in-data-[scrolled=true]:h-[60svh]",
         )}
       >
