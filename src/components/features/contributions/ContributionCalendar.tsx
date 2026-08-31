@@ -221,108 +221,110 @@ export default function ContributionCalendar({
   if (weeks.length === 0) return null;
 
   return (
-    <div className="overflow-hidden rounded-2xl p-4">
+    <div className="max-w-full min-w-0 overflow-hidden rounded-2xl p-4">
       <div
-        className="max-w-full overflow-x-auto pb-1"
+        className="w-full max-w-full min-w-0 overflow-x-auto pb-1"
         style={{
           paddingTop: extraTopSpace,
           marginTop: `calc(${extraTopSpace} * -1)`,
         }}
       >
-        <div className="w-full min-w-full" style={{ minWidth }}>
-          <div className="grid items-start" style={calendarGridStyle}>
-            <div aria-hidden="true" />
-            {monthLabels.map((item) => (
-              <div
-                key={`${item.start}-${item.label}`}
-                className="min-w-0 justify-self-start leading-none font-semibold whitespace-nowrap text-emerald-500"
-                style={{
-                  gridColumn: `${item.start + 2} / ${item.end + 2}`,
-                  gridRow: "1",
-                  fontSize: axisLabelFontSize,
-                }}
-              >
-                {item.label}
-              </div>
-            ))}
-
-            {Array.from({ length: 7 }, (_, index) => {
-              const label = weekdayLabels.find(
-                (item) => item.index === index,
-              )?.label;
-
-              return (
+        <div className="w-full min-w-0">
+          <div className="w-full min-w-full" style={{ minWidth }}>
+            <div className="grid items-start" style={calendarGridStyle}>
+              <div aria-hidden="true" />
+              {monthLabels.map((item) => (
                 <div
-                  key={index}
-                  className="flex h-full items-center justify-end pr-1 leading-none font-semibold text-emerald-500"
+                  key={`${item.start}-${item.label}`}
+                  className="min-w-0 justify-self-start leading-none font-semibold whitespace-nowrap text-emerald-500"
                   style={{
-                    gridColumn: "1",
-                    gridRow: `${index + 2}`,
+                    gridColumn: `${item.start + 2} / ${item.end + 2}`,
+                    gridRow: "1",
                     fontSize: axisLabelFontSize,
                   }}
                 >
-                  {label ?? ""}
+                  {item.label}
                 </div>
-              );
-            })}
+              ))}
 
-            {weeks.map((week, weekIndex) =>
-              week.map((day, dayIndex) => {
-                const level = getLevel(day.count);
-                const dateLabel = formatTooltipDate(day.date, locale);
+              {Array.from({ length: 7 }, (_, index) => {
+                const label = weekdayLabels.find(
+                  (item) => item.index === index,
+                )?.label;
 
                 return (
                   <div
-                    key={formatDateKey(day.date)}
-                    className="group/tooltip relative"
+                    key={index}
+                    className="flex h-full items-center justify-end pr-1 leading-none font-semibold text-emerald-500"
                     style={{
-                      gridColumn: `${weekIndex + 2}`,
-                      gridRow: `${dayIndex + 2}`,
+                      gridColumn: "1",
+                      gridRow: `${index + 2}`,
+                      fontSize: axisLabelFontSize,
                     }}
                   >
-                    <div
-                      title={`${dateLabel}: ${day.count}`}
-                      className={[
-                        "aspect-square w-full rounded-[3px]",
-                        day.inRange
-                          ? CELL_LEVEL_CLASS[level]
-                          : "bg-transparent",
-                      ].join(" ")}
-                      style={{
-                        borderRadius: multiplyLength(base, 0.3),
-                      }}
-                    />
-                    {day.inRange && (
-                      <div
-                        className={[
-                          "pointer-events-none invisible absolute bottom-full left-1/2 z-50 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-zinc-900 px-2 py-1.5 text-white opacity-0 shadow-lg transition-all group-hover/tooltip:visible group-hover/tooltip:opacity-100 dark:bg-zinc-700",
-                        ].join(" ")}
-                        style={{
-                          fontSize: multiplyLength(base, 0.95),
-                        }}
-                      >
-                        {dateLabel}
-                      </div>
-                    )}
+                    {label ?? ""}
                   </div>
                 );
-              }),
-            )}
+              })}
+
+              {weeks.map((week, weekIndex) =>
+                week.map((day, dayIndex) => {
+                  const level = getLevel(day.count);
+                  const dateLabel = formatTooltipDate(day.date, locale);
+
+                  return (
+                    <div
+                      key={formatDateKey(day.date)}
+                      className="group/tooltip relative"
+                      style={{
+                        gridColumn: `${weekIndex + 2}`,
+                        gridRow: `${dayIndex + 2}`,
+                      }}
+                    >
+                      <div
+                        title={`${dateLabel}: ${day.count}`}
+                        className={[
+                          "aspect-square w-full rounded-[3px]",
+                          day.inRange
+                            ? CELL_LEVEL_CLASS[level]
+                            : "bg-transparent",
+                        ].join(" ")}
+                        style={{
+                          borderRadius: multiplyLength(base, 0.3),
+                        }}
+                      />
+                      {day.inRange && (
+                        <div
+                          className={[
+                            "pointer-events-none invisible absolute bottom-full left-1/2 z-50 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-zinc-900 px-2 py-1.5 text-white opacity-0 shadow-lg transition-all group-hover/tooltip:visible group-hover/tooltip:opacity-100 dark:bg-zinc-700",
+                          ].join(" ")}
+                          style={{
+                            fontSize: multiplyLength(base, 0.95),
+                          }}
+                        >
+                          {dateLabel}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }),
+              )}
+            </div>
           </div>
         </div>
       </div>
 
       <div
         className={[
-          "mt-3 flex flex-wrap items-center justify-between gap-3 text-slate-500 dark:text-slate-400",
+          "mt-3 flex min-w-0 max-w-full flex-wrap items-center justify-between gap-3 text-slate-500 dark:text-slate-400",
         ].join(" ")}
         style={{ fontSize: multiplyLength(base, 0.95) }}
       >
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex max-w-full min-w-0 flex-wrap items-center gap-2">
           <div
             role="tablist"
             aria-label={t("stats.yearSelectorLabel")}
-            className="flex items-center rounded-lg bg-zinc-100 p-0.5 dark:bg-zinc-800"
+            className="flex max-w-full items-center overflow-x-auto rounded-lg bg-zinc-100 p-0.5 dark:bg-zinc-800"
           >
             {availableYears.map((year) => (
               <button

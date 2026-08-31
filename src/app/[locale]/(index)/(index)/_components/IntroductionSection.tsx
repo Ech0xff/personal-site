@@ -79,7 +79,7 @@ export async function IntroductionSection({
   return (
     <Stack
       y
-      className="mx-auto mb-8 w-[calc(100svw-2*var(--layout-padding-x))] gap-8 px-4"
+      className="mx-auto mb-8 w-[calc(100svw-2*var(--layout-padding-x))] max-w-full min-w-0 gap-8 px-4"
     >
       {/* About Card */}
       <Card title={t("about.cardTitle")}>
@@ -94,7 +94,7 @@ export async function IntroductionSection({
 
       {/* Stats Card */}
       <Card title={t("stats.cardTitle")}>
-        <Stack y className="gap-4">
+        <Stack y className="min-w-0 gap-4">
           <ContributionCalendar
             locale={locale}
             posts={data.posts.contributions}
@@ -103,12 +103,12 @@ export async function IntroductionSection({
           />
 
           <TagMarquee tags={tags} />
-          <Stack className="grid gap-4 xl:grid-cols-2">
+          <Stack className="grid min-w-0 gap-4 xl:grid-cols-2">
             <Stack
               y
-              className="h-full min-h-0 rounded-2xl bg-slate-50 p-4 dark:bg-white/5"
+              className="h-full min-h-0 min-w-0 rounded-2xl bg-slate-50 p-4 dark:bg-white/5"
             >
-              <Stack className="grid h-full flex-1 grid-cols-2 grid-rows-2 gap-3">
+              <Stack className="grid h-full min-w-0 flex-1 grid-cols-2 grid-rows-2 gap-3">
                 {statsItems.map((item) => (
                   <Stack
                     key={item.label}
@@ -128,12 +128,12 @@ export async function IntroductionSection({
 
             <Stack
               y
-              className="min-h-0 gap-2 rounded-2xl bg-slate-50 p-4 dark:bg-white/5"
+              className="min-h-0 min-w-0 gap-2 rounded-2xl bg-slate-50 p-4 dark:bg-white/5"
             >
               <Stack className="text-xs font-medium tracking-wider text-slate-400 uppercase">
                 {t("recentPlan.title")}
               </Stack>
-              <Stack y className="min-h-0 flex-1 gap-2">
+              <Stack y className="min-h-0 min-w-0 flex-1 gap-2">
                 {config.recentPlan.length > 0 ? (
                   config.recentPlan.map((plan) => {
                     const StatusIcon = recentPlanStatusIcons[plan.status];
