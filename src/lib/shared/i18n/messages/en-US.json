@@ -50,7 +50,7 @@
     "recentActivity": {
       "cardTitle": "Recent Updates",
       "empty": "No activity yet...",
-      "recordCount": "{count, plural, one {# record} other {# records}}"
+      "recordCount": "{count} records"
     },
     "stats": {
       "cardTitle": "Statistics",
