@@ -9,12 +9,13 @@
     "fmt": "oxfmt --check",
     "fmt:fix": "oxfmt",
     "gen:icons": "svgr --out-dir src/components/icons --typescript --icon --replace-attr-values \"#000=currentColor\" public/svg-icons",
-    "gen:types:dev": "source .env.development && bunx supabase gen types typescript --project-id $(echo $NEXT_PUBLIC_SUPABASE_URL | sed 's/https:\\/\\///' | cut -d'.' -f1) > src/types/supabase.ts",
-    "gen:types:prod": "source .env.production && bunx supabase gen types typescript --project-id $(echo $NEXT_PUBLIC_SUPABASE_URL | sed 's/https:\\/\\///' | cut -d'.' -f1) > src/types/supabase.ts",
     "lint": "oxlint .",
     "lint:fix": "oxlint . --fix ",
     "menu": "bun ./scripts/menu.ts",
     "start": "next start",
+    "supabase:env": "bun ./scripts/supabase-env.ts",
+    "supabase:setup": "bunx supabase start && bun run supabase:env",
+    "supabase:types": "bunx supabase gen types --local --schema public > src/types/supabase.ts",
     "test": "bun test",
     "typecheck": "NODE_OPTIONS=--max-old-space-size=8192 tsc --noEmit"
   },
@@ -44,10 +45,10 @@
     "rehype-prism-plus": "^2.0.2",
     "remark-directive": "^4.0.0",
     "remark-gfm": "^4.0.1",
-    "sass": "^1.103.1",
-    "sonner": "^2.0.8",
+    "sass": "^1.97.3",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.4.0",
     "supabase": "^2.116.0",
-    "tailwind-merge": "^3.6.0",
     "ts-pattern": "^5.9.0",
     "unist-util-visit": "^5.1.0"
   },
@@ -67,8 +68,9 @@
     "oxlint-tsgolint": "7.0.2001",
     "postcss-scss": "^4.0.9",
     "postgres": "^3.4.9",
-    "tailwindcss": "^4.3.3",
-    "typescript": "^7.0.2"
+    "supabase": "2.110.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   },
   "ignoreScripts": [
     "sharp",
@@ -76,6 +78,7 @@
   ],
   "trustedDependencies": [
     "sharp",
+    "supabase",
     "unrs-resolver"
   ]
 }

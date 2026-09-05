@@ -24,27 +24,33 @@ const buildRecentActivity = async (): Promise<RecentActivityItem[]> => {
   ]);
 
   return [
-    ...posts.map((post): RecentActivityItem => ({
-      id: post.id,
-      kind: "post",
-      published_at: post.published_at,
-      tags: post.tags,
-      title: post.title,
-    })),
-    ...thoughts.map((thought): RecentActivityItem => ({
-      id: thought.id,
-      kind: "thought",
-      published_at: thought.published_at,
-      tags: [],
-      title: toPreviewText(thought.content),
-    })),
-    ...events.map((event): RecentActivityItem => ({
-      id: event.id,
-      kind: "event",
-      published_at: event.published_at,
-      tags: event.tags,
-      title: event.title,
-    })),
+    ...posts.map(
+      (post): RecentActivityItem => ({
+        id: post.id,
+        kind: "post",
+        published_at: post.published_at,
+        tags: post.tags,
+        title: post.title,
+      }),
+    ),
+    ...thoughts.map(
+      (thought): RecentActivityItem => ({
+        id: thought.id,
+        kind: "thought",
+        published_at: thought.published_at,
+        tags: [],
+        title: toPreviewText(thought.content),
+      }),
+    ),
+    ...events.map(
+      (event): RecentActivityItem => ({
+        id: event.id,
+        kind: "event",
+        published_at: event.published_at,
+        tags: event.tags,
+        title: event.title,
+      }),
+    ),
   ]
     .sort(
       (a, b) =>
