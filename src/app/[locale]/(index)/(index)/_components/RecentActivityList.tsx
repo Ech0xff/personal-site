@@ -1,12 +1,11 @@
 import { CalendarDays, FileText, GitBranch, Lightbulb } from "lucide-react";
 
 import Link from "#components/ui/Link";
-import { getT } from "#lib/shared/i18n/tools";
+import { useT } from "#i18n";
 import { formatTime } from "#lib/shared/utils";
 import type { RecentActivityItem } from "#types";
 
 type Props = {
-  locale?: string;
   items: RecentActivityItem[];
 };
 
@@ -58,21 +57,22 @@ const groupRecentActivity = (items: RecentActivityItem[]) => {
   );
 };
 
-export default function RecentActivityList({ locale = "en-US", items }: Props) {
-  const t = getT("IndexHome", locale);
-  const tCommon = getT("Common", locale);
+export default function RecentActivityList({ items }: Props) {
+  const translator = useT();
+  const t = translator.scope((d) => d.indexHome);
+  const tCommon = translator.scope((d) => d.common);
   const groupedActivity = groupRecentActivity(items);
 
   return (
     <div className="scrollbar-visible max-h-[24rem] overflow-y-auto rounded-2xl pr-1">
       {groupedActivity.length === 0 && (
         <p className="px-3 py-2 text-sm text-slate-400">
-          {t("recentActivity.empty")}
+          {t((d) => d.recentActivity.empty)}
         </p>
       )}
       <div className="divide-y divide-zinc-200/60 dark:divide-zinc-800">
         {groupedActivity.map((group) => {
-          const recordText = t("recentActivity.recordCount", {
+          const recordText = t((d) => d.recentActivity.recordCount, {
             count: group.items.length,
           });
 
@@ -84,7 +84,7 @@ export default function RecentActivityList({ locale = "en-US", items }: Props) {
                   {formatTime(
                     group.date,
                     "MMM D, YYYY",
-                    tCommon("unknownDate"),
+                    tCommon((d) => d.unknownDate),
                   )}
                 </span>
                 <span className="whitespace-nowrap">{recordText}</span>

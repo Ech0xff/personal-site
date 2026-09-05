@@ -1,5 +1,5 @@
 import {
-  CONFIG_KEYS,
+  CONFIG_KEY,
   type OAuthProvider,
   providerConfig,
 } from "#lib/shared/config";
@@ -12,17 +12,10 @@ const allProviders = Object.keys(providerConfig) as OAuthProvider[];
 const title = "OAuth Providers";
 
 export default function OauthProviders() {
-  const {
-    value,
-    setValue,
-    setLocale,
-    loading,
-    hasStoredValue,
-    deleteConfig,
-    saveConfig,
-  } = useConfig({
-    key: CONFIG_KEYS.oauthProviders,
-  });
+  const { value, setValue, loading, hasStoredValue, deleteConfig, saveConfig } =
+    useConfig({
+      key: CONFIG_KEY.OAUTH,
+    });
   const providers = value;
 
   const toggleProvider = (provider: OAuthProvider) => {
@@ -37,7 +30,6 @@ export default function OauthProviders() {
     <EditorShell
       className="w-[60%] max-w-3xl"
       title={title}
-      onLocaleChange={setLocale}
       onDelete={hasStoredValue ? deleteConfig : undefined}
       onSave={saveConfig}
       loading={loading}
@@ -80,9 +72,7 @@ export default function OauthProviders() {
                     {config.label}
                   </p>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    {enabled
-                      ? "Enabled for this locale"
-                      : "Disabled for this locale"}
+                    {enabled ? "Enabled globally" : "Disabled globally"}
                   </p>
                 </div>
               </div>

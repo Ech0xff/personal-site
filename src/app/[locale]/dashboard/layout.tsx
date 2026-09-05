@@ -16,6 +16,7 @@ import LogoutButton from "#components/shared/LogoutButton";
 import ThemeToggle from "#components/shared/ThemeToggle";
 import DropdownPopover from "#components/ui/DropdownPopover";
 import Stack from "#components/ui/Stack";
+import { getLocale } from "#lib/server/i18n";
 import { makeServerClient } from "#lib/server/supabase";
 import { getLocalizedRoutes } from "#lib/shared/routes";
 import { cn } from "#lib/shared/utils/tailwind";
@@ -23,14 +24,9 @@ import { getUserStatus } from "#lib/shared/utils/tools";
 
 import DashboardModalOptions from "./_components/DashboardModalOptions";
 
-async function Navbar({
-  isAdmin,
-  locale,
-}: {
-  isAdmin: boolean;
-  locale: string;
-}) {
+async function Navbar({ isAdmin }: { isAdmin: boolean }) {
   "use cache";
+  const locale = await getLocale();
   const routes = getLocalizedRoutes(locale);
 
   const navItems = [
@@ -142,12 +138,10 @@ async function Navbar({
 
 export default async function Layout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
+  const locale = await getLocale();
   const routes = getLocalizedRoutes(locale);
   const client = await makeServerClient();
   const { isAuth, isAdmin } = await getUserStatus(client);
@@ -162,7 +156,7 @@ export default async function Layout({
       )}
     >
       <DashboardModalOptions />
-      <Navbar isAdmin={isAdmin} locale={locale} />
+      <Navbar isAdmin={isAdmin} />
       {/* Main Content */}
       {children}
     </Stack>
