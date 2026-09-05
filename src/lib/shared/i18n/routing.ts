@@ -1,6 +1,6 @@
-export const routing = {
-  locales: ["en-US", "zh-CN"],
-  defaultLocale: "en-US",
-};
+import { defaultLocale, locales } from "./i18n.const";
 
-export type Locale = (typeof routing.locales)[number];
+export const routing = {
+  locales,
+  defaultLocale,
+};

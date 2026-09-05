@@ -2,9 +2,9 @@ import { cacheTag } from "next/cache";
 
 import Stack from "#components/ui/Stack";
 import { CACHE_TAGS } from "#lib/server/cache";
-import { CONFIG_KEYS } from "#lib/shared/config";
+import { loadConfigsByServer } from "#lib/server/services/configs";
+import { CONFIG_KEY } from "#lib/shared/config";
 import {
-  fetchConfigs,
   fetchEvents,
   fetchPosts,
   fetchSummary,
@@ -54,41 +54,23 @@ const buildRecentActivity = async (): Promise<RecentActivityItem[]> => {
     .slice(0, 12);
 };
 
-export default async function HomePage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function HomePage() {
   "use cache";
   cacheTag(CACHE_TAGS.summary);
   cacheTag(CACHE_TAGS.config);
 
-  const { locale } = await params;
   const [data, recentActivity, configs] = await Promise.all([
     fetchSummary() as Promise<BlogSummaryData>,
     buildRecentActivity(),
-    fetchConfigs(
-      [
-        CONFIG_KEYS.aboutMe,
-        CONFIG_KEYS.playlistUrl,
-        CONFIG_KEYS.siteInfo,
-        CONFIG_KEYS.recentPlan,
-      ],
-      {
-        locale,
-      },
-    ),
+    loadConfigsByServer([
+      CONFIG_KEY.ABOUT_ME,
+      CONFIG_KEY.PLAYLIST_URL,
+      CONFIG_KEY.RECENT_PLAN,
+    ]),
   ]);
-  const aboutMeValue = configs.get(CONFIG_KEYS.aboutMe);
-  const playlistUrlValue = configs.get(CONFIG_KEYS.playlistUrl);
-  const aboutMe = typeof aboutMeValue === "string" ? aboutMeValue : "";
-  const playlistUrl =
-    typeof playlistUrlValue === "string" ? playlistUrlValue : "";
-  const siteInfo = configs.get(CONFIG_KEYS.siteInfo);
-  const recentPlan = configs.get(CONFIG_KEYS.recentPlan);
   return (
     <>
-      <AnimationSection siteInfo={siteInfo} />
+      <AnimationSection />
       <Stack y className="group relative flex w-full gap-3 pt-[10svh]">
         {/* background */}
         <div
@@ -98,13 +80,12 @@ export default async function HomePage({
           )}
         />
         <IntroductionSection
-          locale={locale}
           data={data}
           recentActivity={recentActivity}
           config={{
-            aboutMe,
-            playlistUrl,
-            recentPlan,
+            aboutMe: configs[CONFIG_KEY.ABOUT_ME],
+            playlistUrl: configs[CONFIG_KEY.PLAYLIST_URL],
+            recentPlan: configs[CONFIG_KEY.RECENT_PLAN],
           }}
         />
       </Stack>

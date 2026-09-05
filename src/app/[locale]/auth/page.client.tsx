@@ -5,14 +5,13 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { useLocale, useT } from "#i18n";
 import { makeBrowserClient } from "#lib/client/supabase";
 import { type OAuthProvider, providerConfig } from "#lib/shared/config";
-import { getT } from "#lib/shared/i18n";
 import { getLocalizedRoutes } from "#lib/shared/routes";
 
 interface Props {
   oauthProviders: OAuthProvider[];
-  locale: string;
 }
 
 type Mode = "login" | "register";
@@ -29,11 +28,12 @@ const initialForm: AuthForm = {
   confirmPassword: "",
 };
 
-export default function PageClient({ oauthProviders, locale }: Props) {
+export default function PageClient({ oauthProviders }: Props) {
+  const locale = useLocale();
   const client = makeBrowserClient();
   const router = useRouter();
   const routes = getLocalizedRoutes(locale);
-  const t = getT("auth", locale);
+  const t = useT().scope((d) => d.auth);
   const [mode, setModeState] = useState<Mode>("login");
   const [form, setForm] = useState<AuthForm>(initialForm);
 
@@ -47,10 +47,13 @@ export default function PageClient({ oauthProviders, locale }: Props) {
   };
 
   const handleLogin = async ({ email, password }: AuthForm) => {
-    const toastId = toast.loading(t("loggingIn"));
+    const toastId = toast.loading(t((d) => d.loggingIn));
 
     if (!email || !password) {
-      toast.error(t("invalidEmailOrPassword"), { id: toastId });
+      toast.error(
+        t((d) => d.invalidEmailOrPassword),
+        { id: toastId },
+      );
       return;
     }
 
@@ -60,11 +63,17 @@ export default function PageClient({ oauthProviders, locale }: Props) {
     });
 
     if (error || !data.session) {
-      toast.error(t("invalidEmailOrPassword"), { id: toastId });
+      toast.error(
+        t((d) => d.invalidEmailOrPassword),
+        { id: toastId },
+      );
       return;
     }
 
-    toast.success(t("loggedInSuccessfully"), { id: toastId });
+    toast.success(
+      t((d) => d.loggedInSuccessfully),
+      { id: toastId },
+    );
     router.replace(routes.DASHBOARD.ACCOUNT);
   };
 
@@ -73,14 +82,20 @@ export default function PageClient({ oauthProviders, locale }: Props) {
     password,
     confirmPassword,
   }: AuthForm) => {
-    const toastId = toast.loading(t("creatingAccount"));
+    const toastId = toast.loading(t((d) => d.creatingAccount));
     if (!email || !password) {
-      toast.error(t("invalidEmailOrPassword"), { id: toastId });
+      toast.error(
+        t((d) => d.invalidEmailOrPassword),
+        { id: toastId },
+      );
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error(t("passwordsDoNotMatch"), { id: toastId });
+      toast.error(
+        t((d) => d.passwordsDoNotMatch),
+        { id: toastId },
+      );
       return;
     }
 
@@ -90,16 +105,25 @@ export default function PageClient({ oauthProviders, locale }: Props) {
     });
 
     if (error) {
-      toast.error(t("errorRegisteringUser"), { id: toastId });
+      toast.error(
+        t((d) => d.errorRegisteringUser),
+        { id: toastId },
+      );
       return;
     }
 
     if (data.user?.email) {
-      toast.error(t("emailReservedForOauth"), { id: toastId });
+      toast.error(
+        t((d) => d.emailReservedForOauth),
+        { id: toastId },
+      );
       return;
     }
 
-    toast.success(t("accountCreatedSuccessfully"), { id: toastId });
+    toast.success(
+      t((d) => d.accountCreatedSuccessfully),
+      { id: toastId },
+    );
     router.replace(routes.DASHBOARD.ACCOUNT);
   };
 
@@ -114,7 +138,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
 
   const handleLoginWithOauth = async (provider: OAuthProvider) => {
     const origin = window.location.origin;
-    const toastId = toast.loading(t("startingOAuthLogin"));
+    const toastId = toast.loading(t((d) => d.startingOAuthLogin));
 
     const { data, error } = await client.auth.signInWithOAuth({
       provider,
@@ -124,11 +148,17 @@ export default function PageClient({ oauthProviders, locale }: Props) {
     });
 
     if (error || !data.url) {
-      toast.error(t("errorLoggingInWithOAuth"), { id: toastId });
+      toast.error(
+        t((d) => d.errorLoggingInWithOAuth),
+        { id: toastId },
+      );
       return;
     }
 
-    toast.success(t("redirectingToOAuthProvider"), { id: toastId });
+    toast.success(
+      t((d) => d.redirectingToOAuthProvider),
+      { id: toastId },
+    );
     window.location.assign(data.url);
   };
 
@@ -141,12 +171,14 @@ export default function PageClient({ oauthProviders, locale }: Props) {
     <>
       <div className="mb-8 text-center">
         <h1 className="mb-2 text-3xl font-bold text-(--text-primary)">
-          {mode === "login" ? t("welcomeBack") : t("createAccount")}
+          {mode === "login"
+            ? t((d) => d.welcomeBack)
+            : t((d) => d.createAccount)}
         </h1>
         <p className="text-(--text-muted)">
           {mode === "login"
-            ? t("signInToYourAccount")
-            : t("signUpForNewAccount")}
+            ? t((d) => d.signInToYourAccount)
+            : t((d) => d.signUpForNewAccount)}
         </p>
       </div>
 
@@ -160,7 +192,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
               : "text-(--text-muted) hover:text-(--text-secondary)"
           }`}
         >
-          {t("signIn")}
+          {t((d) => d.signIn)}
         </button>
         <button
           type="button"
@@ -171,7 +203,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
               : "text-(--text-muted) hover:text-(--text-secondary)"
           }`}
         >
-          {t("signUp")}
+          {t((d) => d.signUp)}
         </button>
       </div>
 
@@ -181,13 +213,13 @@ export default function PageClient({ oauthProviders, locale }: Props) {
             htmlFor="email"
             className="mb-2 block text-sm font-medium text-(--text-secondary)"
           >
-            {t("email")}
+            {t((d) => d.email)}
           </label>
           <input
             id="email"
             name="email"
             type="email"
-            placeholder={t("enterYourEmail")}
+            placeholder={t((d) => d.enterYourEmail)}
             className="w-full rounded-lg border border-(--border-strong) bg-(--surface-input) px-4 py-3 text-(--text-primary) transition-all duration-200 placeholder:text-(--text-placeholder) focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
             required
             autoFocus
@@ -201,13 +233,13 @@ export default function PageClient({ oauthProviders, locale }: Props) {
             htmlFor="password"
             className="mb-2 block text-sm font-medium text-(--text-secondary)"
           >
-            {t("password")}
+            {t((d) => d.password)}
           </label>
           <input
             id="password"
             name="password"
             type="password"
-            placeholder={t("enterYourPassword")}
+            placeholder={t((d) => d.enterYourPassword)}
             className="w-full rounded-lg border border-(--border-strong) bg-(--surface-input) px-4 py-3 text-(--text-primary) transition-all duration-200 placeholder:text-(--text-placeholder) focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
             required
             value={form.password}
@@ -221,13 +253,13 @@ export default function PageClient({ oauthProviders, locale }: Props) {
               htmlFor="confirmPassword"
               className="mb-2 block text-sm font-medium text-(--text-secondary)"
             >
-              {t("confirmPassword")}
+              {t((d) => d.confirmPassword)}
             </label>
             <input
               id="confirmPassword"
               name="confirmPassword"
               type="password"
-              placeholder={t("repeatYourPassword")}
+              placeholder={t((d) => d.repeatYourPassword)}
               className="w-full rounded-lg border border-(--border-strong) bg-(--surface-input) px-4 py-3 text-(--text-primary) transition-all duration-200 placeholder:text-(--text-placeholder) focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
               required
               value={form.confirmPassword}
@@ -242,7 +274,7 @@ export default function PageClient({ oauthProviders, locale }: Props) {
           type="submit"
           className="w-full rounded-lg bg-blue-600 px-4 py-3 font-medium text-white transition-all duration-200 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {mode === "login" ? t("signIn") : t("signUp")}
+          {mode === "login" ? t((d) => d.signIn) : t((d) => d.signUp)}
         </button>
       </form>
 
@@ -250,7 +282,9 @@ export default function PageClient({ oauthProviders, locale }: Props) {
         <>
           <div className="my-6 flex items-center gap-4">
             <div className="h-px flex-1 bg-(--border-default)" />
-            <span className="text-sm text-(--text-placeholder)">{t("or")}</span>
+            <span className="text-sm text-(--text-placeholder)">
+              {t((d) => d.or)}
+            </span>
             <div className="h-px flex-1 bg-(--border-default)" />
           </div>
 
@@ -266,7 +300,9 @@ export default function PageClient({ oauthProviders, locale }: Props) {
                   className="flex w-full items-center justify-center gap-3 rounded-lg border border-(--border-strong) bg-(--surface-input) px-4 py-3 font-medium text-(--text-primary) transition-all duration-200 hover:bg-(--surface-hover)"
                 >
                   <Icon className="h-5 w-5" />
-                  {t("continueWith", { provider: config.label })}
+                  {t((d) => d.continueWith, {
+                    provider: config.label,
+                  })}
                 </button>
               );
             })}

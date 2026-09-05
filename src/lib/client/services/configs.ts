@@ -1,42 +1,35 @@
-import type { ConfigKey, ConfigValue } from "#lib/shared/config";
+"use client";
+
+import type { ConfigKey, ConfigOverride } from "#lib/shared/config";
 import {
-  deleteConfig,
-  fetchConfigs,
-  setConfig,
+  deleteConfigOverride,
+  loadConfigOverrides,
+  loadConfigs,
+  setConfigOverride,
+  type ConfigOptions,
 } from "#lib/shared/services/configs";
-import type { Json } from "#types";
 
 import { makeBrowserClient } from "../supabase";
 
-export const fetchConfigByBrowser = async <K extends ConfigKey>(
+export const loadConfigsByBrowser = <const Keys extends readonly ConfigKey[]>(
+  keys: Keys,
+  options: ConfigOptions = {},
+) => loadConfigs(makeBrowserClient(), keys, options);
+
+export const loadConfigOverridesByBrowser = <
+  const Keys extends readonly ConfigKey[],
+>(
+  keys: Keys,
+  options: ConfigOptions = {},
+) => loadConfigOverrides(makeBrowserClient(), keys, options);
+
+export const setConfigOverrideByBrowser = <K extends ConfigKey>(
   key: K,
-  locale?: string,
-): Promise<ConfigValue[K] | null> => {
-  const client = makeBrowserClient();
-  const configs = await fetchConfigs([key], { locale }, client);
-  return configs.get(key) ?? null;
-};
+  value: ConfigOverride<K>,
+  options: ConfigOptions = {},
+) => setConfigOverride(makeBrowserClient(), key, value, options);
 
-export const setConfigByBrowser = async <T extends Json>(
-  key: string,
-  value: T,
-) => {
-  const client = makeBrowserClient();
-  return setConfig(key, value, client);
-};
-
-export const fetchConfigsByBrowser = async <K extends ConfigKey>(
-  keys: readonly K[],
-  options: {
-    locale?: string;
-    strict?: boolean;
-  } = {},
-) => {
-  const client = makeBrowserClient();
-  return fetchConfigs(keys, options, client);
-};
-
-export const deleteConfigByBrowser = async (key: string) => {
-  const client = makeBrowserClient();
-  return deleteConfig(client, key);
-};
+export const deleteConfigOverrideByBrowser = (
+  key: ConfigKey,
+  options: ConfigOptions = {},
+) => deleteConfigOverride(makeBrowserClient(), key, options);

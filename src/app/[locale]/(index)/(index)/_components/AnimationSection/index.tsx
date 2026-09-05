@@ -1,7 +1,7 @@
 import type React from "react";
 
 import Stack from "#components/ui/Stack";
-import type { ConfigValue } from "#lib/shared/config";
+import { useT } from "#i18n";
 import { cn } from "#lib/shared/utils";
 
 import Typewriter from "./Typewriter";
@@ -27,11 +27,8 @@ function AnimatedGridBackground({
   );
 }
 
-export default function AnimationSection({
-  siteInfo,
-}: {
-  siteInfo: ConfigValue["siteInfo"];
-}) {
+export default function AnimationSection() {
+  const t = useT().scope((d) => d.home);
   return (
     <>
       <Stack
@@ -51,12 +48,12 @@ export default function AnimationSection({
               className="text-center text-[5em]"
               style={{ fontFamily: '"Titan One", cursive' }}
             >
-              {siteInfo.hero}
+              {t((d) => d.hero)}
             </h1>
 
             <div className="my-2 h-px w-full bg-linear-to-r from-transparent via-gray-300 to-transparent dark:via-gray-700" />
 
-            <Typewriter texts={siteInfo.typing} />
+            <Typewriter texts={t((d) => d.typing)} />
 
             <div
               className="mt-8 text-[6em] font-black"
@@ -65,7 +62,7 @@ export default function AnimationSection({
                   '"Savoye LET", "Snell Roundhand", "Segoe Script", "Gabriola", cursive',
               }}
             >
-              {siteInfo.bio}
+              {t((d) => d.bio)}
             </div>
           </Stack>
         </Stack>

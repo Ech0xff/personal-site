@@ -7,8 +7,9 @@ import PostTableOfContents from "#components/features/posts/PostTableOfContents"
 import ScrollToTopButton from "#components/shared/ScrollToTopButton";
 import CopyButton from "#components/ui/CopyButton";
 import Link from "#components/ui/Link";
+import { useT } from "#i18n";
 import { CACHE_TAGS } from "#lib/server/cache";
-import { getT } from "#lib/shared/i18n/tools";
+import { getScopedT } from "#lib/server/i18n";
 import { fetchPost } from "#lib/shared/services";
 import { formatTime, getMarkdownHeadings } from "#lib/shared/utils";
 
@@ -19,19 +20,19 @@ const getPostData = async (slug: string) => {
 };
 
 interface Props {
-  params: Promise<{ locale: string; slug: string }>;
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   "use cache";
-  const { locale, slug } = await params;
+  const { slug } = await params;
   cacheTag(CACHE_TAGS.post(slug));
-  const t = getT("PostDetail", locale);
+  const t = await getScopedT((d) => d.postDetail);
   const post = await getPostData(slug);
 
   if (!post || post.status !== "show") {
     return {
-      title: t("metaNotFoundTitle"),
+      title: t((d) => d.metaNotFoundTitle),
     };
   }
 
@@ -43,25 +44,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PostPage({ params }: Props) {
   "use cache";
-  const { locale, slug } = await params;
+  const { slug } = await params;
   cacheTag(CACHE_TAGS.post(slug));
-  const t = getT("PostDetail", locale);
   const post = await getPostData(slug);
+
+  return <PostPageContent post={post} />;
+}
+
+function PostPageContent({
+  post,
+}: {
+  post: Awaited<ReturnType<typeof getPostData>>;
+}) {
+  const t = useT().scope((d) => d.postDetail);
   const content = post?.content || "";
 
   // Handle 404 - also hide non-show posts
   if (!post || post.status !== "show") {
     return (
       <div className="py-20 text-center">
-        <h1 className="mb-4 text-3xl font-bold">{t("notFoundTitle")}</h1>
+        <h1 className="mb-4 text-3xl font-bold">{t((d) => d.notFoundTitle)}</h1>
         <p className="mb-8 text-gray-500 dark:text-gray-400">
-          {t("notFoundDescription")}
+          {t((d) => d.notFoundDescription)}
         </p>
         <Link
           href="/posts"
           className="inline-flex items-center gap-2 rounded bg-gray-900 px-6 py-3 text-white transition-opacity hover:opacity-90 dark:bg-white dark:text-black"
         >
-          {t("backToPosts")}
+          {t((d) => d.backToPosts)}
         </Link>
       </div>
     );
@@ -125,7 +135,7 @@ export default async function PostPage({ params }: Props) {
               className="flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-gray-900 dark:hover:text-gray-100"
             >
               <ArrowLeft className="h-4 w-4" />
-              {t("backToPosts")}
+              {t((d) => d.backToPosts)}
             </Link>
 
             <ScrollToTopButton />
@@ -135,7 +145,7 @@ export default async function PostPage({ params }: Props) {
 
       <PostTableOfContents
         headings={headings}
-        title={t("tableOfContents")}
+        title={t((d) => d.tableOfContents)}
         className="fixed top-24 right-(--layout-padding-x) hidden translate-x-full xl:block"
       />
     </>

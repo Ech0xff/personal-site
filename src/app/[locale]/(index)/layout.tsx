@@ -15,25 +15,31 @@ import DropdownPopover from "#components/ui/DropdownPopover";
 import FooterSection from "#components/ui/FooterSection";
 import Link from "#components/ui/Link";
 import Stack from "#components/ui/Stack";
+import { useT } from "#i18n";
 import { CACHE_TAGS } from "#lib/server/cache";
-import { CONFIG_KEYS } from "#lib/shared/config";
-import { getT } from "#lib/shared/i18n/tools";
-import { fetchConfigs } from "#lib/shared/services";
 import { cn } from "#lib/shared/utils";
 
 import LayoutClient from "./_components/LayoutClient";
 
 import "./layout.scss";
 
-function Navbar({ locale }: { className?: string; locale?: string }) {
-  const t = getT("Navigation", locale);
+function Navbar() {
+  const t = useT().scope((d) => d.navigation);
 
   const navItems = [
-    { name: t("posts"), path: "/posts", icon: FileText },
-    { name: t("thoughts"), path: "/thoughts", icon: Lightbulb },
-    { name: t("events"), path: "/events", icon: CalendarDays },
+    { name: t((d) => d.posts), path: "/posts", icon: FileText },
     {
-      name: t("dashboard"),
+      name: t((d) => d.thoughts),
+      path: "/thoughts",
+      icon: Lightbulb,
+    },
+    {
+      name: t((d) => d.events),
+      path: "/events",
+      icon: CalendarDays,
+    },
+    {
+      name: t((d) => d.dashboard),
       path: "/dashboard/account",
       icon: LayoutDashboard,
     },
@@ -66,7 +72,7 @@ function Navbar({ locale }: { className?: string; locale?: string }) {
               "sm:block",
             )}
           >
-            {t("description")}
+            {t((d) => d.description)}
           </div>
         </Link>
         {/* Nav Items - Right aligned */}
@@ -97,24 +103,22 @@ function Navbar({ locale }: { className?: string; locale?: string }) {
 
 export default async function Layout({
   children,
-  params,
 }: {
-  params: Promise<{ locale: string }>;
   children: React.ReactNode;
 }) {
   "use cache";
   cacheTag(CACHE_TAGS.config);
 
-  const { locale } = await params;
-  const configs = await fetchConfigs([CONFIG_KEYS.siteInfo], {
-    locale,
-  });
-  const siteInfo = configs.get(CONFIG_KEYS.siteInfo);
-
   return (
-    <LayoutClient navbar={<Navbar locale={locale} />}>
+    <LayoutClient navbar={<Navbar />}>
       {children}
-      <FooterSection filing={siteInfo.filing} />
+      <Footer />
     </LayoutClient>
   );
+}
+
+function Footer() {
+  const t = useT();
+
+  return <FooterSection filing={t((d) => d.footer.filing)} />;
 }

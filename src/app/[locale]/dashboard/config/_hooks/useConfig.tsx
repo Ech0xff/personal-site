@@ -3,93 +3,100 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
+import { useLocale } from "#i18n";
 import {
-  deleteConfigByBrowser,
-  fetchConfigsByBrowser,
-  setConfigByBrowser,
-} from "#lib/client/services";
+  deleteConfigOverrideByBrowser,
+  loadConfigOverridesByBrowser,
+  loadConfigsByBrowser,
+  setConfigOverrideByBrowser,
+} from "#lib/client/services/configs";
 import {
   type ConfigKey,
+  type ConfigOverride,
   type ConfigValue,
-  DEFAULT_CONFIG,
+  CONFIG_REGISTRY,
+  CONFIG_SCOPE,
+  getConfigDefaults,
 } from "#lib/shared/config";
-import { generateConfigKey } from "#lib/shared/config/utils";
-import { type Locale, routing } from "#lib/shared/i18n/routing";
+import type { Locale } from "#lib/shared/i18n";
 
-type UseConfigOptions<K extends ConfigKey> = {
-  key: K;
-};
-
-export default function useConfig<K extends ConfigKey>({
-  key,
-}: UseConfigOptions<K>) {
-  const [value, setValue] = useState<ConfigValue[K]>(DEFAULT_CONFIG[key]);
-  const [locale, setLocale] = useState<Locale>(routing.defaultLocale);
-  const [loading, setLoading] = useState(true);
-  const [hasStoredValue, setHasStoredValue] = useState(false);
-
-  const saveConfig = useCallback(
-    async (nextValue?: ConfigValue[K]) => {
-      try {
-        const newValue = await setConfigByBrowser(
-          generateConfigKey(key, locale),
-          nextValue ?? value,
-        );
-        setValue(newValue);
-        setHasStoredValue(true);
-        toast.success("Config saved.");
-      } catch (e) {
-        toast.error(e instanceof Error ? e.message : "Failed to save config.");
-      }
-    },
-    [key, locale, value],
+export default function useConfig<K extends ConfigKey>({ key }: { key: K }) {
+  const routeLocale = useLocale();
+  const [locale, setLocale] = useState<Locale>(routeLocale);
+  const [value, setValue] = useState<ConfigValue<K>>(() =>
+    getConfigDefaults(key, routeLocale),
   );
+  const [override, setOverride] = useState<ConfigOverride<K> | null>(null);
+  const [loading, setLoading] = useState(true);
+  const localized = CONFIG_REGISTRY[key].scope === CONFIG_SCOPE.LOCALE;
 
   const getConfig = useCallback(async () => {
     setLoading(true);
     try {
-      const values = await fetchConfigsByBrowser([key], {
-        locale,
-        strict: true,
-      });
-      const value = values.get(key);
-      setValue(value !== undefined ? value : DEFAULT_CONFIG[key]);
-      setHasStoredValue(value !== undefined);
-    } catch {
-      setHasStoredValue(false);
-      setValue(DEFAULT_CONFIG[key]);
+      const options = { locale };
+      const [values, overrides] = await Promise.all([
+        loadConfigsByBrowser([key], options),
+        loadConfigOverridesByBrowser([key], options),
+      ]);
+      setValue(values[key] as ConfigValue<K>);
+      setOverride(overrides[key] as ConfigOverride<K> | null);
+    } catch (error) {
+      setValue(getConfigDefaults(key, locale));
+      setOverride(null);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to load config.",
+      );
     } finally {
       setLoading(false);
     }
   }, [key, locale]);
 
+  const saveConfig = useCallback(
+    async (nextOverride?: ConfigOverride<K>) => {
+      try {
+        const saved = await setConfigOverrideByBrowser(
+          key,
+          nextOverride ?? (value as ConfigOverride<K>),
+          { locale },
+        );
+        setOverride(saved);
+        await getConfig();
+        toast.success("Config saved.");
+      } catch (error) {
+        toast.error(
+          error instanceof Error ? error.message : "Failed to save config.",
+        );
+      }
+    },
+    [getConfig, key, locale, value],
+  );
+
   const deleteConfig = useCallback(async () => {
-    if (!hasStoredValue) return;
+    if (override === null) return;
     try {
-      await deleteConfigByBrowser(generateConfigKey(key, locale));
-      toast.success("Config deleted.");
+      await deleteConfigOverrideByBrowser(key, { locale });
       await getConfig();
-    } catch {
-      toast.error("Failed to delete config.");
+      toast.success("Config deleted.");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to delete config.",
+      );
     }
-  }, [getConfig, hasStoredValue, key, locale]);
+  }, [getConfig, key, locale, override]);
 
   useEffect(() => {
-    let ignore = false;
-    if (ignore) return;
-    getConfig();
-    return () => {
-      ignore = true;
-    };
+    void getConfig();
   }, [getConfig]);
 
   return {
     value,
     setValue,
+    override,
     locale,
     setLocale,
+    localized,
     loading,
-    hasStoredValue,
+    hasStoredValue: override !== null,
     deleteConfig,
     saveConfig,
   };

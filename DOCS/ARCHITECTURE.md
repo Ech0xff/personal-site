@@ -109,7 +109,16 @@
 
 - Locale configuration lives in `src/lib/shared/i18n/routing.ts`. The supported
   locales are `en-US` and `zh-CN`, with `en-US` as the default.
-- Translation dictionaries live under `src/lib/shared/i18n/messages` and are
-  accessed through helpers such as `getT`.
+- Translation dictionaries live under `src/lib/shared/i18n/messages`.
+- Components import `useT` and `useLocale` from `#i18n`. The package `imports`
+  map in `package.json` resolves that specifier to the server implementation
+  under the `react-server` condition and to the client Context implementation
+  otherwise. This keeps synchronous shared components as Server Components
+  while allowing the same source to run inside Client Components.
+- The client `I18nProvider` remains a separate provider around the application;
+  it supplies the serialized dictionary to interactive Client Components.
+- React Hooks cannot run in async Server Components or metadata functions. Keep
+  translations in a synchronous Server Component child and use `getT` or
+  `getScopedT` for metadata and other async server-only functions.
 - Because the locale is part of the route, preserve the locale parameter in
   page and layout APIs, links, redirects, and navigation helpers.

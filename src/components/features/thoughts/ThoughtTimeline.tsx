@@ -5,7 +5,6 @@ import ThoughtCard, { type Thought } from "./ThoughtCard";
 
 interface Props {
   thoughts: Thought[];
-  locale?: string;
   className?: string;
   renderMetaRight?: (thought: Thought) => React.ReactNode;
   renderActions?: (thought: Thought) => React.ReactNode;
@@ -13,7 +12,6 @@ interface Props {
 
 export default function ThoughtTimeline({
   thoughts,
-  locale,
   renderActions,
   className,
 }: Props) {
@@ -30,7 +28,6 @@ export default function ThoughtTimeline({
           key={thought.id}
           thought={thought}
           id={thought.id}
-          locale={locale}
           index={index + 1}
           isLast={index === thoughts.length - 1}
           renderActions={renderActions}

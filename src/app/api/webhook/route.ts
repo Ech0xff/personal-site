@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
 
     const tags = new Set(TABLE_CACHE_TAGS[table] ?? []);
 
-    if (table === "posts" && !id) tags.add(CACHE_TAGS.post(id));
+    if (table === "posts" && id) tags.add(CACHE_TAGS.post(id));
 
     tags.forEach((tag) => {
       revalidateTag(tag, "max");

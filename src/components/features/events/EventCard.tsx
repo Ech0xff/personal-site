@@ -1,6 +1,6 @@
 import { EventContent } from "#components/features/content";
 import Stack from "#components/ui/Stack";
-import { getT } from "#lib/shared/i18n/tools";
+import { useT } from "#i18n";
 import { formatTime } from "#lib/shared/utils/tools";
 import type { Tag } from "#types";
 
@@ -20,7 +20,6 @@ export type Event = {
 interface Props {
   event: Event;
   className?: string;
-  locale?: string;
   renderActions?: (event: Event) => React.ReactNode;
 }
 
@@ -38,20 +37,19 @@ const getTagColor = (tag: EventTag) => {
   return typeof color === "string" && color.trim() ? color : defaultTagColor;
 };
 
-export default function EventCard({
-  event,
-  className,
-  locale,
-  renderActions,
-}: Props) {
-  const tCommon = getT("Common", locale);
+export default function EventCard({ event, className, renderActions }: Props) {
+  const t = useT();
   const { title, content, tags, published_at } = event;
   return (
     <Stack y className={className}>
       {/* Meta Row */}
       <Stack x className="mb-2 items-center justify-between">
         <div className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
-          {formatTime(published_at, "MMM D", tCommon("unknownDate"))}
+          {formatTime(
+            published_at,
+            "MMM D",
+            t((d) => d.common.unknownDate),
+          )}
         </div>
         <Stack x className="items-center gap-2">
           {renderActions?.(event)}

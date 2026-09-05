@@ -6,7 +6,6 @@ import DropdownPopover from "#components/ui/DropdownPopover";
 import Image from "#components/ui/Image";
 import SegmentedToggle from "#components/ui/SegmentedToggle";
 import Stack from "#components/ui/Stack";
-import { useCurrentLocale } from "#lib/client/locale";
 import { cn } from "#lib/shared/utils";
 import type { Status } from "#types";
 
@@ -22,7 +21,6 @@ export default function ThoughtEditor({
   onClose,
   onSaved,
 }: BaseEditorProps) {
-  const locale = useCurrentLocale();
   const {
     form,
     viewMode,
@@ -222,7 +220,6 @@ export default function ThoughtEditor({
                 hidden: viewMode === "edit",
                 "basis-1/2": viewMode === "split",
               })}
-              locale={locale}
               thought={form}
             />
           </Stack>
