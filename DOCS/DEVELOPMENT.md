@@ -2,9 +2,9 @@
 
 ## Command source of truth
 
-Treat the `scripts` object in `package.json` as authoritative. Documentation can
-lag behind script changes, so verify a command there before using or documenting
-it.
+Treat the `scripts` object in `package.json` as authoritative for application and
+repository tasks. Supabase operations intentionally have no package scripts;
+follow the explicit local and hosted CLI workflows in the README.
 
 The repository uses Bun. Use `bun install` for dependencies and `bun run <name>`
 for scripts so `bun.lock` remains the only package-manager lockfile.
@@ -38,9 +38,10 @@ production builds and deployments; GitHub Actions CI does not run the build.
 
 - `bun run lint:fix` applies available Oxlint fixes.
 - `bun run fmt:fix` formats supported files through Oxfmt.
-- `bun run gen:types:dev` and `bun run gen:types:prod` replace the generated
-  Supabase database types.
 - `bun run gen:icons` regenerates React icon components from `public/svg-icons`.
+
+Supabase CLI commands that mutate local state or a linked hosted project are
+documented in the README together with their target-selection safeguards.
 
 Before running a mutating command across the repository, inspect the working tree
 and avoid overwriting unrelated user changes. Prefer targeting only files related
@@ -53,6 +54,16 @@ to the current task when the tool supports it.
 - Files under `src/components/icons` are generated from source SVGs in
   `public/svg-icons`.
 - Do not commit `.next` output or introduce lockfiles from other package managers.
+- Do not commit Supabase CLI state under `supabase/.temp` or
+  `supabase/.branches`.
+
+## Local database workflow
+
+Follow the README for the complete local Docker workflow, type generation, and
+hosted migration workflow. Make schema changes in `supabase/schemas`, then use
+`bunx supabase db diff -f <name>` to generate and review the migration. Database
+migrations may also contain deployable baseline data. Keep development-only
+fixtures in `supabase/seed.sql`.
 
 ## Manual verification
 
