@@ -4,7 +4,6 @@ import EventCard from "#components/features/events/EventCard";
 import { MarkdownEditor } from "#components/ui/codemirror";
 import SegmentedToggle from "#components/ui/SegmentedToggle";
 import Stack from "#components/ui/Stack";
-import { useCurrentLocale } from "#lib/client/locale";
 import { cn } from "#lib/shared/utils";
 import type { Status } from "#types";
 
@@ -31,7 +30,6 @@ export default function EventEditor({
   onClose,
   onSaved,
 }: BaseEditorProps) {
-  const locale = useCurrentLocale();
   const {
     form,
     tags,
@@ -152,7 +150,7 @@ export default function EventEditor({
             />
 
             <Stack x className="p-4">
-              <EventCard event={form} locale={locale} />
+              <EventCard event={form} />
             </Stack>
           </Stack>
         </>

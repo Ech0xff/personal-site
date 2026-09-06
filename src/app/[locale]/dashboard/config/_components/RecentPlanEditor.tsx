@@ -2,7 +2,7 @@
 
 import { Check, CircleDashed, Clock, Plus, Trash2, X } from "lucide-react";
 
-import { CONFIG_KEYS, type RecentPlan } from "#lib/shared/config";
+import { CONFIG_KEY, type RecentPlan } from "#lib/shared/config";
 import { cn } from "#lib/shared/utils";
 
 import useConfig from "../_hooks/useConfig";
@@ -25,13 +25,14 @@ export default function RecentPlanEditor() {
   const {
     value,
     setValue,
+    locale,
     setLocale,
     loading,
     hasStoredValue,
     deleteConfig,
     saveConfig,
   } = useConfig({
-    key: CONFIG_KEYS.recentPlan,
+    key: CONFIG_KEY.RECENT_PLAN,
   });
 
   const updatePlan = (index: number, nextPlan: RecentPlan) => {
@@ -63,6 +64,7 @@ export default function RecentPlanEditor() {
     <EditorShell
       className="h-[80%] w-[80%] max-w-5xl"
       title={title}
+      locale={locale}
       onLocaleChange={setLocale}
       onDelete={hasStoredValue ? deleteConfig : undefined}
       onSave={handleSave}
