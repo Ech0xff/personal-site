@@ -1,17 +1,11 @@
-import { CONFIG_KEYS } from "#lib/shared/config";
+import { CONFIG_KEY } from "#lib/shared/config";
 
-import { fetchConfigByBrowser } from "./configs";
+import { loadConfigsByBrowser } from "./configs";
 
-export const fetchAvailableOauthProvidersByBrowser = async (
-  locale?: string,
-) => {
+export const fetchAvailableOauthProvidersByBrowser = async () => {
   try {
-    const value = await fetchConfigByBrowser(
-      CONFIG_KEYS.oauthProviders,
-      locale,
-    );
-
-    return value ?? [];
+    const configs = await loadConfigsByBrowser([CONFIG_KEY.OAUTH]);
+    return configs[CONFIG_KEY.OAUTH];
   } catch {
     return [];
   }

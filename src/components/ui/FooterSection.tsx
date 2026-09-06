@@ -9,7 +9,7 @@ export default function FooterSection({ filing }: { filing: string }) {
         <p>{filing}</p>
         <div className="flex items-center gap-3 text-xs opacity-70">
           <span className="cursor-default transition-colors hover:text-slate-600 dark:hover:text-slate-300">
-            Designed by Muyu
+            Designed by Ech0xff
           </span>
           <span className="h-1 w-1 rounded-full bg-slate-300 dark:bg-slate-700" />
           <span className="cursor-default transition-colors hover:text-slate-600 dark:hover:text-slate-300">
