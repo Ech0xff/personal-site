@@ -33,7 +33,8 @@ It includes a public-facing site for posts, thoughts, and events, plus a locale-
 
 - Node.js 18+
 - Bun
-- A Supabase project
+- Database access: Docker Desktop (or another Docker-compatible runtime) for
+  local development, a Supabase project for remote development, or both
 
 ## Getting Started
 
@@ -50,34 +51,35 @@ cd personal-site
 bun install
 ```
 
-### 3. Configure environment variables
+### 3. Start the local database
+
+Make sure Docker Desktop is running, then run:
 
 ```bash
-cp .env.example .env.development
+bun run supabase:setup
 ```
 
-Required values:
+This starts the local Supabase services and writes the local API URL, anon key,
+and service-role key to `.env.development`. Existing non-Supabase values in that
+file are preserved.
 
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY`
-- `DATABASE_URL`
-- `SITE_URL`
-- `WEBHOOK_SECRET`
+### 4. Configure environment variables
 
-Optional values:
+If you used `bun run supabase:setup`, this mapping is done automatically. The
+values come from `bunx supabase status`:
 
-- `NEXT_PUBLIC_APP_TIMEZONE`
+- API URL to `NEXT_PUBLIC_SUPABASE_URL`
+- anon key to `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- service role key to `SUPABASE_SERVICE_ROLE_KEY`
+- any private local value to `WEBHOOK_SECRET`
 
-The example file also works as a reference for production env setup.
+`NEXT_PUBLIC_APP_TIMEZONE` is optional.
+Edit `.env.development` to set `WEBHOOK_SECRET` and any optional application values.
+The file is ignored by Git.
 
-### 4. Set up Supabase
-
-1. Create a Supabase project.
-2. Run the SQL in order: `supabase/schema.sql`, `supabase/rpc.sql`, `supabase/data.sql`, and `supabase/rls.sql`.
-   Optional test data lives in `supabase/data.test.sql`.
-3. Create a public storage bucket named `images`.
-4. Fill in the env values from your project settings.
+Supabase Studio is available at [http://localhost:54323](http://localhost:54323).
+The local email inbox is available at
+[http://localhost:54324](http://localhost:54324).
 
 ### 5. Start the development server
 
@@ -102,6 +104,30 @@ bun run menu dev
 ```
 
 Then choose `Promote user to admin`.
+
+## Database
+
+### Local
+
+| Command                                    | Use                                             |
+| ------------------------------------------ | ----------------------------------------------- |
+| `bunx supabase start`                      | Start local Supabase services.                  |
+| `bunx supabase status`                     | Get local URLs and keys for `.env.development`. |
+| `bun run supabase:setup`                   | Start Supabase and update `.env.development`.   |
+| `bun run supabase:env`                     | Update Supabase values in `.env.development`.   |
+| `bunx supabase db reset --local`           | Rebuild the local schema and fixtures.          |
+| `bunx supabase db reset --local --no-seed` | Rebuild an empty local database.                |
+| `bun run supabase:types`                   | Regenerate local database types.                |
+| `bunx supabase stop`                       | Stop Supabase while preserving local data.      |
+
+The files under `supabase/schemas` describe the local database structure. After
+changing them, rebuild the local database with `bunx supabase db reset --local`,
+then regenerate types with `bun run supabase:types`. This repository does not
+use Supabase migration history for schema deployment.
+
+Next.js automatically loads `.env.development` during local development.
+Environment files are loaded when Next.js starts;
+restart the dev server after changing them.
 
 ## Markdown Support
 
@@ -148,13 +174,16 @@ The renderer also supports custom directives such as:
 - `bun run test` - run Bun tests
 - `bun run menu dev` - open the interactive maintenance menu with `.env.development`
 - `bun run menu prod` - open the interactive maintenance menu with `.env.production`
-- `bun run gen:types:dev` - generate Supabase types using `.env.development`
-- `bun run gen:types:prod` - generate Supabase types using `.env.production`
 - `bun run gen:icons` - regenerate icon components from `public/svg-icons`
+- `bun run supabase:setup` - start local Supabase and generate `.env.development`
+- `bun run supabase:env` - refresh local Supabase values in `.env.development`
+- `bun run supabase:types` - generate Supabase types from the local database
+
+Supabase operations are intentionally kept explicit. Use the local commands
+above so the target database is clear.
 
 The interactive menu currently includes:
 
-- Reset database (optional test data)
 - Rebind webhooks
 - Promote user to admin
 
@@ -170,11 +199,9 @@ The interactive menu currently includes:
 │   ├── styles/              # Global styles
 │   └── types/               # Shared TypeScript types
 ├── supabase/
-│   ├── schema.sql           # Tables and schema setup
-│   ├── rpc.sql              # Query and helper functions
-│   ├── data.sql             # Initial data
-│   ├── data.test.sql        # Extra test data
-│   ├── rls.sql              # Grants and row-level security
+│   ├── config.toml          # Local Supabase CLI configuration
+│   ├── schemas/              # Local schema source files
+│   └── seed.sql              # Local development fixtures
 └── public/                  # Static assets
 ```
 
@@ -185,8 +212,6 @@ For deployment, provide the same environment variables as local development, esp
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
-- `DATABASE_URL`
-- `SITE_URL`
 - `WEBHOOK_SECRET`
 
 If OAuth is enabled, make sure your Supabase auth redirect URLs include your deployed site URL and the callback route.

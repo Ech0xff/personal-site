@@ -25,7 +25,6 @@ export function generateStaticParams() {
 }
 
 export const instant = false;
-
 export async function generateMetadata(): Promise<Metadata> {
   "use cache";
   cacheTag(CACHE_TAGS.config);

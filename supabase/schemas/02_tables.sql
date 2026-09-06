@@ -1,10 +1,3 @@
-DROP SCHEMA IF EXISTS public CASCADE;
-CREATE SCHEMA IF NOT EXISTS public;
-CREATE EXTENSION IF NOT EXISTS postgis SCHEMA extensions;
-CREATE EXTENSION IF NOT EXISTS pg_net SCHEMA extensions;
-ALTER DATABASE postgres SET search_path TO "$user", public, extensions;
-SET search_path TO "$user", public, extensions;
-
 CREATE TABLE public.posts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title VARCHAR(500) NOT NULL,

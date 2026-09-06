@@ -8,8 +8,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-----------------------------------------------------------------------------------------
-
 CREATE OR REPLACE FUNCTION get_summary(
   tag_source_types TEXT[] DEFAULT NULL
 )
@@ -143,8 +141,6 @@ BEGIN
 END;
 $$;
 
-----------------------------------------------------------------------------------------
-
 CREATE OR REPLACE FUNCTION public.search_content(
   search_query TEXT
 )
@@ -275,8 +271,6 @@ AS $$
   ORDER BY combined.priority DESC, combined.published_at DESC;
 $$;
 
-----------------------------------------------------------------------------------------
-
 CREATE OR REPLACE FUNCTION public.send_webhook_via_pg_net()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -321,8 +315,6 @@ BEGIN
   RETURN NEW;
 END;
 $$;
-
-----------------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION manage_webhook(
   target_url text,
