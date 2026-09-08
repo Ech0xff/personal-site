@@ -2,11 +2,10 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Agentation } from "agentation";
 import type { Metadata } from "next";
 import { cacheTag } from "next/cache";
-import { cookies } from "next/headers";
 import { Suspense } from "react";
 
 import ToastWatcher from "#components/features/ToastWatcher";
-import { ThemeHelper, ThemeProvider } from "#components/providers/theme";
+import ThemeScript from "#components/shared/ThemeScript";
 import { ImageViewer } from "#components/ui/ImageViewer";
 import ModalProvider from "#components/ui/ModalProvider";
 import { I18nProvider } from "#lib/client/i18n";
@@ -16,16 +15,18 @@ import { type Dictionary, locales, type Locale } from "#lib/shared/i18n";
 
 import "#styles/tailwind.css";
 import "#styles/variables.scss";
+
 interface LayoutProps {
   children: React.ReactNode;
 }
 
-export function generateStaticParams() {
+export const generateStaticParams = () => {
   return locales.map((locale) => ({ locale }));
-}
+};
 
 export const instant = false;
-export async function generateMetadata(): Promise<Metadata> {
+
+export const generateMetadata = async (): Promise<Metadata> => {
   "use cache";
   cacheTag(CACHE_TAGS.config);
 
@@ -40,9 +41,9 @@ export async function generateMetadata(): Promise<Metadata> {
       apple: "/icon.svg",
     },
   };
-}
+};
 
-export default async function RootLayout({ children }: Readonly<LayoutProps>) {
+const RootLayout = async ({ children }: Readonly<LayoutProps>) => {
   const { locale, dictionary } = await getI18nConfig();
 
   return (
@@ -52,9 +53,9 @@ export default async function RootLayout({ children }: Readonly<LayoutProps>) {
       </ConfigShell>
     </Suspense>
   );
-}
+};
 
-async function ConfigShell({
+const ConfigShell = ({
   locale,
   dictionary,
   children,
@@ -62,24 +63,24 @@ async function ConfigShell({
   locale: Locale;
   dictionary: Dictionary;
   children: React.ReactNode;
-}) {
-  const cookieStore = await cookies();
-  const theme = ThemeHelper.format(cookieStore.get("theme")?.value);
-
+}) => {
   return (
-    <html className={theme} lang={locale}>
+    <html suppressHydrationWarning lang={locale}>
+      <head>
+        <ThemeScript />
+      </head>
       <body style={{ anchorName: "--body" }}>
-        <ThemeProvider initialTheme={theme}>
-          <I18nProvider locale={locale} dictionary={dictionary}>
-            <ModalProvider>
-              <ToastWatcher />
-              <SpeedInsights />
-              <ImageViewer>{children}</ImageViewer>
-            </ModalProvider>
-          </I18nProvider>
-          {process.env.NODE_ENV === "development" && <Agentation />}
-        </ThemeProvider>
+        <I18nProvider locale={locale} dictionary={dictionary}>
+          <ModalProvider>
+            <ToastWatcher />
+            <SpeedInsights />
+            <ImageViewer>{children}</ImageViewer>
+          </ModalProvider>
+        </I18nProvider>
+        {process.env.NODE_ENV === "development" && <Agentation />}
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

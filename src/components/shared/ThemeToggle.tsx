@@ -1,16 +1,18 @@
 "use client";
+
+import { useSetAtom } from "jotai";
 import { Monitor, Moon, Sun } from "lucide-react";
 
-import { useTheme } from "#components/providers/theme";
+import { themeAtom } from "#lib/client/theme";
+import { getNextTheme } from "#lib/shared/theme";
 import { cn } from "#lib/shared/utils";
 
-export default function ThemeToggle({ className }: { className?: string }) {
-  const { toggleTheme } = useTheme();
-
+const ThemeToggle = ({ className }: { className?: string }) => {
+  const setTheme = useSetAtom(themeAtom);
   return (
     <button
       type="button"
-      onClick={() => toggleTheme()}
+      onClick={() => setTheme(getNextTheme)}
       className={cn(
         "cursor-pointer rounded-full p-2 text-(--text-muted) transition-all hover:bg-(--surface-hover) hover:text-(--text-primary)",
         className,
@@ -21,4 +23,6 @@ export default function ThemeToggle({ className }: { className?: string }) {
       <Monitor className="hidden h-5 w-5 in-[.system]:block" />
     </button>
   );
-}
+};
+
+export default ThemeToggle;
