@@ -248,7 +248,7 @@ function GlobalSearchModal() {
   return (
     <dialog
       open
-      className="m-0 w-full max-w-2xl rounded-[2rem] border border-(--border-default) bg-(--surface-panel) p-4 text-inherit shadow-2xl"
+      className="relative m-0 w-full max-w-2xl rounded-[2rem] border border-(--border-default) bg-(--surface-panel) p-4 text-inherit shadow-2xl"
       aria-modal="true"
       aria-label={t((d) => d.title)}
     >
