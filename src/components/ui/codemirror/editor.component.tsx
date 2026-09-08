@@ -4,10 +4,11 @@ import type { Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import type { ReactCodeMirrorProps } from "@uiw/react-codemirror";
 import CodeMirror from "@uiw/react-codemirror";
+import { useAtomValue } from "jotai";
 import type { Ref } from "react";
 import { useImperativeHandle, useMemo } from "react";
 
-import { useTheme } from "#components/providers/theme";
+import { resolvedThemeAtom } from "#lib/client/theme";
 import { cn } from "#lib/shared/utils";
 
 export interface EditorHandle {
@@ -33,7 +34,7 @@ export function Editor({
   ref,
   ...props
 }: EditorProps) {
-  const { resolvedTheme } = useTheme();
+  const resolvedTheme = useAtomValue(resolvedThemeAtom);
 
   const editorExtensions = useMemo(
     () => [EditorView.lineWrapping, extensions],
