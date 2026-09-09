@@ -34,6 +34,19 @@ changes involving routing, server/client boundaries, Next.js cache behavior,
 metadata, or production bundling. Vercel is responsible for preview and
 production builds and deployments; GitHub Actions CI does not run the build.
 
+Type-aware linting reports unnecessary conditions, type assertions, type
+parameters, inferrable type annotations, redundant type constituents, and unsafe
+type assertions as warnings. Additional warnings cover floating and misused
+promises, unsafe `any` propagation, type-only imports, exhaustive switches,
+button types, array-index keys, keyboard interaction, and unused lint-disable
+directives. Promise-returning JSX attributes are excluded from
+`no-misused-promises`; event handlers must still handle failures. Warnings do not
+fail the lint command. Address
+warnings in the current change's scope while migrating existing code gradually.
+Prefer inference and checked type relationships over casts; retain validation
+where external inputs enter the application. `as const` preserves literal types
+and is distinct from asserting an unchecked value into a narrower domain type.
+
 ## Mutating commands
 
 - `bun run lint:fix` applies available Oxlint fixes.
