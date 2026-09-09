@@ -174,6 +174,7 @@ The renderer also supports custom directives such as:
 - `bun run fmt` - check Oxfmt formatting
 - `bun run fmt:fix` - apply Oxfmt formatting
 - `bun run typecheck` - run TypeScript checks
+- `bun run check` - run formatting, lint, and TypeScript checks
 - `bun run test` - run Bun tests
 - `bun run menu dev` - open the interactive maintenance menu with `.env.development`
 - `bun run menu prod` - open the interactive maintenance menu with `.env.production`
@@ -193,6 +194,15 @@ The interactive menu currently includes:
 ## Verification
 
 GitHub Actions runs `fmt`, `lint`, `typecheck`, and `test` on branch pushes.
+Pushes do not automatically create pull requests.
+
+`bun install` installs the Husky Git hooks. Before each commit, the pre-commit
+hook runs `bun run check` against the whole working tree, including unstaged
+changes, and blocks the commit if formatting, lint, or TypeScript checks fail.
+The hook does not modify or stage files. Use `bun run fmt:fix` and
+`bun run lint:fix` to apply fixes, review them, and stage the intended changes
+before retrying. Run `bun run prepare` to reinstall hooks if needed.
+
 Use the relevant checks locally; Markdown-only edits need formatting checks.
 Formatter and lint rules live in `.oxfmtrc.json` and `.oxlintrc.json`.
 
