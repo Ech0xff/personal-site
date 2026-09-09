@@ -2,10 +2,11 @@
 
 import { Plus, Save, Tags, X } from "lucide-react";
 import { useState } from "react";
+import { z } from "zod";
 
 import TagSphere from "#components/features/tags/TagSphere";
 import Stack from "#components/ui/Stack";
-import type { Json, TagWithCount } from "#types";
+import type { TagWithCount } from "#types";
 
 import DashboardShell from "../_components/layout/DashboardShell";
 import { useTags } from "./useTags";
@@ -16,7 +17,8 @@ type TagForm = {
   name: string;
 };
 
-type JsonObject = { [key: string]: Json | undefined };
+const jsonObjectSchema = z.record(z.string(), z.json());
+type JsonObject = z.infer<typeof jsonObjectSchema>;
 
 export default function TagsPage() {
   const { tags: displayTags, loading, error, createTag, updateTag } = useTags();
@@ -58,16 +60,13 @@ export default function TagsPage() {
 
     let meta: JsonObject;
     try {
-      const parsedMeta = JSON.parse(tagForm.meta || "{}");
-      if (
-        parsedMeta === null ||
-        Array.isArray(parsedMeta) ||
-        typeof parsedMeta !== "object"
-      ) {
+      const parsedMeta: unknown = JSON.parse(tagForm.meta || "{}");
+      const result = jsonObjectSchema.safeParse(parsedMeta);
+      if (!result.success) {
         setFormError("Meta must be a JSON object.");
         return;
       }
-      meta = parsedMeta as JsonObject;
+      meta = result.data;
     } catch {
       setFormError("Meta is not valid JSON.");
       return;

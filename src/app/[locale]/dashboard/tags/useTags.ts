@@ -19,7 +19,7 @@ export const useTags = () => {
   const refetch = useCallback(async () => {
     try {
       const data = await fetchSummaryByBrowser();
-      setTags(data?.tags ?? []);
+      setTags(data.tags);
       setError(false);
     } catch {
       setTags([]);

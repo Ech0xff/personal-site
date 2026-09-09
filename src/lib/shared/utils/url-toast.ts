@@ -1,6 +1,12 @@
 const toastTypes = ["info", "success", "error", "warning"] as const;
 export type ToastType = (typeof toastTypes)[number];
 
+const isToastType = (value: unknown): value is ToastType =>
+  toastTypes.some((type) => type === value);
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
 export type UrlToastPayload = {
   type: ToastType;
   code?: string;
@@ -14,8 +20,9 @@ export type UrlToastPayload = {
 export function encodeUrlToast(payload: UrlToastPayload): string {
   const json = JSON.stringify(payload);
   // btoa expects a binary string; encode as UTF-8 then convert
-  const utf8 = encodeURIComponent(json).replace(/%([0-9A-F]{2})/g, (_, p1) =>
-    String.fromCharCode(parseInt(p1, 16)),
+  const utf8 = encodeURIComponent(json).replace(
+    /%([0-9A-F]{2})/g,
+    (_match: string, hex: string) => String.fromCharCode(parseInt(hex, 16)),
   );
   return btoa(utf8).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
@@ -40,19 +47,13 @@ export function decodeUrlToast(encoded: string): UrlToastPayload | null {
     );
     const parsed = JSON.parse(json) as unknown;
 
-    if (
-      typeof parsed !== "object" &&
-      parsed !== null &&
-      !Array.isArray(parsed)
-    ) {
-      return null;
-    }
-    const obj = parsed as Record<string, unknown>;
+    if (!isRecord(parsed)) return null;
+    const obj = parsed;
     if (typeof obj.type !== "string") return null;
-    if (!toastTypes.includes(obj.type as ToastType)) return null;
+    if (!isToastType(obj.type)) return null;
 
     return {
-      type: obj.type as ToastType,
+      type: obj.type,
       code: typeof obj.code === "string" ? obj.code : undefined,
       message: typeof obj.message === "string" ? obj.message : undefined,
     };

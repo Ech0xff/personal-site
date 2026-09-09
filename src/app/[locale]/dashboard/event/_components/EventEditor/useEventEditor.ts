@@ -56,7 +56,7 @@ export const useEventEditor = ({
         const summary = await fetchSummaryByBrowser({
           tagSourceTypes: ["event"],
         });
-        setTags(summary?.tags ?? []);
+        setTags(summary.tags);
 
         if (isNewMode) {
           setForm(DEFAULT_FORM);

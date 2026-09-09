@@ -59,7 +59,7 @@ export const usePostEditor = ({
         const summary = await fetchSummaryByBrowser({
           tagSourceTypes: ["post"],
         });
-        setTags(summary?.tags ?? []);
+        setTags(summary.tags);
 
         if (isNewMode) {
           setForm(DEFAULT_FORM);

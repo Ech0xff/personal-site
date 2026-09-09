@@ -6,24 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { cn } from "#lib/shared/utils";
 
-type MicrolinkImage = {
-  url?: string;
-};
-
-type MicrolinkData = {
-  title?: string;
-  description?: string;
-  publisher?: string;
-  url?: string;
-  image?: MicrolinkImage;
-  logo?: MicrolinkImage;
-};
-
-type MicrolinkResponse = {
-  status?: string;
-  data?: MicrolinkData;
-  message?: string;
-};
+import { parseMicrolinkResponse, type MicrolinkData } from "./microlink.schema";
 
 type MetadataState =
   | { status: "loading" }
@@ -189,7 +172,7 @@ export default function MetaRenderClient({ url }: Props) {
           throw new Error("Failed to load link metadata.");
         }
 
-        const payload = (await response.json()) as MicrolinkResponse;
+        const payload = parseMicrolinkResponse(await response.json());
         if (payload.status !== "success" || !payload.data) {
           throw new Error(payload.message || "Failed to load link metadata.");
         }

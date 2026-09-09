@@ -11,7 +11,7 @@ import {
   fetchThoughts,
 } from "#lib/shared/services";
 import { cn, toPreviewText } from "#lib/shared/utils";
-import type { BlogSummaryData, RecentActivityItem } from "#types";
+import type { RecentActivityItem } from "#types";
 
 import AnimationSection from "./_components/AnimationSection";
 import { IntroductionSection } from "./_components/IntroductionSection";
@@ -60,7 +60,7 @@ export default async function HomePage() {
   cacheTag(CACHE_TAGS.config);
 
   const [data, recentActivity, configs] = await Promise.all([
-    fetchSummary() as Promise<BlogSummaryData>,
+    fetchSummary(),
     buildRecentActivity(),
     loadConfigsByServer([
       CONFIG_KEY.ABOUT_ME,
