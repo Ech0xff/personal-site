@@ -4,7 +4,12 @@ import type { z } from "zod";
 import type { Json } from "#types";
 
 import type { Locale } from "../i18n";
-import type { CONFIG_KEY, CONFIG_SCOPE,IDENTITY_PROVIDER,OAUTH_PROVIDERS } from "./config.const";
+import type {
+  CONFIG_KEY,
+  CONFIG_SCOPE,
+  IDENTITY_PROVIDER,
+  OAUTH_PROVIDERS,
+} from "./config.const";
 
 export type ConfigKey = ValueOf<typeof CONFIG_KEY>;
 export type ConfigScope = ValueOf<typeof CONFIG_SCOPE>;

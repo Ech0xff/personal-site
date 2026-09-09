@@ -14,11 +14,11 @@ function AnimatedGridBackground({
   smallGridSize?: number;
 }) {
   const largeGridSize = smallGridSize * 8;
-  const gridStyles = {
+  const gridStyles: Record<string, string> = {
     "--small-size": `${smallGridSize}px`,
     "--large-size": `${largeGridSize}px`,
     "--grid-offset": `${largeGridSize}px`,
-  } as React.CSSProperties;
+  };
 
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">

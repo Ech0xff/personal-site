@@ -1,12 +1,11 @@
 import type { ContainerDirective, TextDirective } from "mdast-util-directive";
 import type { ReactNode } from "react";
 
-export type DirectiveAttributes = Record<string, string | undefined>;
 export type ContentDirectiveNode = ContainerDirective | TextDirective;
 export type DirectiveNodeType = "containerDirective" | "textDirective";
 
 export interface RenderProps {
-  attributes: DirectiveAttributes;
+  attributes: unknown;
   children?: ReactNode;
 }
 
@@ -18,7 +17,6 @@ export interface DirectiveRenderProps extends RenderProps {
 export interface DirectiveRegistration {
   directive: string;
   directiveType: DirectiveNodeType;
-  checkAttributes?: (attributes: DirectiveAttributes) => void;
   render: (props: RenderProps) => ReactNode;
 }
 

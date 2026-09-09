@@ -88,6 +88,11 @@ function MarqueeRow({
   const duplicated = [...expanded, ...expanded];
   const trackRef = useRef<HTMLDivElement>(null);
   const [duration, setDuration] = useState<number | null>(null);
+  const trackStyle:
+    | (CSSProperties & { "--tag-marquee-duration": string })
+    | undefined = duration
+    ? { "--tag-marquee-duration": `${duration}s` }
+    : undefined;
 
   useEffect(() => {
     const element = trackRef.current;
@@ -119,11 +124,7 @@ function MarqueeRow({
             ? "tag-marquee-track-left"
             : "tag-marquee-track-right",
         ].join(" ")}
-        style={
-          duration
-            ? ({ "--tag-marquee-duration": `${duration}s` } as CSSProperties)
-            : undefined
-        }
+        style={trackStyle}
       >
         {duplicated.map((tag, index) => (
           <TagCard key={`${direction}-${tag.id}-${index}`} tag={tag} />

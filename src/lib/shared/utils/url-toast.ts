@@ -45,7 +45,7 @@ export function decodeUrlToast(encoded: string): UrlToastPayload | null {
         .map((c) => `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`)
         .join(""),
     );
-    const parsed = JSON.parse(json) as unknown;
+    const parsed: unknown = JSON.parse(json);
 
     if (!isRecord(parsed)) return null;
     const obj = parsed;

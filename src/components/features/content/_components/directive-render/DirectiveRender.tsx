@@ -1,7 +1,7 @@
-import type { Properties } from "hast";
 import { TriangleAlert } from "lucide-react";
 import type { Root } from "mdast";
 import { visit } from "unist-util-visit";
+import { z } from "zod";
 
 import {
   CONTENT_DIRECTIVE_NODE_TYPES,
@@ -35,9 +35,9 @@ export function DirectiveRender({
         `No registration found for directive "${directive}" of type "${directiveType}"`,
       );
     }
-    registration.checkAttributes?.(attributes);
+    const parsedAttributes: unknown = JSON.parse(z.string().parse(attributes));
     return registration.render({
-      attributes,
+      attributes: parsedAttributes,
       children,
     });
   } catch (error) {
@@ -54,13 +54,13 @@ export const remarkContentNodes = () => {
     for (const directiveType of CONTENT_DIRECTIVE_NODE_TYPES) {
       visit(tree, directiveType, (node: ContentDirectiveNode) => {
         node.data = {
+          ...node.data,
           hName: DIRECTIVE_RENDER_ELEMENT_NAME,
           hProperties: {
             directive: node.name,
             directiveType: node.type,
-            attributes: node.attributes ?? {},
-            children: node.children,
-          } as unknown as Properties,
+            attributes: JSON.stringify(node.attributes ?? {}),
+          },
         };
       });
     }

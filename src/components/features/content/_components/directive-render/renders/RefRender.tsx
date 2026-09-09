@@ -4,39 +4,14 @@ import {
   File,
   FileText,
   MessageCircleMore,
-  Quote,
 } from "lucide-react";
 
 import { cn } from "#lib/shared/utils";
 
-import type { DirectiveAttributes, RenderProps } from "../types";
+import { refAttributesSchema } from "../directive.schema";
+import type { RenderProps } from "../types";
 
-const REF_TYPES = ["post", "thought", "event", "external", "file"] as const;
-
-type RefType = (typeof REF_TYPES)[number];
-type RefDirectiveAttributes = {
-  id: string;
-  title?: string;
-  type: RefType;
-};
-
-const checkAttributes = (attributes: DirectiveAttributes) => {
-  const { id, type } = attributes;
-
-  const isRefType = (type: string): type is RefType => {
-    return REF_TYPES.includes(type as RefType);
-  };
-
-  if (typeof id !== "string" || id.length === 0) {
-    throw new Error('Directive "ref" is missing required attribute "id".');
-  }
-
-  if (typeof type !== "string" || !isRefType(type)) {
-    throw new Error(
-      'Directive "ref" is missing required attribute "type" or it is invalid.',
-    );
-  }
-};
+type RefType = ReturnType<typeof refAttributesSchema.parse>["type"];
 
 const resolveRefHref = (type: RefType, id: string) => {
   switch (type) {
@@ -53,7 +28,7 @@ const resolveRefHref = (type: RefType, id: string) => {
   }
 };
 
-function RefIcon({ type }: { type?: string }) {
+function RefIcon({ type }: { type: RefType }) {
   switch (type) {
     case "post":
       return <FileText className="inline-block h-3.5 w-3.5 align-[-0.125em]" />;
@@ -71,13 +46,11 @@ function RefIcon({ type }: { type?: string }) {
       );
     case "file":
       return <File className="inline-block h-3.5 w-3.5 align-[-0.125em]" />;
-    default:
-      return <Quote className="inline-block h-3.5 w-3.5 align-[-0.125em]" />;
   }
 }
 
 function render({ attributes, children }: RenderProps) {
-  const { id, title, type } = attributes as RefDirectiveAttributes;
+  const { id, title, type } = refAttributesSchema.parse(attributes);
   const href = resolveRefHref(type, id);
   return (
     <a
@@ -102,7 +75,6 @@ function render({ attributes, children }: RenderProps) {
 const refDirectiveConfig = {
   directive: "ref",
   directiveType: "textDirective" as const,
-  checkAttributes,
   render,
 };
 

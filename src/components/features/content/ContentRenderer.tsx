@@ -4,7 +4,7 @@ import {
   isValidElement,
   type ReactNode,
 } from "react";
-import type { Options } from "react-markdown";
+import type { Components, Options } from "react-markdown";
 import Markdown from "react-markdown";
 import rehypePrism from "rehype-prism-plus";
 import remarkDirective from "remark-directive";
@@ -72,6 +72,15 @@ const rehypePlugins: Options["rehypePlugins"] = [
   [rehypePrism, { ignoreMissing: true, showLineNumbers: true }],
 ];
 
+const components = {
+  p: ParagraphRender,
+  pre: PreRender,
+  table: TableRender,
+  [DIRECTIVE_RENDER_ELEMENT_NAME]: DirectiveRender,
+} satisfies Components & {
+  [DIRECTIVE_RENDER_ELEMENT_NAME]: typeof DirectiveRender;
+};
+
 export default function ContentRenderer({ content, className = "" }: Props) {
   return (
     <div
@@ -83,14 +92,7 @@ export default function ContentRenderer({ content, className = "" }: Props) {
       <Markdown
         remarkPlugins={[remarkDirective, remarkGfm, remarkContentNodes]}
         rehypePlugins={rehypePlugins}
-        components={
-          {
-            p: ParagraphRender,
-            pre: PreRender,
-            table: TableRender,
-            [DIRECTIVE_RENDER_ELEMENT_NAME]: DirectiveRender,
-          } as Record<string, React.ElementType>
-        }
+        components={components}
       >
         {content}
       </Markdown>
