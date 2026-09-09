@@ -22,7 +22,7 @@ export const useEvents = () => {
   }, []);
 
   useEffect(() => {
-    refetch();
+    void refetch();
   }, [refetch]);
 
   const syncStatus = (eventId: string, nextStatus: Status) => {

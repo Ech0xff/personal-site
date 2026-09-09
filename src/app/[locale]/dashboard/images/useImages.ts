@@ -38,7 +38,7 @@ export const useImages = () => {
   }, []);
 
   useEffect(() => {
-    refetch();
+    void refetch();
   }, [refetch]);
 
   const removeImage = (imageId: string) => {

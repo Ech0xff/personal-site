@@ -22,7 +22,7 @@ export const usePosts = () => {
   }, []);
 
   useEffect(() => {
-    refetch();
+    void refetch();
   }, [refetch]);
 
   const syncStatus = useCallback((postId: string, newStatus: Status) => {

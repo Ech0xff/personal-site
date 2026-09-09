@@ -115,6 +115,13 @@ After implementation, apply formatting and lint fixes to affected files, then
 run relevant non-mutating checks. See the [README](./README.md#verification)
 for verification and Supabase commands.
 
+### Test Scope
+
+- For simple lint, type, schema, or UI changes, use existing checks; do not
+  add tests by default.
+- Add tests for important behavior or bug regressions, preferably in existing
+  suites. Avoid tests that merely repeat implementation or library behavior.
+
 Use focused Conventional Commits (`feat:`, `fix:`, `refactor:`, `chore:`, `docs:`)
 with concise imperative subjects. Include only task-related changes and report
 checks that could not be run.

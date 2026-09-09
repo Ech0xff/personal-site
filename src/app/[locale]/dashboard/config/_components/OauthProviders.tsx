@@ -1,5 +1,6 @@
 import {
   CONFIG_KEY,
+  OAUTH_PROVIDERS,
   type OAuthProvider,
   providerConfig,
 } from "#lib/shared/config";
@@ -8,7 +9,7 @@ import { cn } from "#lib/shared/utils";
 import useConfig from "../_hooks/useConfig";
 import EditorShell from "./EditorShell";
 
-const allProviders = Object.keys(providerConfig) as OAuthProvider[];
+const allProviders: OAuthProvider[] = [...OAUTH_PROVIDERS];
 const title = "OAuth Providers";
 
 export default function OauthProviders() {

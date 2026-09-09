@@ -84,7 +84,7 @@ export const useEventEditor = ({
       }
     };
 
-    loadEditorData();
+    void loadEditorData();
   }, [id, isNewMode, onClose]);
 
   const selectTag = useCallback((tag: string) => {

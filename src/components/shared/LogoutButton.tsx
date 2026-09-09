@@ -22,22 +22,30 @@ export default function LogOutButton({ className, ...props }: Props) {
 
   const handleLogout = async () => {
     const toastId = toast.loading(t((d) => d.loggingOut));
-    supabase.auth.signOut().then(({ error }) => {
-      if (error) {
+    await supabase.auth
+      .signOut()
+      .then(({ error }) => {
+        if (error) {
+          toast.error(
+            t((d) => d.errorLoggingOut),
+            { id: toastId },
+          );
+        } else {
+          toast.success(
+            t((d) => d.loggedOutSuccessfully),
+            {
+              id: toastId,
+            },
+          );
+          router.replace(routes.AUTH);
+        }
+      })
+      .catch(() => {
         toast.error(
           t((d) => d.errorLoggingOut),
           { id: toastId },
         );
-      } else {
-        toast.success(
-          t((d) => d.loggedOutSuccessfully),
-          {
-            id: toastId,
-          },
-        );
-        router.replace(routes.AUTH);
-      }
-    });
+      });
   };
 
   return (

@@ -7,7 +7,6 @@ import Image from "#components/ui/Image";
 import SegmentedToggle from "#components/ui/SegmentedToggle";
 import Stack from "#components/ui/Stack";
 import { cn } from "#lib/shared/utils";
-import type { Status } from "#types";
 
 import type { BaseEditorProps } from "../../../_components/editor-types";
 import AuthorInput from "../../../_components/editor/AuthorInput";
@@ -84,9 +83,7 @@ export default function ThoughtEditor({
                   <SegmentedToggle
                     className="ml-auto"
                     value={form.status}
-                    onChange={(value) =>
-                      updateForm({ status: value as Status })
-                    }
+                    onChange={(value) => updateForm({ status: value })}
                     options={[
                       { value: "hide", label: "Hide" },
                       { value: "show", label: "Show" },
@@ -122,7 +119,7 @@ export default function ThoughtEditor({
               <SegmentedToggle
                 className="ml-auto"
                 value={form.status}
-                onChange={(value) => updateForm({ status: value as Status })}
+                onChange={(value) => updateForm({ status: value })}
                 options={[
                   { value: "hide", label: "Hide" },
                   { value: "show", label: "Show" },
@@ -204,7 +201,7 @@ export default function ThoughtEditor({
                   multiple
                   onChange={(e) => {
                     if (e.target.files) {
-                      handleFileUpload(e.target.files);
+                      void handleFileUpload(e.target.files);
                       e.target.value = "";
                     }
                   }}

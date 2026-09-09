@@ -22,7 +22,7 @@ export const useThoughts = () => {
   }, []);
 
   useEffect(() => {
-    refetch();
+    void refetch();
   }, [refetch]);
 
   const syncStatus = (thoughtId: string, nextStatus: Status) => {

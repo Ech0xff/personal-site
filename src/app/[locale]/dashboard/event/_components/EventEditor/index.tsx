@@ -5,7 +5,6 @@ import { MarkdownEditor } from "#components/ui/codemirror";
 import SegmentedToggle from "#components/ui/SegmentedToggle";
 import Stack from "#components/ui/Stack";
 import { cn } from "#lib/shared/utils";
-import type { Status } from "#types";
 
 import type { BaseEditorProps } from "../../../_components/editor-types";
 import DateTimeInput from "../../../_components/editor/DateTimeInput";
@@ -58,7 +57,7 @@ export default function EventEditor({
           <HeaderSection title={pageTitle}>
             <SegmentedToggle
               value={form.status}
-              onChange={(value) => updateForm({ status: value as Status })}
+              onChange={(value) => updateForm({ status: value })}
               options={[
                 { value: "hide", label: "Hide" },
                 { value: "show", label: "Show" },

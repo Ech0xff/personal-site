@@ -41,7 +41,7 @@ export default function ImageActionRender({
         type="button"
         onClick={(event) => {
           event.stopPropagation();
-          handleCopyUrl();
+          void handleCopyUrl();
         }}
         className={`flex h-5 w-5 items-center justify-center rounded-full transition-colors ${
           copied

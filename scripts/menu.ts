@@ -35,7 +35,7 @@ const selectMenu = async () => {
   }
 };
 
-(async () => {
+await (async () => {
   try {
     const envPath = loadEnvConfig(process.argv[2]);
     console.log(`Select an action: (Current environment: ${envPath})`);

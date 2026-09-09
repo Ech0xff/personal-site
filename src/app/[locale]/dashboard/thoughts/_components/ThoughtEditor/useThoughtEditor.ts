@@ -90,7 +90,7 @@ export const useThoughtEditor = ({
       }
     };
 
-    loadThought();
+    void loadThought();
   }, [id, isNewMode, onClose]);
 
   const handleFileUpload = useCallback(
@@ -152,7 +152,7 @@ export const useThoughtEditor = ({
 
       const files = event.dataTransfer.files;
       if (files.length > 0) {
-        handleFileUpload(files);
+        void handleFileUpload(files);
       }
     },
     [handleFileUpload],

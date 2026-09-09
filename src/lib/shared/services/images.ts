@@ -59,12 +59,18 @@ export const fetchImages = async (
     });
 };
 
-export const deleteImage = async (client: SupabaseClient, fileName: string) => {
+export const deleteImage = async (
+  client: SupabaseClient<Database>,
+  fileName: string,
+) => {
   const { error } = await client.storage.from(BUCKET_NAME).remove([fileName]);
   if (error) throw error;
 };
 
-export const uploadImage = async (client: SupabaseClient, file: File) => {
+export const uploadImage = async (
+  client: SupabaseClient<Database>,
+  file: File,
+) => {
   const compressedFile = await compressToWebp(file);
   const buffer = await compressedFile.arrayBuffer();
   const hash = await computeHash(buffer);
@@ -92,7 +98,7 @@ export const uploadImage = async (client: SupabaseClient, file: File) => {
 };
 
 export const uploadImageFromUrl = async (
-  client: SupabaseClient,
+  client: SupabaseClient<Database>,
   url: string,
 ) => {
   const response = await fetch(url);

@@ -46,7 +46,7 @@ export const useTags = () => {
   );
 
   useEffect(() => {
-    refetch();
+    void refetch();
   }, [refetch]);
 
   return {

@@ -93,14 +93,13 @@ export default function AccountPage() {
                   removed. GitHub and Google are linked sign-in methods you can
                   add or remove from this page.
                 </p>
-                {accountObj &&
-                  accountObj.identities!.map((identity) => (
-                    <IdentityCard
-                      key={identity.id}
-                      identity={identity}
-                      onUnlink={handleUnlink}
-                    />
-                  ))}
+                {accountObj.identities.map((identity) => (
+                  <IdentityCard
+                    key={identity.id}
+                    identity={identity}
+                    onUnlink={handleUnlink}
+                  />
+                ))}
               </Stack>
 
               {/* Link new providers */}
@@ -113,7 +112,7 @@ export default function AccountPage() {
                     {availableOauthProviders
                       .filter(
                         (provider) =>
-                          !accountObj.identities!.some(
+                          !accountObj.identities.some(
                             (identity) => identity.provider === provider,
                           ),
                       )

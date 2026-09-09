@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
+import { toast } from "sonner";
 
 import { makeBrowserClient } from "#lib/client/supabase";
 import { getUserStatus } from "#lib/shared/utils";
@@ -19,13 +20,13 @@ export default function AuthorInput({ value, onChange, disabled }: Props) {
 
     const fillNickname = async () => {
       const userStatus = await getUserStatus(supabase);
-      const nickname = userStatus.metadata?.nickname;
+      const nickname = userStatus.metadata.nickname;
       if (nickname && !value) {
-        onChange(String(nickname));
+        onChange(nickname);
       }
     };
 
-    fillNickname();
+    fillNickname().catch(() => toast.error("Failed to load author nickname"));
   }, [onChange, supabase, value]);
 
   return (

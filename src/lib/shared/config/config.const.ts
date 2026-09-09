@@ -10,3 +10,14 @@ export const CONFIG_SCOPE = {
   GLOBAL: "global",
   LOCALE: "locale",
 } as const;
+
+export const IDENTITY_PROVIDER = {
+  EMAIL: "email",
+  GITHUB: "github",
+  GOOGLE: "google",
+} as const;
+
+export const OAUTH_PROVIDERS = [
+  IDENTITY_PROVIDER.GITHUB,
+  IDENTITY_PROVIDER.GOOGLE,
+] as const;

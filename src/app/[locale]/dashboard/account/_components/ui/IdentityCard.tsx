@@ -1,11 +1,28 @@
 import type { UserIdentity } from "@supabase/supabase-js";
-import { Link2, Link2Off, Loader2 } from "lucide-react";
+import { assert } from "es-toolkit";
+import { includes } from "es-toolkit/compat";
+import { Link2Off, Loader2 } from "lucide-react";
 
 import Stack from "#components/ui/Stack";
-import { providerConfig } from "#lib/shared/config";
+import {
+  IDENTITY_PROVIDER,
+  type IdentityProvider,
+  providerConfig,
+} from "#lib/shared/config";
+
+const supportedProviders = Object.values(IDENTITY_PROVIDER);
+
+const assertSupportedProvider: (
+  provider: string,
+) => asserts provider is IdentityProvider = (provider) => {
+  assert(
+    includes(supportedProviders, provider),
+    `Unsupported identity provider: ${provider}`,
+  );
+};
 
 const isPrimaryIdentity = (identity: UserIdentity) =>
-  identity.provider === "email";
+  identity.provider === IDENTITY_PROVIDER.EMAIL;
 
 export default function IdentityCard({
   identity,
@@ -15,11 +32,9 @@ export default function IdentityCard({
   onUnlink: (identity: UserIdentity) => void;
 }) {
   const provider = identity.provider;
-  const config = providerConfig[provider as keyof typeof providerConfig] ?? {
-    label: provider,
-    icon: Link2,
-    color: "bg-zinc-500 text-white",
-  };
+  assertSupportedProvider(provider);
+
+  const config = providerConfig[provider];
   const Icon = config.icon;
 
   return (

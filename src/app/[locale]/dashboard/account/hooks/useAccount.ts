@@ -3,6 +3,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { makeBrowserClient } from "#lib/client/supabase";
+import {
+  appMetadataSchema,
+  userMetadataSchema,
+} from "#lib/shared/auth/user-metadata.schema";
 
 export type AccountObj = {
   id: string;
@@ -11,7 +15,7 @@ export type AccountObj = {
   nickname: string;
   createdAt: string;
   lastSignInAt?: string;
-  identities?: UserIdentity[];
+  identities: UserIdentity[];
 };
 
 export function useAccount() {
@@ -22,7 +26,7 @@ export function useAccount() {
 
   /** Fetch account info */
   const fetchAccountObj = useCallback(async () => {
-    supabase.auth
+    await supabase.auth
       .getUser()
       .then(({ data: { user }, error }) => {
         if (error || !user) {
@@ -31,13 +35,15 @@ export function useAccount() {
         }
         setAccountObj({
           id: user.id,
-          avatar_url: user.user_metadata?.avatar_url || "",
-          nickname: user.user_metadata?.nickname || "",
-          role: user.app_metadata?.role || "",
+          ...userMetadataSchema.parse(user.user_metadata),
+          ...appMetadataSchema.parse(user.app_metadata),
           createdAt: user.created_at,
           lastSignInAt: user.last_sign_in_at,
-          identities: user.identities,
+          identities: user.identities ?? [],
         });
+      })
+      .catch(() => {
+        setAccountObj(undefined);
       })
       .finally(() => {
         setLoading(false);
@@ -45,15 +51,12 @@ export function useAccount() {
   }, [supabase]);
 
   useEffect(() => {
-    fetchAccountObj();
+    void fetchAccountObj();
   }, [fetchAccountObj]);
 
   const handleSaveNickname = async (nextNickname: string) => {
     const toastId = toast.loading("Saving profile...");
-    setAccountObj((prev) =>
-      prev ? { ...prev, nickname: nextNickname } : prev,
-    );
-    supabase.auth
+    await supabase.auth
       .updateUser({
         data: {
           nickname: nextNickname,
@@ -66,12 +69,15 @@ export function useAccount() {
           toast.success("Profile updated successfully.", { id: toastId });
           await fetchAccountObj();
         }
+      })
+      .catch(() => {
+        toast.error("Error updating profile", { id: toastId });
       });
   };
 
   const handleLink = async (provider: "github" | "google") => {
     const toastId = toast.loading(`Linking ${provider}...`);
-    supabase.auth
+    await supabase.auth
       .linkIdentity({
         provider,
         options: {
@@ -89,19 +95,27 @@ export function useAccount() {
         } else {
           toast.error("Failed to start linking.", { id: toastId });
         }
+      })
+      .catch(() => {
+        toast.error("Failed to start linking.", { id: toastId });
       });
   };
 
   const handleUnlink = async (identity: UserIdentity) => {
     const toastId = toast.loading("Unlinking provider...");
-    supabase.auth.unlinkIdentity(identity).then(({ error }) => {
-      if (error) {
+    await supabase.auth
+      .unlinkIdentity(identity)
+      .then(async ({ error }) => {
+        if (error) {
+          toast.error("Error unlinking provider", { id: toastId });
+        } else {
+          toast.success("Provider unlinked successfully.", { id: toastId });
+          await fetchAccountObj();
+        }
+      })
+      .catch(() => {
         toast.error("Error unlinking provider", { id: toastId });
-      } else {
-        toast.success("Provider unlinked successfully.", { id: toastId });
-        fetchAccountObj();
-      }
-    });
+      });
   };
 
   return {

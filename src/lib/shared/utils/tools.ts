@@ -4,6 +4,8 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 
+import { userMetadataSchema } from "#lib/shared/auth/user-metadata.schema";
+
 const DEFAULT_TIME_ZONE = "America/New_York";
 const DEFAULT_LOCALE = "en";
 
@@ -132,6 +134,6 @@ export const getUserStatus = async (client: SupabaseClient) => {
   return {
     isAuth: Boolean(session),
     isAdmin: user?.app_metadata.role === "admin",
-    metadata: user?.user_metadata || {},
+    metadata: userMetadataSchema.parse(user?.user_metadata ?? {}),
   };
 };
