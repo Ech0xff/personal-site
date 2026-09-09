@@ -31,7 +31,7 @@ It includes a public-facing site for posts, thoughts, and events, plus a locale-
 
 ## Prerequisites
 
-- Node.js 18+
+- Node.js 20.9+
 - Bun
 - Database access: Docker Desktop (or another Docker-compatible runtime) for
   local development, a Supabase project for remote development, or both
@@ -168,6 +168,7 @@ The renderer also supports custom directives such as:
 - `bun run build` - build for production
 - `bun run start` - start the production server
 - `bun run lint` - run Oxlint checks
+- `bun run lint:fix` - apply Oxlint fixes
 - `bun run fmt` - check Oxfmt formatting
 - `bun run fmt:fix` - apply Oxfmt formatting
 - `bun run typecheck` - run TypeScript checks
@@ -186,6 +187,17 @@ The interactive menu currently includes:
 
 - Rebind webhooks
 - Promote user to admin
+
+## Verification
+
+GitHub Actions runs `fmt`, `lint`, `typecheck`, and `test` on branch pushes.
+Use the relevant checks locally; Markdown-only edits need formatting checks.
+Formatter and lint rules live in `.oxfmtrc.json` and `.oxlintrc.json`.
+
+For routing, cache, or server/client integration changes, also check a production
+build with `bun run build`. CI does not build the app. There is currently no
+browser test suite; verify affected behavior in the running app: locales and
+auth roles, cache invalidation, or light/dark and mobile/desktop layouts.
 
 ## Project Structure
 
@@ -215,6 +227,12 @@ For deployment, provide the same environment variables as local development, esp
 - `WEBHOOK_SECRET`
 
 If OAuth is enabled, make sure your Supabase auth redirect URLs include your deployed site URL and the callback route.
+
+## Documentation
+
+- [Development conventions](./AGENTS.md)
+- [Architecture](./DOCS/ARCHITECTURE.md)
+- [TODO](./DOCS/TODO.md)
 
 ## License
 
