@@ -31,7 +31,7 @@ export type RecentActivityItem =
       title: string;
     };
 
-export type TagWithCount = Tag & {
+export type TagWithCount = Pick<Tag, "id" | "name" | "meta"> & {
   count: number;
 };
 

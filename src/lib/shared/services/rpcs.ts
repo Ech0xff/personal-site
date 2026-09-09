@@ -39,7 +39,6 @@ const blogSummarySchema: z.ZodType<BlogSummaryData> = z.object({
       id: z.string(),
       name: z.string(),
       meta: jsonValueSchema,
-      created_at: z.string(),
       count: z.number(),
     }),
   ),
