@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { z } from "zod";
 
 import { compressToWebp, computeHash } from "#lib/shared/utils";
 import type { Database } from "#types";
@@ -7,6 +8,10 @@ import { makeStaticClient } from "../supabase";
 
 const BUCKET_NAME = "images";
 const WEBP_EXTENSION = "webp";
+
+const imageMetadataSchema = z.object({
+  size: z.number().nonnegative().default(0),
+});
 
 export const fetchExistingPublicUrl = async (
   filePath: string,
@@ -37,26 +42,29 @@ export const fetchImages = async (
 
   if (error) throw error;
 
-  return (data || [])
-    .filter(
-      (file): file is typeof file & { id: string; created_at: string } =>
-        file.id !== null &&
-        file.created_at !== null &&
-        !file.name.endsWith("/"),
-    )
-    .map((file) => {
-      const {
-        data: { publicUrl },
-      } = client.storage.from(BUCKET_NAME).getPublicUrl(file.name);
+  return data.flatMap((file) => {
+    if (
+      file.id === null ||
+      file.created_at === null ||
+      file.name.endsWith("/")
+    ) {
+      return [];
+    }
+    const metadata = imageMetadataSchema.parse(file.metadata ?? {});
+    const {
+      data: { publicUrl },
+    } = client.storage.from(BUCKET_NAME).getPublicUrl(file.name);
 
-      return {
+    return [
+      {
         id: file.id,
         name: file.name,
         url: publicUrl,
-        size: file.metadata?.size || 0,
+        size: metadata.size,
         createdAt: file.created_at,
-      };
-    });
+      },
+    ];
+  });
 };
 
 export const deleteImage = async (

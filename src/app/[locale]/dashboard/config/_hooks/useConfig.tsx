@@ -6,8 +6,7 @@ import { toast } from "sonner";
 import { useLocale } from "#i18n";
 import {
   deleteConfigOverrideByBrowser,
-  loadConfigOverridesByBrowser,
-  loadConfigsByBrowser,
+  loadConfigByBrowser,
   setConfigOverrideByBrowser,
 } from "#lib/client/services/configs";
 import {
@@ -33,13 +32,9 @@ export default function useConfig<K extends ConfigKey>({ key }: { key: K }) {
   const getConfig = useCallback(async () => {
     setLoading(true);
     try {
-      const options = { locale };
-      const [values, overrides] = await Promise.all([
-        loadConfigsByBrowser([key], options),
-        loadConfigOverridesByBrowser([key], options),
-      ]);
-      setValue(values[key] as ConfigValue<K>);
-      setOverride(overrides[key] as ConfigOverride<K> | null);
+      const config = await loadConfigByBrowser(key, { locale });
+      setValue(config.value);
+      setOverride(config.override);
     } catch (error) {
       setValue(getConfigDefaults(key, locale));
       setOverride(null);
@@ -52,13 +47,11 @@ export default function useConfig<K extends ConfigKey>({ key }: { key: K }) {
   }, [key, locale]);
 
   const saveConfig = useCallback(
-    async (nextOverride?: ConfigOverride<K>) => {
+    async (nextOverride: ConfigOverride<K>) => {
       try {
-        const saved = await setConfigOverrideByBrowser(
-          key,
-          nextOverride ?? (value as ConfigOverride<K>),
-          { locale },
-        );
+        const saved = await setConfigOverrideByBrowser(key, nextOverride, {
+          locale,
+        });
         setOverride(saved);
         await getConfig();
         toast.success("Config saved.");
@@ -68,7 +61,7 @@ export default function useConfig<K extends ConfigKey>({ key }: { key: K }) {
         );
       }
     },
-    [getConfig, key, locale, value],
+    [getConfig, key, locale],
   );
 
   const deleteConfig = useCallback(async () => {

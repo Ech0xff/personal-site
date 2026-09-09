@@ -1,12 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import type {
-  Database,
-  PostInsert,
-  PostUpdate,
-  PostWithTags,
-  Status,
-} from "#types";
+import { parseContentStatus } from "#lib/shared/content/status.helper";
+import { statusSchema } from "#lib/shared/content/status.schema";
+import type { Database, PostInsert, PostWithTags, Status } from "#types";
 
 import { makeStaticClient } from "../supabase";
 import { formatTags } from "./utils";
@@ -38,7 +34,7 @@ export const fetchPosts = async (
 
   const { data, error } = await query;
   if (error) throw error;
-  return data.map(formatTags);
+  return data.map((row) => parseContentStatus(formatTags(row)));
 };
 
 export const fetchPost = async (
@@ -59,18 +55,19 @@ export const fetchPost = async (
       )
     `)
     .eq("id", id)
-    .single();
+    .maybeSingle();
   if (error) throw error;
   if (!data) return null;
 
-  return formatTags(data);
+  return parseContentStatus(formatTags(data));
 };
 
 export const savePost = async (
   client: SupabaseClient<Database>,
   payload: PostInsert & { id?: string; tagIds?: string[] },
 ) => {
-  const { tagIds, ...postPayload } = payload;
+  const status = statusSchema.optional().parse(payload.status);
+  const { tagIds, ...postPayload } = { ...payload, status };
   let post: PostRow;
 
   if (payload.id) {
@@ -78,7 +75,7 @@ export const savePost = async (
     delete rest.id;
     const { data, error } = await client
       .from("posts")
-      .update(rest as PostUpdate)
+      .update(rest)
       .eq("id", payload.id)
       .select("*")
       .single();
@@ -112,7 +109,7 @@ export const savePost = async (
     }
   }
 
-  return post;
+  return parseContentStatus(post);
 };
 
 export const updatePostStatus = async (
@@ -120,7 +117,10 @@ export const updatePostStatus = async (
   id: string,
   status: Status,
 ) => {
-  const { error } = await client.from("posts").update({ status }).eq("id", id);
+  const { error } = await client
+    .from("posts")
+    .update({ status: statusSchema.parse(status) })
+    .eq("id", id);
   if (error) throw error;
 };
 

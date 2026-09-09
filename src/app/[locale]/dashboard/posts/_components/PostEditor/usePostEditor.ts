@@ -68,17 +68,16 @@ export const usePostEditor = ({
         }
 
         const post = await fetchPostByBrowser(id);
-        if (post !== null) {
-          setForm({
-            ...DEFAULT_FORM,
-            title: post.title,
-            content: post.content,
-            author: post.author,
-            status: post.status,
-            published_at: post.published_at,
-            tags: post.tags.map((tag) => tag.name),
-          });
-        }
+        if (post === null) throw new Error("Post not found");
+        setForm({
+          ...DEFAULT_FORM,
+          title: post.title,
+          content: post.content,
+          author: post.author,
+          status: post.status,
+          published_at: post.published_at,
+          tags: post.tags.map((tag) => tag.name),
+        });
       } catch {
         toast.error("Failed to load post data");
         onClose();

@@ -1,8 +1,4 @@
-import type { Tables } from "./supabase";
-
-type Post = Tables<"posts">;
-type Event = Tables<"events">;
-type Tag = Tables<"tags">;
+import type { Post, Event, Tag } from "./index";
 
 export type PostWithTags = Post & {
   tags: Tag[];

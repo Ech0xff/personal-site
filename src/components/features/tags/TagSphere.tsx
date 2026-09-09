@@ -186,16 +186,22 @@ export default function TagSphere<T extends TagSphereItem>({
   tags,
 }: Props<T>) {
   const [mounted, setMounted] = useState(false);
-  const buttonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const buttonRefs = useRef<Partial<Record<string, HTMLButtonElement | null>>>(
+    {},
+  );
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const currentProjectionsRef = useRef<Record<string, TagProjection>>({});
-  const frozenTagProjectionsRef = useRef<Record<string, TagProjection>>({});
-  const hoveringTagsRef = useRef<Record<string, HoveringTag>>({});
+  const currentProjectionsRef = useRef<Partial<Record<string, TagProjection>>>(
+    {},
+  );
+  const frozenTagProjectionsRef = useRef<
+    Partial<Record<string, TagProjection>>
+  >({});
+  const hoveringTagsRef = useRef<Partial<Record<string, HoveringTag>>>({});
   const pointerDirectionRef = useRef<PointerDirection>({
     x: 1,
     y: 0.5,
   });
-  const returningTagsRef = useRef<Record<string, ReturningTag>>({});
+  const returningTagsRef = useRef<Partial<Record<string, ReturningTag>>>({});
   const rotationRef = useRef<Rotation>({ x: 0.15, y: 0 });
   const sizeRef = useRef({ height: 560, width: 560 });
   const maxCount = Math.max(...tags.map((tag) => tag.count), 0);

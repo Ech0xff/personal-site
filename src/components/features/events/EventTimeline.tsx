@@ -1,3 +1,5 @@
+import { groupBy } from "es-toolkit";
+
 import SectionCard from "#components/ui/SectionCard";
 import Stack from "#components/ui/Stack";
 import { useT } from "#i18n";
@@ -13,18 +15,10 @@ interface Props {
 export default function EventTimeline({ events, renderActions }: Props) {
   const t = useT();
 
-  // Group by year
-  const groupedEvents: Record<string, Event[]> = {};
-  events.forEach((event) => {
-    const year = formatTime(event.published_at, "YYYY", "Unknown");
-    if (!groupedEvents[year]) {
-      groupedEvents[year] = [];
-    }
-    groupedEvents[year].push(event);
-  });
-
-  // Sort years descending
-  const sortedYears = Object.keys(groupedEvents).sort((a, b) => {
+  const groupedEvents = groupBy(events, (event) =>
+    formatTime(event.published_at, "YYYY", "Unknown"),
+  );
+  const sortedYears = Object.entries(groupedEvents).sort(([a], [b]) => {
     if (a === "Unknown") return 1;
     if (b === "Unknown") return -1;
     return Number(b) - Number(a);
@@ -35,8 +29,7 @@ export default function EventTimeline({ events, renderActions }: Props) {
       {/* Timeline Axis */}
       <div className="absolute top-0 bottom-0 left-1/2 w-0.5 -translate-x-1/2 transform bg-zinc-200 dark:bg-zinc-800" />
 
-      {sortedYears.map((year) => {
-        const yearEvents = groupedEvents[year] || [];
+      {sortedYears.map(([year, yearEvents]) => {
         return (
           <Stack y key={year} className="mb-12">
             {/* Year Title */}

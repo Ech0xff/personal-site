@@ -4,12 +4,13 @@ import Stack from "#components/ui/Stack";
 import { useT } from "#i18n";
 import { cn } from "#lib/shared/utils/tailwind";
 import { formatTime } from "#lib/shared/utils/tools";
+import type { Status } from "#types";
 
 export type Thought = {
   id: string;
   content: string;
   images: string[];
-  status: string;
+  status: Status;
   published_at: string;
 };
 
@@ -64,7 +65,7 @@ export default function ThoughtCard({
       <ThoughtContent content={thought.content} />
 
       {/* Images Grid */}
-      {thought.images && thought.images.length > 0 && (
+      {thought.images.length > 0 && (
         <div
           className={cn(
             "mt-4 grid gap-2",

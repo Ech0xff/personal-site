@@ -41,11 +41,11 @@ export function IntroductionSection({
 }) {
   const t = useT().scope((d) => d.indexHome);
 
-  const tags = data.tags ?? [];
+  const tags = data.tags;
 
   const totalCharacters =
     data.posts.characters + data.thoughts.characters + data.events.characters;
-  const playlistUrl = config.playlistUrl?.trim();
+  const playlistUrl = config.playlistUrl.trim();
   const darkPlaylistUrl = playlistUrl
     ? getPlaylistEmbedUrl(playlistUrl, "dark")
     : "";

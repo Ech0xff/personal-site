@@ -2,7 +2,7 @@ import { EventContent } from "#components/features/content";
 import Stack from "#components/ui/Stack";
 import { useT } from "#i18n";
 import { formatTime } from "#lib/shared/utils/tools";
-import type { Tag } from "#types";
+import type { Status, Tag } from "#types";
 
 type EventTag = Tag | string;
 const defaultTagColor = "#71717a";
@@ -13,7 +13,7 @@ export type Event = {
   content: string;
   tags: EventTag[];
   color: string;
-  status: string;
+  status: Status;
   published_at: string;
 };
 
@@ -66,7 +66,7 @@ export default function EventCard({ event, className, renderActions }: Props) {
 
       {/* Tags */}
       <Stack x className="mt-auto flex-wrap gap-2 py-3">
-        {tags && tags.length > 0 && (
+        {tags.length > 0 && (
           <>
             {tags.map((tag) => {
               const tagColor = getTagColor(tag);

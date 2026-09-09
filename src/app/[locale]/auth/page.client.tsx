@@ -57,12 +57,12 @@ export default function PageClient({ oauthProviders }: Props) {
       return;
     }
 
-    const { data, error } = await client.auth.signInWithPassword({
+    const { error } = await client.auth.signInWithPassword({
       email,
       password,
     });
 
-    if (error || !data.session) {
+    if (error) {
       toast.error(
         t((d) => d.invalidEmailOrPassword),
         { id: toastId },

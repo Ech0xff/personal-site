@@ -1,5 +1,3 @@
-import type React from "react";
-
 import Stack from "#components/ui/Stack";
 import { useT } from "#i18n";
 import { cn } from "#lib/shared/utils";

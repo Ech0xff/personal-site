@@ -72,23 +72,26 @@ export type ConfigValue<K extends ConfigKey> = ReturnType<
   ConfigRegistry[K]["resolve"]
 >;
 
-export type ConfigSnapshot<K extends ConfigKey> = Readonly<{
-  [P in K]: ConfigValue<P>;
-}>;
+export type ConfigSnapshot<K extends ConfigKey> = {
+  readonly [P in K]: ConfigValue<P>;
+};
 
-export type ConfigOverrideSnapshot<K extends ConfigKey> = Readonly<{
-  [P in K]: ConfigOverride<P> | null;
-}>;
+export type ConfigOverrideSnapshot<K extends ConfigKey> = {
+  readonly [P in K]: ConfigOverride<P> | null;
+};
+
+const registry: {
+  [P in ConfigKey]: ConfigDefinition<ConfigOverride<P>, ConfigValue<P>>;
+} = CONFIG_REGISTRY;
+
+export const getConfigDefinition = <K extends ConfigKey>(key: K) =>
+  registry[key];
 
 export const getConfigDefaults = <K extends ConfigKey>(
   key: K,
   locale: Locale,
 ): ConfigValue<K> => {
-  // Preserve the relationship between each registry key and its result type.
-  const registry: {
-    [P in ConfigKey]: ConfigDefinition<ConfigOverride<P>, ConfigValue<P>>;
-  } = CONFIG_REGISTRY;
-  const definition = registry[key];
+  const definition = getConfigDefinition(key);
   return definition.scope === CONFIG_SCOPE.LOCALE
     ? definition.defaults({ locale })
     : definition.defaults();

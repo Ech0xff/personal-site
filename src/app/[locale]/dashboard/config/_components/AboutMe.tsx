@@ -29,7 +29,7 @@ export default function AboutMe() {
       locale={locale}
       onLocaleChange={setLocale}
       onDelete={hasStoredValue ? deleteConfig : undefined}
-      onSave={saveConfig}
+      onSave={() => saveConfig(value)}
       loading={loading}
     >
       <div

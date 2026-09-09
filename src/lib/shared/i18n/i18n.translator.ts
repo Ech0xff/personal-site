@@ -1,5 +1,5 @@
 import IntlMessageFormat from "intl-messageformat";
-import type { ReactNode } from "react";
+import { cloneElement, isValidElement, type ReactNode } from "react";
 
 import type {
   Locale,
@@ -37,8 +37,17 @@ const createScopedT = <Scope extends object>(
   const rich = (
     select: (scope: Scope) => string,
     values?: RichMessageValues,
-  ): ReactNode =>
-    new IntlMessageFormat(select(source), locale).format<ReactNode>(values);
+  ): ReactNode => {
+    const formatted = new IntlMessageFormat(
+      select(source),
+      locale,
+    ).format<ReactNode>(values);
+    if (!Array.isArray(formatted)) return formatted;
+
+    return formatted.map((node, index) =>
+      isValidElement(node) ? cloneElement(node, { key: index }) : node,
+    );
+  };
 
   const scope = <ChildScope extends object>(
     select: (scope: Scope) => ChildScope,

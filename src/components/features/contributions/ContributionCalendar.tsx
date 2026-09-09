@@ -169,7 +169,9 @@ export default function ContributionCalendar({
     [events, posts, thoughts],
   );
   const availableYears = useMemo(() => getAvailableYears(merged), [merged]);
-  const [selectedYear, setSelectedYear] = useState(availableYears[0] ?? 2026);
+  const [selectedYear, setSelectedYear] = useState(
+    availableYears.at(0) ?? 2026,
+  );
 
   const currentYearContributions = useMemo(
     () =>
@@ -209,11 +211,9 @@ export default function ContributionCalendar({
   };
 
   useEffect(() => {
-    if (
-      !availableYears.includes(selectedYear) &&
-      availableYears[0] !== undefined
-    ) {
-      setSelectedYear(availableYears[0]);
+    const latestYear = availableYears.at(0);
+    if (!availableYears.includes(selectedYear) && latestYear !== undefined) {
+      setSelectedYear(latestYear);
     }
   }, [availableYears, selectedYear]);
 

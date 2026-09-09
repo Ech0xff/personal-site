@@ -5,11 +5,17 @@ import {
   deleteConfigOverride,
   loadConfigOverrides,
   loadConfigs,
+  loadConfig,
   setConfigOverride,
   type ConfigOptions,
 } from "#lib/shared/services/configs";
 
 import { makeBrowserClient } from "../supabase";
+
+export const loadConfigByBrowser = <K extends ConfigKey>(
+  key: K,
+  options: ConfigOptions = {},
+) => loadConfig(makeBrowserClient(), key, options);
 
 export const loadConfigsByBrowser = <const Keys extends readonly ConfigKey[]>(
   keys: Keys,

@@ -44,7 +44,7 @@ export default function PlaylistUrl() {
       locale={locale}
       onLocaleChange={setLocale}
       onDelete={hasStoredValue ? deleteConfig : undefined}
-      onSave={saveConfig}
+      onSave={() => saveConfig(value)}
       loading={loading}
     >
       <div className={cn("flex flex-1 flex-col gap-4", loading && "opacity-0")}>

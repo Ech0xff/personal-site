@@ -57,7 +57,7 @@ export default function RecentPlanEditor() {
   };
 
   const handleSave = () => {
-    return saveConfig();
+    return saveConfig(value);
   };
 
   return (

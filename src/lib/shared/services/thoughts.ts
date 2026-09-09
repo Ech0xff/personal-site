@@ -1,6 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import type { Database, Status, ThoughtInsert, ThoughtUpdate } from "#types";
+import { parseContentStatus } from "#lib/shared/content/status.helper";
+import { statusSchema } from "#lib/shared/content/status.schema";
+import type { Database, Status, ThoughtInsert } from "#types";
 
 import { makeStaticClient } from "../supabase";
 
@@ -12,7 +14,7 @@ export const fetchThoughts = async (
     .select("*")
     .order("published_at", { ascending: false });
   if (error) throw error;
-  const items = (data || []).map((t) => ({ ...t, images: t.images || [] }));
+  const items = data.map(parseContentStatus);
   return items.sort((a, b) => {
     const aTs = new Date(a.published_at || 0).getTime();
     const bTs = new Date(b.published_at || 0).getTime();
@@ -28,34 +30,35 @@ export const fetchThought = async (
     .from("thoughts")
     .select("*")
     .eq("id", id)
-    .single();
+    .maybeSingle();
   if (error) throw error;
-  return data || null;
+  return data === null ? null : parseContentStatus(data);
 };
 
 export const saveThought = async (
   client: SupabaseClient<Database>,
   payload: ThoughtInsert & { id?: string },
 ) => {
+  const status = statusSchema.optional().parse(payload.status);
   if (payload.id) {
     const { id, ...rest } = payload;
     const { data, error } = await client
       .from("thoughts")
-      .update(rest as ThoughtUpdate)
+      .update({ ...rest, status })
       .eq("id", id)
       .select("*")
       .single();
     if (error) throw error;
-    return data;
+    return parseContentStatus(data);
   }
 
   const { data, error } = await client
     .from("thoughts")
-    .insert(payload)
+    .insert({ ...payload, status })
     .select("*")
     .single();
   if (error) throw error;
-  return data;
+  return parseContentStatus(data);
 };
 
 export const updateThoughtStatus = async (
@@ -65,7 +68,7 @@ export const updateThoughtStatus = async (
 ) => {
   const { error } = await client
     .from("thoughts")
-    .update({ status })
+    .update({ status: statusSchema.parse(status) })
     .eq("id", id);
   if (error) throw error;
 };

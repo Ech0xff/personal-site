@@ -32,7 +32,7 @@ export default function OauthProviders() {
       className="w-[60%] max-w-3xl"
       title={title}
       onDelete={hasStoredValue ? deleteConfig : undefined}
-      onSave={saveConfig}
+      onSave={() => saveConfig(value)}
       loading={loading}
     >
       <div

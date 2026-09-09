@@ -1,12 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import type {
-  Database,
-  EventInsert,
-  EventUpdate,
-  EventWithTags,
-  Status,
-} from "#types";
+import { parseContentStatus } from "#lib/shared/content/status.helper";
+import { statusSchema } from "#lib/shared/content/status.schema";
+import type { Database, EventInsert, EventWithTags, Status } from "#types";
 
 import { makeStaticClient } from "../supabase";
 import { formatTags } from "./utils";
@@ -31,7 +27,7 @@ export const fetchEvents = async (
     `)
     .order("published_at", { ascending: false });
   if (error) throw error;
-  const items = (data || []).map(formatTags);
+  const items = data.map((row) => parseContentStatus(formatTags(row)));
   return items.sort((a, b) => {
     const aTs = new Date(a.published_at || 0).getTime();
     const bTs = new Date(b.published_at || 0).getTime();
@@ -57,17 +53,18 @@ export const fetchEvent = async (
       )
     `)
     .eq("id", id)
-    .single();
+    .maybeSingle();
   if (error) throw error;
   if (!data) return null;
-  return formatTags(data);
+  return parseContentStatus(formatTags(data));
 };
 
 export const saveEvent = async (
   client: SupabaseClient<Database>,
   payload: EventInsert & { id?: string; tagIds?: string[] },
 ) => {
-  const { tagIds, ...eventPayload } = payload;
+  const status = statusSchema.optional().parse(payload.status);
+  const { tagIds, ...eventPayload } = { ...payload, status };
   let event: EventRow;
 
   if (payload.id) {
@@ -75,7 +72,7 @@ export const saveEvent = async (
     delete rest.id;
     const { data, error } = await client
       .from("events")
-      .update(rest as EventUpdate)
+      .update(rest)
       .eq("id", payload.id)
       .select("*")
       .single();
@@ -109,7 +106,7 @@ export const saveEvent = async (
     }
   }
 
-  return event;
+  return parseContentStatus(event);
 };
 
 export const updateEventStatus = async (
@@ -117,7 +114,10 @@ export const updateEventStatus = async (
   id: string,
   status: Status,
 ) => {
-  const { error } = await client.from("events").update({ status }).eq("id", id);
+  const { error } = await client
+    .from("events")
+    .update({ status: statusSchema.parse(status) })
+    .eq("id", id);
   if (error) throw error;
 };
 

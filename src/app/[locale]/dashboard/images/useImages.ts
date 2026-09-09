@@ -52,7 +52,7 @@ export const useImages = () => {
       if (sortField === "createdAt") {
         comparison =
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-      } else if (sortField === "size") {
+      } else {
         comparison = a.size - b.size;
       }
 

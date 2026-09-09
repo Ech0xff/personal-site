@@ -107,7 +107,7 @@ function PostPageContent({
             )}
           </div>
 
-          {post.tags && post.tags.length > 0 && (
+          {post.tags.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
               {post.tags.map((tag) => (
                 <span

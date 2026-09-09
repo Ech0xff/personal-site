@@ -71,17 +71,16 @@ export const useThoughtEditor = ({
     const loadThought = async () => {
       try {
         const thought = await fetchThoughtByBrowser(id);
-        if (thought) {
-          setForm({
-            ...DEFAULT_FORM,
-            id: thought.id,
-            author: thought.author,
-            content: thought.content,
-            images: thought.images,
-            status: thought.status,
-            published_at: thought.published_at,
-          });
-        }
+        if (thought === null) throw new Error("Thought not found");
+        setForm({
+          ...DEFAULT_FORM,
+          id: thought.id,
+          author: thought.author,
+          content: thought.content,
+          images: thought.images,
+          status: thought.status,
+          published_at: thought.published_at,
+        });
       } catch {
         toast.error("Failed to load thought data");
         onClose();
