@@ -1,17 +1,14 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { toast, Toaster } from "sonner";
 
 import { useT } from "#i18n";
 import { useI18n } from "#lib/client/i18n";
-import {
-  readToastFromSearchParams,
-  type ToastType,
-} from "#lib/shared/utils/url-toast";
+import { readToastFromSearchParams } from "#lib/shared/utils/url-toast";
 
-export default function ToastWatcher() {
+const BaseToastWatcher = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -28,9 +25,17 @@ export default function ToastWatcher() {
     };
     const finalMsg =
       payload.message ?? (payload.code ? translateCode(payload.code) : "");
-    toast[(payload.type ?? "info") as ToastType](finalMsg);
+    toast[payload.type ?? "info"](finalMsg);
     router.replace(pathname);
   }, [dictionary.toastCodes, payload, pathname, t, router]);
 
   return <Toaster position="top-center" richColors />;
+};
+
+export default function ToastWatcher() {
+  return (
+    <Suspense fallback={null}>
+      <BaseToastWatcher />
+    </Suspense>
+  );
 }
