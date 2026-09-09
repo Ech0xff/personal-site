@@ -52,14 +52,11 @@ function PlantUmlRender({ className, code = "" }: Props) {
 }
 
 export function PreRender(props: Props) {
-  const { language } = props;
-  switch (language?.toUpperCase()) {
-    case "PLANTUML":
-    case "PUML":
-      return <PlantUmlRender {...props} />;
-    default:
-      return <CodeBlockRender {...props} />;
+  const language = (props.language ?? "TEXT").toUpperCase();
+  if (language === "PLANTUML" || language === "PUML") {
+    return <PlantUmlRender {...props} />;
   }
+  return <CodeBlockRender {...props} />;
 }
 
 export const rehypeCodeBlockProps = () => {

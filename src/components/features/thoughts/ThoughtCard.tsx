@@ -74,7 +74,7 @@ export default function ThoughtCard({
         >
           {thought.images.map((img, idx) => (
             <Image
-              key={idx}
+              key={img}
               framed
               src={img}
               alt={tThoughtCard((d) => d.imageAlt, {

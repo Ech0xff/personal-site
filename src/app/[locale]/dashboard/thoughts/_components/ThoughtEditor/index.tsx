@@ -174,7 +174,7 @@ export default function ThoughtEditor({
                   <div className="mt-auto grid grid-cols-6 gap-2 md:grid-cols-8 lg:grid-cols-10">
                     {form.images.map((url, index) => (
                       <Image
-                        key={index}
+                        key={url}
                         framed
                         src={url}
                         alt={`Image ${index + 1}`}

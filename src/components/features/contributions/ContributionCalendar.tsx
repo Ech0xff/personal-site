@@ -347,9 +347,9 @@ export default function ContributionCalendar({
 
         <div className="flex items-center gap-2">
           <span>{t((d) => d.stats.less)}</span>
-          {CELL_LEVEL_CLASS.map((className, index) => (
+          {CELL_LEVEL_CLASS.map((className) => (
             <div
-              key={index}
+              key={className}
               className={["rounded-[3px]", className].join(" ")}
               style={{
                 height: LEGEND_CELL_SIZE,

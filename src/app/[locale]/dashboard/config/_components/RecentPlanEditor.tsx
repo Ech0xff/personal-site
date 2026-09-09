@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, CircleDashed, Clock, Plus, Trash2, X } from "lucide-react";
+import { useState } from "react";
 
 import { CONFIG_KEY, type RecentPlan } from "#lib/shared/config";
 import { cn } from "#lib/shared/utils";
@@ -22,42 +23,68 @@ const statusOptions: Array<{
 ];
 
 export default function RecentPlanEditor() {
+  const config = useConfig({ key: CONFIG_KEY.RECENT_PLAN });
+  if (config.loading) {
+    return (
+      <EditorShell
+        className="h-[80%] w-[80%] max-w-5xl"
+        title={title}
+        locale={config.locale}
+        onLocaleChange={config.setLocale}
+        loading
+      />
+    );
+  }
+  return <RecentPlanForm config={config} />;
+}
+
+function RecentPlanForm({
+  config,
+}: {
+  config: ReturnType<typeof useConfig<typeof CONFIG_KEY.RECENT_PLAN>>;
+}) {
   const {
     value,
-    setValue,
     locale,
     setLocale,
     loading,
     hasStoredValue,
     deleteConfig,
     saveConfig,
-  } = useConfig({
-    key: CONFIG_KEY.RECENT_PLAN,
-  });
+  } = config;
+  const [plans, setPlans] = useState(() =>
+    value.map((plan, position) => ({ id: `stored-${position}`, plan })),
+  );
 
-  const updatePlan = (index: number, nextPlan: RecentPlan) => {
-    setValue(
-      value.map((plan, planIndex) => (planIndex === index ? nextPlan : plan)),
+  const updatePlan = (id: string, nextPlan: RecentPlan) => {
+    setPlans((current) =>
+      current.map((entry) =>
+        entry.id === id ? { ...entry, plan: nextPlan } : entry,
+      ),
     );
   };
 
   const addPlan = () => {
-    setValue([
-      ...value,
+    const id = crypto.randomUUID();
+    setPlans((current) => [
+      ...current,
       {
-        task: "",
-        status: "waiting",
-        createdAt: new Date().toString(),
+        id,
+        plan: {
+          task: "",
+          status: "waiting",
+          createdAt: new Date().toString(),
+        },
       },
     ]);
   };
 
-  const removePlan = (index: number) => {
-    setValue(value.filter((_, planIndex) => planIndex !== index));
+  const removePlan = (id: string) => {
+    setPlans((current) => current.filter((entry) => entry.id !== id));
   };
 
   const handleSave = () => {
-    return saveConfig(value);
+    return saveConfig(plans.map(({ plan }) => plan));
   };
 
   return (
@@ -77,7 +104,7 @@ export default function RecentPlanEditor() {
         )}
       >
         <div className="min-h-0 flex-1 space-y-3 overflow-auto pr-1">
-          {value.length === 0 ? (
+          {plans.length === 0 ? (
             <button
               type="button"
               onClick={addPlan}
@@ -89,9 +116,9 @@ export default function RecentPlanEditor() {
               <span className="text-sm font-medium">Create first plan</span>
             </button>
           ) : (
-            value.map((plan, index) => (
+            plans.map(({ id, plan }) => (
               <div
-                key={`${plan.createdAt}-${index}`}
+                key={id}
                 className="rounded-2xl border border-zinc-200 bg-white/80 p-3 shadow-sm transition hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/80 dark:hover:border-zinc-700"
               >
                 <div className="flex items-center gap-3">
@@ -103,7 +130,7 @@ export default function RecentPlanEditor() {
                           key={value}
                           type="button"
                           onClick={() =>
-                            updatePlan(index, { ...plan, status: value })
+                            updatePlan(id, { ...plan, status: value })
                           }
                           aria-label={label}
                           title={label}
@@ -122,7 +149,7 @@ export default function RecentPlanEditor() {
                   <input
                     value={plan.task}
                     onChange={(event) =>
-                      updatePlan(index, {
+                      updatePlan(id, {
                         ...plan,
                         task: event.target.value,
                       })
@@ -133,7 +160,7 @@ export default function RecentPlanEditor() {
 
                   <button
                     type="button"
-                    onClick={() => removePlan(index)}
+                    onClick={() => removePlan(id)}
                     aria-label="Remove plan"
                     className="rounded-full p-2 text-zinc-400 transition hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 dark:hover:text-red-300"
                   >
@@ -144,7 +171,7 @@ export default function RecentPlanEditor() {
             ))
           )}
 
-          {value.length > 0 && (
+          {plans.length > 0 && (
             <button
               type="button"
               onClick={addPlan}

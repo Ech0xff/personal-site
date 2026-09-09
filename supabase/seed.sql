@@ -1,3 +1,7 @@
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('images', 'images', true)
+ON CONFLICT (id) DO NOTHING;
+
 INSERT INTO public.posts (id, title, content, author, status, published_at)
 VALUES (
   'cf44cb54-1d65-446b-bca9-8b3f6158484f',
@@ -237,4 +241,3 @@ SELECT '51d99ba9-c65d-4d79-a76d-4ad66940ed68', tags.id
 FROM public.tags AS tags
 WHERE lower(tags.name) IN ('ai', 'llm', 'prompt engineering')
 ON CONFLICT DO NOTHING;
-

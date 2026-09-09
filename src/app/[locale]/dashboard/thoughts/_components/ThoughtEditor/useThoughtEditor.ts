@@ -92,44 +92,36 @@ export const useThoughtEditor = ({
     void loadThought();
   }, [id, isNewMode, onClose]);
 
-  const handleFileUpload = useCallback(
-    async (files: FileList | File[]) => {
-      const fileArray = Array.from(files);
-      const validFiles = fileArray.filter(isValidImageFile);
+  const handleFileUpload = useCallback(async (files: FileList | File[]) => {
+    const fileArray = Array.from(files);
+    const validFiles = fileArray.filter(isValidImageFile);
 
-      if (validFiles.length === 0) {
-        toast.error("No valid image files selected");
-        return;
-      }
+    if (validFiles.length === 0) {
+      toast.error("No valid image files selected");
+      return;
+    }
 
-      setIsUploading(true);
+    setIsUploading(true);
 
-      try {
-        const uploadPromises = validFiles.map((file) =>
-          uploadImageByBrowser(file),
-        );
-        const results = await Promise.all(uploadPromises);
+    try {
+      const uploadPromises = validFiles.map((file) =>
+        uploadImageByBrowser(file),
+      );
+      const results = await Promise.all(uploadPromises);
 
-        const newUrls = results
-          .map((result) => result.url)
-          .filter((url) => !form.images.includes(url));
-
-        if (newUrls.length > 0) {
-          setForm((prev) => ({
-            ...prev,
-            images: [...prev.images, ...newUrls],
-          }));
-        }
-      } catch (error) {
-        toast.error(
-          error instanceof Error ? error.message : "Failed to upload images",
-        );
-      } finally {
-        setIsUploading(false);
-      }
-    },
-    [form.images],
-  );
+      const newUrls = results.map((result) => result.url);
+      setForm((prev) => ({
+        ...prev,
+        images: [...new Set([...prev.images, ...newUrls])],
+      }));
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to upload images",
+      );
+    } finally {
+      setIsUploading(false);
+    }
+  }, []);
 
   const handleDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();

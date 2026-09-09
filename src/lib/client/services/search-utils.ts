@@ -19,6 +19,7 @@ const REGEX_SPECIAL_CHARACTERS = /[.*+?^${}()|[\]\\]/g;
 export interface SearchHighlightSegment {
   text: string;
   matched: boolean;
+  start: number;
 }
 
 export const normalizeSearchQuery = (value: string) =>
@@ -92,17 +93,19 @@ export const getSearchHighlightSegments = (
   );
 
   if (terms.length === 0) {
-    return [{ text: value, matched: false }];
+    return [{ text: value, matched: false, start: 0 }];
   }
 
   const matcher = new RegExp(`(${terms.map(escapeForRegex).join("|")})`, "gi");
   const segments = value.split(matcher).filter(Boolean);
   const normalizedTerms = new Set(terms.map((term) => term.toLowerCase()));
 
-  return segments.map((segment) => ({
-    text: segment,
-    matched: normalizedTerms.has(segment.toLowerCase()),
-  }));
+  let offset = 0;
+  return segments.map((text) => {
+    const start = offset;
+    offset += text.length;
+    return { text, matched: normalizedTerms.has(text.toLowerCase()), start };
+  });
 };
 
 const getMatchScore = (value: string, query: string) => {

@@ -124,6 +124,8 @@ The files under `supabase/schemas` describe the local database structure. After
 changing them, rebuild the local database with `bunx supabase db reset --local`,
 then regenerate types with `bun run supabase:types`. This repository does not
 use Supabase migration history for schema deployment.
+The local seed also creates the public `images` storage bucket; uploads and
+deletions remain restricted to admins by the storage policy.
 
 Next.js automatically loads `.env.development` during local development.
 Environment files are loaded when Next.js starts;
@@ -193,6 +195,11 @@ The interactive menu currently includes:
 GitHub Actions runs `fmt`, `lint`, `typecheck`, and `test` on branch pushes.
 Use the relevant checks locally; Markdown-only edits need formatting checks.
 Formatter and lint rules live in `.oxfmtrc.json` and `.oxlintrc.json`.
+
+Thought image URLs are deduplicated at the service read/write boundary, keeping
+their first occurrence and order. Uploads maintain the same invariant in editor
+state, so image lists can use URLs as stable keys. Recent-plan row IDs exist
+only in editor state and are omitted from saved configuration.
 
 For routing, cache, or server/client integration changes, also check a production
 build with `bun run build`. CI does not build the app. There is currently no

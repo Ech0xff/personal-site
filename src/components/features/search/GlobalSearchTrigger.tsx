@@ -134,9 +134,9 @@ function GlobalSearchModal() {
   }, [debouncedQuery, searchRawText]);
 
   const renderHighlightedText = (value: string) =>
-    getSearchHighlightSegments(value, debouncedQuery).map((segment, index) => (
+    getSearchHighlightSegments(value, debouncedQuery).map((segment) => (
       <span
-        key={`${segment.text}-${index}`}
+        key={segment.start}
         className={
           segment.matched
             ? "rounded-sm bg-(--search-highlight-bg) px-0.5 text-(--search-highlight-text)"

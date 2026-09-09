@@ -20,7 +20,7 @@ const getTagColor = (tag: TagWithCount) => {
     return defaultTagColor;
   }
 
-  const color = (tag.meta as { color?: unknown }).color;
+  const color = tag.meta.color;
   return typeof color === "string" && color.trim() ? color : defaultTagColor;
 };
 
@@ -31,7 +31,9 @@ const expandRow = (tags: TagWithCount[]) => {
   if (tags.length === 0) return [];
 
   const copies = Math.max(2, Math.ceil(MIN_ROW_ITEMS / tags.length));
-  return Array.from({ length: copies }, () => tags).flat();
+  return Array.from({ length: copies }, (_, copy) =>
+    tags.map((tag) => ({ tag, key: `${copy}-${tag.id}` })),
+  ).flat();
 };
 
 function TagCard({ tag }: { tag: TagWithCount }) {
@@ -85,7 +87,9 @@ function MarqueeRow({
   tags: TagWithCount[];
 }) {
   const expanded = expandRow(tags);
-  const duplicated = [...expanded, ...expanded];
+  const duplicated = ["original", "duplicate"].flatMap((group) =>
+    expanded.map(({ tag, key }) => ({ tag, key: `${group}-${key}` })),
+  );
   const trackRef = useRef<HTMLDivElement>(null);
   const [duration, setDuration] = useState<number | null>(null);
   const trackStyle:
@@ -126,8 +130,8 @@ function MarqueeRow({
         ].join(" ")}
         style={trackStyle}
       >
-        {duplicated.map((tag, index) => (
-          <TagCard key={`${direction}-${tag.id}-${index}`} tag={tag} />
+        {duplicated.map(({ tag, key }) => (
+          <TagCard key={key} tag={tag} />
         ))}
       </div>
     </div>

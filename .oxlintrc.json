@@ -46,6 +46,15 @@
     "jsx-a11y/click-events-have-key-events": "warn",
     "simple-import-sort/exports": "error"
   },
+  // Supabase generates redundant unions for empty enum and composite-type maps.
+  "overrides": [
+    {
+      "files": ["src/types/supabase.ts"],
+      "rules": {
+        "typescript/no-redundant-type-constituents": "off"
+      }
+    }
+  ],
   "env": {
     "builtin": true,
     "browser": true,
