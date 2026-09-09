@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 import { makeAdminClient, makeServerClient } from "#lib/server/supabase";
-import { getPreferredLocale } from "#lib/shared/i18n";
+import { LOCALE_COOKIE, normalizeLocale } from "#lib/shared/i18n";
 import { getLocalizedRoutes } from "#lib/shared/routes";
 import { hasEmailIdentity } from "#lib/shared/utils/tools";
 import { appendToastToUrl } from "#lib/shared/utils/url-toast";
@@ -9,7 +9,7 @@ import { appendToastToUrl } from "#lib/shared/utils/url-toast";
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const origin = requestUrl.origin;
-  const locale = getPreferredLocale(request.cookies.get("locale")?.value);
+  const locale = normalizeLocale(request.cookies.get(LOCALE_COOKIE)?.value);
   const routes = getLocalizedRoutes(locale);
   const authUrl = new URL(routes.AUTH, origin).toString();
 

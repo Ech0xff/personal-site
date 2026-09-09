@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 
 import { JsonEditor } from "#components/ui/codemirror";
-import { CONFIG_KEY, dictionaryOverrideSchema } from "#lib/shared/config";
+import { CONFIG_KEY } from "#lib/shared/config";
+import { dictionaryOverrideSchema } from "#lib/shared/i18n/i18n.schema";
 
 import useConfig from "../_hooks/useConfig";
 import EditorShell from "./EditorShell";

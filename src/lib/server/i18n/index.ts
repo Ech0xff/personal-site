@@ -1,5 +1,4 @@
-"server-only";
-
+import "server-only";
 import { cacheTag } from "next/cache";
 import { locale as rootLocale } from "next/root-params";
 import { cache, use } from "react";
@@ -16,11 +15,11 @@ import {
 import { loadConfigs } from "#lib/shared/services/configs";
 import { makeStaticClient } from "#lib/shared/supabase";
 
-export const getLocale = async (): Promise<Locale> => {
+export const getLocale = cache(async (): Promise<Locale> => {
   const value = await rootLocale();
   assertLocale(value);
   return value;
-};
+});
 
 const loadDictionary = async (locale: Locale): Promise<Dictionary> => {
   "use cache";
@@ -47,7 +46,7 @@ export const useT = (): Translator<Dictionary> => {
   return createT(dictionary, locale);
 };
 
-export const useLocale = (): Locale => use(getI18nConfig()).locale;
+export const useLocale = (): Locale => use(getLocale());
 
 export const getT = async (): Promise<Translator<Dictionary>> => {
   const { locale, dictionary } = await getI18nConfig();

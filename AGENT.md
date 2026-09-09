@@ -53,7 +53,7 @@ and the expected validation workflow.
   in their existing boundaries. Never expose `SUPABASE_SERVICE_ROLE_KEY` to
   client code.
 - Preserve locale-prefixed routing and localized links. Supported locales and
-  the default locale are defined in `src/lib/shared/i18n/routing.ts`.
+  the default locale are defined in `src/lib/shared/i18n/i18n.const.ts`.
 - When changing cached data, update cache tags, cached consumers, and
   invalidation paths together.
 - Define database structure in `supabase/schemas`, generate versioned changes in

@@ -1,49 +1,45 @@
 "use client";
 
-import Cookies from "js-cookie";
 import { Languages } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 import { useLocale } from "#i18n";
-import { routing, switchLocaleInPathname } from "#lib/shared/i18n";
+import {
+  getNextLocale,
+  localeLabels,
+  switchLocaleHref,
+} from "#lib/shared/i18n";
 import { cn } from "#lib/shared/utils";
 
-const localeLabelMap: Record<string, string> = {
-  "en-US": "EN",
-  "zh-CN": "中",
-};
-
 export default function LanguageToggle({ className }: { className?: string }) {
-  const pathname = usePathname();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const currentLocale = useLocale();
-  const currentLocaleIndex = routing.locales.indexOf(currentLocale);
-  const targetLocale =
-    routing.locales[(currentLocaleIndex + 1) % routing.locales.length];
-  const search = searchParams.toString();
-  const currentHref = search ? `${pathname}?${search}` : pathname;
-  const targetPath = switchLocaleInPathname(currentHref, targetLocale);
-  const label = localeLabelMap[targetLocale] || targetLocale;
+  const targetLocale = getNextLocale(currentLocale);
 
-  useEffect(() => {
-    Cookies.set("locale", currentLocale, { expires: 365 });
-  }, [currentLocale]);
+  const switchLocale = () => {
+    const { pathname, search, hash } = window.location;
+    router.push(
+      switchLocaleHref(
+        currentLocale,
+        targetLocale,
+        `${pathname}${search}${hash}`,
+      ),
+    );
+  };
 
   return (
     <button
       type="button"
       title={targetLocale}
       aria-label={targetLocale}
-      onClick={() => router.push(targetPath)}
+      onClick={switchLocale}
       className={cn(
         "inline-flex cursor-pointer items-center gap-1 rounded-full p-2 text-(--text-muted) transition-all hover:bg-(--surface-hover) hover:text-(--text-primary)",
         className,
       )}
     >
       <Languages className="h-4 w-4" />
-      <span className="text-xs font-medium">{label}</span>
+      <span className="text-xs font-medium">{localeLabels[targetLocale]}</span>
     </button>
   );
 }

@@ -31,11 +31,17 @@
 ## Routing and app shape
 
 - Routes are prefixed with a locale. `src/proxy.ts` redirects requests without a
-  locale segment to the cookie locale or the default locale from
-  `src/lib/shared/i18n/routing.ts`.
+  locale segment to the locale preference cookie or the default locale from
+  `src/lib/shared/i18n/i18n.const.ts`. `src/components/shared/LocaleCookieSync.tsx`
+  keeps that cookie aligned with the locale of the route being viewed.
 - The root shell is `src/app/[locale]/layout.tsx`. It generates site metadata,
-  loads global styles, initializes theme state, mounts toast and modal providers,
-  and wraps the application with the shared image viewer.
+  loads global styles, applies the theme class from `ThemeScript` before first
+  paint, mounts toast and modal providers, and wraps the application with the
+  shared image viewer.
+- Theme state is client-owned: `ThemeScript` reads `localStorage` during the
+  first paint and `src/lib/client/theme.ts` exposes the Jotai atoms that
+  components read and write. No theme value is read on the server, which keeps
+  the root document prerenderable.
 - Public pages live under `src/app/[locale]/(index)`.
 - Authentication and administration live under `src/app/[locale]/auth` and
   `src/app/[locale]/dashboard`.
@@ -127,14 +133,60 @@
 
 ## Internationalization
 
-- Locale configuration lives in `src/lib/shared/i18n/routing.ts`. The supported
-  locales are `en-US` and `zh-CN`, with `en-US` as the default.
-- Translation dictionaries live under `src/lib/shared/i18n/messages`.
+- Locale configuration lives in `src/lib/shared/i18n/i18n.const.ts`: the locale
+  list, the default locale, the toggle labels, and the locale preference cookie
+  name. The supported locales are `en-US` and `zh-CN`, with `en-US` as the
+  default.
+- Shared domain constants belong in `i18n.const.ts`, shared types in
+  `i18n.type.ts`, and ordinary environment-neutral pure functions in
+  `i18n.helper.ts`. Keep local variables and implementation helpers private and
+  close to their callers. Split a dedicated module when a group of functions
+  has an independent dependency or responsibility, as with the ICU translator
+  and dictionary construction. This convention is being piloted in i18n;
+  migrate other domains when working on them.
+- `i18n.helper.ts` handles locale parsing and localized href transformations.
+  `parseLocale` returns `Locale | null`; `normalizeLocale` falls back to the
+  default for invalid preferences. The proxy parses the leading pathname segment
+  with `getLocaleFromPathname`; the server adapter validates root parameters
+  with `assertLocale`. Internal operations accept a validated `Locale`.
+- `localizeHref(locale, href)` prepends a locale to a locale-free href such as a
+  `ROUTES` constant or `/posts/123`; it never inspects the href for an existing
+  prefix. `switchLocaleHref(from, to, href)` rewrites an already localized href
+  and treats the `from` prefix as a precondition, failing loudly if it is absent.
+- `src/components/shared/LanguageToggle.tsx` derives its target locale from the
+  route locale and reads `window.location` only when the user switches, so it
+  renders inside the static shell instead of behind a `Suspense` boundary.
+- Translation dictionaries live under `src/lib/shared/i18n/messages`;
+  `messages/index.ts` is the registry that maps a locale to its dictionary, and
+  `messages/default.ts` is the shape that `Dictionary` is derived from.
+  `messages/messages.helper.ts` owns `defineDictionary`, which merges built-in
+  translations with the default dictionary without mutating it.
+- `i18n.schema.ts` owns dictionary override validation. The config registry and
+  dashboard dictionary editor import that schema directly; config owns storage
+  and registration, while i18n owns the dictionary rules. The schema and message
+  registry are separate entry points from the shared i18n barrel.
+- `i18n.translator.ts` owns `createT` and ICU formatting. It receives its source
+  and locale explicitly and has no runtime dependency on built-in dictionaries,
+  React, request state, or storage. Dictionary types use type-only imports.
+  Translator overloads preserve selected data types and return strings for
+  interpolated messages; ICU generics distinguish plain text from rich React
+  output. The dynamically generated override schema retains one documented type
+  assertion because TypeScript cannot infer its dictionary keys from
+  `Object.fromEntries`; schema tests cover full dictionaries and partial inputs.
 - Components import `useT` and `useLocale` from `#i18n`. The package `imports`
   map in `package.json` resolves that specifier to the server implementation
   under the `react-server` condition and to the client Context implementation
   otherwise. This keeps synchronous shared components as Server Components
   while allowing the same source to run inside Client Components.
+- `#i18n` is the runtime surface only. Pure helpers, constants, translator
+  construction, and types come from the explicit exports in `#lib/shared/i18n`.
+  Use relative concrete modules within i18n. The shared barrel does not export
+  the dictionary registry or schema, keeping those data dependencies out of the
+  client runtime's import graph through i18n.
+- Server `getLocale` is memoized with React `cache`; `useLocale` reads only that
+  value without loading a dictionary. Translation access loads the dictionary
+  through the existing locale-keyed cache and configuration cache tag. The
+  server entry uses `import "server-only"` to enforce its environment boundary.
 - The client `I18nProvider` remains a separate provider around the application;
   it supplies the serialized dictionary to interactive Client Components.
 - React Hooks cannot run in async Server Components or metadata functions. Keep

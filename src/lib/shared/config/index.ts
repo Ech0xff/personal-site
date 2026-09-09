@@ -4,22 +4,19 @@ import type { z } from "zod";
 import SvgGithub from "#components/icons/Github";
 import SvgGoogle from "#components/icons/Google";
 
-import {
-  dictionaries,
-  type Dictionary,
-  type Locale,
-  type PartialDictionary,
-} from "../i18n";
+import { type Dictionary, type Locale, type PartialDictionary } from "../i18n";
+import { dictionaryOverrideSchema } from "../i18n/i18n.schema";
+import { dictionaries } from "../i18n/messages";
 import { CONFIG_KEY, CONFIG_SCOPE } from "./config.const";
 import { defineConfig } from "./config.helper";
 import {
-  dictionaryOverrideSchema,
   oauthProvidersSchema,
   recentPlansSchema,
   stringConfigSchema,
 } from "./config.schema";
 import type {
   ConfigKey,
+  ConfigDefinition,
   ConfigScope,
   OAuthProvider,
   RecentPlan,
@@ -85,12 +82,14 @@ export const getConfigDefaults = <K extends ConfigKey>(
   key: K,
   locale: Locale,
 ): ConfigValue<K> => {
-  const definition = CONFIG_REGISTRY[key];
-  return (
-    definition.scope === CONFIG_SCOPE.LOCALE
-      ? definition.defaults({ locale })
-      : definition.defaults()
-  ) as ConfigValue<K>;
+  // Preserve the relationship between each registry key and its result type.
+  const registry: {
+    [P in ConfigKey]: ConfigDefinition<ConfigOverride<P>, ConfigValue<P>>;
+  } = CONFIG_REGISTRY;
+  const definition = registry[key];
+  return definition.scope === CONFIG_SCOPE.LOCALE
+    ? definition.defaults({ locale })
+    : definition.defaults();
 };
 
 export const generatePlaylistUrl = (

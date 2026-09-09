@@ -2,8 +2,9 @@ import { type NextRequest, NextResponse } from "next/server";
 
 import {
   getLocaleFromPathname,
-  getPreferredLocale,
+  LOCALE_COOKIE,
   localizeHref,
+  normalizeLocale,
 } from "#lib/shared/i18n";
 
 export function proxy(request: NextRequest) {
@@ -12,11 +13,11 @@ export function proxy(request: NextRequest) {
 
   if (!locale) {
     const redirectUrl = request.nextUrl.clone();
-    const redirectLocale = getPreferredLocale(
-      request.cookies.get("locale")?.value,
+    const preferredLocale = normalizeLocale(
+      request.cookies.get(LOCALE_COOKIE)?.value,
     );
 
-    redirectUrl.pathname = localizeHref(redirectLocale, pathname);
+    redirectUrl.pathname = localizeHref(preferredLocale, pathname);
     return NextResponse.redirect(redirectUrl);
   }
 

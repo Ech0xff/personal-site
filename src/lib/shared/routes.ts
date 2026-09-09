@@ -1,4 +1,5 @@
-import { localizeHref, normalizeLocale } from "./i18n/locale";
+import { localizeHref } from "./i18n/i18n.helper";
+import type { Locale } from "./i18n/i18n.type";
 
 // Centralized management of all route paths
 export const ROUTES = {
@@ -14,7 +15,7 @@ export const ROUTES = {
 
   // Dashboard routes
   DASHBOARD: {
-    CONIFG: "/dashboard/config",
+    CONFIG: "/dashboard/config",
     POSTS: "/dashboard/posts",
     THOUGHTS: "/dashboard/thoughts",
     EVENT: "/dashboard/event",
@@ -24,24 +25,22 @@ export const ROUTES = {
   },
 } as const;
 
-export const getLocalizedRoutes = (locale: string) => {
-  const normalizedLocale = normalizeLocale(locale);
-
+export const getLocalizedRoutes = (locale: Locale) => {
   return {
-    HOME: localizeHref(normalizedLocale, ROUTES.HOME),
-    POSTS: localizeHref(normalizedLocale, ROUTES.POSTS),
-    POST: (id: string) => localizeHref(normalizedLocale, ROUTES.POST(id)),
-    THOUGHTS: localizeHref(normalizedLocale, ROUTES.THOUGHTS),
-    EVENTS: localizeHref(normalizedLocale, ROUTES.EVENTS),
-    AUTH: localizeHref(normalizedLocale, ROUTES.AUTH),
+    HOME: localizeHref(locale, ROUTES.HOME),
+    POSTS: localizeHref(locale, ROUTES.POSTS),
+    POST: (id: string) => localizeHref(locale, ROUTES.POST(id)),
+    THOUGHTS: localizeHref(locale, ROUTES.THOUGHTS),
+    EVENTS: localizeHref(locale, ROUTES.EVENTS),
+    AUTH: localizeHref(locale, ROUTES.AUTH),
     DASHBOARD: {
-      Config: localizeHref(normalizedLocale, ROUTES.DASHBOARD.CONIFG),
-      POSTS: localizeHref(normalizedLocale, ROUTES.DASHBOARD.POSTS),
-      THOUGHTS: localizeHref(normalizedLocale, ROUTES.DASHBOARD.THOUGHTS),
-      EVENT: localizeHref(normalizedLocale, ROUTES.DASHBOARD.EVENT),
-      TAGS: localizeHref(normalizedLocale, ROUTES.DASHBOARD.TAGS),
-      IMAGES: localizeHref(normalizedLocale, ROUTES.DASHBOARD.IMAGES),
-      ACCOUNT: localizeHref(normalizedLocale, ROUTES.DASHBOARD.ACCOUNT),
+      CONFIG: localizeHref(locale, ROUTES.DASHBOARD.CONFIG),
+      POSTS: localizeHref(locale, ROUTES.DASHBOARD.POSTS),
+      THOUGHTS: localizeHref(locale, ROUTES.DASHBOARD.THOUGHTS),
+      EVENT: localizeHref(locale, ROUTES.DASHBOARD.EVENT),
+      TAGS: localizeHref(locale, ROUTES.DASHBOARD.TAGS),
+      IMAGES: localizeHref(locale, ROUTES.DASHBOARD.IMAGES),
+      ACCOUNT: localizeHref(locale, ROUTES.DASHBOARD.ACCOUNT),
     },
   } as const;
 };

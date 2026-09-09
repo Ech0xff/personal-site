@@ -39,7 +39,7 @@ async function Navbar({ isAdmin }: { isAdmin: boolean }) {
     {
       isAdmin: true,
       name: "Config",
-      path: routes.DASHBOARD.Config,
+      path: routes.DASHBOARD.CONFIG,
       icon: UserCog,
     },
     {
