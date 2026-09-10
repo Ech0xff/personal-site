@@ -1,3 +1,3 @@
-export { default as EventContent } from "./EventContent";
-export { default as PostContent } from "./PostContent";
-export { default as ThoughtContent } from "./ThoughtContent";
+export { default as EventContent } from "./event-content.component";
+export { default as PostContent } from "./post-content.component";
+export { default as ThoughtContent } from "./thought-content.component";

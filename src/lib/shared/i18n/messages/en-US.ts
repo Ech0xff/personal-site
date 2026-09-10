@@ -1,3 +1,3 @@
-import { defineDictionary } from "./messages.helper";
+import { defineDictionary } from "./default";
 
 export default defineDictionary({});

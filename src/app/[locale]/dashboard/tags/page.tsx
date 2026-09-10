@@ -4,12 +4,12 @@ import { Plus, Save, Tags, X } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
 
-import TagSphere from "#components/features/tags/TagSphere";
-import Stack from "#components/ui/Stack";
+import TagSphere from "#components/features/tags/tag-sphere.component";
+import Stack from "#components/ui/stack.component";
 import type { TagWithCount } from "#types";
 
-import DashboardShell from "../_components/layout/DashboardShell";
-import { useTags } from "./useTags";
+import DashboardShell from "../_components/layout/dashboard-shell.component";
+import { useTags } from "./_hooks/tags.hook";
 
 type TagForm = {
   id?: string;

@@ -1,3 +1,7 @@
+import { toMerged } from "es-toolkit";
+
+import type { Dictionary, PartialDictionary } from "../i18n.type";
+
 export const dictionary = {
   meta: {
     siteTitle: "Ech0xff's Little Nest",
@@ -179,3 +183,6 @@ export const dictionary = {
     fallback: "This page crashed. Please try again later.",
   },
 };
+
+export const defineDictionary = (overrides: PartialDictionary): Dictionary =>
+  toMerged(dictionary, overrides);

@@ -2,19 +2,20 @@
 
 import { type ReactNode, useCallback } from "react";
 
-import TagsList from "#components/features/posts/TagsList";
-import Link from "#components/ui/Link";
-import { useModal } from "#components/ui/ModalProvider";
-import Stack from "#components/ui/Stack";
+import TagsList from "#components/features/posts/tags-list.component";
+import Link from "#components/shared/link.component";
+import { useModal } from "#components/ui/modal-provider.component";
+import Stack from "#components/ui/stack.component";
 import { updatePostStatusByBrowser } from "#lib/client/services";
-import { cn, formatTime } from "#lib/shared/utils";
+import { cn } from "#lib/shared/utils";
+import { formatTime } from "#lib/shared/utils/date.helper";
 
-import OpenEditorButton from "../_components/editor/OpenEditorButton";
-import DashboardShell from "../_components/layout/DashboardShell";
-import StatusToggle from "../_components/status/StatusToggle";
-import PostActions from "./_components/PostActions";
-import PostEditor from "./_components/PostEditor";
-import { usePosts } from "./usePosts";
+import OpenEditorButton from "../_components/editor/open-editor-button.component";
+import DashboardShell from "../_components/layout/dashboard-shell.component";
+import StatusToggle from "../_components/status/status-toggle.component";
+import PostActions from "./_components/post-actions.component";
+import PostEditor from "./_components/post-editor";
+import { usePosts } from "./_hooks/posts.hook";
 
 const th = (title: string[]) => {
   return (

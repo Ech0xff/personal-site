@@ -12,17 +12,17 @@ import {
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import LogoutButton from "#components/shared/LogoutButton";
-import ThemeToggle from "#components/shared/ThemeToggle";
-import DropdownPopover from "#components/ui/DropdownPopover";
-import Stack from "#components/ui/Stack";
+import LogoutButton from "#components/shared/logout-button.component";
+import ThemeToggle from "#components/shared/theme-toggle.component";
+import DropdownPopover from "#components/ui/dropdown-popover.component";
+import Stack from "#components/ui/stack.component";
 import { getLocale } from "#lib/server/i18n";
-import { makeServerClient } from "#lib/server/supabase";
-import { getLocalizedRoutes } from "#lib/shared/routes";
-import { cn } from "#lib/shared/utils/tailwind";
-import { getUserStatus } from "#lib/shared/utils/tools";
+import { makeServerClient } from "#lib/server/supabase.client";
+import { getUserStatus } from "#lib/shared/auth/session.service";
+import { getLocalizedRoutes } from "#lib/shared/routes/routes.helper";
+import { cn } from "#lib/shared/utils/tailwind.helper";
 
-import DashboardModalOptions from "./_components/DashboardModalOptions";
+import DashboardModalOptions from "./_components/dashboard-modal-options.component";
 
 async function Navbar({ isAdmin }: { isAdmin: boolean }) {
   "use cache";

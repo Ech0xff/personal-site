@@ -2,16 +2,16 @@ import { groupBy } from "es-toolkit";
 import type { Metadata } from "next";
 import { cacheTag } from "next/cache";
 
-import PostCard from "#components/features/posts/PostCard";
-import Stack from "#components/ui/Stack";
+import PostCard from "#components/features/posts/post-card.component";
+import Stack from "#components/ui/stack.component";
 import { useT } from "#i18n";
 import { CACHE_TAGS } from "#lib/server/cache";
 import { getScopedT } from "#lib/server/i18n";
 import { fetchPosts } from "#lib/shared/services";
-import { makeStaticClient } from "#lib/shared/supabase";
-import { formatTime } from "#lib/shared/utils";
+import { makeStaticClient } from "#lib/shared/supabase.client";
+import { formatTime } from "#lib/shared/utils/date.helper";
 
-import CollectionBody from "../_components/CollectionBody";
+import CollectionBody from "../_components/collection-body.component";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getScopedT((d) => d.indexPosts);

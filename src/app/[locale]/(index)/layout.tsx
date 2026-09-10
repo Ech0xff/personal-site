@@ -8,18 +8,18 @@ import {
 import { cacheTag } from "next/cache";
 import type React from "react";
 
-import GlobalSearchTrigger from "#components/features/search/GlobalSearchTrigger";
-import LanguageToggle from "#components/shared/LanguageToggle";
-import ThemeToggle from "#components/shared/ThemeToggle";
-import DropdownPopover from "#components/ui/DropdownPopover";
-import FooterSection from "#components/ui/FooterSection";
-import Link from "#components/ui/Link";
-import Stack from "#components/ui/Stack";
+import GlobalSearchTrigger from "#components/features/search/global-search-trigger.component";
+import LanguageToggle from "#components/shared/language-toggle.component";
+import Link from "#components/shared/link.component";
+import ThemeToggle from "#components/shared/theme-toggle.component";
+import DropdownPopover from "#components/ui/dropdown-popover.component";
+import Stack from "#components/ui/stack.component";
 import { useT } from "#i18n";
 import { CACHE_TAGS } from "#lib/server/cache";
 import { cn } from "#lib/shared/utils";
 
-import LayoutClient from "./_components/LayoutClient";
+import FooterSection from "./_components/footer-section.component";
+import LayoutClient from "./_components/layout-client.component";
 
 import "./layout.scss";
 

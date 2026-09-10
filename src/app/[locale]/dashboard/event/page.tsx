@@ -2,16 +2,16 @@
 
 import { useCallback } from "react";
 
-import EventTimeline from "#components/features/events/EventTimeline";
-import { useModal } from "#components/ui/ModalProvider";
+import EventTimeline from "#components/features/events/event-timeline.component";
+import { useModal } from "#components/ui/modal-provider.component";
 import { updateEventStatusByBrowser } from "#lib/client/services";
 
-import OpenEditorButton from "../_components/editor/OpenEditorButton";
-import DashboardShell from "../_components/layout/DashboardShell";
-import StatusToggle from "../_components/status/StatusToggle";
-import EventActions from "./_components/EventActions";
-import EventEditor from "./_components/EventEditor";
-import { useEvents } from "./useEvents";
+import OpenEditorButton from "../_components/editor/open-editor-button.component";
+import DashboardShell from "../_components/layout/dashboard-shell.component";
+import StatusToggle from "../_components/status/status-toggle.component";
+import EventActions from "./_components/event-actions.component";
+import EventEditor from "./_components/event-editor";
+import { useEvents } from "./_hooks/events.hook";
 
 export default function EventsPage() {
   const { events, loading, error, syncStatus, removeEvent, refetch } =

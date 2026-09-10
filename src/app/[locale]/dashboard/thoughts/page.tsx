@@ -2,16 +2,16 @@
 
 import { useCallback } from "react";
 
-import ThoughtTimeline from "#components/features/thoughts/ThoughtTimeline";
-import { useModal } from "#components/ui/ModalProvider";
+import ThoughtTimeline from "#components/features/thoughts/thought-timeline.component";
+import { useModal } from "#components/ui/modal-provider.component";
 import { updateThoughtStatusByBrowser } from "#lib/client/services";
 
-import OpenEditorButton from "../_components/editor/OpenEditorButton";
-import DashboardShell from "../_components/layout/DashboardShell";
-import StatusToggle from "../_components/status/StatusToggle";
-import ThoughtActions from "./_components/ThoughtActions";
-import ThoughtEditor from "./_components/ThoughtEditor";
-import { useThoughts } from "./useThoughts";
+import OpenEditorButton from "../_components/editor/open-editor-button.component";
+import DashboardShell from "../_components/layout/dashboard-shell.component";
+import StatusToggle from "../_components/status/status-toggle.component";
+import ThoughtActions from "./_components/thought-actions.component";
+import ThoughtEditor from "./_components/thought-editor";
+import { useThoughts } from "./_hooks/thoughts.hook";
 
 export default function ThoughtsPage() {
   const { thoughts, loading, error, syncStatus, removeThought, refetch } =

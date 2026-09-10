@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { cacheTag } from "next/cache";
 
-import EventTimeline from "#components/features/events/EventTimeline";
+import EventTimeline from "#components/features/events/event-timeline.component";
 import { useT } from "#i18n";
 import { CACHE_TAGS } from "#lib/server/cache";
 import { getScopedT } from "#lib/server/i18n";
 import { fetchEvents } from "#lib/shared/services";
-import { makeStaticClient } from "#lib/shared/supabase";
+import { makeStaticClient } from "#lib/shared/supabase.client";
 
-import CollectionBody from "../_components/CollectionBody";
+import CollectionBody from "../_components/collection-body.component";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getScopedT((d) => d.indexEvents);

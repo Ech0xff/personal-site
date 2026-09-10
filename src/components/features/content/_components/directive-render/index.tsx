@@ -1,2 +1,2 @@
-export * from "./DirectiveRender";
-export * from "./registry";
+export * from "./directive.registry";
+export * from "./directive-render.component";

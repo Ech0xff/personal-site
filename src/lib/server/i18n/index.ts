@@ -12,8 +12,8 @@ import {
   type Locale,
   type Translator,
 } from "#lib/shared/i18n";
-import { loadConfigs } from "#lib/shared/services/configs";
-import { makeStaticClient } from "#lib/shared/supabase";
+import { loadConfigs } from "#lib/shared/services/configs.service";
+import { makeStaticClient } from "#lib/shared/supabase.client";
 
 export const getLocale = cache(async (): Promise<Locale> => {
   const value = await rootLocale();

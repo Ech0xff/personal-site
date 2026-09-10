@@ -44,11 +44,35 @@ invalidate translations.
 
 ## Content Rendering
 
-`ContentRenderer.tsx` combines Markdown/GFM parsing, custom directive
+`content-renderer.component.tsx` combines Markdown/GFM parsing, custom directive
 transforms, heading IDs, and syntax highlighting. The directive registry under
 `src/components/features/content/_components/directive-render` connects parsed
 nodes to their renderers; new directives need both registration and rendering.
 
-`PreRender.tsx` handles code blocks and PlantUML output. PlantUML source is sent
+`pre-render.component.tsx` handles code blocks and PlantUML output. PlantUML source is sent
 to a public rendering service; supported content syntax is documented in the
 [README](../README.md#markdown-support).
+
+## Module Ownership
+
+Files use `subject.role.ts(x)` as described in `AGENTS.md`. Existing index
+entrypoints, framework files, generated icons and database types, locale files,
+and maintenance scripts retain their established names.
+
+Page-level hooks live in each route's `_hooks`; editor-private hooks stay beside
+their editor. Reusable presentation primitives and the modal system belong to
+`components/ui`. Locale-aware links and global toast handling belong to
+`components/shared`; the public footer belongs to the public layout.
+
+The client, server, and shared data layers remain separate. Supabase factories
+are named `supabase.client.ts` within each layer. Shared session queries live in
+`lib/shared/auth/session.service.ts` and receive the caller's Supabase client.
+Browser image compression and uploads live in `lib/client/images`; shared image
+services provide storage queries and deletion without importing browser code.
+
+Search transformations and types live in `lib/shared/search`, while browser RPC
+calls stay in client services. Theme constants, types, and transformations live
+in `lib/shared/theme`, with Jotai state in `lib/client/theme.atom.ts`. Route
+constants and localized route transformations live in `lib/shared/routes`.
+Date conversion, file-size formatting, and hashing are separate shared utilities;
+date utilities retain the existing timezone initialization and fallback behavior.

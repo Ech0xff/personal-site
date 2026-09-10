@@ -58,34 +58,53 @@ follow this document for subsequent development.
 
 Use `.helper` rather than `.utils`/`.util`, and `.type` rather than `.types`.
 Specialized modules may choose descriptive suffixes such as `.extension` for
-editor integration or `.translator` for ICU translation. Keep small private
-helpers, types, and constants in their owning module.
+editor and directive integration, `.registry` for registrations, `.atom` for
+Jotai state, or `.translator` for ICU translation. Supabase factories use
+`supabase.client.ts`; their `lib/client`, `lib/server`, or `lib/shared` directory
+identifies the runtime. Keep small private helpers, types, and constants in
+their owning module. Split modules when they mix independent responsibilities
+or runtime dependencies, not just to give every declaration its own file.
 
 Append `.client` or `.server` when an environment distinction is needed, and
 `.test` for tests, e.g. `meta.component.client.tsx` and `payload.schema.test.ts`.
 Keep framework, tool, generated, declaration, locale, and `index` filenames in
-their established formats. Colocated styles share the component basename.
+their established formats. `page.client.tsx` is not a framework filename;
+name route-local client UI by its subject and place it in `_components`.
+Do not add environment suffixes to every Client Component; use them to clarify
+a boundary or distinguish related implementations. Colocated styles share the
+component basename, including `index.scss` for an existing `index.tsx` component.
+Use lowercase kebab-case for ordinary component directories; preserve route
+segments and framework directory conventions.
 
 ## File Placement
 
-| Location                            | Responsibility                                                                        |
-| ----------------------------------- | ------------------------------------------------------------------------------------- |
-| `src/app`                           | Routes, layouts, and handlers; route-local UI in `_components` and hooks in `_hooks`. |
-| `src/components/ui`                 | Reusable presentation primitives and editor integrations.                             |
-| `src/components/shared`             | Application-wide UI and providers.                                                    |
-| `src/components/features/<feature>` | Feature-owned UI and private supporting modules.                                      |
-| `src/lib/client`                    | Browser clients and service adapters.                                                 |
-| `src/lib/server`                    | Server clients, services, and cache definitions.                                      |
-| `src/lib/shared`                    | Environment-neutral domain modules and services.                                      |
-| `src/types`                         | Cross-domain types, declarations, and generated database types.                       |
-| `src/styles`                        | Global styles, tokens, and mixins.                                                    |
-| `scripts`                           | Maintenance and development utilities.                                                |
-| `supabase`                          | Database configuration, schema sources, and seed data.                                |
-| `public`                            | Static assets addressed by URL.                                                       |
-| `DOCS`                              | Project guides and `TODO.md`.                                                         |
+| Location                            | Responsibility                                                                                   |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `src/app`                           | Routes, layouts, and handlers; route-local UI in `_components` and page-level hooks in `_hooks`. |
+| `src/components/ui`                 | Reusable presentation primitives and editor integrations.                                        |
+| `src/components/shared`             | Application-wide UI and providers.                                                               |
+| `src/components/features/<feature>` | Feature-owned UI and private supporting modules.                                                 |
+| `src/lib/client`                    | Browser clients and service adapters.                                                            |
+| `src/lib/server`                    | Server clients, services, and cache definitions.                                                 |
+| `src/lib/shared`                    | Environment-neutral domain modules and services.                                                 |
+| `src/types`                         | Cross-domain types, declarations, and generated database types.                                  |
+| `src/styles`                        | Global styles, tokens, and mixins.                                                               |
+| `scripts`                           | Maintenance and development utilities.                                                           |
+| `supabase`                          | Database configuration, schema sources, and seed data.                                           |
+| `public`                            | Static assets addressed by URL.                                                                  |
+| `DOCS`                              | Project guides and `TODO.md`.                                                                    |
 
 Keep domain types, schemas, constants, helpers, tests, and styles close to their
-owner. Move code to shared locations when actual reuse justifies it.
+owner. A hook used only by one editor or component stays beside that component,
+even inside `_components`; `_hooks` is for page-level or route-shared hooks.
+Move code to shared locations when actual reuse justifies it. Keep reusable UI
+primitives in `components/ui`, site-wide behavior and locale-aware UI in
+`components/shared`, and layout-specific content beside its layout.
+
+Keep browser image compression and upload orchestration in `lib/client/images`.
+Shared storage queries and session services accept a Supabase client; they must
+not import browser-only adapters. The shared utility barrel exports only
+environment-neutral utilities; import auth and image services from their owners.
 
 ## Imports and Styling
 

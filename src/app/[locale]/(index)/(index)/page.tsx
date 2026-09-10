@@ -1,8 +1,8 @@
 import { cacheTag } from "next/cache";
 
-import Stack from "#components/ui/Stack";
+import Stack from "#components/ui/stack.component";
 import { CACHE_TAGS } from "#lib/server/cache";
-import { loadConfigsByServer } from "#lib/server/services/configs";
+import { loadConfigsByServer } from "#lib/server/services/configs.service";
 import { CONFIG_KEY } from "#lib/shared/config";
 import {
   fetchEvents,
@@ -13,8 +13,8 @@ import {
 import { cn, toPreviewText } from "#lib/shared/utils";
 import type { RecentActivityItem } from "#types";
 
-import AnimationSection from "./_components/AnimationSection";
-import { IntroductionSection } from "./_components/IntroductionSection";
+import AnimationSection from "./_components/animation-section";
+import { IntroductionSection } from "./_components/introduction-section.component";
 
 const buildRecentActivity = async (): Promise<RecentActivityItem[]> => {
   const [posts, thoughts, events] = await Promise.all([

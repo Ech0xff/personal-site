@@ -3,11 +3,11 @@ import { Agentation } from "agentation";
 import type { Metadata } from "next";
 import { cacheTag } from "next/cache";
 
-import ToastWatcher from "#components/features/ToastWatcher";
-import LocaleCookieSync from "#components/shared/LocaleCookieSync";
-import ThemeScript from "#components/shared/ThemeScript";
-import { ImageViewer } from "#components/ui/ImageViewer";
-import ModalProvider from "#components/ui/ModalProvider";
+import LocaleCookieSync from "#components/shared/locale-cookie-sync.component";
+import ThemeScript from "#components/shared/theme-script.component";
+import ToastWatcher from "#components/shared/toast-watcher.component";
+import { ImageViewer } from "#components/ui/image-viewer.component";
+import ModalProvider from "#components/ui/modal-provider.component";
 import { I18nProvider } from "#lib/client/i18n";
 import { CACHE_TAGS } from "#lib/server/cache";
 import { getI18nConfig, getT } from "#lib/server/i18n";

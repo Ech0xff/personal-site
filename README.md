@@ -206,6 +206,11 @@ before retrying. Run `bun run prepare` to reinstall hooks if needed.
 Use the relevant checks locally; Markdown-only edits need formatting checks.
 Formatter and lint rules live in `.oxfmtrc.json` and `.oxlintrc.json`.
 
+Source filenames follow `subject.role.ts(x)` with framework, generated, locale,
+index, and tool exceptions. Keep page-level hooks in `_hooks` and editor-private
+hooks beside their editor. See [AGENTS.md](./AGENTS.md#file-naming) for naming
+rules and [Architecture](./DOCS/ARCHITECTURE.md#module-ownership) for ownership.
+
 Thought image URLs are deduplicated at the service read/write boundary, keeping
 their first occurrence and order. Uploads maintain the same invariant in editor
 state, so image lists can use URLs as stable keys. Recent-plan row IDs exist

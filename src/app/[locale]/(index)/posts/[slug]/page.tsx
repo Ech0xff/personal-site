@@ -3,15 +3,16 @@ import type { Metadata } from "next";
 import { cacheTag } from "next/cache";
 
 import { PostContent } from "#components/features/content";
-import PostTableOfContents from "#components/features/posts/PostTableOfContents";
-import ScrollToTopButton from "#components/shared/ScrollToTopButton";
-import CopyButton from "#components/ui/CopyButton";
-import Link from "#components/ui/Link";
+import PostTableOfContents from "#components/features/posts/post-table-of-contents.component";
+import Link from "#components/shared/link.component";
+import ScrollToTopButton from "#components/shared/scroll-to-top-button.component";
+import CopyButton from "#components/ui/copy-button.component";
 import { useT } from "#i18n";
 import { CACHE_TAGS } from "#lib/server/cache";
 import { getScopedT } from "#lib/server/i18n";
 import { fetchPost } from "#lib/shared/services";
-import { formatTime, getMarkdownHeadings } from "#lib/shared/utils";
+import { getMarkdownHeadings } from "#lib/shared/utils";
+import { formatTime } from "#lib/shared/utils/date.helper";
 
 const getPostData = async (slug: string) => {
   "use cache";

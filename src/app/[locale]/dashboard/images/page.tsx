@@ -2,13 +2,14 @@
 
 import { ArrowDownAZ, ArrowUpAZ, Calendar, HardDrive } from "lucide-react";
 
-import Image from "#components/ui/Image";
-import Stack from "#components/ui/Stack";
-import { formatSize, formatTime } from "#lib/shared/utils/tools";
+import Image from "#components/ui/image.component";
+import Stack from "#components/ui/stack.component";
+import { formatTime } from "#lib/shared/utils/date.helper";
+import { formatSize } from "#lib/shared/utils/file-size.helper";
 
-import DashboardShell from "../_components/layout/DashboardShell";
-import ImageActionRender from "./_components/ImageActionRender";
-import { useImages } from "./useImages";
+import DashboardShell from "../_components/layout/dashboard-shell.component";
+import ImageActionRender from "./_components/image-action-render.component";
+import { useImages } from "./_hooks/images.hook";
 
 export default function ImagesPage() {
   const {

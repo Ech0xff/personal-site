@@ -1,0 +1,37 @@
+import {
+  deletePost,
+  fetchPost,
+  fetchPosts,
+  savePost,
+  updatePostStatus,
+} from "#lib/shared/services";
+import type { PostInsert, Status } from "#types";
+
+import { makeBrowserClient } from "../supabase.client";
+
+export const fetchPostsByBrowser = async (limit?: number) => {
+  const client = makeBrowserClient();
+  return fetchPosts(client, limit);
+};
+
+export const fetchPostByBrowser = async (id: string) => {
+  const client = makeBrowserClient();
+  return fetchPost(id, client);
+};
+
+export const savePostByBrowser = async (
+  payload: PostInsert & { id?: string; tagIds?: string[] },
+) => {
+  const client = makeBrowserClient();
+  return savePost(client, payload);
+};
+
+export const updatePostStatusByBrowser = async (id: string, status: Status) => {
+  const client = makeBrowserClient();
+  return updatePostStatus(client, id, status);
+};
+
+export const deletePostByBrowser = async (id: string) => {
+  const client = makeBrowserClient();
+  return deletePost(client, id);
+};

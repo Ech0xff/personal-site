@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-import { ROUTES } from "#lib/shared/routes";
+import { ROUTES } from "#lib/shared/routes/routes.const";
 
 const nextConfig: NextConfig = {
   cacheComponents: true,

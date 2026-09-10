@@ -1,9 +1,9 @@
 import type { Status } from "#lib/shared/content/status.schema";
 
-import type { TagWithCount } from "./aggregates";
+import type { TagWithCount } from "./aggregates.type";
 import type { Tables, TablesInsert, TablesUpdate } from "./supabase";
 
-export * from "./aggregates";
+export * from "./aggregates.type";
 export * from "./supabase";
 export type { Status } from "#lib/shared/content/status.schema";
 

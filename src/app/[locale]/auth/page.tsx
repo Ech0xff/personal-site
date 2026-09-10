@@ -1,17 +1,17 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import LanguageToggle from "#components/shared/LanguageToggle";
-import ThemeToggle from "#components/shared/ThemeToggle";
+import LanguageToggle from "#components/shared/language-toggle.component";
+import ThemeToggle from "#components/shared/theme-toggle.component";
 import { useT } from "#i18n";
 import { getLocale } from "#lib/server/i18n";
-import { loadConfigsByServer } from "#lib/server/services/configs";
-import { makeServerClient } from "#lib/server/supabase";
+import { loadConfigsByServer } from "#lib/server/services/configs.service";
+import { makeServerClient } from "#lib/server/supabase.client";
+import { getUserStatus } from "#lib/shared/auth/session.service";
 import { CONFIG_KEY, type OAuthProvider } from "#lib/shared/config";
-import { getLocalizedRoutes } from "#lib/shared/routes";
-import { getUserStatus } from "#lib/shared/utils/tools";
+import { getLocalizedRoutes } from "#lib/shared/routes/routes.helper";
 
-import PageClient from "./page.client";
+import AuthForm from "./_components/auth-form.component.client";
 
 export default async function Page() {
   const locale = await getLocale();
@@ -46,7 +46,7 @@ function AuthPageContent({
 
       <div className="w-full max-w-md">
         <div className="rounded-2xl border border-(--border-default) bg-(--surface-card) p-8 shadow-xl">
-          <PageClient oauthProviders={oauthProviders} />
+          <AuthForm oauthProviders={oauthProviders} />
         </div>
 
         <p className="mt-6 text-center text-sm text-(--text-muted)">

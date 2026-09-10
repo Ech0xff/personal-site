@@ -5,17 +5,17 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import Button from "#components/ui/Button";
-import { useModal } from "#components/ui/ModalProvider";
-import Stack from "#components/ui/Stack";
+import Button from "#components/ui/button.component";
+import { useModal } from "#components/ui/modal-provider.component";
+import Stack from "#components/ui/stack.component";
 import { cn } from "#lib/shared/utils";
 
-import DashboardShell from "../_components/layout/DashboardShell";
-import AboutMe from "./_components/AboutMe";
-import DictionaryEditor from "./_components/DictionaryEditor";
-import OauthProviders from "./_components/OauthProviders";
-import PlaylistUrl from "./_components/PlaylistUrl";
-import RecentPlanEditor from "./_components/RecentPlanEditor";
+import DashboardShell from "../_components/layout/dashboard-shell.component";
+import AboutMe from "./_components/about-me.component";
+import DictionaryEditor from "./_components/dictionary-editor.component";
+import OauthProviders from "./_components/oauth-providers.component";
+import PlaylistUrl from "./_components/playlist-url.component";
+import RecentPlanEditor from "./_components/recent-plan-editor.component";
 
 export type ConfigField = {
   key: string;

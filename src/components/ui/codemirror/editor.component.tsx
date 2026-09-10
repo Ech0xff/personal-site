@@ -8,7 +8,7 @@ import { useAtomValue } from "jotai";
 import type { Ref } from "react";
 import { useImperativeHandle, useMemo } from "react";
 
-import { resolvedThemeAtom } from "#lib/client/theme";
+import { resolvedThemeAtom } from "#lib/client/theme.atom";
 import { cn } from "#lib/shared/utils";
 
 export interface EditorHandle {

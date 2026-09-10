@@ -2,9 +2,9 @@
 
 import { Layers, Plus, X } from "lucide-react";
 
-import Button from "#components/ui/Button";
-import { useModal } from "#components/ui/ModalProvider";
-import Stack from "#components/ui/Stack";
+import Button from "#components/ui/button.component";
+import { useModal } from "#components/ui/modal-provider.component";
+import Stack from "#components/ui/stack.component";
 
 function ModalTestPanel({ depth }: { depth: number }) {
   const { close, closeAll, open } = useModal();

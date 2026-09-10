@@ -1,0 +1,21 @@
+import Stack from "#components/ui/stack.component";
+
+export default function Card({
+  title,
+  children,
+}: {
+  title?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <Stack y className="z-1 w-full">
+      {title && (
+        <h3 className="mb-4 flex items-center gap-2 text-2xl font-bold">
+          <Stack className="h-5 w-1 rounded-full bg-gray-600" />
+          {title}
+        </h3>
+      )}
+      {children}
+    </Stack>
+  );
+}

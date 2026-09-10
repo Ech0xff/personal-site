@@ -3,18 +3,18 @@
 import { Shield, User as UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import SectionCard from "#components/ui/SectionCard";
-import Stack from "#components/ui/Stack";
+import SectionCard from "#components/ui/section-card.component";
+import Stack from "#components/ui/stack.component";
 import { useT } from "#i18n";
 import { fetchAvailableOauthProvidersByBrowser } from "#lib/client/services";
 import { type OAuthProvider, providerConfig } from "#lib/shared/config";
-import { formatTime } from "#lib/shared/utils";
+import { formatTime } from "#lib/shared/utils/date.helper";
 
-import DashboardShell from "../_components/layout/DashboardShell";
-import EditableInfoRow from "./_components/ui/EditableInfoRow";
-import IdentityCard from "./_components/ui/IdentityCard";
-import InfoRow from "./_components/ui/InfoRow";
-import { useAccount } from "./hooks/useAccount";
+import DashboardShell from "../_components/layout/dashboard-shell.component";
+import EditableInfoRow from "./_components/ui/editable-info-row.component";
+import IdentityCard from "./_components/ui/identity-card.component";
+import InfoRow from "./_components/ui/info-row.component";
+import { useAccount } from "./_hooks/account.hook";
 
 export default function AccountPage() {
   const t = useT().scope((d) => d.auth);
