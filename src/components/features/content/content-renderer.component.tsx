@@ -10,6 +10,7 @@ import rehypePrism from "rehype-prism-plus";
 import remarkDirective from "remark-directive";
 import remarkGfm from "remark-gfm";
 
+import { useDictionary } from "#dictionary";
 import { cn, rehypeHeadingIds } from "#lib/shared/utils";
 
 import {
@@ -63,7 +64,7 @@ function ParagraphRender({
 
 function TableRender(props: ComponentPropsWithoutRef<"table">) {
   return (
-    <div className="scrollbar-visible overflow-x-auto overscroll-x-contain">
+    <div className="overflow-x-auto overscroll-x-contain">
       <table {...props} />
     </div>
   );
@@ -75,8 +76,39 @@ const rehypePlugins: Options["rehypePlugins"] = [
   [rehypePrism, { ignoreMissing: true, showLineNumbers: true }],
 ];
 
+function MarkdownImageRender({
+  src,
+  alt,
+  ...props
+}: ComponentPropsWithoutRef<"img">) {
+  const dictionary = useDictionary();
+  if (typeof src !== "string") return null;
+  return (
+    <span className="inline-block max-w-full align-middle">
+      <button
+        type="button"
+        data-viewer-trigger
+        data-src={src}
+        data-alt={alt}
+        aria-label={alt || dictionary.common.viewImage}
+        className="block max-w-full cursor-zoom-in rounded-lg"
+      >
+        {/* oxlint-disable-next-line next/no-img-element -- Markdown accepts arbitrary remote image URLs and preserves natural dimensions. */}
+        <img
+          {...props}
+          src={src}
+          alt={alt ?? ""}
+          loading="lazy"
+          className="h-auto max-w-full rounded-lg"
+        />
+      </button>
+    </span>
+  );
+}
+
 const components = {
   p: ParagraphRender,
+  img: MarkdownImageRender,
   pre: PreRender,
   table: TableRender,
   [DIRECTIVE_RENDER_ELEMENT_NAME]: DirectiveRender,
@@ -88,7 +120,7 @@ export default function ContentRenderer({ content, className = "" }: Props) {
   return (
     <div
       className={cn(
-        "prose max-w-none dark:prose-invert [&>div]:shadow-none",
+        "content-prose prose max-w-none [&>div]:shadow-none",
         className,
       )}
     >

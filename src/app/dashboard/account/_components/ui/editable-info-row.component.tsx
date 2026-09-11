@@ -1,8 +1,10 @@
 "use client";
-
 import { Check, X } from "lucide-react";
 import { useRef, useState } from "react";
 
+import Button from "#components/ui/button.component";
+import IconButton from "#components/ui/icon-button.component";
+import Input from "#components/ui/input.component";
 import Stack from "#components/ui/stack.component";
 
 type EditableInfoRowProps = {
@@ -55,13 +57,14 @@ export default function EditableInfoRow({
 
   return (
     <Stack y className="gap-1 sm:flex-row sm:items-center sm:gap-4">
-      <span className="w-36 shrink-0 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+      <span className="w-36 shrink-0 text-sm font-medium text-text-muted">
         {label}
       </span>
       <Stack x className="inline-flex items-center gap-1">
         <Stack x className={`inline-flex items-center ${widthClassName}`}>
           {isEditing ? (
-            <input
+            <Input
+              controlSize="sm"
               type="text"
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
@@ -79,50 +82,49 @@ export default function EditableInfoRow({
               }}
               disabled={saving}
               autoFocus
-              className="h-8 w-full bg-transparent px-0 text-sm text-zinc-900 outline-none dark:text-zinc-100"
+              className="w-full bg-transparent px-0"
             />
           ) : (
-            <span className="flex h-8 w-full items-center text-sm text-zinc-900 dark:text-zinc-100">
+            <span className="flex h-8 w-full items-center text-sm text-text-primary">
               {value || placeholder}
             </span>
           )}
         </Stack>
         {isEditing ? (
           <Stack x className="items-center gap-1">
-            <button
-              type="button"
+            <Button
+              size="sm"
+              variant="ghost"
               onMouseDown={() => {
                 ignoreBlurRef.current = true;
               }}
               onClick={handleSave}
               disabled={saving}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
               aria-label="Save"
             >
               <Check className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
+            </Button>
+            <IconButton
+              size="sm"
               onMouseDown={() => {
                 ignoreBlurRef.current = true;
               }}
               onClick={handleCancel}
               disabled={saving}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
               aria-label="Cancel"
             >
               <X className="h-4 w-4" />
-            </button>
+            </IconButton>
           </Stack>
         ) : (
-          <button
-            type="button"
+          <Button
+            size="sm"
+            variant="ghost"
             onClick={startEdit}
             disabled={saving}
-            className="text-xs font-medium text-zinc-500 transition hover:text-zinc-800 disabled:cursor-not-allowed disabled:opacity-50 dark:text-zinc-400 dark:hover:text-zinc-200"
           >
             Edit
-          </button>
+          </Button>
         )}
       </Stack>
     </Stack>

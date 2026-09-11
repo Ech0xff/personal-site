@@ -56,7 +56,7 @@ export default function LayoutClient({
       >
         <Stack
           className={cn(
-            "sticky top-0 z-1000 w-full max-w-full min-w-0 duration-300",
+            "sticky top-0 z-(--layer-navigation) w-full max-w-full min-w-0 duration-300",
             "in-data-[scrolled=true]:backdrop-blur-md",
             isHome
               ? "in-data-[scrolled=true]:*:px-(--layout-padding-x)"
@@ -68,8 +68,8 @@ export default function LayoutClient({
             className={cn(
               "mx-auto h-px duration-300",
               isHome
-                ? "in-data-[scrolled=true]:bg-[#d4d4d8] dark:in-data-[scrolled=true]:bg-[#52525b]"
-                : "bg-[#d4d4d8] dark:bg-[#52525b]",
+                ? "in-data-[scrolled=true]:bg-border-strong"
+                : "bg-border-strong",
             )}
           />
         </Stack>

@@ -4,17 +4,16 @@
   }
 }
 
-@mixin emit-themed-vars($light, $dark) {
-  :root {
+@mixin emit-themed-vars($light, $dark, $selector: ":root") {
+  #{$selector} {
     @include emit-css-vars($light);
   }
-
-  :root.dark {
-    @include emit-css-vars($dark);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root.system {
+  @if $selector == ":root" {
+    :root[data-theme="dark"] {
+      @include emit-css-vars($dark);
+    }
+  } @else {
+    :root[data-theme="dark"] #{$selector} {
       @include emit-css-vars($dark);
     }
   }

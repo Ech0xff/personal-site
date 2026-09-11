@@ -1,13 +1,16 @@
 "use client";
 
+import { useAtomValue } from "jotai";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from "react";
 import { toast, Toaster } from "sonner";
 
 import { useDictionary } from "#dictionary";
+import { resolvedThemeAtom } from "#lib/client/theme.atom";
 import { readToastFromSearchParams } from "#lib/shared/utils/url-toast.helper";
 
 const BaseToastWatcher = () => {
+  const theme = useAtomValue(resolvedThemeAtom);
   const {
     toastCodes: toastMessages,
   }: { toastCodes: Readonly<Record<string, string>> } = useDictionary();
@@ -26,7 +29,7 @@ const BaseToastWatcher = () => {
     router.replace(pathname);
   }, [payload, pathname, router, toastMessages]);
 
-  return <Toaster position="top-center" richColors />;
+  return <Toaster theme={theme} position="top-center" richColors />;
 };
 
 export default function ToastWatcher() {

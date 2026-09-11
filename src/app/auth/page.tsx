@@ -38,16 +38,14 @@ function AuthPageContent({
       <div className="absolute top-4 right-4 flex items-center gap-1">
         <ThemeToggle />
       </div>
-
       <div className="w-full max-w-md">
         <div className="rounded-2xl border border-(--border-default) bg-(--surface-card) p-8 shadow-xl">
           <AuthForm oauthProviders={oauthProviders} />
         </div>
-
         <p className="mt-6 text-center text-sm text-(--text-muted)">
           <Link
             href={homeHref}
-            className="transition-colors hover:text-blue-500"
+            className="transition-colors hover:text-info-text"
           >
             &larr; {dictionary.auth.backToHome}
           </Link>

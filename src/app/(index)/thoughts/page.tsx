@@ -48,9 +48,7 @@ function ThoughtsPageContent({
         totalThoughts,
         totalCharacters,
         b: (chunks) => (
-          <span className="font-bold text-zinc-900 dark:text-zinc-100">
-            {chunks}
-          </span>
+          <span className="font-bold text-text-primary">{chunks}</span>
         ),
       })}
     >

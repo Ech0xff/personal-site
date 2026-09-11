@@ -3,6 +3,7 @@ import { assert } from "es-toolkit";
 import { includes } from "es-toolkit/compat";
 import { Link2Off, Loader2 } from "lucide-react";
 
+import Button from "#components/ui/button.component";
 import Stack from "#components/ui/stack.component";
 import {
   IDENTITY_PROVIDER,
@@ -40,7 +41,7 @@ export default function IdentityCard({
   return (
     <Stack
       x
-      className="items-center justify-between rounded-lg border border-zinc-200 px-4 py-3 transition-colors dark:border-zinc-700"
+      className="items-center justify-between rounded-lg border border-border-default px-4 py-3 transition-colors"
     >
       <Stack x className="items-center gap-3">
         <Stack
@@ -51,29 +52,29 @@ export default function IdentityCard({
         </Stack>
         <Stack y>
           <Stack x className="items-center gap-2">
-            <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+            <p className="text-sm font-medium text-text-primary">
               {config.label}
             </p>
             {isPrimaryIdentity(identity) && (
-              <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-medium tracking-wide text-blue-700 uppercase dark:bg-blue-900/30 dark:text-blue-300">
+              <span className="rounded-full bg-info-bg px-2 py-0.5 text-[10px] font-medium tracking-wide text-info-text uppercase">
                 Primary
               </span>
             )}
           </Stack>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">
+          <p className="text-xs text-text-muted">
             {identity.identity_data?.email ??
               identity.identity_data?.preferred_username ??
               "Connected"}
           </p>
         </Stack>
       </Stack>
-
       {!isPrimaryIdentity(identity) && (
-        <button
-          type="button"
+        <Button
+          size="sm"
+          variant="danger"
           disabled={isPrimaryIdentity(identity)}
           onClick={() => onUnlink(identity)}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 transition-all hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
+          className="gap-1.5 bg-transparent hover:bg-danger-bg"
         >
           {isPrimaryIdentity(identity) ? (
             <Loader2 className="h-3 w-3 animate-spin" />
@@ -81,7 +82,7 @@ export default function IdentityCard({
             <Link2Off className="h-3 w-3" />
           )}
           Unlink
-        </button>
+        </Button>
       )}
     </Stack>
   );

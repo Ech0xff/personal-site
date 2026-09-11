@@ -67,12 +67,12 @@ function PostPageContent({
         <h1 className="mb-4 text-3xl font-bold">
           {dictionary.postDetail.notFoundTitle}
         </h1>
-        <p className="mb-8 text-gray-500 dark:text-gray-400">
+        <p className="mb-8 text-text-muted">
           {dictionary.postDetail.notFoundDescription}
         </p>
         <Link
           href="/posts"
-          className="inline-flex items-center gap-2 rounded bg-gray-900 px-6 py-3 text-white transition-opacity hover:opacity-90 dark:bg-white dark:text-black"
+          className="inline-flex items-center gap-2 rounded bg-surface-inverse px-6 py-3 text-text-inverse transition-opacity hover:opacity-90"
         >
           {dictionary.postDetail.backToPosts}
         </Link>
@@ -86,22 +86,20 @@ function PostPageContent({
 
   return (
     <>
-      <article className="mx-auto flex w-full flex-1 flex-col px-4 pt-10 pb-10">
+      <article className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-(--content-gutter) pt-10 pb-10">
         {/* Header */}
         <header>
           <div className="mb-4 flex flex-col gap-4 text-4xl sm:flex-row sm:items-start sm:justify-between">
             <h1 className="leading-tight font-bold">{post.title}</h1>
             <CopyButton content={content} className="text-base" />
           </div>
-
-          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+          <div className="flex flex-wrap items-center gap-4 text-sm text-text-muted">
             {post.author && (
               <span className="flex items-center gap-1">
                 <User className="h-4 w-4" />
                 {post.author}
               </span>
             )}
-
             {post.published_at && (
               <span className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
@@ -109,13 +107,12 @@ function PostPageContent({
               </span>
             )}
           </div>
-
           {post.tags.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
               {post.tags.map((tag) => (
                 <span
                   key={tag.id}
-                  className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800 dark:bg-gray-800 dark:text-gray-200"
+                  className="inline-flex items-center rounded-full bg-surface-muted px-2.5 py-0.5 text-xs font-medium text-text-primary"
                 >
                   #{tag.name}
                 </span>
@@ -123,29 +120,24 @@ function PostPageContent({
             </div>
           )}
         </header>
-
-        <hr className="my-8 border-gray-200 dark:border-gray-800" />
-
+        <hr className="my-8 border-border-default" />
         {/* Content */}
         <PostContent content={content} />
-
         {/* Footer */}
         <footer className="mt-auto">
-          <hr className="my-8 border-gray-200 dark:border-gray-800" />
+          <hr className="my-8 border-border-default" />
           <div className="flex items-center justify-between">
             <Link
               href="/posts"
-              className="flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-gray-900 dark:hover:text-gray-100"
+              className="flex items-center gap-2 text-sm text-text-muted transition-colors hover:text-text-primary"
             >
               <ArrowLeft className="h-4 w-4" />
               {dictionary.postDetail.backToPosts}
             </Link>
-
             <ScrollToTopButton />
           </div>
         </footer>
       </article>
-
       <PostTableOfContents
         headings={headings}
         title={dictionary.postDetail.tableOfContents}

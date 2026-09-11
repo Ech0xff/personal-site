@@ -1,5 +1,5 @@
 "use client";
-
+/* oxlint-disable jsx-a11y/prefer-tag-over-role -- Anchor-bound overlays must remain in the document layer; native dialog top-layer behavior would change the existing boundary contract. */
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import {
@@ -14,6 +14,7 @@ import {
   useState,
 } from "react";
 
+import { MODAL_ANCHOR, MODAL_BOUNDARY } from "#components/ui/modal.const";
 import { cn } from "#lib/shared/utils";
 
 export interface ModalRenderProps {
@@ -23,7 +24,7 @@ export interface ModalRenderProps {
 type ModalId = string;
 
 export interface Options {
-  boundary: "viewport" | "anchor";
+  boundary: (typeof MODAL_BOUNDARY)[keyof typeof MODAL_BOUNDARY];
   positionAnchor: CSSProperties["positionAnchor"];
   containerClassName?: string;
 }
@@ -32,6 +33,7 @@ interface ModalEntry {
   id: ModalId;
   content: ReactNode;
   options: Options;
+  returnFocus: Element | null;
 }
 
 interface ModalContextType {
@@ -56,22 +58,30 @@ export default function ModalProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   const defaultOptionsRef = useRef<Options>({
-    boundary: "viewport",
-    positionAnchor: "--body",
+    boundary: MODAL_BOUNDARY.VIEWPORT,
+    positionAnchor: MODAL_ANCHOR.BODY,
   });
   const previousPathname = useRef(pathname);
 
   const [modals, setModals] = useState<ModalEntry[]>([]);
 
   const open = useCallback((content: ReactNode, options?: Partial<Options>) => {
+    const resolvedOptions = { ...defaultOptionsRef.current, ...options };
+    if (resolvedOptions.boundary === MODAL_BOUNDARY.VIEWPORT) {
+      document
+        .querySelectorAll<HTMLElement>(":popover-open")
+        .forEach((popover) => popover.hidePopover());
+    }
     const id = crypto.randomUUID();
+    const returnFocus = document.activeElement;
 
     setModals((currentModals) => [
       ...currentModals,
       {
         id,
         content,
-        options: { ...defaultOptionsRef.current, ...options },
+        options: resolvedOptions,
+        returnFocus,
       },
     ]);
 
@@ -83,7 +93,6 @@ export default function ModalProvider({ children }: { children: ReactNode }) {
       if (id) {
         return currentModals.filter((modal) => modal.id !== id);
       }
-
       return currentModals.slice(0, -1);
     });
   }, []);
@@ -96,18 +105,65 @@ export default function ModalProvider({ children }: { children: ReactNode }) {
     defaultOptionsRef.current = options;
   }, []);
 
-  useEffect(() => {
-    if (modals.length === 0) return;
+  const activeModal = modals.at(-1);
 
+  useEffect(() => {
+    if (!activeModal) return;
+
+    const layer = document.querySelector<HTMLElement>(
+      `[data-modal-layer="${activeModal.id}"]`,
+    );
+    if (!layer) return;
+    const focusableSelector =
+      'button:not(:disabled), a[href], input:not(:disabled), textarea:not(:disabled), select:not(:disabled), [tabindex="0"]';
+    const controls = () =>
+      Array.from(layer.querySelectorAll<HTMLElement>(focusableSelector)).filter(
+        (element) =>
+          element.tabIndex >= 0 &&
+          !element.closest("[inert]") &&
+          !element.matches(":disabled") &&
+          element.getClientRects().length > 0,
+      );
+    if (!layer.contains(document.activeElement))
+      (controls()[0] ?? layer).focus();
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
-      close();
+      if (event.defaultPrevented || document.querySelector("dialog:modal"))
+        return;
+      if (event.key === "Escape") {
+        event.preventDefault();
+        close(activeModal.id);
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const elements = controls();
+      const first = elements[0] ?? layer;
+      const last = elements[elements.length - 1] ?? layer;
+      if (
+        event.shiftKey &&
+        (document.activeElement === first ||
+          !layer.contains(document.activeElement))
+      ) {
+        event.preventDefault();
+        last.focus();
+      } else if (
+        !event.shiftKey &&
+        (document.activeElement === last ||
+          !layer.contains(document.activeElement))
+      ) {
+        event.preventDefault();
+        first.focus();
+      }
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
+      if (
+        activeModal.returnFocus instanceof HTMLElement &&
+        activeModal.returnFocus.isConnected
+      )
+        activeModal.returnFocus.focus();
     };
-  }, [close, modals.length]);
+  }, [close, activeModal]);
 
   useEffect(() => {
     if (previousPathname.current === pathname) return;
@@ -134,7 +190,6 @@ export default function ModalProvider({ children }: { children: ReactNode }) {
           const isTop = index === modals.length - 1;
           const { boundary, positionAnchor, containerClassName } =
             modal.options;
-
           return (
             <motion.div
               key={modal.id}
@@ -145,13 +200,20 @@ export default function ModalProvider({ children }: { children: ReactNode }) {
               style={{
                 pointerEvents: isTop ? "auto" : "none",
                 positionAnchor:
-                  boundary === "anchor" ? positionAnchor : undefined,
-                zIndex: 100 + index * 2,
+                  boundary === MODAL_BOUNDARY.ANCHOR
+                    ? positionAnchor
+                    : undefined,
+                zIndex: `calc(var(--layer-modal) + ${index * 2})`,
               }}
+              data-modal-layer={modal.id}
+              role="dialog"
+              aria-modal={isTop}
+              aria-label="Dialog"
+              tabIndex={-1}
               aria-hidden={!isTop}
               className={cn(
-                "fixed bg-zinc-950/40 backdrop-blur-sm",
-                boundary === "anchor"
+                "fixed bg-overlay backdrop-blur-sm outline-none",
+                boundary === MODAL_BOUNDARY.ANCHOR
                   ? "inset-[anchor(top)_anchor(right)_anchor(bottom)_anchor(left)]"
                   : "inset-0",
               )}

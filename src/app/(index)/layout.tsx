@@ -52,7 +52,7 @@ function Navbar() {
     >
       <item.icon size={14} aria-hidden="true" />
       {item.name}
-      <div className="absolute bottom-0 left-1/2 h-px w-px -translate-x-1/2 bg-current opacity-0 transition-all duration-300 group-hover/nav-item:w-full group-hover/nav-item:opacity-100" />
+      <div className="absolute bottom-0 left-1/2 h-px w-px -translate-x-1/2 bg-current opacity-0 transition duration-300 group-hover/nav-item:w-full group-hover/nav-item:opacity-100" />
     </Link>
   );
 
@@ -69,7 +69,7 @@ function Navbar() {
           </div>
           <div
             className={cn(
-              "hidden truncate text-sm text-gray-500 dark:text-gray-400",
+              "hidden truncate text-sm text-text-muted ",
               "sm:block",
             )}
           >
@@ -81,19 +81,17 @@ function Navbar() {
           <DropdownPopover
             className="md:hidden"
             trigger={
-              <button type="button">
+              <button type="button" aria-label={dictionary.common.menu}>
                 <Menu className="h-5 w-5" />
               </button>
             }
           >
             {navItems.map(navItemRender)}
           </DropdownPopover>
-
           <Stack x className="hidden items-center gap-4 md:flex">
             {navItems.map(navItemRender)}
           </Stack>
           <GlobalSearchTrigger />
-
           {/* Dark Mode Toggle */}
           <ThemeToggle />
         </Stack>

@@ -6,6 +6,7 @@ import ThemeScript from "#components/shared/theme-script.component";
 import ToastWatcher from "#components/shared/toast-watcher.component";
 import { ImageViewer } from "#components/ui/image-viewer.component";
 import ModalProvider from "#components/ui/modal-provider.component";
+import { MODAL_ANCHOR } from "#components/ui/modal.const";
 import { useDictionary } from "#dictionary";
 import { DictionaryProvider } from "#lib/client/dictionary/dictionary-provider.component";
 import { getDictionary } from "#lib/server/dictionary/dictionary.service";
@@ -39,7 +40,7 @@ const RootLayout = ({ children }: Readonly<LayoutProps>) => {
       <head>
         <ThemeScript />
       </head>
-      <body style={{ anchorName: "--body" }}>
+      <body style={{ anchorName: MODAL_ANCHOR.BODY }}>
         <DictionaryProvider dictionary={dictionary}>
           <ModalProvider>
             <ToastWatcher />

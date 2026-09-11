@@ -1,7 +1,10 @@
 import { Save, X } from "lucide-react";
 
 import EventCard from "#components/features/events/event-card.component";
+import Button from "#components/ui/button.component";
 import { MarkdownEditor } from "#components/ui/codemirror";
+import IconButton from "#components/ui/icon-button.component";
+import Input from "#components/ui/input.component";
 import SegmentedToggle from "#components/ui/segmented-toggle.component";
 import Stack from "#components/ui/stack.component";
 import { cn } from "#lib/shared/utils";
@@ -45,11 +48,13 @@ export default function EventEditor({
   return (
     <Stack
       y
-      divide={true}
-      className={cn("bg-white *:p-4 dark:bg-zinc-900", className)}
+      className={cn(
+        "divide-y divide-border-default bg-surface-card *:p-4",
+        className,
+      )}
     >
       {isLoading ? (
-        <div className="flex flex-1 items-center justify-center text-zinc-500">
+        <div className="flex flex-1 items-center justify-center text-text-muted">
           Loading...
         </div>
       ) : (
@@ -68,42 +73,37 @@ export default function EventEditor({
               onChange={(value) => updateForm({ published_at: value })}
               disabled={isPending}
             />
-            <button
-              type="button"
+            <IconButton
               onClick={handleSubmit}
-              disabled={isPending}
-              className="duration-300 hover:scale-110 disabled:opacity-50"
+              loading={isPending}
+              aria-label="Save"
             >
               <Save className="h-6 w-6" />
-            </button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
-            >
+            </IconButton>
+            <IconButton onClick={onClose} className="gap-1" aria-label="Close">
               <X className="h-8 w-8" />
-            </button>
+            </IconButton>
           </HeaderSection>
           <Stack x className="p-4">
-            <input
+            <Input
               value={form.title}
               onChange={(e) => updateForm({ title: e.target.value })}
               type="text"
               placeholder="Event title..."
-              className="w-full rounded-lg bg-transparent text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-blue-500 dark:border-zinc-700 dark:text-zinc-100"
+              className="w-full bg-transparent"
             />
           </Stack>
           <Stack x className="flex-wrap gap-2">
             {COLOR_OPTIONS.map((option) => (
-              <button
+              <Button
+                variant="ghost"
                 key={option.value}
-                type="button"
                 onClick={() => updateForm({ color: option.value })}
                 style={{ backgroundColor: option.value }}
                 aria-label={`Select ${option.label} color`}
                 aria-pressed={form.color === option.value}
                 className={cn("h-8 w-8 rounded-full", {
-                  "ring-2 ring-blue-500 ring-offset-2":
+                  "ring-2 ring-info-border ring-offset-2":
                     form.color === option.value,
                 })}
                 title={option.label}
@@ -114,16 +114,18 @@ export default function EventEditor({
             {form.tags.map((tag, index) => (
               <span
                 key={tag}
-                className="flex items-center gap-1 rounded bg-zinc-100 px-2 py-1 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+                className="flex items-center gap-1 rounded bg-surface-muted px-2 py-1 text-sm text-text-secondary"
               >
                 #{tag}
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
+                  className="h-auto border-0 p-0 text-text-muted hover:bg-transparent hover:text-danger-text"
+                  aria-label="Remove tag"
+                  size="sm"
                   onClick={() => removeTag(index)}
-                  className="transition-colors hover:text-red-500"
                 >
                   ×
-                </button>
+                </Button>
               </span>
             ))}
             <TagSelector
@@ -147,7 +149,6 @@ export default function EventEditor({
               onChange={(content) => updateForm({ content })}
               placeholder="Event content..."
             />
-
             <Stack x className="p-4">
               <EventCard event={form} />
             </Stack>

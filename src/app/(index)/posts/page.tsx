@@ -58,9 +58,7 @@ function PostsPageContent({
         totalPosts,
         totalCharacters,
         b: (chunks) => (
-          <span className="font-bold text-zinc-900 dark:text-zinc-100">
-            {chunks}
-          </span>
+          <span className="font-bold text-text-primary">{chunks}</span>
         ),
       })}
     >
@@ -68,13 +66,12 @@ function PostsPageContent({
         {sortedYears.map(([year, yearPosts]) => (
           <section key={year}>
             {/* Year Title */}
-            <h2 className="mb-3 flex items-center gap-2 text-2xl font-bold text-gray-800 dark:text-gray-200">
+            <h2 className="mb-3 flex items-center gap-2 text-2xl font-bold text-text-primary">
               {year === "Unknown" ? dictionary.common.unknownYear : year}
-              <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+              <span className="text-sm font-normal text-text-muted">
                 ({yearPosts.length})
               </span>
             </h2>
-
             {/* List of posts for the year */}
             <Stack y>
               {yearPosts.map((post) => (

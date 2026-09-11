@@ -1,9 +1,9 @@
 "use client";
-
 import { Copy, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import IconButton from "#components/ui/icon-button.component";
 import Stack from "#components/ui/stack.component";
 import type { ImageFile } from "#types";
 
@@ -35,35 +35,38 @@ export default function ImageActionRender({
   return (
     <Stack
       x
-      className="absolute top-1 right-1 gap-1 opacity-0 transition-opacity group-hover/lightbox:opacity-100"
+      className="absolute top-1 right-1 gap-1 opacity-0 transition-opacity group-focus-within/lightbox:opacity-100 group-hover/lightbox:opacity-100"
     >
-      <button
-        type="button"
+      <IconButton
+        size="sm"
         onClick={(event) => {
           event.stopPropagation();
           void handleCopyUrl();
         }}
-        className={`flex h-5 w-5 items-center justify-center rounded-full transition-colors ${
+        className={`rounded-full ${
           copied
-            ? "bg-green-500 text-white"
-            : "bg-zinc-700 text-white hover:bg-zinc-600"
+            ? "bg-success-bg text-success-text"
+            : "bg-surface-inverse text-text-inverse hover:bg-surface-hover-strong"
         }`}
         title="Copy URL"
+        aria-label="Copy URL"
       >
         <Copy className="h-3 w-3" />
-      </button>
-      <button
-        type="button"
+      </IconButton>
+      <IconButton
+        size="sm"
+        variant="danger"
         onClick={(event) => {
           event.stopPropagation();
           onDelete(image);
         }}
         disabled={isPending}
-        className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white transition-colors hover:bg-red-600 disabled:opacity-50"
+        className="rounded-full"
         title="Delete"
+        aria-label="Delete"
       >
         <Trash2 className="h-3 w-3" />
-      </button>
+      </IconButton>
     </Stack>
   );
 }

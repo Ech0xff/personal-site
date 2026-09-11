@@ -84,11 +84,9 @@ export function IntroductionSection({
           <ContentRenderer content={config.aboutMe} />
         </Stack>
       </Card>
-
       <Card title={dictionary.indexHome.recentActivity.cardTitle}>
         <RecentActivityList items={recentActivity} />
       </Card>
-
       {/* Stats Card */}
       <Card title={dictionary.indexHome.stats.cardTitle}>
         <Stack y className="min-w-0 gap-4">
@@ -97,36 +95,34 @@ export function IntroductionSection({
             thoughts={data.thoughts.contributions}
             events={data.events.contributions}
           />
-
           <TagMarquee tags={tags} />
           <Stack className="grid min-w-0 gap-4 xl:grid-cols-2">
             <Stack
               y
-              className="h-full min-h-0 min-w-0 rounded-2xl bg-slate-50 p-4 dark:bg-white/5"
+              className="h-full min-h-0 min-w-0 rounded-2xl bg-surface-muted p-4"
             >
               <Stack className="grid h-full min-w-0 flex-1 grid-cols-2 grid-rows-2 gap-3">
                 {statsItems.map((item) => (
                   <Stack
                     key={item.label}
                     y
-                    className="h-full justify-between rounded-xl bg-white p-4 transition-transform duration-300 hover:scale-105 dark:bg-zinc-950/40"
+                    className="h-full justify-between rounded-xl bg-surface-panel p-4 transition-transform duration-300 hover:scale-105"
                   >
-                    <Stack className="text-xs font-medium tracking-wider text-slate-400 uppercase">
+                    <Stack className="text-xs font-medium tracking-wider text-text-muted uppercase">
                       {item.label}
                     </Stack>
-                    <Stack className="text-2xl font-bold text-slate-700 dark:text-slate-200">
+                    <Stack className="text-2xl font-bold text-text-secondary">
                       {item.count}
                     </Stack>
                   </Stack>
                 ))}
               </Stack>
             </Stack>
-
             <Stack
               y
-              className="min-h-0 min-w-0 gap-2 rounded-2xl bg-slate-50 p-4 dark:bg-white/5"
+              className="min-h-0 min-w-0 gap-2 rounded-2xl bg-surface-muted p-4"
             >
-              <Stack className="text-xs font-medium tracking-wider text-slate-400 uppercase">
+              <Stack className="text-xs font-medium tracking-wider text-text-muted uppercase">
                 {dictionary.indexHome.recentPlan.title}
               </Stack>
               <Stack y className="min-h-0 min-w-0 flex-1 gap-2">
@@ -136,18 +132,18 @@ export function IntroductionSection({
                     return (
                       <div
                         key={`${plan.task}-${plan.createdAt}`}
-                        className="flex items-center justify-between gap-4 border-b border-zinc-200 py-3 last:border-b-0 dark:border-zinc-800"
+                        className="flex items-center justify-between gap-4 border-b border-border-default py-3 last:border-b-0"
                       >
-                        <ListChecks className="h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" />
-                        <span className="min-w-0 flex-1 truncate text-lg text-slate-700 dark:text-slate-200">
+                        <ListChecks className="h-5 w-5 shrink-0 text-text-muted" />
+                        <span className="min-w-0 flex-1 truncate text-lg text-text-secondary">
                           {plan.task}
                         </span>
-                        <StatusIcon className="h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" />
+                        <StatusIcon className="h-5 w-5 shrink-0 text-text-muted" />
                       </div>
                     );
                   })
                 ) : (
-                  <Stack className="flex h-full min-h-32 items-center justify-center rounded-xl border border-dashed border-zinc-200 px-4 text-center text-slate-400 dark:border-zinc-800 dark:text-slate-500">
+                  <Stack className="flex h-full min-h-32 items-center justify-center rounded-xl border border-dashed border-border-default px-4 text-center text-text-muted">
                     {dictionary.indexHome.recentPlan.empty}
                   </Stack>
                 )}
@@ -156,7 +152,6 @@ export function IntroductionSection({
           </Stack>
         </Stack>
       </Card>
-
       {hasPlaylist && (
         <Card title={dictionary.indexHome.playlist.cardTitle}>
           <iframe

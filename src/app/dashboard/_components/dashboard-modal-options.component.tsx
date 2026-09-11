@@ -2,13 +2,20 @@
 import { useEffect } from "react";
 
 import { useModal } from "#components/ui/modal-provider.component";
+import { MODAL_ANCHOR, MODAL_BOUNDARY } from "#components/ui/modal.const";
 
 export default function DashboardModalOptions() {
   const { setDefaultOptions } = useModal();
   useEffect(() => {
-    setDefaultOptions({ boundary: "anchor", positionAnchor: "--dashboard" });
+    setDefaultOptions({
+      boundary: MODAL_BOUNDARY.ANCHOR,
+      positionAnchor: MODAL_ANCHOR.DASHBOARD,
+    });
     return () => {
-      setDefaultOptions({ boundary: "viewport", positionAnchor: "--body" });
+      setDefaultOptions({
+        boundary: MODAL_BOUNDARY.VIEWPORT,
+        positionAnchor: MODAL_ANCHOR.BODY,
+      });
     };
   }, [setDefaultOptions]);
   return null;

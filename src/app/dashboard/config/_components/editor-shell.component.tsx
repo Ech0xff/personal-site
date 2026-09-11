@@ -1,10 +1,12 @@
 "use client";
 
 import { LoaderCircle, Save, Trash2, X } from "lucide-react";
-import type { HTMLAttributes } from "react";
+import { useState, type HTMLAttributes } from "react";
 
 import Button from "#components/ui/button.component";
+import ModalPanel from "#components/ui/modal-panel.component";
 import { useModal } from "#components/ui/modal-provider.component";
+import { useDictionary } from "#dictionary";
 import { cn } from "#lib/shared/utils";
 
 export type ConfigField = {
@@ -28,21 +30,28 @@ export default function EditorShell({
   onDelete,
   onSave,
 }: Props) {
+  const [pending, setPending] = useState<"save" | "delete" | null>(null);
+  const runAction = async (action: "save" | "delete") => {
+    if (pending || loading) return;
+    setPending(action);
+    try {
+      await (action === "save" ? onSave?.() : onDelete?.());
+    } finally {
+      setPending(null);
+    }
+  };
+  const dictionary = useDictionary();
   const { close } = useModal();
 
   return (
-    <div
-      className={cn(
-        "flex flex-col gap-4 overflow-hidden rounded-2xl border-zinc-200 bg-zinc-50 p-6 dark:bg-zinc-900",
-        className,
-      )}
+    <ModalPanel
+      className={cn("flex flex-col gap-4 overflow-hidden p-6", className)}
     >
       <div className="flex items-center gap-2">
-        <h2 className="truncate text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+        <h2 className="truncate text-2xl font-semibold text-text-primary">
           {title}
         </h2>
       </div>
-
       <div className="relative flex flex-1 overflow-hidden px-1">
         <div className={cn("flex flex-1 duration-300", loading && "opacity-0")}>
           {children}
@@ -53,41 +62,35 @@ export default function EditorShell({
             loading ? "opacity-100" : "pointer-events-none opacity-0",
           )}
         >
-          <div className="flex items-center gap-3 text-xl font-medium text-zinc-700 dark:text-zinc-200">
+          <div className="flex items-center gap-3 text-xl font-medium text-text-secondary">
             <LoaderCircle className="h-6 w-6 animate-spin" />
-            <span>Loading</span>
+            <span>{dictionary.common.loading}</span>
           </div>
         </div>
       </div>
-
       <div className="flex flex-wrap items-center justify-end gap-2">
         <Button
-          type="button"
-          onClick={onDelete}
-          disabled={!onDelete}
-          className="bg-red-100 text-red-700 hover:bg-red-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60"
+          onClick={() => runAction("delete")}
+          loading={pending === "delete"}
+          disabled={!onDelete || loading || pending !== null}
+          variant="danger"
         >
           <Trash2 className="h-4 w-4" />
-          Delete
+          {dictionary.common.delete}
         </Button>
-        <Button
-          type="button"
-          onClick={() => close()}
-          className="bg-zinc-200 text-zinc-700 hover:bg-zinc-300 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
-        >
+        <Button onClick={() => close()} variant="secondary">
           <X className="h-4 w-4" />
-          Cancel
+          {dictionary.common.cancel}
         </Button>
         <Button
-          type="button"
-          onClick={() => onSave?.()}
-          disabled={!onSave}
-          className="disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={() => runAction("save")}
+          loading={pending === "save"}
+          disabled={!onSave || loading || pending !== null}
         >
           <Save className="h-4 w-4" />
-          Save
+          {dictionary.common.save}
         </Button>
       </div>
-    </div>
+    </ModalPanel>
   );
 }

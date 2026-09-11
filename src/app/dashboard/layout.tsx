@@ -14,8 +14,10 @@ import { redirect } from "next/navigation";
 
 import LogoutButton from "#components/shared/logout-button.component";
 import ThemeToggle from "#components/shared/theme-toggle.component";
+import Button from "#components/ui/button.component";
 import DropdownPopover from "#components/ui/dropdown-popover.component";
 import Stack from "#components/ui/stack.component";
+import { getDictionary } from "#lib/server/dictionary/dictionary.service";
 import { makeServerClient } from "#lib/server/supabase.client";
 import { getUserStatus } from "#lib/shared/auth/session.service";
 import { ROUTES } from "#lib/shared/routes/routes.const";
@@ -26,6 +28,7 @@ import DashboardModalOptions from "./_components/dashboard-modal-options.compone
 async function Navbar({ isAdmin }: { isAdmin: boolean }) {
   "use cache";
 
+  const dictionary = await getDictionary();
   const navItems = [
     {
       isAdmin: false,
@@ -75,7 +78,7 @@ async function Navbar({ isAdmin }: { isAdmin: boolean }) {
     <Link
       key={item.path}
       href={item.path}
-      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-muted transition-colors hover:bg-surface-hover hover:text-text-primary"
     >
       <item.icon className="h-5 w-5 shrink-0" />
       <div>{item.name}</div>
@@ -85,7 +88,7 @@ async function Navbar({ isAdmin }: { isAdmin: boolean }) {
   return (
     <Stack
       className={cn(
-        "flex bg-zinc-50 p-3 dark:bg-zinc-900",
+        "flex bg-surface-muted p-3 dark:bg-surface-card",
         "flex-row items-center",
         "md:flex-col md:items-start",
       )}
@@ -94,7 +97,7 @@ async function Navbar({ isAdmin }: { isAdmin: boolean }) {
       <Stack x className="gap-2">
         <Link
           href={ROUTES.HOME}
-          className="flex items-center gap-2 text-lg font-semibold text-zinc-900 transition-colors hover:text-blue-600 dark:text-zinc-100 dark:hover:text-blue-400"
+          className="flex items-center gap-2 text-lg font-semibold text-text-primary transition-colors hover:text-info-text"
         >
           <ArrowLeft className="h-5 w-5" />
           <div>Back</div>
@@ -108,12 +111,13 @@ async function Navbar({ isAdmin }: { isAdmin: boolean }) {
           <DropdownPopover
             className="ml-auto md:hidden"
             trigger={
-              <button
-                type="button"
-                className="ml-auto rounded-md p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+              <Button
+                variant="ghost"
+                aria-label={dictionary.common.menu}
+                className="ml-auto"
               >
                 <Menu className="h-5 w-5" />
-              </button>
+              </Button>
             }
           >
             {navItems
@@ -146,7 +150,7 @@ export default async function Layout({
     <Stack
       className={cn(
         "relative flex h-dvh w-dvw bg-(--theme-bg)",
-        "flex-col divide-y",
+        "flex-col divide-y divide-border-default",
         "md:flex-row md:divide-x",
       )}
     >

@@ -14,11 +14,7 @@ export default function TagSelector(props: TagSelectorProps) {
   const selectedCount = props.selectedTags.length;
 
   return (
-    <Button
-      type="button"
-      onClick={() => open(<TagSelectorModal {...props} />)}
-      className="rounded-md px-2 py-1 text-xs"
-    >
+    <Button size="sm" onClick={() => open(<TagSelectorModal {...props} />)}>
       <Tag className="h-3.5 w-3.5 rotate-90" />
       {selectedCount > 0 ? `Tags (${selectedCount})` : "Add tag"}
     </Button>

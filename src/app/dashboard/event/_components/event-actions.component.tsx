@@ -1,8 +1,8 @@
 "use client";
-
 import { Edit, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
+import IconButton from "#components/ui/icon-button.component";
 import { deleteEventByBrowser } from "#lib/client/services";
 
 interface EventActionsProps {
@@ -34,22 +34,23 @@ export default function EventActions({
 
   return (
     <>
-      <button
-        type="button"
+      <IconButton
+        size="sm"
         onClick={() => openEditor(eventId)}
-        className="rounded p-1.5 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
         title="Edit"
+        aria-label="Edit"
       >
         <Edit className="h-4 w-4" />
-      </button>
-      <button
-        type="button"
+      </IconButton>
+      <IconButton
+        size="sm"
+        className="text-text-muted hover:bg-danger-bg hover:text-danger-text"
         onClick={handleDelete}
-        className="rounded p-1.5 text-zinc-400 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
         title="Delete"
+        aria-label="Delete"
       >
         <Trash2 className="h-4 w-4" />
-      </button>
+      </IconButton>
     </>
   );
 }

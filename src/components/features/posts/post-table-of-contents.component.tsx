@@ -34,13 +34,11 @@ export default function PostTableOfContents({
 
     const updateActiveHeading = () => {
       frame = 0;
-
       const activeHeading =
         headingElements.findLast(
           (element) =>
             element.getBoundingClientRect().top <= ACTIVE_HEADING_OFFSET,
         ) || headingElements[0];
-
       setActiveId(activeHeading.id);
     };
 
@@ -88,30 +86,29 @@ export default function PostTableOfContents({
 
   return (
     <nav aria-label={title} className={cn("w-56 p-3 text-sm", className)}>
-      <div className="mb-3 flex items-center gap-2 font-semibold text-zinc-900 dark:text-zinc-100">
+      <div className="mb-3 flex items-center gap-2 font-semibold text-text-primary">
         <List className="h-4 w-4" />
         <span>{title}</span>
       </div>
       <ol
         ref={listRef}
-        className="scrollbar-visible max-h-[calc(100dvh-6rem-1.5rem-2.75rem)] overflow-auto"
+        className="max-h-[calc(100dvh-6rem-1.5rem-2.75rem)] overflow-auto"
       >
         {headings.map((heading) => (
           <li
             key={heading.id}
             data-heading-id={heading.id}
             className={cn(
-              "relative border-l border-zinc-200 py-1 pl-3 hover:border-sky-500 dark:border-zinc-700 hover:dark:border-sky-300",
-              activeId === heading.id && "border-sky-500 dark:border-sky-300",
+              "relative border-l border-border-default py-1 pl-3 hover:border-info-border  ",
+              activeId === heading.id && "border-info-border ",
             )}
           >
             <a
               href={`#${heading.id}`}
               onClick={() => setActiveId(heading.id)}
               className={cn(
-                "block truncate text-zinc-500 transition-colors hover:text-sky-700 dark:text-zinc-400 dark:hover:text-sky-200",
-                activeId === heading.id &&
-                  "font-medium text-sky-700 dark:text-sky-200",
+                "block truncate text-text-muted transition-colors hover:text-info-text  ",
+                activeId === heading.id && "font-medium text-info-text ",
               )}
               title={heading.text}
               style={{

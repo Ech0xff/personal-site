@@ -11,11 +11,11 @@ export default function InfoRow({
 }) {
   return (
     <Stack y className="gap-1 sm:flex-row sm:items-center sm:gap-4">
-      <span className="w-36 shrink-0 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+      <span className="w-36 shrink-0 text-sm font-medium text-text-muted">
         {label}
       </span>
       <span
-        className={`text-sm text-zinc-900 dark:text-zinc-100 ${
+        className={`text-sm text-text-primary  ${
           mono ? "font-mono text-xs" : ""
         }`}
       >

@@ -1,8 +1,9 @@
 "use client";
-
 import { CalendarDays } from "lucide-react";
 import { useEffect, useMemo, useRef } from "react";
 
+import Button from "#components/ui/button.component";
+import Input from "#components/ui/input.component";
 import {
   datetimeLocalToUtcIso,
   toDatetimeLocalValue,
@@ -38,8 +39,8 @@ export default function DateTimeInput({
   }, [fallbackNowUtc, fallbackToNow, onChange, value]);
 
   return (
-    <button
-      type="button"
+    <Button
+      variant="ghost"
       disabled={disabled}
       aria-label={ariaLabel}
       title={ariaLabel}
@@ -53,7 +54,7 @@ export default function DateTimeInput({
         input.click();
       }}
     >
-      <input
+      <Input
         ref={dateInputRef}
         value={resolvedValue}
         onChange={(event) =>
@@ -63,6 +64,6 @@ export default function DateTimeInput({
         className="sr-only"
       />
       <CalendarDays className={className} />
-    </button>
+    </Button>
   );
 }

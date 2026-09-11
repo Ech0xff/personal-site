@@ -11,6 +11,8 @@ import { useImperativeHandle, useMemo } from "react";
 import { resolvedThemeAtom } from "#lib/client/theme.atom";
 import { cn } from "#lib/shared/utils";
 
+import "./editor.component.scss";
+
 export interface EditorHandle {
   clear: () => void;
 }
@@ -65,10 +67,7 @@ export function Editor({
       }}
       extensions={editorExtensions}
       onChange={onChange}
-      className={cn(
-        "h-full min-h-0 w-full [&_.cm-editor]:outline-none!",
-        className,
-      )}
+      className={cn("ui-code-editor h-full min-h-0 w-full", className)}
     />
   );
 }

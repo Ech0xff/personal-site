@@ -10,6 +10,7 @@ import {
   useState,
 } from "react";
 
+import Input from "#components/ui/input.component";
 import { useModal } from "#components/ui/modal-provider.component";
 import Stack from "#components/ui/stack.component";
 import { useDictionary } from "#dictionary";
@@ -22,8 +23,6 @@ import {
 import { type SearchResult } from "#lib/shared/search/search.type";
 import { cn } from "#lib/shared/utils";
 import { formatTime } from "#lib/shared/utils/date.helper";
-
-import "./global-search-trigger.component.scss";
 
 interface Props {
   className?: string;
@@ -52,7 +51,7 @@ export default function GlobalSearchTrigger({ className }: Props) {
       type="button"
       onClick={handleOpen}
       className={cn(
-        "inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-(--text-muted) transition-all hover:bg-(--surface-hover) hover:text-(--text-primary)",
+        "inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-(--text-muted) transition hover:bg-(--surface-hover) hover:text-(--text-primary)",
         className,
       )}
       aria-label={dictionary.search.title}
@@ -139,7 +138,7 @@ function GlobalSearchModal() {
         key={segment.start}
         className={
           segment.matched
-            ? "rounded-sm bg-(--search-highlight-bg) px-0.5 text-(--search-highlight-text)"
+            ? "rounded-sm bg-(--warning-bg) px-0.5 text-(--warning-text)"
             : undefined
         }
       >
@@ -166,7 +165,7 @@ function GlobalSearchModal() {
 
     if (hasError) {
       return (
-        <div className="px-2 py-8 text-center text-sm text-red-500">
+        <div className="px-2 py-8 text-center text-sm text-danger-text">
           {dictionary.search.error}
         </div>
       );
@@ -186,7 +185,6 @@ function GlobalSearchModal() {
       <Stack y className="gap-2">
         {results.map((result) => {
           const isThought = result.type === "thought";
-
           return (
             <NextLink
               key={`${result.type}-${result.id}`}
@@ -215,12 +213,11 @@ function GlobalSearchModal() {
                     {renderHighlightedText(result.rawSnippet ?? result.snippet)}
                   </p>
                 </div>
-
                 <div className="flex shrink-0 items-center gap-3 pl-2">
                   <span
                     className={cn(
                       "font-mono text-xs text-(--text-placeholder)",
-                      isThought && "text-(--search-text-subtle)",
+                      isThought && "text-(--border-strong)",
                     )}
                   >
                     {formatTime(result.publishedAt, "YYYY/MM/DD")}
@@ -229,7 +226,7 @@ function GlobalSearchModal() {
                     className={cn(
                       "inline-flex h-9 w-9 items-center justify-center rounded-full border border-(--border-default) bg-(--surface-muted) text-(--text-muted)",
                       isThought &&
-                        "border-transparent bg-transparent text-(--search-text-subtle)",
+                        "border-transparent bg-transparent text-(--border-strong)",
                     )}
                     aria-label={dictionary.search.types[result.type]}
                     title={dictionary.search.types[result.type]}
@@ -254,15 +251,15 @@ function GlobalSearchModal() {
     >
       <Stack
         x
-        className=" items-center  gap-3 rounded-2xl border border-(--border-default) px-4 py-3"
+        className="items-center gap-3 rounded-2xl border border-(--border-default) px-4 py-3"
       >
-        <Search size={18} className="shrink-0 text-zinc-400" />
-        <input
+        <Search size={18} className="shrink-0 text-text-muted" />
+        <Input
           ref={inputRef}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder={dictionary.search.placeholder}
-          className="flex-1 bg-transparent text-sm text-(--text-primary) outline-none placeholder:text-(--text-placeholder)"
+          className="flex-1 bg-transparent"
         />
         <button
           type="button"
@@ -273,7 +270,6 @@ function GlobalSearchModal() {
           <X size={16} />
         </button>
       </Stack>
-
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3 px-1">
         <span className="text-xs text-(--text-muted)">
           {dictionary.search.advanced.title}
@@ -285,11 +281,10 @@ function GlobalSearchModal() {
             onChange={(event) => setSearchRawText(event.target.checked)}
             className="peer sr-only"
           />
-          <span className="relative h-5 w-9 rounded-full bg-(--surface-muted) transition-colors peer-checked:bg-emerald-500 after:absolute after:top-0.5 after:left-0.5 after:h-4 after:w-4 after:rounded-full after:bg-(--surface-card) after:transition-transform peer-checked:after:translate-x-4" />
+          <span className="relative h-5 w-9 rounded-full bg-(--surface-muted) transition-colors peer-checked:bg-primary-bg after:absolute after:top-0.5 after:left-0.5 after:h-4 after:w-4 after:rounded-full after:bg-(--surface-card) after:transition-transform peer-checked:after:translate-x-4" />
           <span>{dictionary.search.advanced.searchRawText}</span>
         </label>
       </div>
-
       <div className="mt-4 max-h-[60vh] overflow-y-auto">{renderResults()}</div>
     </dialog>
   );

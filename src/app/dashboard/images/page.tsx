@@ -1,7 +1,7 @@
 "use client";
-
 import { ArrowDownAZ, ArrowUpAZ, Calendar, HardDrive } from "lucide-react";
 
+import Button from "#components/ui/button.component";
 import Image from "#components/ui/image.component";
 import Stack from "#components/ui/stack.component";
 import { formatTime } from "#lib/shared/utils/date.helper";
@@ -34,15 +34,16 @@ export default function ImagesPage() {
         <Stack x className="flex-wrap items-center gap-3">
           <Stack
             x
-            className="items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 p-1 dark:border-zinc-700 dark:bg-zinc-800"
+            className="items-center gap-2 rounded-lg border border-border-default bg-surface-muted p-1"
           >
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => toggleSort("createdAt")}
               className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                 sortField === "createdAt"
-                  ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
-                  : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
+                  ? "bg-surface-selected text-text-primary shadow  "
+                  : "text-text-muted hover:text-text-secondary  "
               }`}
             >
               <Calendar className="h-4 w-4" />
@@ -50,39 +51,38 @@ export default function ImagesPage() {
               {sortField === "createdAt" && (
                 <SortIcon className="h-3.5 w-3.5" />
               )}
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => toggleSort("size")}
               className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                 sortField === "size"
-                  ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
-                  : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
+                  ? "bg-surface-selected text-text-primary shadow  "
+                  : "text-text-muted hover:text-text-secondary  "
               }`}
             >
               <HardDrive className="h-4 w-4" />
               Size
               {sortField === "size" && <SortIcon className="h-3.5 w-3.5" />}
-            </button>
+            </Button>
           </Stack>
-
           <Stack
             x
-            className="ml-auto items-center gap-2 text-xs font-medium text-zinc-600 dark:text-zinc-300"
+            className="ml-auto items-center gap-2 text-xs font-medium text-text-secondary"
           >
-            <span className="rounded-full border border-zinc-200 bg-white px-2.5 py-1 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
+            <span className="rounded-full border border-border-default bg-surface-input px-2.5 py-1 shadow-sm">
               {images.length} image{images.length !== 1 ? "s" : ""}
             </span>
-            <span className="rounded-full border border-zinc-200 bg-white px-2.5 py-1 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
+            <span className="rounded-full border border-border-default bg-surface-input px-2.5 py-1 shadow-sm">
               {formatSize(totalSize)} total
             </span>
           </Stack>
         </Stack>
-
         {sortedImages.length === 0 ? (
           <Stack
             y
-            className="items-center justify-center rounded-lg border border-dashed border-zinc-300 py-12 text-zinc-500 dark:border-zinc-700 dark:text-zinc-400"
+            className="items-center justify-center rounded-lg border border-dashed border-border-strong py-12 text-text-muted"
           >
             <HardDrive className="mb-2 h-12 w-12 opacity-50" />
             <p>No images found</p>
@@ -105,17 +105,16 @@ export default function ImagesPage() {
                     />
                   )}
                 />
-
-                <div className="pointer-events-none absolute right-0 bottom-0 left-0 rounded-b-lg bg-linear-to-t from-black/70 to-transparent p-2 opacity-0 transition-opacity group-hover/card:opacity-100">
+                <div className="pointer-events-none absolute right-0 bottom-0 left-0 rounded-b-lg bg-linear-to-t from-black/70 to-transparent p-2 opacity-0 transition-opacity group-focus-within/card:opacity-100 group-hover/card:opacity-100">
                   <p
-                    className="truncate text-xs text-white/90"
+                    className="truncate text-xs text-primary-fg/90"
                     title={image.name}
                   >
                     {image.name}
                   </p>
                   <Stack
                     x
-                    className="items-center justify-between text-xs text-white/70"
+                    className="items-center justify-between text-xs text-primary-fg/70"
                   >
                     <span>{formatSize(image.size)}</span>
                     <span>{formatTime(image.createdAt, "MMM D, YYYY")}</span>

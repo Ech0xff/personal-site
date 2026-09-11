@@ -53,7 +53,7 @@ type Props<T extends TagSphereItem> = {
   tags: T[];
 };
 
-const defaultTagColor = "#71717a";
+import { DEFAULT_TAG_COLOR } from "#components/features/tags/tag.const";
 
 const getSpherePoint = (index: number, total: number): SpherePoint => {
   if (total <= 1) return { x: 0, y: 0, z: 1 };
@@ -114,11 +114,11 @@ const getTagProjection = (
 
 const getTagColor = (tag: TagSphereItem) => {
   if (!tag.meta || typeof tag.meta !== "object" || Array.isArray(tag.meta)) {
-    return defaultTagColor;
+    return DEFAULT_TAG_COLOR;
   }
 
   const color = (tag.meta as { color?: unknown }).color;
-  return typeof color === "string" && color.trim() ? color : defaultTagColor;
+  return typeof color === "string" && color.trim() ? color : DEFAULT_TAG_COLOR;
 };
 
 const getFontSize = (count: number, maxCount: number) => {
@@ -158,10 +158,11 @@ const getTransform = (projection: TagProjection) => {
 const projectionToStyle = (
   projection: TagProjection,
   fontSize: number,
-): CSSProperties => {
+): CSSProperties & { "--tag-color": string } => {
   return {
     alignSelf: "center",
-    color: projection.color,
+    "--tag-color": projection.color,
+    color: "var(--tag-color)",
     fontSize: `${fontSize}px`,
     gridArea: "1 / 1",
     justifySelf: "center",
@@ -217,6 +218,9 @@ export default function TagSphere<T extends TagSphereItem>({
   useEffect(() => {
     if (!mounted) return;
 
+    const motionPreference = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
     let frameId = 0;
     let previousTime = performance.now();
     const updateSize = () => {
@@ -236,19 +240,18 @@ export default function TagSphere<T extends TagSphereItem>({
     if (containerRef.current) resizeObserver?.observe(containerRef.current);
 
     const rotate = (time: number) => {
-      const delta = Math.min(time - previousTime, 32);
+      const delta = motionPreference.matches
+        ? 0
+        : Math.min(time - previousTime, 32);
       previousTime = time;
       const pointerDirection = pointerDirectionRef.current;
-
       rotationRef.current = {
         x: rotationRef.current.x - pointerDirection.y * speed * delta,
         y: rotationRef.current.y + pointerDirection.x * speed * delta,
       };
-
       tags.forEach((tag, index) => {
         const element = buttonRefs.current[tag.id];
         if (!element) return;
-
         const liveProjection = getTagProjection(
           points[index],
           getTagColor(tag),
@@ -279,19 +282,15 @@ export default function TagSphere<T extends TagSphereItem>({
                 returningProgress,
               )
             : liveProjection;
-
         currentProjectionsRef.current[tag.id] = projection;
         applyProjection(element, projection);
-
         if (hoveringTag && hoveringProgress >= 1) {
           delete hoveringTagsRef.current[tag.id];
         }
-
         if (returningTag && returningProgress >= 1) {
           delete returningTagsRef.current[tag.id];
         }
       });
-
       frameId = requestAnimationFrame(rotate);
     };
 
@@ -372,7 +371,6 @@ export default function TagSphere<T extends TagSphereItem>({
             sizeRef.current,
             rotationRef.current,
           );
-
           return (
             <button
               key={tag.id}
@@ -381,7 +379,7 @@ export default function TagSphere<T extends TagSphereItem>({
               }}
               type="button"
               title={`${tag.name}: ${tag.count}`}
-              className="cursor-pointer rounded px-2 py-1 font-semibold tracking-normal whitespace-nowrap transition-colors duration-200 hover:bg-zinc-900/10 hover:opacity-100 focus-visible:bg-zinc-900/10 focus-visible:outline-none dark:hover:bg-white/10 dark:focus-visible:bg-white/10"
+              className="cursor-pointer rounded px-2 py-1 font-semibold tracking-normal whitespace-nowrap transition-colors duration-200 hover:bg-surface-inverse/10 hover:opacity-100 focus-visible:bg-surface-inverse/10 focus-visible:outline-none dark:hover:bg-surface-panel/10 dark:focus-visible:bg-surface-panel/10"
               onBlur={() => releaseTag(tag.id)}
               onClick={() => onTagClick?.(tag)}
               onFocus={() =>

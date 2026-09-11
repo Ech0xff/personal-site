@@ -11,7 +11,7 @@ export default function Card({
     <Stack y className="z-1 w-full">
       {title && (
         <h3 className="mb-4 flex items-center gap-2 text-2xl font-bold">
-          <Stack className="h-5 w-1 rounded-full bg-gray-600" />
+          <Stack className="h-5 w-1 rounded-full bg-surface-hover-strong" />
           {title}
         </h3>
       )}

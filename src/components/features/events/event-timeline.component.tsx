@@ -1,4 +1,5 @@
 import { groupBy } from "es-toolkit";
+import type { CSSProperties } from "react";
 
 import SectionCard from "#components/ui/section-card.component";
 import Stack from "#components/ui/stack.component";
@@ -28,18 +29,16 @@ export default function EventTimeline({ events, renderActions }: Props) {
   return (
     <Stack y className="relative mt-8">
       {/* Timeline Axis */}
-      <div className="absolute top-0 bottom-0 left-1/2 w-0.5 -translate-x-1/2 transform bg-zinc-200 dark:bg-zinc-800" />
-
+      <div className="absolute top-0 bottom-0 left-1/2 w-0.5 -translate-x-1/2 transform bg-surface-hover-strong" />
       {sortedYears.map(([year, yearEvents]) => {
         return (
           <Stack y key={year} className="mb-12">
             {/* Year Title */}
             <Stack x className="mb-8 justify-center">
-              <h2 className="z-10 rounded-full bg-blue-500 px-4 py-1 text-lg font-bold text-white">
+              <h2 className="z-10 rounded-full bg-primary-bg px-4 py-1 text-lg font-bold text-primary-fg">
                 {year === "Unknown" ? dictionary.common.unknownYear : year}
               </h2>
             </Stack>
-
             {/* Events List */}
             <Stack y className="gap-8">
               {yearEvents.map((event, index) => (
@@ -59,7 +58,12 @@ export default function EventTimeline({ events, renderActions }: Props) {
                       "top-0 left-1/2 -translate-1/2",
                       "sm:top-1/2 sm:left-1/2 sm:-translate-1/2",
                     )}
-                    style={{ backgroundColor: event.color }}
+                    style={
+                      {
+                        "--event-color": event.color,
+                        backgroundColor: "var(--event-color)",
+                      } as CSSProperties & { "--event-color": string }
+                    }
                   />
                   <SectionCard
                     className={cn(

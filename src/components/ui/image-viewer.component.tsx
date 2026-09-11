@@ -90,7 +90,6 @@ export function ImageViewer({ children }: { children: ReactNode }) {
   return (
     <>
       {children}
-
       <dialog
         ref={dialogRef}
         aria-label={image?.alt || "Image viewer"}
@@ -137,7 +136,6 @@ export function ImageViewer({ children }: { children: ReactNode }) {
                 <Plus className="size-5" />
               </button>
             </div>
-
             <div className="h-dvh w-dvw overflow-auto p-4 pb-24">
               <button
                 type="button"

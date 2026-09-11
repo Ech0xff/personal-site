@@ -1,0 +1,13 @@
+.tag-editor-palette .react-colorful {
+  width: 100%;
+  height: 200px;
+}
+
+.tag-editor-palette .react-colorful__saturation {
+  border-radius: var(--radius-control) var(--radius-control) 0 0;
+}
+
+.tag-editor-palette .react-colorful__hue {
+  height: 24px;
+  border-radius: 0 0 var(--radius-control) var(--radius-control);
+}

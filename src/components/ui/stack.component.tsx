@@ -24,7 +24,7 @@ export default function Stack({
   return (
     <div
       className={cn(
-        "divide-(--border-default) border-(--border-default)",
+        divide && "divide-(--border-default)",
         divideClass,
         layoutClass,
         className,

@@ -8,20 +8,22 @@ import type { TagWithCount } from "#types";
 
 import { getTagMarqueeDuration } from "./tag-marquee.helper";
 
+import "./tag-marquee.component.scss";
+
 type Props = {
   tags: TagWithCount[];
 };
 
-const defaultTagColor = "#71717a";
+import { DEFAULT_TAG_COLOR } from "#components/features/tags/tag.const";
 const MIN_ROW_ITEMS = 20;
 
 const getTagColor = (tag: TagWithCount) => {
   if (!tag.meta || typeof tag.meta !== "object" || Array.isArray(tag.meta)) {
-    return defaultTagColor;
+    return DEFAULT_TAG_COLOR;
   }
 
   const color = tag.meta.color;
-  return typeof color === "string" && color.trim() ? color : defaultTagColor;
+  return typeof color === "string" && color.trim() ? color : DEFAULT_TAG_COLOR;
 };
 
 const sortTags = (tags: TagWithCount[]) =>
@@ -40,36 +42,47 @@ function TagCard({ tag }: { tag: TagWithCount }) {
   const color = getTagColor(tag);
 
   return (
-    <div className="group/tag relative h-[4.6rem] min-w-[8.5rem] shrink-0 overflow-hidden rounded-[1.1rem] border border-slate-200/80 bg-white px-3 py-3 dark:border-white/8 dark:bg-zinc-900">
+    <div
+      style={
+        { "--tag-color": color } as CSSProperties & { "--tag-color": string }
+      }
+      className="group/tag relative h-[4.6rem] min-w-[8.5rem] shrink-0 overflow-hidden rounded-[1.1rem] border border-border-default/80 bg-surface-panel px-3 py-3 "
+    >
       <div
-        className="absolute inset-y-0 right-0 w-10 bg-linear-to-l from-slate-100/80 to-transparent opacity-90 dark:from-black/10"
+        className="absolute inset-y-0 right-0 w-10 bg-linear-to-l from-surface-muted/80 to-transparent opacity-90 "
         aria-hidden="true"
       />
       <div
-        className="absolute -bottom-8 -left-8 h-16 w-16 rounded-full opacity-0 transition-all duration-500 ease-out group-hover/tag:translate-x-2 group-hover/tag:-translate-y-1 group-hover/tag:opacity-100 dark:hidden"
-        style={{ backgroundColor: `${color}66` }}
+        className="absolute -bottom-8 -left-8 h-16 w-16 rounded-full opacity-0 transition duration-500 ease-out group-hover/tag:translate-x-2 group-hover/tag:-translate-y-1 group-hover/tag:opacity-100 dark:hidden"
+        style={{
+          backgroundColor:
+            "color-mix(in srgb, var(--tag-color) 40%, transparent)",
+        }}
         aria-hidden="true"
       />
       <div
-        className="absolute -bottom-8 -left-8 hidden h-16 w-16 rounded-full opacity-0 transition-all duration-500 ease-out group-hover/tag:translate-x-2 group-hover/tag:-translate-y-1 group-hover/tag:opacity-100 dark:block"
-        style={{ backgroundColor: `${color}b3` }}
+        className="absolute -bottom-8 -left-8 hidden h-16 w-16 rounded-full opacity-0 transition duration-500 ease-out group-hover/tag:translate-x-2 group-hover/tag:-translate-y-1 group-hover/tag:opacity-100 dark:block"
+        style={{
+          backgroundColor:
+            "color-mix(in srgb, var(--tag-color) 70%, transparent)",
+        }}
         aria-hidden="true"
       />
       <div className="relative grid h-full grid-rows-[1fr_auto]">
         <div
           className="line-clamp-1 text-[1.05rem] leading-none font-black tracking-tight"
-          style={{ color }}
+          style={{ color: "var(--tag-color)" }}
         >
           {tag.name}
         </div>
         <div className="flex items-end justify-between gap-3">
-          <span className="relative z-10 text-lg leading-none font-bold text-slate-500 dark:text-white/55">
+          <span className="relative z-10 text-lg leading-none font-bold text-text-muted">
             {tag.count}
           </span>
           <Tag
             className="h-[1.35rem] w-[1.35rem] shrink-0 rotate-[90deg] opacity-75 transition-transform duration-500 group-hover/tag:rotate-[70deg]"
             style={{
-              color: `${color}aa`,
+              color: "color-mix(in srgb, var(--tag-color) 67%, transparent)",
             }}
             aria-hidden="true"
           />

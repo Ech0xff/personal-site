@@ -28,7 +28,7 @@ const BASE_SIZE = "11px";
 const LEGEND_CELL_SIZE = "0.875rem";
 
 const CELL_LEVEL_CLASS = [
-  "bg-zinc-200/80 dark:bg-zinc-800",
+  "bg-surface-hover-strong/80 ",
   "bg-emerald-200 dark:bg-emerald-950",
   "bg-emerald-300 dark:bg-emerald-800",
   "bg-emerald-400 dark:bg-emerald-700",
@@ -241,12 +241,10 @@ export default function ContributionCalendar({
                   {item.label}
                 </div>
               ))}
-
               {Array.from({ length: 7 }, (_, index) => {
                 const label = weekdayLabels.find(
                   (item) => item.index === index,
                 )?.label;
-
                 return (
                   <div
                     key={index}
@@ -261,12 +259,10 @@ export default function ContributionCalendar({
                   </div>
                 );
               })}
-
               {weeks.map((week, weekIndex) =>
                 week.map((day, dayIndex) => {
                   const level = getLevel(day.count);
                   const dateLabel = formatTooltipDate(day.date);
-
                   return (
                     <div
                       key={formatDateKey(day.date)}
@@ -291,7 +287,7 @@ export default function ContributionCalendar({
                       {day.inRange && (
                         <div
                           className={[
-                            "pointer-events-none invisible absolute bottom-full left-1/2 z-50 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-zinc-900 px-2 py-1.5 text-white opacity-0 shadow-lg transition-all group-hover/tooltip:visible group-hover/tooltip:opacity-100 dark:bg-zinc-700",
+                            "pointer-events-none invisible absolute bottom-full left-1/2 z-(--layer-tooltip) mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-surface-inverse px-2 py-1.5 text-text-inverse opacity-0 shadow-lg transition group-hover/tooltip:visible group-focus-within/tooltip:visible group-hover/tooltip:opacity-100 group-focus-within/tooltip:opacity-100 ",
                           ].join(" ")}
                           style={{
                             fontSize: multiplyLength(base, 0.95),
@@ -308,10 +304,9 @@ export default function ContributionCalendar({
           </div>
         </div>
       </div>
-
       <div
         className={[
-          "mt-3 flex min-w-0 max-w-full flex-wrap items-center justify-between gap-3 text-slate-500 dark:text-slate-400",
+          "mt-3 flex min-w-0 max-w-full flex-wrap items-center justify-between gap-3 text-text-muted ",
         ].join(" ")}
         style={{ fontSize: multiplyLength(base, 0.95) }}
       >
@@ -319,7 +314,7 @@ export default function ContributionCalendar({
           <div
             role="tablist"
             aria-label={dictionary.indexHome.stats.yearSelectorLabel}
-            className="flex max-w-full items-center overflow-x-auto rounded-lg bg-zinc-100 p-0.5 dark:bg-zinc-800"
+            className="flex max-w-full items-center overflow-x-auto rounded-lg bg-surface-muted p-0.5"
           >
             {availableYears.map((year) => (
               <button
@@ -329,10 +324,10 @@ export default function ContributionCalendar({
                 aria-selected={year === selectedYear}
                 onClick={() => setSelectedYear(year)}
                 className={[
-                  "rounded-md px-2 py-0.5 font-medium transition-all",
+                  "rounded-md px-2 py-0.5 font-medium transition",
                   year === selectedYear
-                    ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-100"
-                    : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300",
+                    ? "bg-surface-panel text-text-primary shadow  "
+                    : "text-text-muted hover:text-text-secondary ",
                 ].join(" ")}
               >
                 {year}
@@ -340,7 +335,6 @@ export default function ContributionCalendar({
             ))}
           </div>
         </div>
-
         <div className="flex items-center gap-2">
           <span>{dictionary.indexHome.stats.less}</span>
           {CELL_LEVEL_CLASS.map((className) => (

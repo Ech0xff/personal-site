@@ -16,7 +16,7 @@ import type {
 function ErrorDirectiveMessage({ message }: { message: string }) {
   return (
     <span
-      className="group relative isolate inline-flex items-center align-middle text-rose-600 dark:text-rose-400"
+      className="group relative isolate inline-flex items-center align-middle text-danger-text "
       title={message}
       aria-label={`Directive error: ${message}`}
     >

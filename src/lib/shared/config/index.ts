@@ -104,17 +104,17 @@ export const providerConfig = {
   [IDENTITY_PROVIDER.EMAIL]: {
     label: "email",
     icon: Link2,
-    color: "bg-zinc-500 text-white",
+    color: "bg-surface-muted text-text-primary",
   },
   [IDENTITY_PROVIDER.GITHUB]: {
     label: "GitHub",
     icon: SvgGithub,
-    color: "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900",
+    color: "bg-surface-inverse text-text-inverse",
   },
   [IDENTITY_PROVIDER.GOOGLE]: {
     label: "Google",
     icon: SvgGoogle,
-    color: "bg-white text-zinc-900",
+    color: "bg-surface-panel text-text-primary",
   },
 } satisfies Record<
   IdentityProvider,

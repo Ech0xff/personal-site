@@ -24,7 +24,6 @@ export default function HeroTypewriter() {
         setCurrentText((prev) => fullText.substring(0, prev.length + 1));
         setTypingSpeed(100);
       }
-
       if (!isDeleting && currentText === fullText) {
         setTypingSpeed(2500);
         setIsDeleting(true);
@@ -41,7 +40,7 @@ export default function HeroTypewriter() {
   return (
     <Stack
       x
-      className="items-center gap-2 font-mono tracking-widest text-gray-500 dark:text-gray-500"
+      className="items-center gap-2 font-mono tracking-widest text-text-muted"
     >
       <Stack x className="items-center gap-1 text-[1.2em] font-black">
         {currentText}

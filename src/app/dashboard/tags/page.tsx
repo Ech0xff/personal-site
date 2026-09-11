@@ -1,97 +1,38 @@
 "use client";
 
-import { Plus, Save, Tags, X } from "lucide-react";
-import { useState } from "react";
-import { z } from "zod";
+import { Plus, Tags } from "lucide-react";
 
 import TagSphere from "#components/features/tags/tag-sphere.component";
+import Button from "#components/ui/button.component";
+import { useModal } from "#components/ui/modal-provider.component";
+import { MODAL_ANCHOR, MODAL_BOUNDARY } from "#components/ui/modal.const";
 import Stack from "#components/ui/stack.component";
 import type { TagWithCount } from "#types";
 
 import DashboardShell from "../_components/layout/dashboard-shell.component";
+import TagEditor from "./_components/tag-editor.component";
 import { useTags } from "./_hooks/tags.hook";
-
-type TagForm = {
-  id?: string;
-  meta: string;
-  name: string;
-};
-
-const jsonObjectSchema = z.record(z.string(), z.json());
-type JsonObject = z.infer<typeof jsonObjectSchema>;
 
 export default function TagsPage() {
   const { tags: displayTags, loading, error, createTag, updateTag } = useTags();
-  const [formError, setFormError] = useState("");
-  const [saving, setSaving] = useState(false);
-  const [tagForm, setTagForm] = useState<TagForm | null>(null);
-  const isEditing = Boolean(tagForm?.id);
+  const { open, close } = useModal();
 
-  const openCreateModal = () => {
-    setFormError("");
-    setTagForm({
-      meta: "{}",
-      name: "",
-    });
-  };
-
-  const openEditModal = (tag: TagWithCount) => {
-    setFormError("");
-    setTagForm({
-      id: tag.id,
-      meta: JSON.stringify(tag.meta, null, 2),
-      name: tag.name,
-    });
-  };
-
-  const closeModal = () => {
-    setFormError("");
-    setTagForm(null);
-  };
-
-  const saveTag = async () => {
-    if (!tagForm) return;
-
-    const name = tagForm.name.trim();
-    if (!name) {
-      setFormError("Name is required.");
-      return;
-    }
-
-    let meta: JsonObject;
-    try {
-      const parsedMeta: unknown = JSON.parse(tagForm.meta || "{}");
-      const result = jsonObjectSchema.safeParse(parsedMeta);
-      if (!result.success) {
-        setFormError("Meta must be a JSON object.");
-        return;
-      }
-      meta = result.data;
-    } catch {
-      setFormError("Meta is not valid JSON.");
-      return;
-    }
-
-    setSaving(true);
-    try {
-      if (tagForm.id) {
-        await updateTag({
-          id: tagForm.id,
-          meta,
-          name,
-        });
-      } else {
-        await createTag({
-          meta,
-          name,
-        });
-      }
-      closeModal();
-    } catch {
-      setFormError("Save failed.");
-    } finally {
-      setSaving(false);
-    }
+  const openEditor = (tag?: TagWithCount) => {
+    const id = open(
+      <TagEditor
+        tag={tag}
+        onClose={() => close(id)}
+        onSave={async (input) => {
+          if (tag) await updateTag({ ...input, id: tag.id });
+          else await createTag(input);
+        }}
+      />,
+      {
+        boundary: MODAL_BOUNDARY.ANCHOR,
+        positionAnchor: MODAL_ANCHOR.DASHBOARD,
+        containerClassName: "p-4",
+      },
+    );
   };
 
   return (
@@ -99,7 +40,7 @@ export default function TagsPage() {
       <Stack y className="flex-1 gap-4">
         <Stack
           x
-          className="items-center justify-between gap-3 rounded-xl border border-(--border-default) bg-(--surface-card) px-4 py-3 text-sm text-(--text-secondary)"
+          className="items-center justify-between gap-3 rounded-xl border border-border-default bg-surface-card px-4 py-3 text-sm text-text-secondary"
         >
           <Stack x className="items-center gap-2">
             <Tags className="h-4 w-4" />
@@ -107,134 +48,23 @@ export default function TagsPage() {
               {displayTags.length} tag{displayTags.length !== 1 ? "s" : ""}
             </span>
           </Stack>
-          <button
-            type="button"
-            onClick={openCreateModal}
-            disabled={saving}
-            className="inline-flex items-center gap-1 rounded border border-(--border-default) px-2 py-1 font-medium text-(--text-secondary) transition-colors hover:border-(--border-strong) hover:bg-(--surface-hover)"
+          <Button
+            variant="secondary"
+            onClick={() => openEditor()}
+            className="gap-1"
           >
             <Plus className="h-4 w-4" />
             Add tag
-          </button>
+          </Button>
         </Stack>
         <div className="grid flex-1 place-items-center overflow-hidden">
           <TagSphere
             className="aspect-square h-full"
-            onTagClick={openEditModal}
+            onTagClick={openEditor}
             tags={displayTags}
           />
         </div>
       </Stack>
-
-      {tagForm ? (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-zinc-950/40 px-4 backdrop-blur-sm">
-          <dialog
-            open
-            className="m-0 flex w-full max-w-md flex-col gap-4 rounded-lg border border-(--border-default) bg-(--surface-panel) p-5 text-inherit shadow-xl"
-            aria-modal="true"
-            aria-label={isEditing ? "Edit tag" : "Add tag"}
-          >
-            <Stack x className="items-center justify-between gap-3">
-              <Stack y>
-                <h2 className="text-lg font-semibold text-(--text-primary)">
-                  {isEditing ? "Edit tag" : "Add tag"}
-                </h2>
-                <p className="text-sm text-(--text-muted)">
-                  Update name and meta fields.
-                </p>
-              </Stack>
-              <button
-                type="button"
-                onClick={closeModal}
-                className="rounded p-1 text-(--text-muted) transition-colors hover:bg-(--surface-hover) hover:text-(--text-primary)"
-                aria-label="Close"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </Stack>
-
-            {tagForm.id ? (
-              <Stack y className="gap-1">
-                <label
-                  htmlFor="tag-id"
-                  className="text-sm font-medium text-(--text-secondary)"
-                >
-                  ID
-                </label>
-                <input
-                  id="tag-id"
-                  value={tagForm.id}
-                  readOnly
-                  className="rounded border border-(--border-default) bg-(--surface-muted) px-3 py-2 text-sm text-(--text-muted) outline-none"
-                />
-              </Stack>
-            ) : null}
-
-            <Stack y className="gap-1">
-              <label
-                htmlFor="tag-name"
-                className="text-sm font-medium text-(--text-secondary)"
-              >
-                Name
-              </label>
-              <input
-                id="tag-name"
-                value={tagForm.name}
-                onChange={(event) =>
-                  setTagForm((form) =>
-                    form ? { ...form, name: event.target.value } : form,
-                  )
-                }
-                className="rounded border border-(--border-default) bg-(--surface-input) px-3 py-2 text-sm text-(--text-primary) transition-colors outline-none focus:border-blue-500"
-                placeholder="Tag name"
-              />
-            </Stack>
-
-            <Stack y className="gap-1">
-              <label
-                htmlFor="tag-meta"
-                className="text-sm font-medium text-(--text-secondary)"
-              >
-                Meta
-              </label>
-              <textarea
-                id="tag-meta"
-                value={tagForm.meta}
-                onChange={(event) =>
-                  setTagForm((form) =>
-                    form ? { ...form, meta: event.target.value } : form,
-                  )
-                }
-                className="min-h-36 resize-y rounded border border-(--border-default) bg-(--surface-input) px-3 py-2 font-mono text-sm text-(--text-primary) transition-colors outline-none focus:border-blue-500"
-                spellCheck={false}
-              />
-            </Stack>
-
-            {formError ? (
-              <p className="text-sm text-red-500">{formError}</p>
-            ) : null}
-
-            <Stack x className="justify-end gap-2">
-              <button
-                type="button"
-                onClick={closeModal}
-                className="rounded border border-(--border-default) px-3 py-2 text-sm text-(--text-secondary) transition-colors hover:bg-(--surface-hover)"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={saveTag}
-                disabled={saving}
-                className="inline-flex items-center gap-2 rounded bg-(--surface-inverse) px-3 py-2 text-sm text-(--text-inverse) transition-colors hover:bg-(--surface-inverse-hover)"
-              >
-                <Save className="h-4 w-4" />
-                {saving ? "Saving..." : "Save"}
-              </button>
-            </Stack>
-          </dialog>
-        </div>
-      ) : null}
     </DashboardShell>
   );
 }

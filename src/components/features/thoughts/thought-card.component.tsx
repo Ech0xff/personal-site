@@ -38,11 +38,8 @@ export default function ThoughtCard({
     <div id={id} className={cn("group scroll-mt-24", className)}>
       {/* Meta Row */}
       <Stack x className="items-center justify-between">
-        <Stack
-          x
-          className="gap-3 font-mono text-xs text-zinc-400 dark:text-zinc-500"
-        >
-          <span className="font-bold text-zinc-500 dark:text-zinc-400">
+        <Stack x className="gap-3 font-mono text-xs text-text-muted">
+          <span className="font-bold text-text-muted">
             #{index ? index : dictionary.thoughtCard.preview}
           </span>
           <span>•</span>
@@ -54,15 +51,12 @@ export default function ThoughtCard({
             )}
           </span>
         </Stack>
-
         <Stack x className="items-center gap-2">
           {renderActions?.(thought)}
         </Stack>
       </Stack>
-
       {/* Content */}
       <ThoughtContent content={thought.content} />
-
       {/* Images Grid */}
       {thought.images.length > 0 && (
         <div
@@ -83,11 +77,8 @@ export default function ThoughtCard({
           ))}
         </div>
       )}
-
       {/* Divider */}
-      {!isLast && (
-        <div className="mt-12 h-px w-full bg-zinc-100 dark:bg-zinc-800/60" />
-      )}
+      {!isLast && <div className="mt-12 h-px w-full bg-border-default" />}
     </div>
   );
 }

@@ -26,7 +26,11 @@ $code-theme-dark: (
   code-regex: #7ee787,
 );
 
-@include emit-themed-vars($code-theme-light, $code-theme-dark);
+@include emit-themed-vars(
+  $code-theme-light,
+  $code-theme-dark,
+  ".pre-render-code-block"
+);
 
 .pre-render-code-block {
   color: var(--code-fg);
@@ -37,7 +41,7 @@ $code-theme-dark: (
     width: 1rem;
     margin-right: 1.5rem;
     text-align: right;
-    color: #8c959f;
+    color: var(--text-muted);
     user-select: none;
   }
 

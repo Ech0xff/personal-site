@@ -54,7 +54,7 @@ function DictionaryForm({
       onDelete={config.hasStoredValue ? config.deleteConfig : undefined}
     >
       <div className="flex min-h-0 flex-1 flex-col gap-3">
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="text-sm text-text-muted">
           Edit only the fields you want to override. Missing fields use
           defaults; Delete restores all defaults. Keep existing placeholders
           such as {"{count}"} when needed.
@@ -92,7 +92,7 @@ function DictionaryForm({
         {parseError && (
           <p
             role="alert"
-            className="max-h-24 overflow-auto text-sm text-red-600 dark:text-red-400"
+            className="max-h-24 overflow-auto text-sm text-danger-text"
           >
             {parseError}
           </p>

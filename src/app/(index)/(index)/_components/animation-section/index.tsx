@@ -32,7 +32,7 @@ export default function AnimationSection() {
       <Stack
         y
         className={cn(
-          "bg-brand-gradient absolute inset-0 h-dvh w-full max-w-full snap-start items-center justify-center overflow-hidden transition-all",
+          "absolute inset-0 h-dvh w-full max-w-full snap-start items-center justify-center overflow-hidden transition-[height]",
           "duration-300 in-data-[scrolled=true]:h-[60svh]",
         )}
       >
@@ -42,27 +42,15 @@ export default function AnimationSection() {
           className="relative flex-1 items-center justify-center text-[clamp(0.6rem,2vw,1.2rem)]"
         >
           <Stack y className="items-center">
-            <h1
-              className="text-center text-[5em]"
-              style={{ fontFamily: '"Titan One", cursive' }}
-            >
+            <h1 className="px-4 text-center font-serif text-[clamp(2.5rem,8vw,6rem)]">
               {dictionary.home.hero}
             </h1>
-
-            <div className="my-2 h-px w-full bg-linear-to-r from-transparent via-gray-300 to-transparent dark:via-gray-700" />
-
+            <div className="my-2 h-px w-full bg-linear-to-r from-transparent via-surface-hover-strong to-transparent" />
             <Typewriter
               key={JSON.stringify(dictionary.home.typing)}
               texts={dictionary.home.typing}
             />
-
-            <div
-              className="mt-8 text-[6em] font-black"
-              style={{
-                fontFamily:
-                  '"Savoye LET", "Snell Roundhand", "Segoe Script", "Gabriola", cursive',
-              }}
-            >
+            <div className="mt-8 px-4 text-center font-handwriting text-[clamp(2rem,7vw,7rem)] leading-tight font-black">
               {dictionary.home.bio}
             </div>
           </Stack>
@@ -70,7 +58,7 @@ export default function AnimationSection() {
       </Stack>
       <div
         className={cn(
-          "h-dvh transition-all duration-300",
+          "h-dvh transition-[height] duration-300",
           "in-data-[scrolled=true]:h-[60svh]",
         )}
       ></div>

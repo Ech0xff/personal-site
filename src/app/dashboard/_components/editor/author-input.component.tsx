@@ -1,8 +1,8 @@
 "use client";
-
 import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
 
+import Input from "#components/ui/input.component";
 import { makeBrowserClient } from "#lib/client/supabase.client";
 import { getUserStatus } from "#lib/shared/auth/session.service";
 
@@ -30,14 +30,15 @@ export default function AuthorInput({ value, onChange, disabled }: Props) {
   }, [onChange, supabase, value]);
 
   return (
-    <div className="flex items-center rounded-lg bg-zinc-100 p-1 dark:bg-zinc-800">
-      <input
+    <div className="flex items-center rounded-lg bg-surface-muted p-1">
+      <Input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         type="text"
         placeholder="Author"
         disabled={disabled}
-        className="w-32 px-3 py-1.5 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 disabled:cursor-not-allowed dark:text-zinc-100 dark:placeholder:text-zinc-300"
+        controlSize="sm"
+        className="w-32 border-0 bg-transparent text-sm"
       />
     </div>
   );

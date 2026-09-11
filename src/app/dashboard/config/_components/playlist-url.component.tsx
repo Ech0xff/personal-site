@@ -1,4 +1,9 @@
+import { useAtomValue } from "jotai";
+
+import Input from "#components/ui/input.component";
+import { resolvedThemeAtom } from "#lib/client/theme.atom";
 import { CONFIG_KEY, generatePlaylistUrl } from "#lib/shared/config";
+import type { ResolvedTheme } from "#lib/shared/theme/theme.type";
 import { cn } from "#lib/shared/utils";
 
 import useConfig from "../_hooks/config.hook";
@@ -8,7 +13,7 @@ const title = "Playlist URL";
 
 function getPreviewUrl(
   value: string,
-  theme: "dark" | "light",
+  theme: ResolvedTheme,
 ): string | undefined {
   const trimmedValue = value.trim();
   if (!trimmedValue) return undefined;
@@ -25,9 +30,8 @@ export default function PlaylistUrl() {
     useConfig({
       key: CONFIG_KEY.PLAYLIST_URL,
     });
-  const lightPreviewUrl = getPreviewUrl(value, "light");
-  const darkPreviewUrl = getPreviewUrl(value, "dark");
-  const hasPreview = Boolean(lightPreviewUrl && darkPreviewUrl);
+  const theme = useAtomValue(resolvedThemeAtom);
+  const previewUrl = getPreviewUrl(value, theme);
 
   return (
     <EditorShell
@@ -39,33 +43,22 @@ export default function PlaylistUrl() {
     >
       <div className={cn("flex flex-1 flex-col gap-4", loading && "opacity-0")}>
         <div className="flex shrink-0 flex-col gap-3 rounded-lg">
-          <input
+          <Input
             value={value}
             onChange={(event) => setValue(event.target.value)}
             placeholder="https://open.spotify.com/playlist/..."
-            className="w-full rounded-lg border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 transition outline-none focus:border-blue-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+            className="w-full"
           />
         </div>
-
-        {hasPreview && lightPreviewUrl && darkPreviewUrl && (
-          <>
-            <iframe
-              title={`${title} dark preview`}
-              allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
-              height="450"
-              className="hidden w-full overflow-hidden rounded-lg border-none dark:block"
-              sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-              src={darkPreviewUrl}
-            />
-            <iframe
-              title={`${title} light preview`}
-              allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
-              height="450"
-              className="w-full overflow-hidden rounded-lg border-none dark:hidden"
-              sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-              src={lightPreviewUrl}
-            />
-          </>
+        {previewUrl && (
+          <iframe
+            title={`${title} preview`}
+            allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
+            height="450"
+            className="w-full overflow-hidden rounded-lg border-none"
+            sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+            src={previewUrl}
+          />
         )}
       </div>
     </EditorShell>

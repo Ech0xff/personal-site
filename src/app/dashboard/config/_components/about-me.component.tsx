@@ -36,7 +36,7 @@ export default function AboutMe() {
             className="h-full min-h-0 overflow-auto"
           />
         </div>
-        <div className="min-h-0 overflow-auto rounded-lg bg-white dark:bg-zinc-950">
+        <div className="min-h-0 overflow-auto rounded-lg bg-surface-panel">
           <ContentRenderer
             content={value || "No content"}
             className="min-h-full p-4"

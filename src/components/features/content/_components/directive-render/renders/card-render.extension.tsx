@@ -9,15 +9,15 @@ function toneClassName(
   switch (tone) {
     case "tip":
     case "success":
-      return "border-emerald-200 bg-emerald-50/80 text-emerald-950 dark:border-emerald-900/60 dark:bg-emerald-950/35 dark:text-emerald-100";
+      return "border-success-border bg-success-bg/80 text-success-text   ";
     case "warn":
-      return "border-amber-200 bg-amber-50/80 text-amber-950 dark:border-amber-900/60 dark:bg-amber-950/35 dark:text-amber-100";
+      return "border-warning-border bg-warning-bg/80 text-warning-text   ";
     case "danger":
-      return "border-rose-200 bg-rose-50/80 text-rose-950 dark:border-rose-900/60 dark:bg-rose-950/35 dark:text-rose-100";
+      return "border-danger-border bg-danger-bg/80 text-danger-text   ";
     case "info":
-      return "border-sky-200 bg-sky-50/80 text-sky-950 dark:border-sky-900/60 dark:bg-sky-950/35 dark:text-sky-100";
+      return "border-info-border bg-info-bg/80 text-info-text   ";
     case undefined:
-      return "border-zinc-200 bg-zinc-50/80 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-100";
+      return "border-border-default bg-surface-muted/80 text-text-primary   ";
   }
 }
 

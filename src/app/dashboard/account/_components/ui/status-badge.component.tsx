@@ -9,8 +9,8 @@ export default function StatusBadge({
 }) {
   const styles =
     type === "success"
-      ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-400"
-      : "border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400";
+      ? "border-success-border bg-success-bg text-success-text   "
+      : "border-danger-border bg-danger-bg text-danger-text   ";
   const Icon = type === "success" ? Check : AlertTriangle;
 
   return (

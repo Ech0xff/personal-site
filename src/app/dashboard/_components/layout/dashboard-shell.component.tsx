@@ -1,8 +1,8 @@
 "use client";
-
 import { Loader2 } from "lucide-react";
 import type { ComponentPropsWithoutRef } from "react";
 
+import { MODAL_ANCHOR } from "#components/ui/modal.const";
 import Stack from "#components/ui/stack.component";
 import { cn } from "#lib/shared/utils";
 
@@ -29,7 +29,7 @@ export default function DashboardShell({
   if (loading) {
     return (
       <Stack x className="flex-1 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-text-muted" />
       </Stack>
     );
   }
@@ -40,7 +40,7 @@ export default function DashboardShell({
         {errorRender ? (
           errorRender
         ) : (
-          <span className="text-zinc-500">
+          <span className="text-text-muted">
             An error occurred while loading data.
           </span>
         )}
@@ -52,13 +52,11 @@ export default function DashboardShell({
     <Stack
       y
       {...props}
-      style={{ anchorName: "--dashboard" }}
+      style={{ anchorName: MODAL_ANCHOR.DASHBOARD }}
       className={cn("relative flex-1 overflow-hidden *:p-4", className)}
     >
       <Stack x className="items-center justify-between">
-        <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-          {title}
-        </h2>
+        <h2 className="text-2xl font-bold text-text-primary">{title}</h2>
         {optActions && <div>{optActions}</div>}
       </Stack>
       <Stack y className="flex-1 overflow-auto">

@@ -4,7 +4,10 @@ import { Check, Copy } from "lucide-react";
 import { type ButtonHTMLAttributes, useState } from "react";
 import { toast } from "sonner";
 
+import { useDictionary } from "#dictionary";
 import { cn } from "#lib/shared/utils";
+
+import Button from "./button.component";
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   content?: string;
@@ -17,14 +20,19 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export default function CopyButton({
   content,
-  idleLabel = "Copy",
-  copiedLabel = "Copied",
-  emptyMessage = "Nothing to copy.",
+  idleLabel: customIdleLabel,
+  copiedLabel: customCopiedLabel,
+  emptyMessage: customEmptyMessage,
   successMessage,
-  errorMessage = "Failed to copy.",
+  errorMessage: customErrorMessage,
   className,
   ...props
 }: Props) {
+  const dictionary = useDictionary();
+  const idleLabel = customIdleLabel ?? dictionary.common.copy;
+  const copiedLabel = customCopiedLabel ?? dictionary.common.copied;
+  const emptyMessage = customEmptyMessage ?? dictionary.common.nothingToCopy;
+  const errorMessage = customErrorMessage ?? dictionary.common.copyFailed;
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -44,26 +52,21 @@ export default function CopyButton({
   };
 
   return (
-    <button
-      type="button"
+    <Button
+      variant="ghost"
+      size="sm"
       onClick={handleCopy}
       title={idleLabel}
       aria-label={idleLabel}
-      className={cn(
-        "inline-flex shrink-0    items-center  gap-1.5 rounded-md px-2 py-1 font-medium transition-colors hover:bg-(--surface-hover) focus:outline-none",
-        className,
-      )}
+      className={cn("gap-1.5", className)}
       {...props}
     >
       {copied ? (
-        <>
-          <Check className="size-[1em]" /> {copiedLabel}
-        </>
+        <Check className="size-[1em]" />
       ) : (
-        <>
-          <Copy className="size-[1em]" /> {idleLabel}
-        </>
+        <Copy className="size-[1em]" />
       )}
-    </button>
+      {copied ? copiedLabel : idleLabel}
+    </Button>
   );
 }

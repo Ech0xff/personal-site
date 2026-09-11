@@ -1,9 +1,9 @@
 "use client";
-
 import { Edit, Eye, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import Link from "#components/shared/link.component";
+import IconButton from "#components/ui/icon-button.component";
 import { deletePostByBrowser } from "#lib/client/services";
 
 interface PostActionsProps {
@@ -37,27 +37,28 @@ export default function PostActions({
     <>
       <Link
         href={`/posts/${postId}`}
-        className="rounded p-1.5 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
+        className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-muted hover:text-text-secondary"
         title="View"
       >
         <Eye className="h-4 w-4" />
       </Link>
-      <button
-        type="button"
+      <IconButton
+        size="sm"
         onClick={() => openEditor(postId)}
-        className="rounded p-1.5 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
         title="Edit"
+        aria-label="Edit"
       >
         <Edit className="h-4 w-4" />
-      </button>
-      <button
-        type="button"
+      </IconButton>
+      <IconButton
+        size="sm"
+        className="text-text-muted hover:bg-danger-bg hover:text-danger-text"
         onClick={handleDelete}
-        className="rounded p-1.5 text-zinc-400 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
         title="Delete"
+        aria-label="Delete"
       >
         <Trash2 className="h-4 w-4" />
-      </button>
+      </IconButton>
     </>
   );
 }

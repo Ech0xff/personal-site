@@ -1,57 +1,88 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { toMerged } from "es-toolkit";
+import { useReducedMotion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { match } from "ts-pattern";
 
 import Stack from "#components/ui/stack.component";
 
+type TypewriterPhase = (typeof PHASE)[keyof typeof PHASE];
+
+type TypewriterState = Readonly<{
+  currentIndex: number;
+  currentText: string;
+  phase: TypewriterPhase;
+}>;
+
+const PHASE = {
+  typing: "typing",
+  holding: "holding",
+  deleting: "deleting",
+  waiting: "waiting",
+} as const;
+
+const INITIAL_STATE: TypewriterState = {
+  currentIndex: 0,
+  currentText: "",
+  phase: "typing",
+};
+
+const PHASE_DELAY = {
+  typing: 100,
+  holding: 2500,
+  deleting: 50,
+  waiting: 500,
+} as const satisfies Readonly<Record<TypewriterPhase, number>>;
+
 export default function Typewriter({ texts }: { texts: string[] }) {
-  const typingTexts = useMemo(() => texts, [texts]);
-  const typingTextCount = typingTexts.length;
-  const [currentText, setCurrentText] = useState("");
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [typingSpeed, setTypingSpeed] = useState(100);
+  const reducedMotion = useReducedMotion();
+  const textCount = texts.length;
+  const [state, setState] = useState<TypewriterState>(INITIAL_STATE);
+  const fullText = texts[state.currentIndex] ?? "";
 
   useEffect(() => {
-    if (typingTextCount === 0) return;
-
-    const fullText = typingTexts[currentIndex] || "";
+    if (reducedMotion || textCount === 0) return;
 
     const timer = setTimeout(() => {
-      if (isDeleting) {
-        setCurrentText((prev) => prev.substring(0, prev.length - 1));
-        setTypingSpeed(50);
-      } else {
-        setCurrentText((prev) => fullText.substring(0, prev.length + 1));
-        setTypingSpeed(100);
-      }
+      setState((state) => {
+        const { phase, currentText } = state;
+        return match(phase)
+          .with(PHASE.typing, () =>
+            toMerged(state, {
+              currentText: fullText.slice(0, currentText.length + 1),
+              phase: currentText === fullText ? PHASE.holding : PHASE.typing,
+            }),
+          )
+          .with(PHASE.holding, () =>
+            toMerged(state, {
+              phase: PHASE.deleting,
+            }),
+          )
+          .with(PHASE.deleting, () =>
+            toMerged(state, {
+              currentText: currentText.slice(0, -1),
+              phase: !currentText.length ? PHASE.waiting : PHASE.deleting,
+            }),
+          )
+          .with(PHASE.waiting, () => ({
+            currentIndex: (state.currentIndex + 1) % textCount,
+            currentText: "",
+            phase: PHASE.typing,
+          }))
+          .exhaustive();
+      });
+    }, PHASE_DELAY[state.phase]);
 
-      if (!isDeleting && currentText === fullText) {
-        setTypingSpeed(2500);
-        setIsDeleting(true);
-      } else if (isDeleting && currentText === "") {
-        setIsDeleting(false);
-        setCurrentIndex((prev) => (prev + 1) % typingTextCount);
-        setTypingSpeed(500);
-      }
-    }, typingSpeed);
-
-    return () => clearTimeout(timer);
-  }, [
-    currentText,
-    isDeleting,
-    currentIndex,
-    typingSpeed,
-    typingTexts,
-    typingTextCount,
-  ]);
+    return () => window.clearTimeout(timer);
+  }, [reducedMotion, state, textCount, fullText]);
 
   return (
     <Stack
       x
-      className="items-center gap-2 font-mono tracking-widest text-gray-500 dark:text-gray-500"
+      className="items-center gap-2 font-mono tracking-widest text-text-muted"
     >
       <div className="flex items-center gap-1 text-[1.2em] font-black">
-        {currentText}
+        {reducedMotion ? texts[0] : state.currentText}
         <span className="typing-cursor">▋</span>
       </div>
     </Stack>

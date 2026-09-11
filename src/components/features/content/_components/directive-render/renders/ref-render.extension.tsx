@@ -56,9 +56,9 @@ function render({ attributes, children }: RenderProps) {
     <a
       className={cn(
         "inline rounded-md align-baseline font-medium whitespace-nowrap no-underline transition-colors",
-        "text-sky-700 decoration-sky-500/60 underline-offset-4 hover:text-sky-800 hover:underline",
-        "focus-visible:ring-2 focus-visible:ring-sky-500/40 focus-visible:outline-none",
-        "dark:text-sky-300 dark:decoration-sky-300/60 dark:hover:text-sky-200",
+        "text-info-text decoration-info-border/60 underline-offset-4 hover:text-info-text hover:underline",
+        "focus-visible:ring-2 focus-visible:ring-info-border/40 focus-visible:outline-none",
+        "  ",
       )}
       href={href}
       target="_blank"

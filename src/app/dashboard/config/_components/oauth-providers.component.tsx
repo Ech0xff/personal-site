@@ -1,3 +1,4 @@
+import Button from "#components/ui/button.component";
 import {
   CONFIG_KEY,
   OAUTH_PROVIDERS,
@@ -45,18 +46,16 @@ export default function OauthProviders() {
           const config = providerConfig[provider];
           const Icon = config.icon;
           const enabled = providers.includes(provider);
-
           return (
-            <button
+            <Button
+              variant="ghost"
               key={provider}
-              type="button"
               onClick={() => toggleProvider(provider)}
               aria-label={`${enabled ? "Disable" : "Enable"} ${config.label}`}
               aria-pressed={enabled}
               className={cn(
-                "flex items-center justify-between rounded-2xl border border-zinc-200 bg-white px-5 py-4 text-left transition hover:border-blue-300 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-blue-700 dark:hover:bg-zinc-900",
-                enabled &&
-                  "border-blue-500 bg-blue-50/70 dark:border-blue-600 dark:bg-blue-950/20",
+                "h-auto justify-between rounded-2xl border-border-default bg-surface-panel px-5 py-4 text-left font-normal hover:border-info-border",
+                enabled && "border-info-border bg-info-bg/70  ",
               )}
             >
               <div className="flex items-center gap-4">
@@ -69,29 +68,28 @@ export default function OauthProviders() {
                   <Icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="font-medium text-zinc-900 dark:text-zinc-100">
+                  <p className="font-medium text-text-primary">
                     {config.label}
                   </p>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                  <p className="text-sm text-text-muted">
                     {enabled ? "Enabled globally" : "Disabled globally"}
                   </p>
                 </div>
               </div>
-
               <div
                 className={cn(
                   "relative h-7 w-12 rounded-full transition",
-                  enabled ? "bg-blue-600" : "bg-zinc-300 dark:bg-zinc-700",
+                  enabled ? "bg-primary-bg" : "bg-surface-hover-strong ",
                 )}
               >
                 <span
                   className={cn(
-                    "absolute top-1 left-1 h-5 w-5 rounded-full bg-white transition-transform",
+                    "absolute top-1 left-1 h-5 w-5 rounded-full bg-primary-fg transition-transform",
                     enabled && "translate-x-5",
                   )}
                 />
               </div>
-            </button>
+            </Button>
           );
         })}
       </div>

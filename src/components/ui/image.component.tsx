@@ -38,9 +38,9 @@ export default function Image({
     <div
       {...props}
       className={cn(
-        "group/lightbox relative w-full transition-all",
+        "group/lightbox relative w-full transition",
         framed
-          ? "rounded-lg border border-zinc-200 bg-zinc-100 hover:border-zinc-300 dark:border-zinc-700/50 dark:bg-zinc-800 dark:hover:border-zinc-600"
+          ? "rounded-lg border border-border-default bg-surface-muted hover:border-border-strong   "
           : "rounded-none border-none bg-transparent",
         isFluid ? "" : "aspect-square",
         "overflow-hidden",
@@ -75,7 +75,6 @@ export default function Image({
           <div className="pointer-events-none absolute inset-0 bg-black/0 transition-colors group-hover/lightbox:bg-black/10" />
         ) : null}
       </button>
-
       {actionRender?.()}
     </div>
   );

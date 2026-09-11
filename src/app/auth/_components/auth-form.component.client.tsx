@@ -5,6 +5,9 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import Button from "#components/ui/button.component";
+import Input from "#components/ui/input.component";
+import SegmentedToggle from "#components/ui/segmented-toggle.component";
 import { useDictionary } from "#dictionary";
 import { makeBrowserClient } from "#lib/client/supabase.client";
 import { type OAuthProvider, providerConfig } from "#lib/shared/config";
@@ -34,6 +37,7 @@ export default function AuthForm({ oauthProviders }: Props) {
   const router = useRouter();
   const dictionary = useDictionary();
   const [mode, setModeState] = useState<Mode>("login");
+  const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState<AuthForm>(initialForm);
 
   const updateForm = (updates: Partial<AuthForm>) => {
@@ -133,7 +137,13 @@ export default function AuthForm({ oauthProviders }: Props) {
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await handleSubmit();
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      await handleSubmit();
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -150,32 +160,16 @@ export default function AuthForm({ oauthProviders }: Props) {
             : dictionary.auth.signUpForNewAccount}
         </p>
       </div>
-
-      <div className="mb-6 flex rounded-lg bg-(--surface-muted) p-1">
-        <button
-          type="button"
-          onClick={() => setMode("login")}
-          className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 ${
-            mode === "login"
-              ? "bg-(--surface-selected) text-(--text-primary) shadow-sm"
-              : "text-(--text-muted) hover:text-(--text-secondary)"
-          }`}
-        >
-          {dictionary.auth.signIn}
-        </button>
-        <button
-          type="button"
-          onClick={() => setMode("register")}
-          className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 ${
-            mode === "register"
-              ? "bg-(--surface-selected) text-(--text-primary) shadow-sm"
-              : "text-(--text-muted) hover:text-(--text-secondary)"
-          }`}
-        >
-          {dictionary.auth.signUp}
-        </button>
-      </div>
-
+      <SegmentedToggle
+        value={mode}
+        onChange={setMode}
+        options={[
+          { value: "login", label: dictionary.auth.signIn },
+          { value: "register", label: dictionary.auth.signUp },
+        ]}
+        className="mb-6 w-full"
+        buttonClassName="flex-1"
+      />
       <form onSubmit={onSubmit} className="space-y-6">
         <div>
           <label
@@ -184,19 +178,18 @@ export default function AuthForm({ oauthProviders }: Props) {
           >
             {dictionary.auth.email}
           </label>
-          <input
+          <Input
             id="email"
             name="email"
             type="email"
             placeholder={dictionary.auth.enterYourEmail}
-            className="w-full rounded-lg border border-(--border-strong) bg-(--surface-input) px-4 py-3 text-(--text-primary) transition-all duration-200 placeholder:text-(--text-placeholder) focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="w-full"
             required
             autoFocus
             value={form.email}
             onChange={(event) => updateForm({ email: event.target.value })}
           />
         </div>
-
         <div>
           <label
             htmlFor="password"
@@ -204,18 +197,17 @@ export default function AuthForm({ oauthProviders }: Props) {
           >
             {dictionary.auth.password}
           </label>
-          <input
+          <Input
             id="password"
             name="password"
             type="password"
             placeholder={dictionary.auth.enterYourPassword}
-            className="w-full rounded-lg border border-(--border-strong) bg-(--surface-input) px-4 py-3 text-(--text-primary) transition-all duration-200 placeholder:text-(--text-placeholder) focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="w-full"
             required
             value={form.password}
             onChange={(event) => updateForm({ password: event.target.value })}
           />
         </div>
-
         {mode === "register" && (
           <div>
             <label
@@ -224,12 +216,12 @@ export default function AuthForm({ oauthProviders }: Props) {
             >
               {dictionary.auth.confirmPassword}
             </label>
-            <input
+            <Input
               id="confirmPassword"
               name="confirmPassword"
               type="password"
               placeholder={dictionary.auth.repeatYourPassword}
-              className="w-full rounded-lg border border-(--border-strong) bg-(--surface-input) px-4 py-3 text-(--text-primary) transition-all duration-200 placeholder:text-(--text-placeholder) focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="w-full"
               required
               value={form.confirmPassword}
               onChange={(event) =>
@@ -238,15 +230,10 @@ export default function AuthForm({ oauthProviders }: Props) {
             />
           </div>
         )}
-
-        <button
-          type="submit"
-          className="w-full rounded-lg bg-blue-600 px-4 py-3 font-medium text-white transition-all duration-200 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-        >
+        <Button type="submit" className="w-full" loading={submitting}>
           {mode === "login" ? dictionary.auth.signIn : dictionary.auth.signUp}
-        </button>
+        </Button>
       </form>
-
       {oauthProviders.length > 0 && (
         <>
           <div className="my-6 flex items-center gap-4">
@@ -256,23 +243,22 @@ export default function AuthForm({ oauthProviders }: Props) {
             </span>
             <div className="h-px flex-1 bg-(--border-default)" />
           </div>
-
           <div className="flex flex-col gap-3">
             {oauthProviders.map((provider) => {
               const config = providerConfig[provider];
               const Icon = config.icon;
               return (
-                <button
+                <Button
                   key={provider}
-                  type="button"
+                  variant="secondary"
                   onClick={() => void handleLoginWithOauth(provider)}
-                  className="flex w-full items-center justify-center gap-3 rounded-lg border border-(--border-strong) bg-(--surface-input) px-4 py-3 font-medium text-(--text-primary) transition-all duration-200 hover:bg-(--surface-hover)"
+                  className="w-full gap-3"
                 >
                   <Icon className="h-5 w-5" />
                   {formatMessage(dictionary.auth.continueWith, {
                     provider: config.label,
                   })}
-                </button>
+                </Button>
               );
             })}
           </div>

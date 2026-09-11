@@ -19,11 +19,11 @@ import { usePosts } from "./_hooks/posts.hook";
 
 const th = (title: string[]) => {
   return (
-    <tr className="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
+    <tr className="border-b border-border-default bg-surface-muted dark:bg-surface-card">
       {title.map((item) => (
         <th
           key={item}
-          className="px-6 py-3 text-center text-xs font-medium tracking-wider whitespace-nowrap text-zinc-500 uppercase dark:text-zinc-400"
+          className="px-6 py-3 text-center text-xs font-medium tracking-wider whitespace-nowrap text-text-muted uppercase"
         >
           {item}
         </th>
@@ -73,21 +73,21 @@ export default function Page() {
     >
       <Stack y>
         {/* Posts Table */}
-        <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="overflow-hidden rounded-xl border border-border-default bg-surface-card">
           <table className="w-full table-auto">
             <thead>
               {th(["Title", "Tags", "Status", "Published At", "Actions"])}
             </thead>
-            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
+            <tbody className="divide-y divide-border-default">
               {posts.map((post) => (
                 <tr
                   key={post.id}
-                  className="transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+                  className="transition-colors hover:bg-surface-muted"
                 >
                   {td(
                     <Link
                       href={`/posts/${post.id}`}
-                      className="font-medium text-zinc-900 transition-colors hover:text-blue-600 dark:text-zinc-100 dark:hover:text-blue-400"
+                      className="font-medium text-text-primary transition-colors hover:text-info-text"
                     >
                       {post.title}
                     </Link>,
@@ -105,7 +105,7 @@ export default function Page() {
                   )}
                   {td(
                     formatTime(post.published_at, "MMM D, YYYY"),
-                    "text-sm text-zinc-500 dark:text-zinc-400",
+                    "text-sm text-text-muted ",
                   )}
                   {td(
                     <PostActions

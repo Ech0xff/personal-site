@@ -1,8 +1,10 @@
 import { Edit, Save, Upload, X } from "lucide-react";
 
 import ThoughtCard from "#components/features/thoughts/thought-card.component";
+import Button from "#components/ui/button.component";
 import { MarkdownEditor } from "#components/ui/codemirror";
 import DropdownPopover from "#components/ui/dropdown-popover.component";
+import IconButton from "#components/ui/icon-button.component";
 import Image from "#components/ui/image.component";
 import SegmentedToggle from "#components/ui/segmented-toggle.component";
 import Stack from "#components/ui/stack.component";
@@ -38,9 +40,9 @@ export default function ThoughtEditor({
   } = useThoughtEditor({ id, onSaved, onClose });
 
   return (
-    <Stack y className={cn("min- bg-white dark:bg-zinc-900", className)}>
+    <Stack y className={cn("min-h-0 bg-surface-card", className)}>
       {isLoading ? (
-        <div className="flex flex-1 items-center justify-center text-zinc-500">
+        <div className="flex flex-1 items-center justify-center text-text-muted">
           Loading...
         </div>
       ) : (
@@ -49,15 +51,15 @@ export default function ThoughtEditor({
             <DropdownPopover
               className="md:hidden"
               trigger={
-                <button type="button" className="duration-300 hover:scale-110">
+                <IconButton aria-label="Edit">
                   <Edit className="h-6 w-6" />
-                </button>
+                </IconButton>
               }
             >
               <Stack y className="gap-1">
                 <Stack x className="w-full justify-between gap-1">
-                  <button
-                    type="button"
+                  <Button
+                    variant="ghost"
                     className="ml-3"
                     onClick={(e) => {
                       e.stopPropagation();
@@ -66,7 +68,7 @@ export default function ThoughtEditor({
                     disabled={isPending}
                   >
                     <Upload />
-                  </button>
+                  </Button>
                   <AuthorInput
                     value={form.author}
                     onChange={(value) => updateForm({ author: value })}
@@ -125,7 +127,6 @@ export default function ThoughtEditor({
                   { value: "show", label: "Show" },
                 ]}
               />
-
               <DateTimeInput
                 className="duration-300 hover:scale-110"
                 value={form.published_at}
@@ -133,21 +134,12 @@ export default function ThoughtEditor({
                 disabled={isPending}
               />
             </Stack>
-            <button
-              type="button"
-              onClick={handleSubmit}
-              className="duration-300 hover:scale-110"
-            >
+            <IconButton onClick={handleSubmit} aria-label="Save">
               <Save className="h-6 w-6" />
-            </button>
-
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
-            >
+            </IconButton>
+            <IconButton onClick={onClose} className="gap-1" aria-label="Close">
               <X className="h-8 w-8" />
-            </button>
+            </IconButton>
           </HeaderSection>
           <Stack y divide={true} className="flex-1 overflow-hidden">
             {/* Main Editor Area */}
@@ -179,16 +171,16 @@ export default function ThoughtEditor({
                         src={url}
                         alt={`Image ${index + 1}`}
                         actionRender={() => (
-                          <button
-                            type="button"
+                          <IconButton
                             onClick={(e) => {
                               e.stopPropagation();
                               removeImage(index);
                             }}
-                            className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-all group-hover/lightbox:opacity-100 hover:bg-red-600"
+                            className="absolute top-1 right-1 h-5 w-5 rounded-full opacity-0 transition group-focus-within/lightbox:opacity-100 group-hover/lightbox:opacity-100"
+                            aria-label="Close"
                           >
                             <X className="h-3 w-3" />
-                          </button>
+                          </IconButton>
                         )}
                       />
                     ))}
@@ -209,7 +201,6 @@ export default function ThoughtEditor({
                 />
               </Stack>
             </Stack>
-
             {/* Preview */}
             <ThoughtCard
               className={cn("overflow-y-auto p-4", {

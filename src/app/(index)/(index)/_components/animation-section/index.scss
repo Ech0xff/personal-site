@@ -10,7 +10,11 @@ $grid-theme-dark: (
   grid-sub: rgba(244, 244, 245, 0.03),
 );
 
-@include emit-themed-vars($grid-theme-light, $grid-theme-dark);
+@include emit-themed-vars(
+  $grid-theme-light,
+  $grid-theme-dark,
+  ".grid-background"
+);
 
 @keyframes scroll-grid {
   0% {

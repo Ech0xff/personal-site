@@ -21,7 +21,7 @@ export default function PostCard({ post, className }: Props) {
     <Link
       href={`/posts/${id}`}
       className={cn(
-        "group flex items-center rounded-r-lg border-l-2 border-gray-200 py-2 pl-6 hover:border-blue-500 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-zinc-900/50",
+        "group flex items-center rounded-r-lg border-l-2 border-border-default py-2 pl-6 hover:border-info-border hover:bg-surface-muted  ",
         className,
       )}
     >
@@ -30,7 +30,7 @@ export default function PostCard({ post, className }: Props) {
         <span className="mx-4 min-w-0 truncate whitespace-nowrap">{title}</span>
         <TagsList className="mr-2 hidden sm:flex" tags={post.tags} />
         {/* Date */}
-        <span className="ml-auto w-28 shrink-0 text-sm whitespace-nowrap text-gray-400">
+        <span className="ml-auto w-28 shrink-0 text-sm whitespace-nowrap text-text-muted">
           {formatTime(
             published_at,
             "MMM D, YYYY",

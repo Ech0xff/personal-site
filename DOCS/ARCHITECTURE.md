@@ -69,6 +69,23 @@ browser RPC calls stay in client services. Shared theme logic lives in
 `lib/shared/theme`, with browser state in `lib/client/theme.atom.ts`; routes live
 in `lib/shared/routes`.
 
+The theme atom owns preference persistence, system and storage listeners, and
+HTML theme attributes through a single update path. Subscribing to either theme
+atom mounts these listeners; the last unsubscribe removes them. Storage is read
+on mount, while ordinary atom reads use in-memory state. The pre-paint
+`ThemeScript` applies the initial appearance before React mounts.
+
 Thought image URLs are deduplicated at service read/write boundaries and in
 upload state, preserving first occurrence and order so URLs can serve as keys.
 Recent-plan row IDs exist only in editor state and are omitted when saving.
+
+Dashboard editors fill their modal boundary and use a flat `Stack` surface.
+`ModalPanel` is reserved for floating panels. Inline destructive actions use
+transparent icon buttons with danger colors on hover; configuration delete
+buttons retain their filled treatment. List rows keep content-driven height
+rather than inheriting the fixed height of ordinary buttons.
+
+Tag editors use the dashboard-anchored modal boundary. A continuous saturation
+and brightness palette, hue slider, and hex input update only `meta.color`,
+preserving other metadata fields. Modal focus follows the active entry ID and
+returns to its opener, even while a removed layer is animating out.

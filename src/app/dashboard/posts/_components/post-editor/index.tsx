@@ -1,8 +1,11 @@
 import { Edit, Eye, Save, X } from "lucide-react";
 
 import { PostContent } from "#components/features/content";
+import Button from "#components/ui/button.component";
 import { MarkdownEditor } from "#components/ui/codemirror";
 import DropdownPopover from "#components/ui/dropdown-popover.component";
+import IconButton from "#components/ui/icon-button.component";
+import Input from "#components/ui/input.component";
 import SegmentedToggle from "#components/ui/segmented-toggle.component";
 import Stack from "#components/ui/stack.component";
 import { cn } from "#lib/shared/utils";
@@ -42,12 +45,14 @@ export default function PostEditor({
   return (
     <Stack
       y
-      divide={true}
-      className={cn("bg-white dark:bg-zinc-900", className)}
+      className={cn(
+        "divide-y divide-border-default bg-surface-card",
+        className,
+      )}
     >
       {/* Top Toolbar */}
       {isLoading ? (
-        <div className="flex flex-1 items-center justify-center text-zinc-500">
+        <div className="flex flex-1 items-center justify-center text-text-muted">
           Loading...
         </div>
       ) : (
@@ -56,9 +61,9 @@ export default function PostEditor({
             <DropdownPopover
               className="md:hidden"
               trigger={
-                <button type="button" className="duration-300 hover:scale-110">
+                <IconButton aria-label="Edit">
                   <Edit className="h-6 w-6" />
-                </button>
+                </IconButton>
               }
             >
               <Stack y className="gap-1">
@@ -95,14 +100,12 @@ export default function PostEditor({
                 />
               </Stack>
             </DropdownPopover>
-
             <Stack x className="hidden gap-2 md:flex">
               <AuthorInput
                 value={form.author}
                 onChange={(value) => updateForm({ author: value })}
                 disabled={isPending}
               />
-
               <SegmentedToggle
                 value={viewMode}
                 onChange={setViewMode}
@@ -112,7 +115,6 @@ export default function PostEditor({
                   { value: "preview", label: "Preview" },
                 ]}
               />
-
               <SegmentedToggle
                 value={form.status}
                 onChange={(value) => updateForm({ status: value })}
@@ -121,7 +123,6 @@ export default function PostEditor({
                   { value: "show", label: "Show" },
                 ]}
               />
-
               <DateTimeInput
                 className="duration-300 hover:scale-110"
                 value={form.published_at}
@@ -129,28 +130,24 @@ export default function PostEditor({
                 disabled={isPending}
               />
             </Stack>
-
             {/* Save Button */}
-            <button
-              type="button"
+            <IconButton
               onClick={handleSubmit}
-              disabled={isPending}
-              className="duration-300 hover:scale-110 disabled:opacity-50"
+              loading={isPending}
+              aria-label="Save"
             >
               <Save className="h-6 w-6" />
-            </button>
-
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
-            >
+            </IconButton>
+            <IconButton onClick={onClose} className="gap-1" aria-label="Close">
               <X className="h-8 w-8" />
-            </button>
+            </IconButton>
           </HeaderSection>
-
           {/* Main Editor Area */}
-          <Stack x divide={true} className="min-h-0 flex-1 gap-0">
+          <Stack
+            x
+            divide={true}
+            className="min-h-0 flex-1 flex-col gap-0 overflow-auto md:flex-row"
+          >
             {/* Left: Editor Panel */}
             <Stack
               y
@@ -159,28 +156,27 @@ export default function PostEditor({
                 viewMode === "preview"
                   ? "hidden"
                   : viewMode === "split"
-                    ? "w-1/2"
+                    ? "h-1/2 min-h-64 w-full shrink-0 md:h-auto md:min-h-0 md:w-1/2"
                     : "flex-1"
               }`}
             >
               {/* Editor Header */}
               <Stack y className="shrink-0 gap-3 p-4">
                 {/* Title Input */}
-                <input
+                <Input
                   value={form.title}
                   onChange={(e) => updateForm({ title: e.target.value })}
                   type="text"
                   placeholder="Enter post title..."
-                  className="w-full border-none text-xl font-semibold text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
+                  className="w-full border-none bg-transparent px-0 text-xl font-semibold"
                 />
-
                 {/* Tags */}
                 <Stack x className="flex-wrap items-center gap-4">
                   <Stack
                     x
                     className="min-w-0 flex-1 flex-wrap items-center gap-2"
                   >
-                    <span className="shrink-0 text-sm text-zinc-500">
+                    <span className="shrink-0 text-sm text-text-muted">
                       Tags:
                     </span>
                     <Stack
@@ -190,16 +186,18 @@ export default function PostEditor({
                       {form.tags.map((tag, index) => (
                         <span
                           key={tag}
-                          className="flex shrink-0 items-center gap-1 rounded bg-zinc-100 px-2 py-0.5 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+                          className="flex shrink-0 items-center gap-1 rounded bg-surface-muted px-2 py-0.5 text-sm text-text-secondary"
                         >
                           #{tag}
-                          <button
-                            type="button"
+                          <Button
+                            variant="ghost"
+                            className="h-auto border-0 p-0 text-text-muted hover:bg-transparent hover:text-danger-text"
+                            aria-label="Remove tag"
+                            size="sm"
                             onClick={() => removeTag(index)}
-                            className="transition-colors hover:text-red-500"
                           >
                             ×
-                          </button>
+                          </Button>
                         </span>
                       ))}
                       <TagSelector
@@ -215,9 +213,7 @@ export default function PostEditor({
                   </Stack>
                 </Stack>
               </Stack>
-
               {/* Content Editor */}
-
               <MarkdownEditor
                 value={form.content}
                 mode="live"
@@ -226,52 +222,46 @@ export default function PostEditor({
                 placeholder="Write your post content using Markdown..."
               />
             </Stack>
-
             {/* Right: Preview Panel */}
             <Stack
               y
               divide={true}
-              className={`flex flex-col overflow-hidden transition-all *:p-4 ${
+              className={`flex flex-col overflow-hidden transition *:p-4 ${
                 viewMode === "edit"
                   ? "hidden"
                   : viewMode === "split"
-                    ? "w-1/2"
+                    ? "h-1/2 min-h-64 w-full shrink-0 md:h-auto md:min-h-0 md:w-1/2"
                     : "flex-1"
               }`}
             >
               {/* Preview Header */}
-              <Stack x className="items-center gap-2 text-sm text-zinc-500">
+              <Stack x className="items-center gap-2 text-sm text-text-muted">
                 <Eye className="h-4 w-4" />
                 Preview
               </Stack>
-
               {/* Preview Content */}
               <div className="min-h-0 flex-1 overflow-auto">
                 {/* Preview Title */}
                 {form.title ? (
-                  <h1 className="mb-4 text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+                  <h1 className="mb-4 text-2xl font-bold text-text-primary">
                     {form.title}
                   </h1>
                 ) : (
-                  <h1 className="mb-4 text-2xl text-zinc-400 italic">
+                  <h1 className="mb-4 text-2xl text-text-muted italic">
                     Untitled
                   </h1>
                 )}
-
                 {/* Preview Meta */}
                 {(form.author || form.tags.length > 0) && (
                   <Stack
                     x
-                    className="mb-6 items-center gap-3 text-sm text-zinc-500"
+                    className="mb-6 items-center gap-3 text-sm text-text-muted"
                   >
                     {form.author && <span>{form.author}</span>}
                     {form.tags.length > 0 && (
                       <Stack x className="items-center gap-1">
                         {form.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="text-blue-600 dark:text-blue-400"
-                          >
+                          <span key={tag} className="text-info-text">
                             #{tag}
                           </span>
                         ))}
@@ -279,12 +269,11 @@ export default function PostEditor({
                     )}
                   </Stack>
                 )}
-
                 {/* Markdown Content Preview */}
                 {form.content ? (
                   <PostContent content={form.content} />
                 ) : (
-                  <p className="text-sm text-zinc-400 italic">
+                  <p className="text-sm text-text-muted italic">
                     Start writing and the preview will appear here...
                   </p>
                 )}
