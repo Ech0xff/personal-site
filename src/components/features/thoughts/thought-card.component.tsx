@@ -1,7 +1,8 @@
 import ThoughtContent from "#components/features/content/thought-content.component";
 import Image from "#components/ui/image.component";
 import Stack from "#components/ui/stack.component";
-import { useT } from "#i18n";
+import { useDictionary } from "#dictionary";
+import { formatMessage } from "#lib/shared/dictionary/dictionary.helper";
 import { formatTime } from "#lib/shared/utils/date.helper";
 import { cn } from "#lib/shared/utils/tailwind.helper";
 import type { Status } from "#types";
@@ -31,9 +32,7 @@ export default function ThoughtCard({
   isLast = true,
   renderActions,
 }: Props) {
-  const translator = useT();
-  const tCommon = translator.scope((d) => d.common);
-  const tThoughtCard = translator.scope((d) => d.thoughtCard);
+  const dictionary = useDictionary();
 
   return (
     <div id={id} className={cn("group scroll-mt-24", className)}>
@@ -44,14 +43,14 @@ export default function ThoughtCard({
           className="gap-3 font-mono text-xs text-zinc-400 dark:text-zinc-500"
         >
           <span className="font-bold text-zinc-500 dark:text-zinc-400">
-            #{index ? index : tThoughtCard((d) => d.preview)}
+            #{index ? index : dictionary.thoughtCard.preview}
           </span>
           <span>•</span>
           <span>
             {formatTime(
               thought.published_at,
               "MM/DD, HH:mm",
-              tCommon((d) => d.unknownDate),
+              dictionary.common.unknownDate,
             )}
           </span>
         </Stack>
@@ -77,7 +76,7 @@ export default function ThoughtCard({
               key={img}
               framed
               src={img}
-              alt={tThoughtCard((d) => d.imageAlt, {
+              alt={formatMessage(dictionary.thoughtCard.imageAlt, {
                 index: idx + 1,
               })}
             />

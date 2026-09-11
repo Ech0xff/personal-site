@@ -28,21 +28,18 @@ Post changes also invalidate the individual post tag. The admin-only
 `/api/admin/cache/revalidate-all` endpoint expires all known content tags
 immediately. These paths and cached consumers share the same tag definitions.
 
-## Internationalization
-
-`#i18n` uses conditional exports in `package.json`: Server Components read
-route locale and cached dictionaries; Client Components read the serialized
-dictionary from `I18nProvider`. This lets shared synchronous components use the
-same translation API without forcing them into the client bundle. Async server
-code uses `getT` or `getScopedT`.
-
-The ICU translator receives its dictionary and locale explicitly. Dictionary
-validation belongs to i18n; config owns storage and overrides. The shared i18n
-entrypoint excludes dictionary data and schemas to keep them out of client
-imports. Dictionary caches use the config tag, so configuration changes also
-invalidate translations.
-
 ## Content Rendering
+
+Post detail pages and metadata retain `"use cache"` and use the route's `slug`
+to identify the article. Both carry post and config tags so article edits and
+dictionary overrides invalidate the rendered output. Route `loading.tsx` files
+re-export `#components/ui/loading.component`, which owns the shared full-screen
+loading UI. In addition to the root boundary, post details and authentication
+have local boundaries for route parameters and session reads. These keep Instant
+validation enabled for the pages without manually splitting their components.
+The request URL already supplies the slug; the asynchronous `params` API does
+not require a separate network lookup. Directory loading boundaries cover the
+page and descendants, not runtime reads in a layout in the same directory.
 
 `content-renderer.component.tsx` combines Markdown/GFM parsing, custom directive
 transforms, heading IDs, and syntax highlighting. The directive registry under
@@ -56,12 +53,12 @@ to a public rendering service; supported content syntax is documented in the
 ## Module Ownership
 
 Files use `subject.role.ts(x)` as described in `AGENTS.md`. Existing index
-entrypoints, framework files, generated icons and database types, locale files,
+entrypoints, framework files, generated icons and database types,
 and maintenance scripts retain their established names.
 
 Page-level hooks live in each route's `_hooks`; editor-private hooks stay beside
 their editor. Reusable presentation primitives and the modal system belong to
-`components/ui`. Locale-aware links and global toast handling belong to
+`components/ui`. Site-wide links and global toast handling belong to
 `components/shared`; the public footer belongs to the public layout.
 
 The client, server, and shared data layers remain separate. Supabase factories
@@ -73,6 +70,6 @@ services provide storage queries and deletion without importing browser code.
 Search transformations and types live in `lib/shared/search`, while browser RPC
 calls stay in client services. Theme constants, types, and transformations live
 in `lib/shared/theme`, with Jotai state in `lib/client/theme.atom.ts`. Route
-constants and localized route transformations live in `lib/shared/routes`.
+constants live in `lib/shared/routes`.
 Date conversion, file-size formatting, and hashing are separate shared utilities;
 date utilities retain the existing timezone initialization and fallback behavior.

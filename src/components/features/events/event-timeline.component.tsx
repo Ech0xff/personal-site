@@ -2,7 +2,7 @@ import { groupBy } from "es-toolkit";
 
 import SectionCard from "#components/ui/section-card.component";
 import Stack from "#components/ui/stack.component";
-import { useT } from "#i18n";
+import { useDictionary } from "#dictionary";
 import { cn } from "#lib/shared/utils";
 import { formatTime } from "#lib/shared/utils/date.helper";
 
@@ -14,7 +14,7 @@ interface Props {
 }
 
 export default function EventTimeline({ events, renderActions }: Props) {
-  const t = useT();
+  const dictionary = useDictionary();
 
   const groupedEvents = groupBy(events, (event) =>
     formatTime(event.published_at, "YYYY", "Unknown"),
@@ -36,7 +36,7 @@ export default function EventTimeline({ events, renderActions }: Props) {
             {/* Year Title */}
             <Stack x className="mb-8 justify-center">
               <h2 className="z-10 rounded-full bg-blue-500 px-4 py-1 text-lg font-bold text-white">
-                {year === "Unknown" ? t((d) => d.common.unknownYear) : year}
+                {year === "Unknown" ? dictionary.common.unknownYear : year}
               </h2>
             </Stack>
 

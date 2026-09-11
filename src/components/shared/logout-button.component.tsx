@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import type { ComponentPropsWithoutRef } from "react";
 import { toast } from "sonner";
 
-import { useLocale, useT } from "#i18n";
+import { useDictionary } from "#dictionary";
 import { makeBrowserClient } from "#lib/client/supabase.client";
-import { getLocalizedRoutes } from "#lib/shared/routes/routes.helper";
+import { ROUTES } from "#lib/shared/routes/routes.const";
 
 interface Props extends ComponentPropsWithoutRef<"button"> {
   className?: string;
@@ -15,36 +15,25 @@ interface Props extends ComponentPropsWithoutRef<"button"> {
 
 export default function LogOutButton({ className, ...props }: Props) {
   const router = useRouter();
-  const locale = useLocale();
-  const t = useT().scope((d) => d.auth);
-  const routes = getLocalizedRoutes(locale);
+  const dictionary = useDictionary();
   const supabase = makeBrowserClient();
 
   const handleLogout = async () => {
-    const toastId = toast.loading(t((d) => d.loggingOut));
+    const toastId = toast.loading(dictionary.auth.loggingOut);
     await supabase.auth
       .signOut()
       .then(({ error }) => {
         if (error) {
-          toast.error(
-            t((d) => d.errorLoggingOut),
-            { id: toastId },
-          );
+          toast.error(dictionary.auth.errorLoggingOut, { id: toastId });
         } else {
-          toast.success(
-            t((d) => d.loggedOutSuccessfully),
-            {
-              id: toastId,
-            },
-          );
-          router.replace(routes.AUTH);
+          toast.success(dictionary.auth.loggedOutSuccessfully, {
+            id: toastId,
+          });
+          router.replace(ROUTES.AUTH);
         }
       })
       .catch(() => {
-        toast.error(
-          t((d) => d.errorLoggingOut),
-          { id: toastId },
-        );
+        toast.error(dictionary.auth.errorLoggingOut, { id: toastId });
       });
   };
 

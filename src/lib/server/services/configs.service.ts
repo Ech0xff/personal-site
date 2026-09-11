@@ -1,6 +1,7 @@
-"server-only";
+import "server-only";
+import { cacheTag } from "next/cache";
 
-import { getLocale } from "#lib/server/i18n";
+import { CACHE_TAGS } from "#lib/server/cache";
 import type { ConfigKey } from "#lib/shared/config";
 import {
   loadConfigOverrides,
@@ -12,11 +13,14 @@ export const loadConfigsByServer = async <
   const Keys extends readonly ConfigKey[],
 >(
   keys: Keys,
-) => loadConfigs(makeStaticClient(), keys, { locale: await getLocale() });
+) => {
+  "use cache";
+  cacheTag(CACHE_TAGS.config);
+  return loadConfigs(makeStaticClient(), keys);
+};
 
 export const loadConfigOverridesByServer = async <
   const Keys extends readonly ConfigKey[],
 >(
   keys: Keys,
-) =>
-  loadConfigOverrides(makeStaticClient(), keys, { locale: await getLocale() });
+) => loadConfigOverrides(makeStaticClient(), keys);

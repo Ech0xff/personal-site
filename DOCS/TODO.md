@@ -21,10 +21,6 @@ link them to an issue or a relevant file when possible.
 
 ## Runtime verification
 
-- [ ] Resolve the anonymous auth route's blocking-prerender diagnostic for
-      uncached `loadConfigsByServer` calls in `src/app/[locale]/auth/page.tsx`.
-      Observed during the naming refactor; the configuration read and rendering
-      behavior were retained. Verify anonymous hard and soft navigation.
 - [ ] Exercise `uploadImageFromUrl` in a browser integration test, including
       fetch failure and duplicate content. File upload, WebP compression, and
       duplicate file uploads were verified against local Supabase; URL upload
@@ -33,3 +29,9 @@ link them to an issue or a relevant file when possible.
       browser verification. The naming refactor passed compilation and ordinary
       Markdown rendering checks; the existing local posts did not cover every
       directive or external preview service.
+
+## Temporary client translation
+
+- [ ] Research optional, temporary client-side translation of original content.
+      Define privacy, provider, and UX requirements before implementation; do
+      not restore language routes, dictionaries, or server translation storage.

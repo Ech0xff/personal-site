@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Locale-aware personal site and lightweight CMS built with Next.js 16, React 19,
+English-only personal site and lightweight CMS built with Next.js 16, React 19,
 Supabase, Tailwind CSS 4, SCSS, and Bun.
 
 ## Project Constraints
@@ -8,8 +8,9 @@ Supabase, Tailwind CSS 4, SCSS, and Bun.
 - Use Bun and the scripts in `package.json`.
 - Keep browser, server-session, static-public, and service-role Supabase clients
   within their runtime boundaries. Never expose the service-role key to clients.
-- Preserve locale-prefixed routing and localized links; locale configuration
-  lives in `src/lib/shared/i18n/i18n.const.ts`.
+- Keep English default copy in the shared dictionary and support admin
+  configuration overrides. Preserve routes without language prefixes and business
+  content in its original language; do not add locale routing or AI translation.
 - Update cache tags, consumers, and invalidation paths together.
 - Maintain database structure in `supabase/schemas` and local fixtures in
   `supabase/seed.sql`; follow the database workflow in the README.
@@ -59,7 +60,7 @@ follow this document for subsequent development.
 Use `.helper` rather than `.utils`/`.util`, and `.type` rather than `.types`.
 Specialized modules may choose descriptive suffixes such as `.extension` for
 editor and directive integration, `.registry` for registrations, `.atom` for
-Jotai state, or `.translator` for ICU translation. Supabase factories use
+Jotai state. Supabase factories use
 `supabase.client.ts`; their `lib/client`, `lib/server`, or `lib/shared` directory
 identifies the runtime. Keep small private helpers, types, and constants in
 their owning module. Split modules when they mix independent responsibilities
@@ -67,7 +68,7 @@ or runtime dependencies, not just to give every declaration its own file.
 
 Append `.client` or `.server` when an environment distinction is needed, and
 `.test` for tests, e.g. `meta.component.client.tsx` and `payload.schema.test.ts`.
-Keep framework, tool, generated, declaration, locale, and `index` filenames in
+Keep framework, tool, generated, declaration, and `index` filenames in
 their established formats. `page.client.tsx` is not a framework filename;
 name route-local client UI by its subject and place it in `_components`.
 Do not add environment suffixes to every Client Component; use them to clarify
@@ -98,7 +99,7 @@ Keep domain types, schemas, constants, helpers, tests, and styles close to their
 owner. A hook used only by one editor or component stays beside that component,
 even inside `_components`; `_hooks` is for page-level or route-shared hooks.
 Move code to shared locations when actual reuse justifies it. Keep reusable UI
-primitives in `components/ui`, site-wide behavior and locale-aware UI in
+primitives in `components/ui`, site-wide behavior and navigation in
 `components/shared`, and layout-specific content beside its layout.
 
 Keep browser image compression and upload orchestration in `lib/client/images`.
@@ -110,11 +111,12 @@ environment-neutral utilities; import auth and image services from their owners.
 
 - Use `#components/*`, `#lib/*`, `#styles/*`, and `#types`/`#types/*` for imports
   across source areas, and relative imports within a feature. Alias definitions
-  live in `tsconfig.json`; `#i18n` uses conditional imports in `package.json`.
+  live in `tsconfig.json`; `#dictionary` uses conditional imports in `package.json`
+  for server reads and the client provider.
 - Prefer Tailwind utilities. Use colocated SCSS for complex selectors,
   generated content, and third-party overrides.
 - Global theme tokens belong in `src/styles/variables.scss`; public-layout-only
-  variables belong in `src/app/[locale]/(index)/layout.scss`.
+  variables belong in `src/app/(index)/layout.scss`.
 - Reserve inline styles for dynamic values or cases not handled cleanly above.
 
 ## Development
@@ -150,7 +152,7 @@ checks that could not be run.
 Consult the relevant guide for the task:
 
 - [README](./README.md): setup, features, database operations, and deployment.
-- [Architecture](./DOCS/ARCHITECTURE.md): data boundaries, caching, i18n, and rendering.
+- [Architecture](./DOCS/ARCHITECTURE.md): data boundaries, caching, configuration, and rendering.
 - [TODO](./DOCS/TODO.md): deferred project work.
 
 <!-- BEGIN:nextjs-agent-rules -->

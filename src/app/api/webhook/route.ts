@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
   const authHeader = request.headers.get("Authorization");
   const expectedToken = `Bearer ${process.env.WEBHOOK_SECRET}`;
 
-  if (authHeader !== expectedToken) {
+  if (!process.env.WEBHOOK_SECRET || authHeader !== expectedToken) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 

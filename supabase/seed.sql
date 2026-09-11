@@ -241,3 +241,13 @@ SELECT '51d99ba9-c65d-4d79-a76d-4ad66940ed68', tags.id
 FROM public.tags AS tags
 WHERE lower(tags.name) IN ('ai', 'llm', 'prompt engineering')
 ON CONFLICT DO NOTHING;
+
+-- Language-free editable configuration for fresh local databases.
+INSERT INTO public.configs (key, value)
+VALUES
+  ('DICTIONARY', '{}'::jsonb),
+  ('ABOUT_ME', '"Hi, I''m Ech0xff. Welcome to my personal site!"'::jsonb),
+  ('PLAYLIST_URL', '""'::jsonb),
+  ('RECENT_PLAN', '[]'::jsonb),
+  ('OAUTH', '[]'::jsonb)
+ON CONFLICT (key) DO NOTHING;

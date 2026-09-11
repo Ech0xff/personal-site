@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { useLocale, useT } from "#i18n";
+import { useDictionary } from "#dictionary";
 import type { ContributionDay } from "#types";
 
 type Props = {
@@ -102,11 +102,8 @@ const buildCalendarWeeks = (
   return weeks;
 };
 
-const buildMonthLabels = (
-  weeks: CalendarCell[][],
-  locale: string,
-): MonthLabel[] => {
-  const formatter = new Intl.DateTimeFormat(locale, {
+const buildMonthLabels = (weeks: CalendarCell[][]): MonthLabel[] => {
+  const formatter = new Intl.DateTimeFormat("en", {
     month: "short",
     timeZone: "UTC",
   });
@@ -135,8 +132,8 @@ const buildMonthLabels = (
   return labels;
 };
 
-const formatTooltipDate = (date: Date, locale: string) =>
-  new Intl.DateTimeFormat(locale, {
+const formatTooltipDate = (date: Date) =>
+  new Intl.DateTimeFormat("en", {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -161,9 +158,8 @@ export default function ContributionCalendar({
   thoughts,
   events,
 }: Props) {
-  const locale = useLocale();
   const base = BASE_SIZE;
-  const t = useT().scope((d) => d.indexHome);
+  const dictionary = useDictionary();
   const merged = useMemo(
     () => mergeContributions(posts, thoughts, events),
     [events, posts, thoughts],
@@ -190,11 +186,11 @@ export default function ContributionCalendar({
     yearStart,
     yearEnd,
   );
-  const monthLabels = buildMonthLabels(weeks, locale);
+  const monthLabels = buildMonthLabels(weeks);
   const weekdayLabels = getWeekdayLabels([
-    t((d) => d.stats.weekdays.monday),
-    t((d) => d.stats.weekdays.wednesday),
-    t((d) => d.stats.weekdays.friday),
+    dictionary.indexHome.stats.weekdays.monday,
+    dictionary.indexHome.stats.weekdays.wednesday,
+    dictionary.indexHome.stats.weekdays.friday,
   ]);
   const extraTopSpace = multiplyLength(base, 3);
   const gap = multiplyLength(base, 0.3);
@@ -269,7 +265,7 @@ export default function ContributionCalendar({
               {weeks.map((week, weekIndex) =>
                 week.map((day, dayIndex) => {
                   const level = getLevel(day.count);
-                  const dateLabel = formatTooltipDate(day.date, locale);
+                  const dateLabel = formatTooltipDate(day.date);
 
                   return (
                     <div
@@ -322,7 +318,7 @@ export default function ContributionCalendar({
         <div className="flex max-w-full min-w-0 flex-wrap items-center gap-2">
           <div
             role="tablist"
-            aria-label={t((d) => d.stats.yearSelectorLabel)}
+            aria-label={dictionary.indexHome.stats.yearSelectorLabel}
             className="flex max-w-full items-center overflow-x-auto rounded-lg bg-zinc-100 p-0.5 dark:bg-zinc-800"
           >
             {availableYears.map((year) => (
@@ -346,7 +342,7 @@ export default function ContributionCalendar({
         </div>
 
         <div className="flex items-center gap-2">
-          <span>{t((d) => d.stats.less)}</span>
+          <span>{dictionary.indexHome.stats.less}</span>
           {CELL_LEVEL_CLASS.map((className) => (
             <div
               key={className}
@@ -358,7 +354,7 @@ export default function ContributionCalendar({
               }}
             />
           ))}
-          <span>{t((d) => d.stats.more)}</span>
+          <span>{dictionary.indexHome.stats.more}</span>
         </div>
       </div>
     </div>

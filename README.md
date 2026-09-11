@@ -2,14 +2,14 @@
 
 A personal site and lightweight CMS built with Next.js 16, React 19, Supabase, and Tailwind CSS 4.
 
-It includes a public-facing site for posts, thoughts, and events, plus a locale-aware dashboard for content, tags, images, config, and account management.
+It includes a public-facing site for posts, thoughts, and events, plus an English-language dashboard for content, tags, images, config, and account management.
 
 ## Features
 
 - Public pages for posts, thoughts, and events
 - Dashboard for managing posts, thoughts, events, tags, images, site config, and account info
 - Supabase-backed auth, database, and storage
-- Locale-aware routing with `en-US` and `zh-CN`
+- English interface with language-free routes and original-language business content
 - Markdown rendering with GFM, syntax highlighting, heading anchors, and custom directives
 - PlantUML code block rendering through the public PlantUML server
 - Click-to-open image preview
@@ -164,6 +164,66 @@ The renderer also supports custom directives such as:
 - `::card{title="..." tone="info"}` for callout-style content blocks
 - `:meta{url="https://..."}` for URL metadata cards
 
+## English-only migration
+
+Routes are `/`, `/posts`, `/thoughts`, `/events`, `/auth`, and `/dashboard/*`.
+Old language-prefixed URLs and translation-preview URLs return 404; there are
+no compatibility redirects. OAuth returns through `/api/auth/callback` to
+`/dashboard/account` or `/auth`.
+
+Before deploying to an existing database, apply
+[`supabase/updates/english-only.sql`](./supabase/updates/english-only.sql) with
+`psql -v ON_ERROR_STOP=1` or the Supabase SQL editor. For the local database:
+
+```bash
+psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -v ON_ERROR_STOP=1 -f supabase/updates/english-only.sql
+bun run supabase:types
+```
+
+The transaction copies English `ABOUT_ME`, `PLAYLIST_URL`, and `RECENT_PLAN`
+configuration and dictionary overrides into language-free keys, including
+historical camel-case keys.
+English content settings replace unused unscoped values; existing global OAuth
+settings remain unchanged. It
+removes old language keys and drops `translation_cache`
+without resetting posts, thoughts, events, tags, images, or their relationships.
+Reapplying it preserves subsequent configuration edits. Fresh databases use
+`supabase/schemas` and `supabase/seed.sql` directly.
+
+### Editable dictionary
+
+Open **Dashboard → Config → Dictionary** to customize site metadata, homepage,
+navigation, search, authentication, and other dictionary-backed copy. **Defaults**
+shows all available fields; **Overrides** accepts a partial JSON object and
+**Effective** shows the merged result. For example:
+
+```json
+{
+  "meta": { "siteTitle": "My personal site" },
+  "home": { "hero": "Welcome", "bio": "Notes from my corner of the web." },
+  "footer": { "filing": "© 2026 My name" }
+}
+```
+
+Missing fields use `src/lib/shared/dictionary/dictionary.const.ts` defaults.
+Arrays such as `home.typing` are replaced completely. Delete an override field to
+restore that field's default, or use **Delete** to remove the stored override.
+Unknown keys, incorrect value types, invalid message syntax, and unsupported
+placeholders are rejected. Dynamic copy supports existing ICU placeholders,
+plural forms, and explicitly rendered rich-text tags; overrides are never raw HTML.
+
+The dictionary is stored under the global `DICTIONARY` config key. Saving or
+deleting config uses an authenticated admin Server Action, expires the config
+cache, and refreshes the current route. Updated metadata and copy appear on the
+next render without redeploying. Other already-open browser tabs need a refresh.
+No locale selection, language cookies, or translation API is involved.
+
+About Me, recent plans, playlists, and OAuth remain separately editable. Remove
+`TRANSLATION_AI_*` variables from deployed environments.
+Restart or redeploy after migration to discard cached old configuration and
+routes; rebind the ordinary content webhooks if needed. Webhooks only refresh
+business caches and require `Authorization: Bearer <WEBHOOK_SECRET>`.
+
 ## Scripts
 
 - `bun run dev` - start the Next.js dev server
@@ -206,7 +266,7 @@ before retrying. Run `bun run prepare` to reinstall hooks if needed.
 Use the relevant checks locally; Markdown-only edits need formatting checks.
 Formatter and lint rules live in `.oxfmtrc.json` and `.oxlintrc.json`.
 
-Source filenames follow `subject.role.ts(x)` with framework, generated, locale,
+Source filenames follow `subject.role.ts(x)` with framework, generated,
 index, and tool exceptions. Keep page-level hooks in `_hooks` and editor-private
 hooks beside their editor. See [AGENTS.md](./AGENTS.md#file-naming) for naming
 rules and [Architecture](./DOCS/ARCHITECTURE.md#module-ownership) for ownership.
@@ -218,8 +278,20 @@ only in editor state and are omitted from saved configuration.
 
 For routing, cache, or server/client integration changes, also check a production
 build with `bun run build`. CI does not build the app. There is currently no
-browser test suite; verify affected behavior in the running app: locales and
-auth roles, cache invalidation, or light/dark and mobile/desktop layouts.
+browser test suite; verify affected behavior in the running app: auth roles, cache invalidation, or light/dark and mobile/desktop layouts.
+
+### English-only verification
+
+Verify public routes and original Chinese/English search results, sign-in and
+sign-out, dashboard editing, configuration saves, and authenticated cache
+refreshes. Confirm `/en-US`, `/zh-CN`, and translation-preview paths return 404.
+Check `<html lang="en">` and that no language cookies or translation API calls
+are used. Save a partial dictionary override, verify metadata and client/server
+copy after refresh, then delete it and verify the defaults return. Compare business-table and image-record digests
+before and after applying the SQL update. No new mock or test suite is required.
+
+For schema experiments, use an isolated Supabase workdir with a distinct project
+ID and unused ports. Do not reset a database containing content you need to keep.
 
 ## Project Structure
 

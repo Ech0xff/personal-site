@@ -1,6 +1,6 @@
 import Link from "#components/shared/link.component";
 import Stack from "#components/ui/stack.component";
-import { useT } from "#i18n";
+import { useDictionary } from "#dictionary";
 import { cn } from "#lib/shared/utils";
 import { formatTime } from "#lib/shared/utils/date.helper";
 import type { Post, Tag } from "#types";
@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function PostCard({ post, className }: Props) {
-  const t = useT();
+  const dictionary = useDictionary();
   const { id, title, published_at } = post;
   return (
     <Link
@@ -34,7 +34,7 @@ export default function PostCard({ post, className }: Props) {
           {formatTime(
             published_at,
             "MMM D, YYYY",
-            t((d) => d.common.unknownDate),
+            dictionary.common.unknownDate,
           )}
         </span>
       </Stack>

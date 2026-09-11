@@ -1,6 +1,6 @@
 import { EventContent } from "#components/features/content";
 import Stack from "#components/ui/stack.component";
-import { useT } from "#i18n";
+import { useDictionary } from "#dictionary";
 import { formatTime } from "#lib/shared/utils/date.helper";
 import type { Status, Tag } from "#types";
 
@@ -38,18 +38,14 @@ const getTagColor = (tag: EventTag) => {
 };
 
 export default function EventCard({ event, className, renderActions }: Props) {
-  const t = useT();
+  const dictionary = useDictionary();
   const { title, content, tags, published_at } = event;
   return (
     <Stack y className={className}>
       {/* Meta Row */}
       <Stack x className="mb-2 items-center justify-between">
         <div className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
-          {formatTime(
-            published_at,
-            "MMM D",
-            t((d) => d.common.unknownDate),
-          )}
+          {formatTime(published_at, "MMM D", dictionary.common.unknownDate)}
         </div>
         <Stack x className="items-center gap-2">
           {renderActions?.(event)}

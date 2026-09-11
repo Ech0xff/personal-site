@@ -1,14 +1,17 @@
-import { toMerged } from "es-toolkit";
 import { Link2 } from "lucide-react";
 import type { z } from "zod";
 
 import SvgGithub from "#components/icons/Github";
 import SvgGoogle from "#components/icons/Google";
 
-import { type Dictionary, type Locale, type PartialDictionary } from "../i18n";
-import { dictionaryOverrideSchema } from "../i18n/i18n.schema";
-import { dictionaries } from "../i18n/messages";
-import { CONFIG_KEY, CONFIG_SCOPE, IDENTITY_PROVIDER } from "./config.const";
+import { defaultDictionary } from "../dictionary/dictionary.const";
+import { mergeDictionary } from "../dictionary/dictionary.helper";
+import { dictionaryOverrideSchema } from "../dictionary/dictionary.schema";
+import type {
+  Dictionary,
+  DictionaryOverride,
+} from "../dictionary/dictionary.type";
+import { CONFIG_KEY, IDENTITY_PROVIDER } from "./config.const";
 import { defineConfig } from "./config.helper";
 import {
   oauthProvidersSchema,
@@ -18,7 +21,6 @@ import {
 import type {
   ConfigKey,
   ConfigDefinition,
-  ConfigScope,
   IdentityProvider,
   OAuthProvider,
   RecentPlan,
@@ -30,37 +32,32 @@ export * from "./config.schema";
 export * from "./config.type";
 
 export const CONFIG_REGISTRY = {
+  [CONFIG_KEY.DICTIONARY]: defineConfig<DictionaryOverride, Dictionary>({
+    defaults: () => defaultDictionary,
+    schema: dictionaryOverrideSchema,
+    resolve: mergeDictionary,
+  }),
   [CONFIG_KEY.ABOUT_ME]: defineConfig<string, string>({
-    scope: CONFIG_SCOPE.LOCALE,
     defaults: () => "Hi, I'm Ech0xff. Welcome to my personal site!",
     schema: stringConfigSchema,
     resolve: (_, override) => override,
   }),
   [CONFIG_KEY.OAUTH]: defineConfig<OAuthProvider[], OAuthProvider[]>({
-    scope: CONFIG_SCOPE.GLOBAL,
     defaults: () => [],
     schema: oauthProvidersSchema,
     resolve: (_, override) => override,
   }),
-  [CONFIG_KEY.DICTIONARY]: defineConfig<PartialDictionary, Dictionary>({
-    scope: CONFIG_SCOPE.LOCALE,
-    defaults: ({ locale }) => dictionaries[locale],
-    schema: dictionaryOverrideSchema,
-    resolve: (defaults, override) => toMerged(defaults, override),
-  }),
   [CONFIG_KEY.PLAYLIST_URL]: defineConfig<string, string>({
-    scope: CONFIG_SCOPE.LOCALE,
     defaults: () => "",
     schema: stringConfigSchema,
     resolve: (_, override) => override,
   }),
   [CONFIG_KEY.RECENT_PLAN]: defineConfig<RecentPlan[], RecentPlan[]>({
-    scope: CONFIG_SCOPE.LOCALE,
     defaults: () => [],
     schema: recentPlansSchema,
     resolve: (_, override) => override,
   }),
-} as const satisfies Record<ConfigKey, { readonly scope: ConfigScope }>;
+} as const;
 
 export type ConfigRegistry = typeof CONFIG_REGISTRY;
 
@@ -89,12 +86,9 @@ export const getConfigDefinition = <K extends ConfigKey>(key: K) =>
 
 export const getConfigDefaults = <K extends ConfigKey>(
   key: K,
-  locale: Locale,
 ): ConfigValue<K> => {
   const definition = getConfigDefinition(key);
-  return definition.scope === CONFIG_SCOPE.LOCALE
-    ? definition.defaults({ locale })
-    : definition.defaults();
+  return definition.defaults();
 };
 
 export const generatePlaylistUrl = (

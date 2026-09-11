@@ -12,9 +12,9 @@ import {
 
 import { useModal } from "#components/ui/modal-provider.component";
 import Stack from "#components/ui/stack.component";
-import { useLocale, useT } from "#i18n";
+import { useDictionary } from "#dictionary";
 import { searchContentByBrowser } from "#lib/client/services";
-import { localizeHref } from "#lib/shared/i18n";
+import { formatMessage } from "#lib/shared/dictionary/dictionary.helper";
 import {
   getSearchHighlightSegments,
   normalizeSearchQuery,
@@ -36,7 +36,7 @@ const RESULT_ICON_BY_TYPE: Record<SearchResult["type"], ReactNode> = {
 };
 
 export default function GlobalSearchTrigger({ className }: Props) {
-  const t = useT().scope((d) => d.search);
+  const dictionary = useDictionary();
   const { isOpen, open } = useModal();
 
   const handleOpen = () => {
@@ -55,8 +55,8 @@ export default function GlobalSearchTrigger({ className }: Props) {
         "inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-(--text-muted) transition-all hover:bg-(--surface-hover) hover:text-(--text-primary)",
         className,
       )}
-      aria-label={t((d) => d.title)}
-      title={t((d) => d.title)}
+      aria-label={dictionary.search.title}
+      title={dictionary.search.title}
     >
       <Search size={14} aria-hidden="true" />
     </button>
@@ -64,8 +64,7 @@ export default function GlobalSearchTrigger({ className }: Props) {
 }
 
 function GlobalSearchModal() {
-  const locale = useLocale();
-  const t = useT().scope((d) => d.search);
+  const dictionary = useDictionary();
   const { close } = useModal();
 
   const [query, setQuery] = useState("");
@@ -152,7 +151,7 @@ function GlobalSearchModal() {
     if (!debouncedQuery) {
       return (
         <div className="rounded-2xl border border-dashed border-(--border-default) px-4 py-10 text-center text-sm text-(--text-muted)">
-          {t((d) => d.empty)}
+          {dictionary.search.empty}
         </div>
       );
     }
@@ -160,7 +159,7 @@ function GlobalSearchModal() {
     if (isLoading) {
       return (
         <div className="px-2 py-8 text-center text-sm text-(--text-muted)">
-          {t((d) => d.loading)}
+          {dictionary.search.loading}
         </div>
       );
     }
@@ -168,7 +167,7 @@ function GlobalSearchModal() {
     if (hasError) {
       return (
         <div className="px-2 py-8 text-center text-sm text-red-500">
-          {t((d) => d.error)}
+          {dictionary.search.error}
         </div>
       );
     }
@@ -176,7 +175,7 @@ function GlobalSearchModal() {
     if (results.length === 0) {
       return (
         <div className="px-2 py-8 text-center text-sm text-(--text-muted)">
-          {t((d) => d.noResults, {
+          {formatMessage(dictionary.search.noResults, {
             query: debouncedQuery,
           })}
         </div>
@@ -191,7 +190,7 @@ function GlobalSearchModal() {
           return (
             <NextLink
               key={`${result.type}-${result.id}`}
-              href={localizeHref(locale, result.href)}
+              href={result.href}
               onClick={handleClose}
               className={cn(
                 "rounded-2xl border border-(--border-default) px-4 py-3 transition-colors hover:border-(--border-strong) hover:bg-(--surface-hover)",
@@ -232,8 +231,8 @@ function GlobalSearchModal() {
                       isThought &&
                         "border-transparent bg-transparent text-(--search-text-subtle)",
                     )}
-                    aria-label={t((d) => d.types[result.type])}
-                    title={t((d) => d.types[result.type])}
+                    aria-label={dictionary.search.types[result.type]}
+                    title={dictionary.search.types[result.type]}
                   >
                     {RESULT_ICON_BY_TYPE[result.type]}
                   </span>
@@ -251,7 +250,7 @@ function GlobalSearchModal() {
       open
       className="relative m-0 w-full max-w-2xl rounded-[2rem] border border-(--border-default) bg-(--surface-panel) p-4 text-inherit shadow-2xl"
       aria-modal="true"
-      aria-label={t((d) => d.title)}
+      aria-label={dictionary.search.title}
     >
       <Stack
         x
@@ -262,14 +261,14 @@ function GlobalSearchModal() {
           ref={inputRef}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder={t((d) => d.placeholder)}
+          placeholder={dictionary.search.placeholder}
           className="flex-1 bg-transparent text-sm text-(--text-primary) outline-none placeholder:text-(--text-placeholder)"
         />
         <button
           type="button"
           onClick={handleClose}
           className="inline-flex h-8 w-8 items-center justify-center rounded-full text-(--text-placeholder) transition-colors hover:bg-(--surface-hover) hover:text-(--text-secondary)"
-          aria-label={t((d) => d.close)}
+          aria-label={dictionary.search.close}
         >
           <X size={16} />
         </button>
@@ -277,7 +276,7 @@ function GlobalSearchModal() {
 
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3 px-1">
         <span className="text-xs text-(--text-muted)">
-          {t((d) => d.advanced.title)}
+          {dictionary.search.advanced.title}
         </span>
         <label className="inline-flex cursor-pointer items-center gap-2 text-xs text-(--text-muted)">
           <input
@@ -287,7 +286,7 @@ function GlobalSearchModal() {
             className="peer sr-only"
           />
           <span className="relative h-5 w-9 rounded-full bg-(--surface-muted) transition-colors peer-checked:bg-emerald-500 after:absolute after:top-0.5 after:left-0.5 after:h-4 after:w-4 after:rounded-full after:bg-(--surface-card) after:transition-transform peer-checked:after:translate-x-4" />
-          <span>{t((d) => d.advanced.searchRawText)}</span>
+          <span>{dictionary.search.advanced.searchRawText}</span>
         </label>
       </div>
 
