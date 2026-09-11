@@ -8,152 +8,118 @@ Supabase, Tailwind CSS 4, SCSS, and Bun.
 - Use Bun and the scripts in `package.json`.
 - Keep browser, server-session, static-public, and service-role Supabase clients
   within their runtime boundaries. Never expose the service-role key to clients.
-- Keep English default copy in the shared dictionary and support admin
-  configuration overrides. Preserve routes without language prefixes and business
-  content in its original language; do not add locale routing or AI translation.
+- Keep English defaults in the shared dictionary with admin overrides, routes
+  without language prefixes, and business content in its original language.
+  Do not add locale routing or AI translation.
 - Update cache tags, consumers, and invalidation paths together.
-- Maintain database structure in `supabase/schemas` and local fixtures in
-  `supabase/seed.sql`; follow the database workflow in the README.
-- Regenerate Supabase types and SVG icon components rather than editing generated
-  files by hand.
-- Write source comments and project documentation in English. Update affected
-  documentation with the implementation and record deferred work in `DOCS/TODO.md`.
-- Preserve unrelated working-tree changes and avoid destructive Git operations
-  unless explicitly requested.
+- Maintain schemas in `supabase/schemas` and fixtures in `supabase/seed.sql`;
+  follow the [database workflow](./README.md#database).
+- Regenerate Supabase types and SVG icon components; do not edit generated files.
+- Write comments and documentation in English. Update affected docs with the
+  implementation and record deferred work in `DOCS/TODO.md`.
+- Preserve unrelated changes; avoid destructive Git operations unless requested.
 
 ## Code Style
 
-- Prefer small, composable functions with explicit inputs and return values.
-  Keep transformations pure; handle I/O in services and React effects in hooks.
-- Treat inputs, props, and state as immutable. Prefer `const` and readonly types
-  at shared boundaries; local mutation is fine when contained and clearer.
-- Use `map`, `filter`, and named transformations for data processing. Use
-  `es-toolkit/fp` composition when it improves readability; simple branches and
-  loops do not need to become pipelines.
-- Derive UI values from existing data instead of duplicating state. Use
-  functional state updates when the next value depends on the previous value.
-- Model distinct states with discriminated unions and use `ts-pattern` for
-  complex exhaustive matching. Validate external inputs with Zod and prefer
-  inferred types over assertions.
-- Reuse the existing `es-toolkit` and `ts-pattern` dependencies. Add abstractions
-  or libraries for concrete needs, not to enforce functional purity.
+- Use small, composable functions with explicit inputs and return values.
+  Keep transformations pure, I/O in services, and React effects in hooks.
+- Treat inputs, props, and state as immutable; prefer `const` and readonly types
+  at shared boundaries. Contained local mutation is fine when clearer.
+- Prefer `map`, `filter`, and named transformations. Use `es-toolkit/fp`
+  composition when helpful; simple branches and loops are fine.
+- Derive UI values from existing data. Use functional state updates when the
+  next value depends on the previous one.
+- Model distinct states with discriminated unions; use `ts-pattern` for complex
+  exhaustive matching. Validate external inputs with Zod and prefer inferred
+  types over assertions.
+- Reuse `es-toolkit` and `ts-pattern`; add abstractions or dependencies only
+  for concrete needs.
 
 ## File Naming
 
-Use `<subject>.<role>.ts` or `.tsx`, with lowercase kebab-case subjects:
-`post-editor.component.tsx`. Exported components use PascalCase (`PostEditor`)
-and hooks use `useXxx` (`usePosts`).
+Use lowercase kebab-case `<subject>.<role>.ts(x)`, e.g.
+`post-editor.component.tsx`. Components use PascalCase; hooks use `useXxx`.
+Apply these conventions to new work; some legacy files differ.
 
-Some existing files do not follow these conventions. These are legacy issues;
-follow this document for subsequent development.
+- `.type`: Types and interfaces.
+- `.const`: Shared constants and defaults.
+- `.schema`: Runtime validation and parsing.
+- `.helper`: Pure transformations without state or I/O.
+- `.service`: Domain operations and external I/O.
+- `.component`: React UI, editors, and providers.
+- `.hook`: React state, effects, and UI behavior.
 
-| Suffix       | Responsibility                                               |
-| ------------ | ------------------------------------------------------------ |
-| `.type`      | Type aliases and interfaces.                                 |
-| `.const`     | Shared fixed values, lookup tables, and defaults.            |
-| `.schema`    | Runtime validation and parsing rules.                        |
-| `.helper`    | Pure transformations and calculations, without state or I/O. |
-| `.service`   | Domain data operations and external I/O.                     |
-| `.component` | React UI, including editors and providers.                   |
-| `.hook`      | React state, effects, and UI behavior.                       |
+Use `.helper`, not `.utils`/`.util`; use `.type`, not `.types`. Specialized
+suffixes such as `.extension`, `.registry`, and `.atom` are valid.
 
-Use `.helper` rather than `.utils`/`.util`, and `.type` rather than `.types`.
-Specialized modules may choose descriptive suffixes such as `.extension` for
-editor and directive integration, `.registry` for registrations, `.atom` for
-Jotai state. Supabase factories use
-`supabase.client.ts`; their `lib/client`, `lib/server`, or `lib/shared` directory
-identifies the runtime. Keep small private helpers, types, and constants in
-their owning module. Split modules when they mix independent responsibilities
-or runtime dependencies, not just to give every declaration its own file.
+Supabase factories use `supabase.client.ts`; their data layer identifies the
+runtime. Add `.client`/`.server` only to clarify an environment boundary, and
+`.test` for tests, e.g. `meta.component.client.tsx`, `payload.schema.test.ts`.
 
-Append `.client` or `.server` when an environment distinction is needed, and
-`.test` for tests, e.g. `meta.component.client.tsx` and `payload.schema.test.ts`.
-Keep framework, tool, generated, declaration, and `index` filenames in
-their established formats. `page.client.tsx` is not a framework filename;
-name route-local client UI by its subject and place it in `_components`.
-Do not add environment suffixes to every Client Component; use them to clarify
-a boundary or distinguish related implementations. Colocated styles share the
-component basename, including `index.scss` for an existing `index.tsx` component.
-Use lowercase kebab-case for ordinary component directories; preserve route
-segments and framework directory conventions.
+Preserve framework, tool, generated, declaration, and `index` filenames.
+`page.client.tsx` is not a framework filename: use a subject name inside
+`_components`. Colocated styles share the component basename, including
+`index.scss` for `index.tsx`. Ordinary directories use lowercase kebab-case;
+preserve route segments and framework conventions.
 
 ## File Placement
 
-| Location                            | Responsibility                                                                                   |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `src/app`                           | Routes, layouts, and handlers; route-local UI in `_components` and page-level hooks in `_hooks`. |
-| `src/components/ui`                 | Reusable presentation primitives and editor integrations.                                        |
-| `src/components/shared`             | Application-wide UI and providers.                                                               |
-| `src/components/features/<feature>` | Feature-owned UI and private supporting modules.                                                 |
-| `src/lib/client`                    | Browser clients and service adapters.                                                            |
-| `src/lib/server`                    | Server clients, services, and cache definitions.                                                 |
-| `src/lib/shared`                    | Environment-neutral domain modules and services.                                                 |
-| `src/types`                         | Cross-domain types, declarations, and generated database types.                                  |
-| `src/styles`                        | Global styles, tokens, and mixins.                                                               |
-| `scripts`                           | Maintenance and development utilities.                                                           |
-| `supabase`                          | Database configuration, schema sources, and seed data.                                           |
-| `public`                            | Static assets addressed by URL.                                                                  |
-| `DOCS`                              | Project guides and `TODO.md`.                                                                    |
+- `src/app`: Routes, layouts, handlers; local UI in `_components`, page-level
+  hooks in `_hooks`.
+- `src/components/ui`: Reusable presentation primitives and editor integrations.
+- `src/components/shared`: Site-wide UI and providers.
+- `src/components/features/<feature>`: Feature UI and private supporting modules.
+- `src/lib/client`: Browser clients and service adapters.
+- `src/lib/server`: Server clients, services, and caches.
+- `src/lib/shared`: Environment-neutral domain modules and services.
+- `src/types`: Cross-domain types, declarations, and generated database types.
+- `src/styles`: Global styles, tokens, and mixins.
+- `scripts`: Maintenance and development utilities.
+- `supabase`: Database configuration, schemas, and seed data.
+- `public`: Static assets addressed by URL.
+- `DOCS`: Project guides and deferred work.
 
-Keep domain types, schemas, constants, helpers, tests, and styles close to their
-owner. A hook used only by one editor or component stays beside that component,
-even inside `_components`; `_hooks` is for page-level or route-shared hooks.
-Move code to shared locations when actual reuse justifies it. Keep reusable UI
-primitives in `components/ui`, site-wide behavior and navigation in
-`components/shared`, and layout-specific content beside its layout.
+Keep domain types, schemas, constants, helpers, tests, and styles with their owner.
+Editor-private hooks stay beside the editor; `_hooks` is for page-level or
+route-shared hooks. Keep layout-specific content beside its layout. Share code
+when actual reuse warrants it; split modules for independent responsibilities
+or runtime dependencies, not for every private declaration.
 
-Keep browser image compression and upload orchestration in `lib/client/images`.
-Shared storage queries and session services accept a Supabase client; they must
-not import browser-only adapters. The shared utility barrel exports only
-environment-neutral utilities; import auth and image services from their owners.
+Browser image compression and uploads belong in `lib/client/images`.
+Shared storage and session services accept a Supabase client and never import
+browser adapters. The shared utility barrel exports only environment-neutral
+utilities; import auth and image services from their owners.
 
 ## Imports and Styling
 
-- Use `#components/*`, `#lib/*`, `#styles/*`, and `#types`/`#types/*` for imports
-  across source areas, and relative imports within a feature. Alias definitions
-  live in `tsconfig.json`; `#dictionary` uses conditional imports in `package.json`
-  for server reads and the client provider.
-- Prefer Tailwind utilities. Use colocated SCSS for complex selectors,
-  generated content, and third-party overrides.
-- Global theme tokens belong in `src/styles/variables.scss`; public-layout-only
+- Use `#components/*`, `#lib/*`, `#styles/*`, and `#types`/`#types/*`
+  across source areas; use relative imports within a feature.
+  Aliases live in `tsconfig.json`; `#dictionary` uses conditional imports in
+  `package.json` for server reads and the client provider.
+- Prefer Tailwind utilities. Use colocated SCSS for complex selectors, generated
+  content, and third-party overrides; reserve inline styles for dynamic values
+  or cases these do not handle cleanly.
+- Global tokens belong in `src/styles/variables.scss`; public-layout-only
   variables belong in `src/app/(index)/layout.scss`.
-- Reserve inline styles for dynamic values or cases not handled cleanly above.
 
-## Development
+## Development and Documentation
 
-| Task                     | Command                                  |
-| ------------------------ | ---------------------------------------- |
-| Install                  | `bun install`                            |
-| Develop                  | `bun run dev`                            |
-| Build / serve production | `bun run build` / `bun run start`        |
-| Check formatting / lint  | `bun run fmt` / `bun run lint`           |
-| Fix formatting / lint    | `bun run fmt:fix` / `bun run lint:fix`   |
-| Check types / test       | `bun run typecheck` / `bun run test`     |
-| Maintenance menu         | `bun run menu dev` / `bun run menu prod` |
-| Generate icons           | `bun run gen:icons`                      |
+Follow the [README commands](./README.md#development) and
+[verification workflow](./README.md#verification): apply formatting and lint
+fixes to affected files, then run relevant non-mutating checks.
 
-After implementation, apply formatting and lint fixes to affected files, then
-run relevant non-mutating checks. See the [README](./README.md#verification)
-for verification and Supabase commands.
+Use existing checks for simple lint, type, schema, or UI changes. Add tests for
+important behavior or regressions, preferably in existing suites; avoid tests
+that repeat implementation or library behavior.
 
-### Test Scope
+Use focused Conventional Commits (`feat:`, `fix:`, `refactor:`, `chore:`,
+`docs:`) with imperative subjects. Include only task-related changes and report
+checks that could not run.
 
-- For simple lint, type, schema, or UI changes, use existing checks; do not
-  add tests by default.
-- Add tests for important behavior or bug regressions, preferably in existing
-  suites. Avoid tests that merely repeat implementation or library behavior.
-
-Use focused Conventional Commits (`feat:`, `fix:`, `refactor:`, `chore:`, `docs:`)
-with concise imperative subjects. Include only task-related changes and report
-checks that could not be run.
-
-## Documentation
-
-Consult the relevant guide for the task:
-
-- [README](./README.md): setup, features, database operations, and deployment.
-- [Architecture](./DOCS/ARCHITECTURE.md): data boundaries, caching, configuration, and rendering.
-- [TODO](./DOCS/TODO.md): deferred project work.
+Keep documentation responsibilities distinct: [README](./README.md) for setup
+and operations, [Architecture](./DOCS/ARCHITECTURE.md) for system behavior,
+[TODO](./DOCS/TODO.md) for actionable outstanding work. Link to the owning guide
+instead of repeating its content. Prefer concise paragraphs and lists over tables.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

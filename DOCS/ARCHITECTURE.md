@@ -1,75 +1,74 @@
 # Architecture
 
+For setup and operations, see [README](../README.md). For naming and placement
+rules, see [AGENTS.md](../AGENTS.md).
+
 ## Data and Authorization
 
-Shared services contain reusable queries and accept a Supabase client so the
-caller selects the appropriate identity:
+Shared services accept a Supabase client so callers choose the identity:
 
-| Client              | Use                                                      |
-| ------------------- | -------------------------------------------------------- |
-| `makeStaticClient`  | Anonymous public reads.                                  |
-| `makeBrowserClient` | Browser session reads and mutations.                     |
-| `makeServerClient`  | Cookie-backed server session access.                     |
-| `makeAdminClient`   | Privileged server operations using the service-role key. |
+- `makeStaticClient`: Anonymous public reads.
+- `makeBrowserClient`: Browser session reads and mutations.
+- `makeServerClient`: Cookie-backed server session access.
+- `makeAdminClient`: Privileged server operations using the service-role key.
 
-The dashboard layout controls navigation and sign-in access. Database RLS and
-authorization checks in privileged endpoints protect the underlying operations;
-hiding an admin link is not authorization.
+The dashboard layout controls sign-in access and navigation. Database RLS and
+privileged endpoint checks authorize operations; hiding an admin link does not.
 
 ## Cache Invalidation
 
-Public data uses `"use cache"` with tags defined in
+Public data uses `"use cache"` with shared tags in
 `src/lib/server/cache/index.ts`. Lists, summaries, config, and individual posts
-have separate tags so updates invalidate only their consumers.
+have separate tags.
 
-Supabase changes reach `/api/webhook`, which validates the bearer secret and
-payload, maps tables to tags, and revalidates with stale-while-revalidate behavior.
-Post changes also invalidate the individual post tag. The admin-only
-`/api/admin/cache/revalidate-all` endpoint expires all known content tags
-immediately. These paths and cached consumers share the same tag definitions.
+- `/api/webhook`: Validates the bearer secret and payload, maps tables to tags,
+  and revalidates with stale-while-revalidate behavior. Post changes also refresh
+  the individual post tag.
+- Config Server Actions: Require admin access and immediately expire the
+  config tag.
+- `/api/admin/cache/revalidate-all`: Requires admin access and immediately
+  expires all known content tags.
+
+Post detail pages and metadata use the route's `slug` and carry both post and
+config tags, so article edits and dictionary overrides invalidate their output.
+
+## Configuration
+
+Global config includes `DICTIONARY`, which merges admin overrides with
+`src/lib/shared/dictionary/dictionary.const.ts`. Objects merge recursively;
+arrays replace defaults. Zod validates overrides, and dynamic messages use ICU
+formatting with supported placeholders and explicit rich-text renderers.
+
+The `#dictionary` conditional import resolves to the server reader or client
+provider. Config saves and deletions use admin Server Actions to expire the
+config cache; the dashboard refreshes the current route.
+
+The interface uses English without locale routing, language cookies, or a
+translation API. Business content keeps its original language. Old
+language-prefixed and translation-preview URLs return 404 without redirects.
+OAuth returns through `/api/auth/callback` to `/dashboard/account` or `/auth`.
 
 ## Content Rendering
 
-Post detail pages and metadata retain `"use cache"` and use the route's `slug`
-to identify the article. Both carry post and config tags so article edits and
-dictionary overrides invalidate the rendered output. Route `loading.tsx` files
-re-export `#components/ui/loading.component`, which owns the shared full-screen
-loading UI. In addition to the root boundary, post details and authentication
-have local boundaries for route parameters and session reads. These keep Instant
-validation enabled for the pages without manually splitting their components.
-The request URL already supplies the slug; the asynchronous `params` API does
-not require a separate network lookup. Directory loading boundaries cover the
-page and descendants, not runtime reads in a layout in the same directory.
+`content-renderer.component.tsx` combines Markdown/GFM, directives, heading IDs,
+and syntax highlighting. Directives under
+`src/components/features/content/_components/directive-render` require both
+registration and a renderer. `pre-render.component.tsx` handles code blocks and
+PlantUML; see [supported syntax](../README.md#markdown-support).
 
-`content-renderer.component.tsx` combines Markdown/GFM parsing, custom directive
-transforms, heading IDs, and syntax highlighting. The directive registry under
-`src/components/features/content/_components/directive-render` connects parsed
-nodes to their renderers; new directives need both registration and rendering.
-
-`pre-render.component.tsx` handles code blocks and PlantUML output. PlantUML source is sent
-to a public rendering service; supported content syntax is documented in the
-[README](../README.md#markdown-support).
+Root, post-detail, and auth `loading.tsx` files re-export the shared loading UI.
+The local boundaries cover page parameter and session reads; they do not cover
+runtime reads in a layout at the same directory level.
 
 ## Module Ownership
 
-Files use `subject.role.ts(x)` as described in `AGENTS.md`. Existing index
-entrypoints, framework files, generated icons and database types,
-and maintenance scripts retain their established names.
+Shared auth/session queries accept the caller's client. Browser image compression
+and uploads live in `lib/client/images`; shared image services handle storage
+queries and deletion. Search transformations live in `lib/shared/search`, while
+browser RPC calls stay in client services. Shared theme logic lives in
+`lib/shared/theme`, with browser state in `lib/client/theme.atom.ts`; routes live
+in `lib/shared/routes`.
 
-Page-level hooks live in each route's `_hooks`; editor-private hooks stay beside
-their editor. Reusable presentation primitives and the modal system belong to
-`components/ui`. Site-wide links and global toast handling belong to
-`components/shared`; the public footer belongs to the public layout.
-
-The client, server, and shared data layers remain separate. Supabase factories
-are named `supabase.client.ts` within each layer. Shared session queries live in
-`lib/shared/auth/session.service.ts` and receive the caller's Supabase client.
-Browser image compression and uploads live in `lib/client/images`; shared image
-services provide storage queries and deletion without importing browser code.
-
-Search transformations and types live in `lib/shared/search`, while browser RPC
-calls stay in client services. Theme constants, types, and transformations live
-in `lib/shared/theme`, with Jotai state in `lib/client/theme.atom.ts`. Route
-constants live in `lib/shared/routes`.
-Date conversion, file-size formatting, and hashing are separate shared utilities;
-date utilities retain the existing timezone initialization and fallback behavior.
+Thought image URLs are deduplicated at service read/write boundaries and in
+upload state, preserving first occurrence and order so URLs can serve as keys.
+Recent-plan row IDs exist only in editor state and are omitted when saving.
