@@ -98,9 +98,9 @@ function RecentPlanForm({
             <Button
               variant="ghost"
               onClick={addPlan}
-              className="group flex min-h-36 w-full flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-border-strong bg-surface-muted/40 text-text-muted transition hover:border-info-border hover:bg-info-bg/70 hover:text-info-text"
+              className="group flex min-h-36 w-full flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-border-strong bg-surface-muted/40 text-text-muted transition-colors hover:border-info-border hover:bg-info-bg/70 hover:text-info-text"
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-full border border-current/30 transition group-hover:scale-105">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full border border-current/30 transition-transform group-hover:scale-105">
                 <Plus className="h-5 w-5" />
               </span>
               <span className="text-sm font-medium">Create first plan</span>
@@ -109,7 +109,7 @@ function RecentPlanForm({
             plans.map(({ id, plan }) => (
               <div
                 key={id}
-                className="rounded-2xl border border-border-default bg-surface-panel/80 p-3 shadow-sm transition hover:border-border-strong"
+                className="rounded-2xl border border-border-default bg-surface-panel/80 p-3 shadow-sm transition-colors hover:border-border-strong"
               >
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-1 rounded-full bg-surface-muted p-1">
@@ -125,7 +125,7 @@ function RecentPlanForm({
                           aria-label={label}
                           title={label}
                           className={cn(
-                            "h-8 w-8 rounded-full border-0 p-2 text-text-muted transition hover:text-text-primary",
+                            "h-8 w-8 rounded-full border-0 p-2 text-text-muted transition-colors hover:text-text-primary",
                             active &&
                               "bg-surface-selected text-text-primary shadow-sm",
                           )}
@@ -161,9 +161,9 @@ function RecentPlanForm({
             <IconButton
               onClick={addPlan}
               aria-label="Add plan"
-              className="group flex w-full items-center justify-center rounded-2xl border border-dashed border-border-strong py-3 text-text-muted transition hover:border-info-border hover:bg-info-bg/60 hover:text-info-text"
+              className="group flex w-full items-center justify-center rounded-2xl border border-dashed border-border-strong py-3 text-text-muted transition-colors hover:border-info-border hover:bg-info-bg/60 hover:text-info-text"
             >
-              <Plus className="h-5 w-5 transition group-hover:scale-110" />
+              <Plus className="h-5 w-5 transition-transform group-hover:scale-110" />
             </IconButton>
           )}
         </div>

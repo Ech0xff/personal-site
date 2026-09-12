@@ -78,7 +78,7 @@ export default function OauthProviders() {
               </div>
               <div
                 className={cn(
-                  "relative h-7 w-12 rounded-full transition",
+                  "relative h-7 w-12 rounded-full transition-colors",
                   enabled ? "bg-primary-bg" : "bg-surface-hover-strong ",
                 )}
               >

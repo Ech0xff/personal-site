@@ -11,6 +11,10 @@ relevant file or issue when possible.
 
 ## Runtime Verification
 
+- [ ] Verify snapshot theme changes with dashboard editors, the tag sphere, and
+      notifications open in an authenticated browser; the current verification
+      session has no admin login. Compare the result in Safari on macOS as well.
+
 - [ ] Cover `uploadImageFromUrl` in a browser integration test, including fetch
       failure and duplicate content. It has no current UI consumer; file upload,
       WebP compression, and duplicate file uploads were verified locally.

@@ -39,7 +39,7 @@ export default function Button({
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border font-medium transition-colors duration-180 disabled:pointer-events-none disabled:opacity-50",
+        "inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border font-medium transition-colors disabled:pointer-events-none disabled:opacity-50",
         variants[variant],
         sizes[size],
         className,

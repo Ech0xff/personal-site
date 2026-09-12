@@ -120,7 +120,7 @@ export default function AccountPage() {
                             variant="secondary"
                             key={provider}
                             onClick={() => handleLink(provider)}
-                            className="gap-2 transition"
+                            className="gap-2"
                           >
                             <config.icon className="h-4 w-4" />
                             {formatMessage(dictionary.auth.linkProvider, {

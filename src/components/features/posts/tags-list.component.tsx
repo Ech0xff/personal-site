@@ -34,7 +34,7 @@ export default function TagsList({
           </div>
           <div className="pointer-events-none invisible absolute bottom-full left-1/2 z-(--layer-tooltip) mb-2 -translate-x-1/2 rounded-lg bg-surface-inverse px-3 py-2 text-xs whitespace-nowrap text-text-inverse opacity-0 shadow-lg transition group-focus-within/tooltip:visible group-focus-within/tooltip:opacity-100 group-hover/tooltip:visible group-hover/tooltip:opacity-100">
             {hiddenTags.map((tag) => tag.name).join(", ")}
-            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-zinc-900 dark:border-t-zinc-700" />
+            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-surface-inverse" />
           </div>
         </div>
       )}

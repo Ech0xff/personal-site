@@ -124,7 +124,7 @@ export default function PostEditor({
                 ]}
               />
               <DateTimeInput
-                className="duration-300 hover:scale-110"
+                className="transition-transform duration-300 hover:scale-110"
                 value={form.published_at}
                 onChange={(value) => updateForm({ published_at: value })}
                 disabled={isPending}

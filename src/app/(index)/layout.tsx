@@ -57,7 +57,10 @@ function Navbar() {
   );
 
   return (
-    <Stack y className={cn("relative flex-1 duration-300")}>
+    <Stack
+      y
+      className={cn("relative flex-1 transition-[padding] duration-300")}
+    >
       <Stack
         x
         className={cn("mx-auto w-full items-center justify-between px-4 py-2")}

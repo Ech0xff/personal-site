@@ -21,7 +21,7 @@ export default function Input({
       {...props}
       aria-invalid={invalid || props["aria-invalid"]}
       className={cn(
-        "min-w-0 rounded-lg border border-border-default bg-surface-input px-3 text-text-primary transition-colors duration-180 placeholder:text-text-placeholder read-only:bg-surface-muted focus-visible:border-focus-ring disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-danger-border aria-invalid:outline-danger-text",
+        "min-w-0 rounded-lg border border-border-default bg-surface-input px-3 text-text-primary transition-colors placeholder:text-text-placeholder read-only:bg-surface-muted focus-visible:border-focus-ring disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-danger-border aria-invalid:outline-danger-text",
         sizes[controlSize],
         className,
       )}

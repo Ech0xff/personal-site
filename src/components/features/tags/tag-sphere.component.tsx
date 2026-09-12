@@ -3,6 +3,8 @@
 import type { CSSProperties, MouseEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import { isThemeTransitioning } from "#lib/client/theme-transition.service";
+
 type Rotation = {
   x: number;
   y: number;
@@ -240,6 +242,11 @@ export default function TagSphere<T extends TagSphereItem>({
     if (containerRef.current) resizeObserver?.observe(containerRef.current);
 
     const rotate = (time: number) => {
+      if (isThemeTransitioning()) {
+        previousTime = time;
+        frameId = requestAnimationFrame(rotate);
+        return;
+      }
       const delta = motionPreference.matches
         ? 0
         : Math.min(time - previousTime, 32);
@@ -379,7 +386,7 @@ export default function TagSphere<T extends TagSphereItem>({
               }}
               type="button"
               title={`${tag.name}: ${tag.count}`}
-              className="cursor-pointer rounded px-2 py-1 font-semibold tracking-normal whitespace-nowrap transition-colors duration-200 hover:bg-surface-inverse/10 hover:opacity-100 focus-visible:bg-surface-inverse/10 focus-visible:outline-none dark:hover:bg-surface-panel/10 dark:focus-visible:bg-surface-panel/10"
+              className="cursor-pointer rounded px-2 py-1 font-semibold tracking-normal whitespace-nowrap transition-colors hover:bg-surface-inverse/10 hover:opacity-100 focus-visible:bg-surface-inverse/10 focus-visible:outline-none dark:hover:bg-surface-panel/10 dark:focus-visible:bg-surface-panel/10"
               onBlur={() => releaseTag(tag.id)}
               onClick={() => onTagClick?.(tag)}
               onFocus={() =>

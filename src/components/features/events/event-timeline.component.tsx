@@ -54,7 +54,7 @@ export default function EventTimeline({ events, renderActions }: Props) {
                   {/* Dot */}
                   <div
                     className={cn(
-                      "absolute z-10 aspect-square h-5 rounded-full duration-300",
+                      "absolute z-10 aspect-square h-5 rounded-full transition-[top,left,translate,background-color] duration-300",
                       "top-0 left-1/2 -translate-1/2",
                       "sm:top-1/2 sm:left-1/2 sm:-translate-1/2",
                     )}
@@ -67,7 +67,7 @@ export default function EventTimeline({ events, renderActions }: Props) {
                   />
                   <SectionCard
                     className={cn(
-                      "relative w-full duration-300",
+                      "relative w-full transition-[width,padding,margin] duration-300",
                       "w-full",
                       "sm:w-[calc(50%-2rem)]",
                       index % 2 === 0

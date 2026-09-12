@@ -48,7 +48,7 @@ export default function SegmentedToggle<T extends string>({
             aria-pressed={isActive}
             onClick={() => onChange(option.value)}
             className={cn(
-              "rounded-md whitespace-nowrap transition-colors duration-180",
+              "rounded-md whitespace-nowrap transition-colors",
               buttonSizeClass,
               isActive
                 ? "bg-(--surface-selected) text-(--text-primary) shadow"

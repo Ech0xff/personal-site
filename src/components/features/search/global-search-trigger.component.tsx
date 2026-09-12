@@ -51,7 +51,7 @@ export default function GlobalSearchTrigger({ className }: Props) {
       type="button"
       onClick={handleOpen}
       className={cn(
-        "inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-(--text-muted) transition hover:bg-(--surface-hover) hover:text-(--text-primary)",
+        "inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-(--text-muted) transition-colors hover:bg-(--surface-hover) hover:text-(--text-primary)",
         className,
       )}
       aria-label={dictionary.search.title}

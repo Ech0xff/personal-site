@@ -1,13 +1,12 @@
 "use client";
 
 import { atom } from "jotai";
+import { flushSync } from "react-dom";
 
 import {
   Theme,
   THEME_STORAGE_KEY,
   THEME_MEDIA_QUERY,
-  THEME_ATTRIBUTE,
-  THEME_PREFERENCE_ATTRIBUTE,
 } from "#lib/shared/theme/theme.const";
 import { parseTheme, resolveTheme } from "#lib/shared/theme/theme.helper";
 import type {
@@ -15,15 +14,20 @@ import type {
   ResolvedTheme,
 } from "#lib/shared/theme/theme.type";
 
+import { applyTheme, transitionTheme } from "./theme-transition.service";
+
 type ThemeState = Readonly<{
   preference: ThemePreference;
   systemDark: boolean;
 }>;
+type PreferenceUpdate =
+  | ThemePreference
+  | ((previous: ThemePreference) => ThemePreference);
 type ThemeUpdate =
   | Readonly<{ type: "initialize"; state: ThemeState }>
   | Readonly<{
       type: "preference";
-      preference: ThemePreference;
+      preference: PreferenceUpdate;
       persist: boolean;
     }>
   | Readonly<{ type: "system"; systemDark: boolean }>;
@@ -36,29 +40,40 @@ const _theme = atom<ThemeState>({
 const stateAtom = atom(
   (get) => get(_theme),
   (get, set, update: ThemeUpdate) => {
-    const current = get(_theme);
-    const next =
-      update.type === "initialize"
-        ? update.state
-        : update.type === "system"
-          ? { ...current, systemDark: update.systemDark }
-          : { ...current, preference: update.preference };
+    const commit = () => {
+      const current = get(_theme);
+      const next =
+        update.type === "initialize"
+          ? update.state
+          : update.type === "system"
+            ? { ...current, systemDark: update.systemDark }
+            : {
+                ...current,
+                preference:
+                  typeof update.preference === "function"
+                    ? update.preference(current.preference)
+                    : update.preference,
+              };
 
-    set(_theme, next);
-    if (typeof window === "undefined") return;
+      applyTheme(
+        next.preference,
+        resolveTheme(next.preference, next.systemDark),
+      );
+      set(_theme, next);
 
-    const resolved = resolveTheme(next.preference, next.systemDark);
-    const root = document.documentElement;
-    root.setAttribute(THEME_ATTRIBUTE, resolved);
-    root.setAttribute(THEME_PREFERENCE_ATTRIBUTE, next.preference);
-    root.style.colorScheme = resolved;
-
-    if (update.type === "preference" && update.persist) {
-      try {
-        window.localStorage.setItem(THEME_STORAGE_KEY, next.preference);
-      } catch {
-        // Theme changes still work when browser storage is unavailable.
+      if (update.type === "preference" && update.persist) {
+        try {
+          window.localStorage.setItem(THEME_STORAGE_KEY, next.preference);
+        } catch {
+          // Theme changes still work when browser storage is unavailable.
+        }
       }
+    };
+
+    if (update.type === "initialize") {
+      commit();
+    } else {
+      transitionTheme(() => flushSync(commit), 200);
     }
   },
 );
@@ -97,17 +112,10 @@ stateAtom.onMount = (update) => {
 
 export const themeAtom = atom(
   (get) => get(stateAtom).preference,
-  (
-    get,
-    set,
-    update: ThemePreference | ((previous: ThemePreference) => ThemePreference),
-  ) =>
+  (_get, set, update: PreferenceUpdate) =>
     set(stateAtom, {
       type: "preference",
-      preference:
-        typeof update === "function"
-          ? update(get(stateAtom).preference)
-          : update,
+      preference: update,
       persist: true,
     }),
 );

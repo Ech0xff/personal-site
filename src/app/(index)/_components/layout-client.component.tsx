@@ -50,13 +50,11 @@ export default function LayoutClient({
       <NavbarController />
       <Stack
         y
-        className={cn(
-          "relative min-h-dvh w-full max-w-full overflow-x-clip duration-300",
-        )}
+        className={cn("relative min-h-dvh w-full max-w-full overflow-x-clip")}
       >
         <Stack
           className={cn(
-            "sticky top-0 z-(--layer-navigation) w-full max-w-full min-w-0 duration-300",
+            "sticky top-0 z-(--layer-navigation) w-full max-w-full min-w-0 transition-[padding,backdrop-filter] duration-300",
             "in-data-[scrolled=true]:backdrop-blur-md",
             isHome
               ? "in-data-[scrolled=true]:*:px-(--layout-padding-x)"
@@ -66,7 +64,7 @@ export default function LayoutClient({
           {navbar}
           <div
             className={cn(
-              "mx-auto h-px duration-300",
+              "mx-auto h-px transition-[padding] duration-300",
               isHome
                 ? "in-data-[scrolled=true]:bg-border-strong"
                 : "bg-border-strong",
@@ -76,7 +74,7 @@ export default function LayoutClient({
         <Stack
           y
           className={cn(
-            "w-full max-w-full min-w-0 flex-1 duration-300",
+            "w-full max-w-full min-w-0 flex-1 transition-[padding] duration-300",
             "in-data-[scrolled=true]:px-(--layout-padding-x)",
             { "px-(--layout-padding-x)": !isHome },
           )}

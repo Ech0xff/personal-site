@@ -324,7 +324,7 @@ export default function ContributionCalendar({
                 aria-selected={year === selectedYear}
                 onClick={() => setSelectedYear(year)}
                 className={[
-                  "rounded-md px-2 py-0.5 font-medium transition",
+                  "rounded-md px-2 py-0.5 font-medium transition duration-(--duration-state)",
                   year === selectedYear
                     ? "bg-surface-panel text-text-primary shadow  "
                     : "text-text-muted hover:text-text-secondary ",

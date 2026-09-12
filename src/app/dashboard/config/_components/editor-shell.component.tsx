@@ -53,12 +53,17 @@ export default function EditorShell({
         </h2>
       </div>
       <div className="relative flex flex-1 overflow-hidden px-1">
-        <div className={cn("flex flex-1 duration-300", loading && "opacity-0")}>
+        <div
+          className={cn(
+            "flex flex-1 transition-opacity duration-300",
+            loading && "opacity-0",
+          )}
+        >
           {children}
         </div>
         <div
           className={cn(
-            "absolute inset-0 flex items-center justify-center duration-300",
+            "absolute inset-0 flex items-center justify-center transition-opacity duration-300",
             loading ? "opacity-100" : "pointer-events-none opacity-0",
           )}
         >

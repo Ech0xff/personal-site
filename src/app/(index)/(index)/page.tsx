@@ -75,8 +75,8 @@ export default async function HomePage() {
         {/* background */}
         <div
           className={cn(
-            "absolute top-[-18svh] left-[50%] h-[18dvh] w-dvw -translate-x-1/2 duration-300",
-            "bg-linear-to-t from-(--theme-bg) from-50% to-transparent",
+            "absolute top-[-18svh] left-[50%] h-[18dvh] w-dvw -translate-x-1/2",
+            "bg-theme-bg mask-t-from-50% mask-t-to-transparent",
           )}
         />
         <IntroductionSection

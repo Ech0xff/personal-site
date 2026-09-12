@@ -75,6 +75,25 @@ atom mounts these listeners; the last unsubscribe removes them. Storage is read
 on mount, while ordinary atom reads use in-memory state. The pre-paint
 `ThemeScript` applies the initial appearance before React mounts.
 
+`applyTheme` only writes HTML theme attributes and the color scheme. The theme
+atom wraps subsequent updates in `transitionTheme` for a 200ms whole-page View
+Transition. It commits DOM attributes and React state together with `flushSync`
+inside the snapshot update callback, so theme consumers share the new appearance.
+Initialization, reduced motion, and browsers without View Transitions update
+immediately. Storage failures fall back to the system theme during initialization.
+
+The Tailwind `transition-colors` utility uses `--duration-state` (180ms) for
+ordinary control feedback. Explicit duration utilities can override it when a
+different interaction warrants that. During a theme transition, local CSS
+transitions are disabled and page animations pause; only the root snapshots
+crossfade. The grid, cursor, and marquee use CSS animation pausing; the typewriter
+and tag sphere skip their JavaScript animation updates. Cleanup uses the browser's
+`finished` promise, resumes previously running animations that remain paused, and
+removes the temporary root marker and duration. Canceled local CSS transitions
+are not replayed. A new request skips the previous transition without
+letting its cleanup affect the new one. Gradient and shadow changes are included
+in the whole-page fade. Embedded iframe activity is owned by its provider.
+
 Thought image URLs are deduplicated at service read/write boundaries and in
 upload state, preserving first occurrence and order so URLs can serve as keys.
 Recent-plan row IDs exist only in editor state and are omitted when saving.

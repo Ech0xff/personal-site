@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { match } from "ts-pattern";
 
 import Stack from "#components/ui/stack.component";
+import { isThemeTransitioning } from "#lib/client/theme-transition.service";
 
 type TypewriterPhase = (typeof PHASE)[keyof typeof PHASE];
 
@@ -43,7 +44,11 @@ export default function Typewriter({ texts }: { texts: string[] }) {
   useEffect(() => {
     if (reducedMotion || textCount === 0) return;
 
-    const timer = setTimeout(() => {
+    const tick = () => {
+      if (isThemeTransitioning()) {
+        timer = setTimeout(tick, 50);
+        return;
+      }
       setState((state) => {
         const { phase, currentText } = state;
         return match(phase)
@@ -71,7 +76,8 @@ export default function Typewriter({ texts }: { texts: string[] }) {
           }))
           .exhaustive();
       });
-    }, PHASE_DELAY[state.phase]);
+    };
+    let timer = setTimeout(tick, PHASE_DELAY[state.phase]);
 
     return () => window.clearTimeout(timer);
   }, [reducedMotion, state, textCount, fullText]);
