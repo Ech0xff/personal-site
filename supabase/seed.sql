@@ -1,3 +1,7 @@
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('images', 'images', true)
+ON CONFLICT (id) DO NOTHING;
+
 INSERT INTO public.posts (id, title, content, author, status, published_at)
 VALUES (
   'cf44cb54-1d65-446b-bca9-8b3f6158484f',
@@ -238,3 +242,12 @@ FROM public.tags AS tags
 WHERE lower(tags.name) IN ('ai', 'llm', 'prompt engineering')
 ON CONFLICT DO NOTHING;
 
+-- Language-free editable configuration for fresh local databases.
+INSERT INTO public.configs (key, value)
+VALUES
+  ('DICTIONARY', '{}'::jsonb),
+  ('ABOUT_ME', '"Hi, I''m Ech0xff. Welcome to my personal site!"'::jsonb),
+  ('PLAYLIST_URL', '""'::jsonb),
+  ('RECENT_PLAN', '[]'::jsonb),
+  ('OAUTH', '[]'::jsonb)
+ON CONFLICT (key) DO NOTHING;

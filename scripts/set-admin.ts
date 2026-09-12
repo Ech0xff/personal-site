@@ -1,4 +1,4 @@
-import { makeAdminClient } from "#lib/server/supabase";
+import { makeAdminClient } from "#lib/server/supabase.client";
 
 import { askInput, checkYes, loadEnvByPath, requireEnvVars } from "./common";
 
@@ -11,7 +11,7 @@ const findUserByEmail = async (email: string) => {
   let page = 1;
   const perPage = 200;
 
-  while (true) {
+  for (;;) {
     const { data, error } = await client.auth.admin.listUsers({
       page,
       perPage,
@@ -21,7 +21,7 @@ const findUserByEmail = async (email: string) => {
       throw new Error(`Failed to list users: ${error.message}`);
     }
 
-    const users = data.users ?? [];
+    const users = data.users;
     const targetUser = users.find(
       (user) => normalizeEmail(user.email ?? "") === email,
     );
@@ -54,7 +54,7 @@ export const setAdmin = async (envPath: string) => {
 
   const { error } = await makeAdminClient().auth.admin.updateUserById(user.id, {
     app_metadata: {
-      ...(user.app_metadata || {}),
+      ...user.app_metadata,
       role: "admin",
     },
   });

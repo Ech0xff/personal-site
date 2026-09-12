@@ -1,14 +1,12 @@
 import { z } from "zod";
 
-import type { OAuthProvider, RecentPlan } from "./config.type";
+import { OAUTH_PROVIDERS } from "./config.const";
 
 export const stringConfigSchema = z.string();
 
-export const oauthProvidersSchema: z.ZodType<OAuthProvider[]> = z.array(
-  z.enum(["github", "google"]),
-);
+export const oauthProvidersSchema = z.array(z.enum(OAUTH_PROVIDERS));
 
-export const recentPlansSchema: z.ZodType<RecentPlan[]> = z.array(
+export const recentPlansSchema = z.array(
   z
     .object({
       task: z.string(),

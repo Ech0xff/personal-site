@@ -1,0 +1,40 @@
+import {
+  deleteEvent,
+  fetchEvent,
+  fetchEvents,
+  saveEvent,
+  updateEventStatus,
+} from "#lib/shared/services";
+import type { EventInsert, Status } from "#types";
+
+import { makeBrowserClient } from "../supabase.client";
+
+export const fetchEventsByBrowser = async () => {
+  const client = makeBrowserClient();
+  return fetchEvents(client);
+};
+
+export const fetchEventByBrowser = async (id: string) => {
+  const client = makeBrowserClient();
+  return fetchEvent(id, client);
+};
+
+export const saveEventByBrowser = async (
+  payload: EventInsert & { id?: string; tagIds?: string[] },
+) => {
+  const client = makeBrowserClient();
+  return saveEvent(client, payload);
+};
+
+export const updateEventStatusByBrowser = async (
+  id: string,
+  status: Status,
+) => {
+  const client = makeBrowserClient();
+  return updateEventStatus(client, id, status);
+};
+
+export const deleteEventByBrowser = async (id: string) => {
+  const client = makeBrowserClient();
+  return deleteEvent(client, id);
+};

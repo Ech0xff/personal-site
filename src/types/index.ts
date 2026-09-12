@@ -1,24 +1,37 @@
-import type { TagWithCount } from "./aggregates";
+import type { Status } from "#lib/shared/content/status.schema";
+
+import type { TagWithCount } from "./aggregates.type";
 import type { Tables, TablesInsert, TablesUpdate } from "./supabase";
 
-export * from "./aggregates";
+export * from "./aggregates.type";
 export * from "./supabase";
+export type { Status } from "#lib/shared/content/status.schema";
 
 export type Tag = Tables<"tags">;
-export type Post = Tables<"posts">;
-export type Thought = Tables<"thoughts">;
-export type Event = Tables<"events">;
+export type Post = Omit<Tables<"posts">, "status"> & { status: Status };
+export type Thought = Omit<Tables<"thoughts">, "status"> & { status: Status };
+export type Event = Omit<Tables<"events">, "status"> & { status: Status };
 
-export type PostInsert = TablesInsert<"posts">;
-export type PostUpdate = TablesUpdate<"posts">;
+export type PostInsert = Omit<TablesInsert<"posts">, "status"> & {
+  status?: Status;
+};
+export type PostUpdate = Omit<TablesUpdate<"posts">, "status"> & {
+  status?: Status;
+};
 
-export type ThoughtInsert = TablesInsert<"thoughts">;
-export type ThoughtUpdate = TablesUpdate<"thoughts">;
+export type ThoughtInsert = Omit<TablesInsert<"thoughts">, "status"> & {
+  status?: Status;
+};
+export type ThoughtUpdate = Omit<TablesUpdate<"thoughts">, "status"> & {
+  status?: Status;
+};
 
-export type EventInsert = TablesInsert<"events">;
-export type EventUpdate = TablesUpdate<"events">;
-
-export type Status = "show" | "hide" | string;
+export type EventInsert = Omit<TablesInsert<"events">, "status"> & {
+  status?: Status;
+};
+export type EventUpdate = Omit<TablesUpdate<"events">, "status"> & {
+  status?: Status;
+};
 
 export interface ContributionDay {
   date: string;

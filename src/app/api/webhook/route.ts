@@ -3,19 +3,36 @@ import { type NextRequest, NextResponse } from "next/server";
 
 import { CACHE_TAGS, TABLE_CACHE_TAGS } from "#lib/server/cache";
 
+import { webhookPayloadSchema } from "./payload.schema";
+
 export async function POST(request: NextRequest) {
   const authHeader = request.headers.get("Authorization");
   const expectedToken = `Bearer ${process.env.WEBHOOK_SECRET}`;
 
-  if (authHeader !== expectedToken) {
+  if (!process.env.WEBHOOK_SECRET || authHeader !== expectedToken) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
+  let body: unknown;
   try {
-    const body = await request.json();
-    const table = body?.table;
-    const record = body?.record ?? body?.new;
-    const oldRecord = body?.old_record;
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ message: "Invalid JSON" }, { status: 400 });
+  }
+
+  const result = webhookPayloadSchema.safeParse(body);
+  if (!result.success) {
+    return NextResponse.json(
+      { message: "Invalid webhook payload" },
+      { status: 400 },
+    );
+  }
+
+  try {
+    const body = result.data;
+    const table = body.table;
+    const record = body.record ?? body.new;
+    const oldRecord = body.old_record;
     const id = record?.id ?? oldRecord?.id;
 
     const tags = new Set(TABLE_CACHE_TAGS[table] ?? []);

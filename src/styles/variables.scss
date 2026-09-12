@@ -1,6 +1,25 @@
 @use "./mixins" as *;
 
 $theme-light: (
+  primary-bg: #2563eb,
+  primary-hover: #1d4ed8,
+  primary-fg: #ffffff,
+  success-text: #166534,
+  success-bg: #f0fdf4,
+  success-border: #86efac,
+  warning-text: #92400e,
+  warning-bg: #fffbeb,
+  warning-border: #fcd34d,
+  danger-text: #b91c1c,
+  danger-bg: #fef2f2,
+  danger-border: #fca5a5,
+  info-text: #1d4ed8,
+  info-bg: #eff6ff,
+  info-border: #93c5fd,
+  focus-ring: #2563eb,
+  overlay: rgba(0, 0, 0, 0.55),
+  scrollbar: #a1a1aa,
+
   theme-bg: #ffffff,
   text-primary: #18181b,
   text-secondary: #52525b,
@@ -26,6 +45,25 @@ $theme-light: (
 );
 
 $theme-dark: (
+  primary-bg: #2563eb,
+  primary-hover: #1d4ed8,
+  primary-fg: #ffffff,
+  success-text: #86efac,
+  success-bg: #052e16,
+  success-border: #166534,
+  warning-text: #fcd34d,
+  warning-bg: #451a03,
+  warning-border: #92400e,
+  danger-text: #fca5a5,
+  danger-bg: #450a0a,
+  danger-border: #991b1b,
+  info-text: #93c5fd,
+  info-bg: #172554,
+  info-border: #1e40af,
+  focus-ring: #60a5fa,
+  overlay: rgba(0, 0, 0, 0.65),
+  scrollbar: #52525b,
+
   theme-bg: #09090b,
   text-primary: #f4f4f5,
   text-secondary: #d4d4d8,
@@ -51,3 +89,30 @@ $theme-dark: (
 );
 
 @include emit-themed-vars($theme-light, $theme-dark);
+
+:root {
+  --radius-control: 8px;
+  --radius-card: 12px;
+  --radius-panel: 16px;
+  --layer-tooltip: 30;
+  --layer-navigation: 40;
+  --layer-modal: 100;
+  --layer-loading: 200;
+  --layer-toast: 300;
+  --duration-state: 180ms;
+  --content-gutter: clamp(1rem, 4vw, 2rem);
+
+  // Resolve aliases before Sonner shadows these status variable names.
+  --toast-success-bg: var(--success-bg);
+  --toast-success-text: var(--success-text);
+  --toast-success-border: var(--success-border);
+  --toast-warning-bg: var(--warning-bg);
+  --toast-warning-text: var(--warning-text);
+  --toast-warning-border: var(--warning-border);
+  --toast-danger-bg: var(--danger-bg);
+  --toast-danger-text: var(--danger-text);
+  --toast-danger-border: var(--danger-border);
+  --toast-info-bg: var(--info-bg);
+  --toast-info-text: var(--info-text);
+  --toast-info-border: var(--info-border);
+}

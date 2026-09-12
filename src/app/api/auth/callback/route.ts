@@ -1,17 +1,14 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { makeAdminClient, makeServerClient } from "#lib/server/supabase";
-import { LOCALE_COOKIE, normalizeLocale } from "#lib/shared/i18n";
-import { getLocalizedRoutes } from "#lib/shared/routes";
-import { hasEmailIdentity } from "#lib/shared/utils/tools";
-import { appendToastToUrl } from "#lib/shared/utils/url-toast";
+import { makeAdminClient, makeServerClient } from "#lib/server/supabase.client";
+import { hasEmailIdentity } from "#lib/shared/auth/account.helper";
+import { ROUTES } from "#lib/shared/routes/routes.const";
+import { appendToastToUrl } from "#lib/shared/utils/url-toast.helper";
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const origin = requestUrl.origin;
-  const locale = normalizeLocale(request.cookies.get(LOCALE_COOKIE)?.value);
-  const routes = getLocalizedRoutes(locale);
-  const authUrl = new URL(routes.AUTH, origin).toString();
+  const authUrl = new URL(ROUTES.AUTH, origin).toString();
 
   const code = requestUrl.searchParams.get("code");
   if (!code) {
@@ -49,5 +46,5 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  return NextResponse.redirect(new URL(routes.DASHBOARD.ACCOUNT, origin));
+  return NextResponse.redirect(new URL(ROUTES.DASHBOARD.ACCOUNT, origin));
 }

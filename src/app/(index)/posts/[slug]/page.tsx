@@ -1,0 +1,148 @@
+import { ArrowLeft, Calendar, User } from "lucide-react";
+import type { Metadata } from "next";
+import { cacheTag } from "next/cache";
+
+import { PostContent } from "#components/features/content";
+import PostTableOfContents from "#components/features/posts/post-table-of-contents.component";
+import Link from "#components/shared/link.component";
+import ScrollToTopButton from "#components/shared/scroll-to-top-button.component";
+import CopyButton from "#components/ui/copy-button.component";
+import { useDictionary } from "#dictionary";
+import { CACHE_TAGS } from "#lib/server/cache";
+import { getDictionary } from "#lib/server/dictionary/dictionary.service";
+import { fetchPost } from "#lib/shared/services";
+import { getMarkdownHeadings } from "#lib/shared/utils";
+import { formatTime } from "#lib/shared/utils/date.helper";
+
+const getPostData = async (slug: string) => {
+  "use cache";
+  cacheTag(CACHE_TAGS.post(slug));
+  return fetchPost(slug);
+};
+
+interface Props {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  "use cache";
+  const { slug } = await params;
+  cacheTag(CACHE_TAGS.post(slug), CACHE_TAGS.config);
+  const dictionary = await getDictionary();
+  const post = await getPostData(slug);
+
+  if (!post || post.status !== "show") {
+    return {
+      title: dictionary.postDetail.metaNotFoundTitle,
+    };
+  }
+
+  return {
+    title: post.title,
+    description: post.content ? post.content.substring(0, 150) : "",
+  };
+}
+
+export default async function PostPage({ params }: Props) {
+  "use cache";
+  const { slug } = await params;
+  cacheTag(CACHE_TAGS.post(slug), CACHE_TAGS.config);
+  const post = await getPostData(slug);
+
+  return <PostPageContent post={post} />;
+}
+
+function PostPageContent({
+  post,
+}: {
+  post: Awaited<ReturnType<typeof getPostData>>;
+}) {
+  const dictionary = useDictionary();
+  const content = post?.content || "";
+
+  // Handle 404 - also hide non-show posts
+  if (!post || post.status !== "show") {
+    return (
+      <div className="py-20 text-center">
+        <h1 className="mb-4 text-3xl font-bold">
+          {dictionary.postDetail.notFoundTitle}
+        </h1>
+        <p className="mb-8 text-text-muted">
+          {dictionary.postDetail.notFoundDescription}
+        </p>
+        <Link
+          href="/posts"
+          className="inline-flex items-center gap-2 rounded bg-surface-inverse px-6 py-3 text-text-inverse transition-opacity hover:opacity-90"
+        >
+          {dictionary.postDetail.backToPosts}
+        </Link>
+      </div>
+    );
+  }
+
+  const headings = getMarkdownHeadings(content).filter(
+    (heading) => heading.depth >= 2 && heading.depth <= 4,
+  );
+
+  return (
+    <>
+      <article className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-(--content-gutter) pt-10 pb-10">
+        {/* Header */}
+        <header>
+          <div className="mb-4 flex flex-col gap-4 text-4xl sm:flex-row sm:items-start sm:justify-between">
+            <h1 className="leading-tight font-bold">{post.title}</h1>
+            <CopyButton content={content} className="text-base" />
+          </div>
+          <div className="flex flex-wrap items-center gap-4 text-sm text-text-muted">
+            {post.author && (
+              <span className="flex items-center gap-1">
+                <User className="h-4 w-4" />
+                {post.author}
+              </span>
+            )}
+            {post.published_at && (
+              <span className="flex items-center gap-1">
+                <Calendar className="h-4 w-4" />
+                {formatTime(post.published_at, "MMMM D, YYYY")}
+              </span>
+            )}
+          </div>
+          {post.tags.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {post.tags.map((tag) => (
+                <span
+                  key={tag.id}
+                  className="inline-flex items-center rounded-full bg-surface-muted px-2.5 py-0.5 text-xs font-medium text-text-primary"
+                >
+                  #{tag.name}
+                </span>
+              ))}
+            </div>
+          )}
+        </header>
+        <hr className="my-8 border-border-default" />
+        {/* Content */}
+        <PostContent content={content} />
+        {/* Footer */}
+        <footer className="mt-auto">
+          <hr className="my-8 border-border-default" />
+          <div className="flex items-center justify-between">
+            <Link
+              href="/posts"
+              className="flex items-center gap-2 text-sm text-text-muted transition-colors hover:text-text-primary"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              {dictionary.postDetail.backToPosts}
+            </Link>
+            <ScrollToTopButton />
+          </div>
+        </footer>
+      </article>
+      <PostTableOfContents
+        headings={headings}
+        title={dictionary.postDetail.tableOfContents}
+        className="fixed top-24 left-[calc(50%+var(--container-3xl)/2)] hidden xl:block"
+      />
+    </>
+  );
+}

@@ -1,0 +1,26 @@
+.ui-code-editor {
+  .cm-editor,
+  .cm-scroller {
+    background: var(--surface-input);
+    color: var(--text-primary);
+  }
+  .cm-gutters {
+    background: var(--surface-muted);
+    color: var(--text-muted);
+    border-color: var(--border-default);
+  }
+  .cm-content {
+    font-family: var(--font-mono);
+  }
+  .cm-activeLine,
+  .cm-activeLineGutter {
+    background: var(--surface-hover);
+  }
+  .cm-editor.cm-focused .cm-selectionBackground,
+  .cm-selectionBackground {
+    background: var(--accent-surface-strong);
+  }
+  .cm-cursor {
+    border-left-color: var(--text-primary);
+  }
+}
