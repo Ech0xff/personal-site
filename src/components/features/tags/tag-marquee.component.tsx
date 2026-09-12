@@ -2,13 +2,10 @@
 
 import { Tag } from "lucide-react";
 import type { CSSProperties } from "react";
-import { useEffect, useRef, useState } from "react";
 
 import type { TagWithCount } from "#types";
 
-import { getTagMarqueeDuration } from "./tag-marquee.helper";
-
-import "./tag-marquee.component.scss";
+import { useTagMarquee } from "./tag-marquee.hook";
 
 type Props = {
   tags: TagWithCount[];
@@ -103,45 +100,13 @@ function MarqueeRow({
   const duplicated = ["original", "duplicate"].flatMap((group) =>
     expanded.map(({ tag, key }) => ({ tag, key: `${group}-${key}` })),
   );
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [duration, setDuration] = useState<number | null>(null);
-  const trackStyle:
-    | (CSSProperties & { "--tag-marquee-duration": string })
-    | undefined = duration
-    ? { "--tag-marquee-duration": `${duration}s` }
-    : undefined;
-
-  useEffect(() => {
-    const element = trackRef.current;
-    if (!element) return;
-
-    const updateDuration = () => {
-      setDuration(getTagMarqueeDuration(element.scrollWidth));
-    };
-
-    updateDuration();
-
-    if (typeof ResizeObserver === "undefined") return;
-
-    const observer = new ResizeObserver(() => {
-      updateDuration();
-    });
-
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, []);
+  const trackRef = useTagMarquee(direction);
 
   return (
     <div className="tag-marquee-row overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
       <div
         ref={trackRef}
-        className={[
-          "tag-marquee-track flex w-max gap-3",
-          direction === "left"
-            ? "tag-marquee-track-left"
-            : "tag-marquee-track-right",
-        ].join(" ")}
-        style={trackStyle}
+        className="tag-marquee-track flex w-max gap-3 will-change-transform"
       >
         {duplicated.map(({ tag, key }) => (
           <TagCard key={key} tag={tag} />

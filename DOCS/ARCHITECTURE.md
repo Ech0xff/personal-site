@@ -60,6 +60,11 @@ Root, post-detail, and auth `loading.tsx` files re-export the shared loading UI.
 The local boundaries cover page parameter and session reads; they do not cover
 runtime reads in a layout at the same directory level.
 
+The home tag marquee keeps its position in `useTagMarquee` and updates transforms
+with animation frames. Hover stops frame updates; leaving resumes from the last
+painted position without including paused time. Reduced-motion preferences stop
+the marquee.
+
 ## Module Ownership
 
 Shared auth/session queries accept the caller's client. Browser image compression
