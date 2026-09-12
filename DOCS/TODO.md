@@ -9,7 +9,23 @@ relevant file or issue when possible.
 - [ ] Confirm the project license and add its file; the former README linked
       to a missing `LICENSE`.
 
+## Existing Authentication Debt
+
+- [ ] Replace server authorization based on `getSession()` in
+      [session.service.ts](../src/lib/shared/auth/session.service.ts) with
+      verified user or claims checks, while keeping browser session reads
+      separate. Verify forged and expired sessions cannot pass admin checks.
+- [ ] Persist refreshed cookies from
+      [supabase.client.ts](../src/lib/server/supabase.client.ts) through a
+      writable response boundary; Server Component cookie writes are currently
+      swallowed. Verify a session survives an expired access token and reload.
+
 ## Runtime Verification
+
+- [ ] Configure and verify production content webhook triggers. The database
+      has webhook functions but no active public-table triggers; confirm
+      content and tag changes refresh all affected public caches using the
+      [deployment setup](../README.md#deployment).
 
 - [ ] Verify snapshot theme changes with dashboard editors, the tag sphere, and
       notifications open in an authenticated browser; the current verification

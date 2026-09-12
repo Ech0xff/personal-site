@@ -39,6 +39,13 @@ Global config includes `DICTIONARY`, which merges admin overrides with
 arrays replace defaults. Zod validates overrides, and dynamic messages use ICU
 formatting with supported placeholders and explicit rich-text renderers.
 
+Deployments upgraded from localized config must copy the English overrides to
+the language-free keys before building. Preview with
+`bun run scripts/config-migration.service.ts prod`, then add `--apply` to copy
+validated `DICTIONARY`, `ABOUT_ME`, `PLAYLIST_URL`, and `RECENT_PLAN` values from
+their `:en-US` keys. Existing targets and all source rows are preserved, including
+when the script runs again. The global `OAUTH` key does not need migration.
+
 The `#dictionary` conditional import resolves to the server reader or client
 provider. Config saves and deletions use admin Server Actions to expire the
 config cache; the dashboard refreshes the current route.

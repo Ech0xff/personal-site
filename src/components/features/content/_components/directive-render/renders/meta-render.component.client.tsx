@@ -4,6 +4,7 @@ import { ExternalLink, Globe2 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 
+import { useDictionary } from "#dictionary";
 import { cn } from "#lib/shared/utils";
 
 import { parseMicrolinkResponse, type MicrolinkData } from "./microlink.schema";
@@ -11,7 +12,7 @@ import { parseMicrolinkResponse, type MicrolinkData } from "./microlink.schema";
 type MetadataState =
   | { status: "loading" }
   | { status: "success"; metadata: MicrolinkData }
-  | { status: "error"; message: string };
+  | { status: "error" };
 
 interface Props {
   url: string;
@@ -54,7 +55,9 @@ function MetaSkeleton({ url }: { url: string }) {
   );
 }
 
-function MetaError({ message, url }: { message: string; url: string }) {
+function MetaError({ url }: { url: string }) {
+  const dictionary = useDictionary();
+
   return (
     <a
       className={cn(
@@ -70,7 +73,9 @@ function MetaError({ message, url }: { message: string; url: string }) {
       <span className="flex h-5 w-5 shrink-0 items-center justify-center">
         <Globe2 className="h-4 w-4" aria-hidden="true" />
       </span>
-      <span className="min-w-0 flex-1 text-sm">{message}</span>
+      <span className="min-w-0 flex-1 text-sm">
+        {dictionary.content.linkPreviewUnavailable}
+      </span>
       <ExternalLink className="h-4 w-4 shrink-0" aria-hidden="true" />
     </a>
   );
@@ -173,7 +178,7 @@ export default function MetaRenderClient({ url }: Props) {
         }
         const payload = parseMicrolinkResponse(await response.json());
         if (payload.status !== "success" || !payload.data) {
-          throw new Error(payload.message || "Failed to load link metadata.");
+          throw new Error("Failed to load link metadata.");
         }
         setState({ status: "success", metadata: payload.data });
       })
@@ -181,13 +186,7 @@ export default function MetaRenderClient({ url }: Props) {
         if (error instanceof DOMException && error.name === "AbortError") {
           return;
         }
-        setState({
-          status: "error",
-          message:
-            error instanceof Error
-              ? error.message
-              : "Failed to load link metadata.",
-        });
+        setState({ status: "error" });
       });
 
     return () => controller.abort();
@@ -196,7 +195,7 @@ export default function MetaRenderClient({ url }: Props) {
   if (state.status === "loading") return <MetaSkeleton url={url} />;
 
   if (state.status === "error") {
-    return <MetaError message={state.message} url={url} />;
+    return <MetaError url={url} />;
   }
 
   return <MetaContent metadata={state.metadata} url={url} />;

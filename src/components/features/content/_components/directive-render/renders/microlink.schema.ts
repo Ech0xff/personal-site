@@ -2,12 +2,12 @@ import { z } from "zod";
 
 const microlinkImageSchema = z.object({ url: z.string().optional() });
 const microlinkDataSchema = z.object({
-  title: z.string().optional(),
-  description: z.string().optional(),
-  publisher: z.string().optional(),
+  title: z.string().nullish(),
+  description: z.string().nullish(),
+  publisher: z.string().nullish(),
   url: z.string().optional(),
-  image: microlinkImageSchema.optional(),
-  logo: microlinkImageSchema.optional(),
+  image: microlinkImageSchema.nullish(),
+  logo: microlinkImageSchema.nullish(),
 });
 const microlinkResponseSchema = z.object({
   status: z.string().optional(),

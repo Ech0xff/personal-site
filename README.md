@@ -47,7 +47,8 @@ Keep environment files out of Git. Restart the dev server after changing them.
 ## Development
 
 - Develop: `bun run dev`
-- Build / serve production: `bun run build` / `bun run start`
+- Build / serve production: `NODE_ENV=production bun run build` /
+  `NODE_ENV=production bun run start`
 - Check formatting / lint: `bun run fmt` / `bun run lint`
 - Fix formatting / lint: `bun run fmt:fix` / `bun run lint:fix`
 - Check types / test: `bun run typecheck` / `bun run test`
@@ -167,6 +168,14 @@ Diagram source is encoded and sent to the public PlantUML server at
 Configure the [environment variables](#environment-variables) for the target
 Supabase project, then build and serve the app. If OAuth is enabled, allow the
 deployed site and `/api/auth/callback` in Supabase's auth redirect URLs.
+
+Set `NODE_ENV=production` before invoking Bun for a local production build or
+server. Otherwise Bun can preload `.env.development` before Next.js selects
+production mode, causing the build to use the development Supabase project.
+
+Legacy `/en-US` and `/zh-CN` URLs permanently redirect to the equivalent
+unprefixed route, preserving nested paths and query parameters. Keep these
+redirects when deploying so existing bookmarks and shared links continue to work.
 
 Content webhooks target `/api/webhook` with
 `Authorization: Bearer <WEBHOOK_SECRET>`. Use the maintenance menu to rebind

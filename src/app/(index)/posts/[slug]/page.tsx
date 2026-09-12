@@ -141,7 +141,7 @@ function PostPageContent({
       <PostTableOfContents
         headings={headings}
         title={dictionary.postDetail.tableOfContents}
-        className="fixed top-24 right-(--layout-padding-x) hidden translate-x-full xl:block"
+        className="fixed top-24 left-[calc(50%+var(--container-3xl)/2)] hidden xl:block"
       />
     </>
   );

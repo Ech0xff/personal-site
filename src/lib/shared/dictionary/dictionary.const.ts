@@ -139,6 +139,10 @@ export const defaultDictionary = {
     backToPosts: "Back to Posts",
     tableOfContents: "Contents",
   },
+  content: {
+    linkPreviewUnavailable:
+      "Link preview unavailable. Open the link to view it.",
+  },
   thoughtCard: {
     preview: "preview",
     imageAlt: "Thought image {index}",
