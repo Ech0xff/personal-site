@@ -1,16 +1,16 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { objectMarker } from "../_design/object-feedback.stylex";
 import {
   color,
   font,
   space,
   shape,
-  light,
-  material,
   media,
   motionToken,
-} from "../_design/tokens.stylex";
+} from "#design/tokens.stylex";
+
+import { objectMarker } from "../_design/object-feedback.stylex";
+import { light, material } from "../_design/tokens.stylex";
 
 const styles = stylex.create({
   cord: {

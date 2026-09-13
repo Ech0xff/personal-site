@@ -1,7 +1,7 @@
 import { useMotionValue, useSpring } from "framer-motion";
 import { useEffect, type PointerEvent } from "react";
 
-import { motionToken } from "../_design/tokens.stylex";
+import { motionToken } from "#design/tokens.stylex";
 
 const spring = {
   stiffness: motionToken.magneticStiffness,

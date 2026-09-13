@@ -1,14 +1,10 @@
 "use client";
 import * as stylex from "@stylexjs/stylex";
 
+import { font, motionToken, shape, space } from "#design/tokens.stylex";
+
 import { foundation } from "../_design/foundation.style";
-import {
-  material,
-  font,
-  motionToken,
-  shape,
-  space,
-} from "../_design/tokens.stylex";
+import { material } from "../_design/tokens.stylex";
 import { useClock } from "./use-clock.hook";
 
 const styles = stylex.create({

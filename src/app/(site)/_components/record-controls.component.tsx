@@ -3,15 +3,11 @@ import * as stylex from "@stylexjs/stylex";
 import { useAtom } from "jotai";
 import { useId, type PointerEvent } from "react";
 
+import { font, media, motionToken, shape } from "#design/tokens.stylex";
+
 import { foundation } from "../_design/foundation.style";
 import { recordMarker } from "../_design/object-feedback.stylex";
-import {
-  material,
-  font,
-  media,
-  motionToken,
-  shape,
-} from "../_design/tokens.stylex";
+import { material } from "../_design/tokens.stylex";
 import {
   playbackModeAtom,
   recordControlsPinnedAtom,

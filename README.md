@@ -2,8 +2,8 @@
 
 A personal site and lightweight CMS built with Next.js 16, React 19, Supabase,
 StyleX, and Bun. The reading-desk homepage uses local content; Posts, Thoughts,
-and Events are placeholders. The legacy dashboard manages content, tags, images,
-site configuration, and accounts using Tailwind CSS 4 and SCSS.
+and Events are placeholders. The dashboard manages content, tags, images,
+site configuration, and accounts using the same shared StyleX tokens.
 
 The interface is English; content keeps its original language. Routes have no
 language prefix.
@@ -79,7 +79,8 @@ working tree, including unstaged changes, without modifying or staging files.
 ## Public Site
 
 The reading-desk homepage is at `/`; its live token guide is at `/system`.
-It uses StyleX, local content, and a separate root layout, so the public pages
+It shares StyleX tokens with authentication and the dashboard while retaining
+local content and a separate root layout, so the public pages
 can run without Supabase. Authentication and dashboard routes still require
 Supabase. The former `/redesign` page URLs permanently redirect to their
 unprefixed counterparts; audio resources keep their `/redesign/*` URLs.

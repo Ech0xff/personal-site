@@ -1,6 +1,8 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { font, material, shape, space } from "../_design/tokens.stylex";
+import { font, shape, space } from "#design/tokens.stylex";
+
+import { material } from "../_design/tokens.stylex";
 
 export const panel = stylex.create({
   title: {

@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import type { KeyboardEvent, ReactNode } from "react";
 
-import { space } from "../_design/tokens.stylex";
+import { space } from "#design/tokens.stylex";
 
 const styles = stylex.create({
   root: { display: "flex", gap: space.xs, width: "100%" },

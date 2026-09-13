@@ -2,17 +2,18 @@
 import * as stylex from "@stylexjs/stylex";
 import { useAtom } from "jotai";
 
-import { foundation } from "../_design/foundation.style";
-import { feedback, objectMarker } from "../_design/object-feedback.stylex";
 import {
   font,
-  material,
   media,
   motionToken,
   shadow,
   shape,
   space,
-} from "../_design/tokens.stylex";
+} from "#design/tokens.stylex";
+
+import { foundation } from "../_design/foundation.style";
+import { feedback, objectMarker } from "../_design/object-feedback.stylex";
+import { material } from "../_design/tokens.stylex";
 import { DeskClock } from "./desk-clock.component";
 import { terminalLines } from "./desk-content.const";
 import { displayProgramAtom } from "./desk-preferences.atom";

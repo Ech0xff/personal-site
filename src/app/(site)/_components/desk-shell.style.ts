@@ -1,15 +1,16 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { objectMarker } from "../_design/object-feedback.stylex";
 import {
   color,
   font,
   media,
-  material,
   motionToken,
   shape,
   space,
-} from "../_design/tokens.stylex";
+} from "#design/tokens.stylex";
+
+import { objectMarker } from "../_design/object-feedback.stylex";
+import { material } from "../_design/tokens.stylex";
 export const shell = stylex.create({
   root: {
     "::selection": { backgroundColor: color.selection, color: color.text },

@@ -3,14 +3,14 @@ import * as stylex from "@stylexjs/stylex";
 import {
   color,
   font,
-  light,
-  material,
   media,
   motionToken,
   shadow,
   shape,
   space,
-} from "../_design/tokens.stylex";
+} from "#design/tokens.stylex";
+
+import { light, material } from "../_design/tokens.stylex";
 export const lampOff = stylex.createTheme(light, {
   glowOpacity: "0",
   bulbOpacity: "0.25",

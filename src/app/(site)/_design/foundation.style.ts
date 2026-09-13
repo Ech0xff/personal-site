@@ -1,6 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { color, font, motionToken, shape, space } from "./tokens.stylex";
+import { color, font, motionToken, shape, space } from "#design/tokens.stylex";
 
 export const foundation = stylex.create({
   focus: {

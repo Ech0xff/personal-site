@@ -1,16 +1,17 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { foundation } from "../_design/foundation.style";
-import { feedback, objectMarker } from "../_design/object-feedback.stylex";
 import {
   color,
   font,
-  material,
   media,
   motionToken,
   shadow,
   shape,
-} from "../_design/tokens.stylex";
+} from "#design/tokens.stylex";
+
+import { foundation } from "../_design/foundation.style";
+import { feedback, objectMarker } from "../_design/object-feedback.stylex";
+import { material } from "../_design/tokens.stylex";
 import { DeskLink } from "./desk-navigation.component";
 
 const styles = stylex.create({

@@ -1,7 +1,9 @@
 import * as stylex from "@stylexjs/stylex";
 import Image from "next/image";
 
-import { material, shape } from "../_design/tokens.stylex";
+import { shape } from "#design/tokens.stylex";
+
+import { material } from "../_design/tokens.stylex";
 import { GuestbookFieldIcon } from "./guestbook-field-icon.component";
 import { useGuestbookAvatar } from "./use-guestbook-avatar.hook";
 

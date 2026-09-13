@@ -1,6 +1,13 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { color, font, media, motionToken, shape, space } from "./tokens.stylex";
+import {
+  color,
+  font,
+  media,
+  motionToken,
+  shape,
+  space,
+} from "#design/tokens.stylex";
 
 export const signature = stylex.defineMarker();
 export const recordMarker = stylex.defineMarker();

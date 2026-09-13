@@ -2,8 +2,6 @@
 import * as stylex from "@stylexjs/stylex";
 import { useEffect } from "react";
 
-import { foundation } from "../_design/foundation.style";
-import { objectMarker } from "../_design/object-feedback.stylex";
 import {
   color,
   font,
@@ -11,7 +9,10 @@ import {
   motionToken,
   shape,
   space,
-} from "../_design/tokens.stylex";
+} from "#design/tokens.stylex";
+
+import { foundation } from "../_design/foundation.style";
+import { objectMarker } from "../_design/object-feedback.stylex";
 import { navigation } from "./desk-content.const";
 import { DeskLink } from "./desk-navigation.component";
 import { shell } from "./desk-shell.style";

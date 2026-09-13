@@ -5,7 +5,7 @@ and System pages live below that prefix. Posts, Thoughts, and Events currently
 show only their heading and `Not implemented yet.`; their sample articles have
 been removed. The homepage has no footer. All copy and audio settings are local
 fixtures in `src/app/(site)/_components/desk-content.const.ts`; no Supabase
-configuration, CMS content, legacy components, or legacy theme resources are
+configuration, CMS content, administration components or appearance state are
 loaded by these pages. UI copy is English; the greeting sequence is decorative.
 
 ## Development and Preview
@@ -29,8 +29,9 @@ whole-site deployment. See the [verification workflow](../README.md#verification
 ## Runtime and Build Boundaries
 
 The public UI lives under `(site)` and serves unprefixed URLs. Authentication
-and dashboard routes remain under `(legacy)` with their original providers;
-legacy UI dependencies live in `src/legacy`. Each group owns a root layout,
+and dashboard routes remain under `(admin)` with their existing providers.
+Reusable controls live in `src/components`; shared StyleX tokens live in
+`src/design`. Each group owns a root layout,
 and there is no shared `app/layout.tsx`. Navigating between roots loads a new
 document; navigation inside the public site keeps its curtain controller mounted.
 API handlers remain at their original locations. The five former redesign page
@@ -42,13 +43,15 @@ favicon until a new identity is chosen.
 
 StyleX 0.19 uses the official Babel and PostCSS pipeline. `babel.config.js` must
 use the `.js` extension: this Next.js Babel loader rejects `.cjs` and `.mjs`
-configuration files. PostCSS reuses the Babel plugin options, scans only redesign
-sources with literal-parenthesis glob matching for `(site)`, and replaces the single `@stylex` directive in its reset stylesheet.
+configuration files. PostCSS reuses the Babel plugin options, scans all source TS/TSX files and replaces the single `@stylex` directive in
+`src/design/stylex.css`, imported by both roots. Babel resolves the TypeScript
+path aliases relative to the project working directory, including when Turbopack
+bundles the PostCSS configuration.
 Runtime style injection is disabled. Next.js retains Turbopack and React Compiler.
 
-The Babel configuration applies to the project build, while the generated
-StyleX stylesheet is imported only by the redesign root. Legacy Tailwind and
-SCSS continue through their existing pipeline. The extra Babel compilation is a
+The Babel configuration applies to the project build, and both roots import the same generated
+StyleX stylesheet. Each root retains its own reset; the public scrollbar and
+Lenis behavior do not apply to administration pages. The extra Babel compilation is a
 build-time tradeoff; it does not introduce a runtime style engine.
 
 StyleX's `valid-styles`, `valid-shorthands`, and `no-unused` rules run through the
@@ -59,7 +62,8 @@ can otherwise compile without the intended styling.
 ## Design System
 
 The live guide at `/system` consumes the same tokens and interaction
-styles as the homepage. Sources are in `src/app/(site)/_design`:
+styles as the homepage. Shared foundations and semantics live in `src/design/tokens.stylex.ts`.
+Scene materials, lighting, and object markers remain in `src/app/(site)/_design`:
 
 - **Foundations:** raw palette, system font stacks (including separate artistic and signature roles), typography scale, spacing,
   shape, and breakpoints.
@@ -88,15 +92,16 @@ All rendered colors, including selection, gradients, material highlights, and
 shadows, are declared in the token module. The neutral light-stone curtain uses `color.curtain` (`palette.softStone`, #e4e2de)
 and `color.curtainText` (`palette.neutralInk`, #333330). The overlay, curved edges,
 greetings, and greeting dot consume these same semantics on both initial loads
-and page transitions. These colors are also displayed in the system guide. A future dark theme must override semantic,
-material, lighting, and shadow variables together; no theme switch is shipped.
+and page transitions. These colors are also displayed in the system guide. The administration theme overrides shared colors and shadows while retaining
+light/dark/system preferences. A future public dark theme must override semantic,
+material, lighting, and shadow variables together; no public theme switch is shipped.
 
 GitHub, Email, X, and Bilibili icons follow the introduction. Their local URLs
 intentionally remain `null`. Unconfigured entries use `aria-disabled` buttons
 with no navigation action, retaining hover previews and keyboard focus.
 
 Only the small reset, CSS entrypoint, Lenis structural stylesheet, and no-script curtain fallback use raw CSS.
-All component styling uses StyleX. Motion owns animated transform/opacity values
+All owned component styling uses StyleX. Motion owns animated transform/opacity values
 for the curtain, page entry, and magnetic content. There are no legacy token references, Tailwind
 utilities, downloaded artwork, shared legacy icons, or external font requests.
 
@@ -110,6 +115,25 @@ display, books, and record; the narrowest widths add vertical clearance to prote
 labels and click targets. Each object keeps its own clear space, including decorative
 coffee and pencil; only parts within a single object (such as the book stack) overlap. Normal document scrolling remains available.
 The hero uses the same handwritten font token as the Thoughts letter.
+
+## Administration Design System
+
+Authentication and dashboard pages preserve their layout and business behavior
+while using the shared palette, typography, shapes, and semantic colors. Additional
+semantics cover input and selected surfaces, disabled and focus feedback,
+success/warning/error/info states, overlays, layer order, and syntax highlighting.
+There is no Tailwind, Sass, old variable bridge, or separate administration palette.
+`/system` shows shared form and status tokens with a locally scoped dark example.
+Existing responsive administration breakpoints and component geometry are retained.
+
+Owned components compose StyleX declarations through `xstyle`, variants, and size
+props. Color values stay in token modules; tag and event colors remain business
+content. CodeMirror uses its theme/highlighting extensions with shared tokens.
+Markdown maps elements to StyleX renderers; a scoped CSS adapter styles Prism's
+generated token spans and line numbers. The color picker also has a scoped CSS
+adapter. These adapters consume StyleX-supplied custom properties. Sonner uses
+its class-name API with StyleX styles. All appearance state stays in the admin root,
+including pre-paint theme classes, system changes, and cross-tab persistence.
 
 ## Interaction Rules
 
@@ -201,7 +225,7 @@ false`). Reduced motion destroys the instance and restores native scrolling;
 changing the preference back recreates it. Curtain activity stops Lenis and
 releases it when navigation completes or the watchdog clears the overlay.
 Browser history retains Next.js scroll restoration. The instance is destroyed
-when its root unmounts. No legacy route loads this scrolling integration.
+when its root unmounts. No administration route loads this scrolling integration.
 
 The reset hides native scrollbars while preserving scrolling input. A fixed
 three-pixel top progress line reflects the native scroll position through a

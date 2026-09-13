@@ -1,7 +1,8 @@
 import * as stylex from "@stylexjs/stylex";
 import { useEffect, useRef, type RefObject } from "react";
 
-import { color, media } from "../_design/tokens.stylex";
+import { color, media } from "#design/tokens.stylex";
+
 import { sampleSpectrum } from "./record-spectrum.helper";
 import { useRecordSpectrum } from "./use-record-spectrum.hook";
 

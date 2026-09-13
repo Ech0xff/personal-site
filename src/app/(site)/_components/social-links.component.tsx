@@ -1,7 +1,8 @@
 import * as stylex from "@stylexjs/stylex";
 
+import { color, motionToken, shape, space } from "#design/tokens.stylex";
+
 import { foundation } from "../_design/foundation.style";
-import { color, motionToken, shape, space } from "../_design/tokens.stylex";
 import { socialLinks } from "./desk-content.const";
 import { Magnetic } from "./magnetic.component";
 

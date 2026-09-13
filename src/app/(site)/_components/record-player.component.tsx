@@ -1,19 +1,15 @@
 "use client";
 import * as stylex from "@stylexjs/stylex";
 
+import { media, motionToken, shadow, shape } from "#design/tokens.stylex";
+
 import { foundation } from "../_design/foundation.style";
 import {
   feedback,
   objectMarker,
   recordMarker,
 } from "../_design/object-feedback.stylex";
-import {
-  material,
-  media,
-  motionToken,
-  shadow,
-  shape,
-} from "../_design/tokens.stylex";
+import { material } from "../_design/tokens.stylex";
 import { playlist } from "./desk-content.const";
 import { RecordControls } from "./record-controls.component";
 import { RecordSpectrum } from "./record-spectrum.component";

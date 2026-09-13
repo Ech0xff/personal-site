@@ -1,6 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { color, font, space } from "../_design/tokens.stylex";
+import { color, font, space } from "#design/tokens.stylex";
 
 const styles = stylex.create({
   root: {

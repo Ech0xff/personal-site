@@ -1,0 +1,11 @@
+[data-color-picker] .react-colorful {
+  width: 100%;
+  height: 200px;
+}
+[data-color-picker] .react-colorful__saturation {
+  border-radius: var(--admin-control-radius) var(--admin-control-radius) 0 0;
+}
+[data-color-picker] .react-colorful__hue {
+  height: 24px;
+  border-radius: 0 0 var(--admin-control-radius) var(--admin-control-radius);
+}

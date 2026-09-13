@@ -1,85 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 
-export const palette = stylex.defineVars({
-  cream: "#f8f5ef",
-  paper: "#fffdf6",
-  ink: "#302b25",
-  faded: "#777067",
-  terracotta: "#a6553c",
-  olive: "#6e775b",
-  sand: "#dfd2b9",
-  coal: "#202320",
-  softStone: "#e4e2de",
-  neutralInk: "#333330",
-});
-export const color = stylex.defineVars({
-  canvas: palette.cream,
-  surface: palette.paper,
-  text: palette.ink,
-  muted: palette.faded,
-  accent: palette.terracotta,
-  objectLabel: palette.cream,
-  objectLabelBackground: "#91482f",
-  navigationGlass: "#f8f5efe6",
-  line: "#dcd4c7",
-  focus: "#8a4b35",
-  curtain: palette.softStone,
-  curtainText: palette.neutralInk,
-  texture: "#5b49360a",
-  selection: "#e8d1b8",
-  inverse: "#faf7f0",
-});
-export const font = stylex.defineVars({
-  display: "Georgia, 'Times New Roman', serif",
-  signature: "Palatino, 'Palatino Linotype', 'Book Antiqua', serif",
-  artistic: "Baskerville, 'Iowan Old Style', 'Palatino Linotype', serif",
-  body: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-  mono: "'SFMono-Regular', Consolas, 'Liberation Mono', monospace",
-  handwritten: "'Snell Roundhand', 'Segoe Script', cursive",
-  tiny: "10px",
-  small: "12px",
-  bodySize: "15px",
-  navigation: "18px",
-  terminal: "14px",
-  large: "20px",
-  title: "48px",
-  regular: "400",
-  medium: "500",
-  bold: "700",
-});
-export const space = stylex.defineVars({
-  xxs: "4px",
-  xs: "8px",
-  sm: "12px",
-  md: "16px",
-  lg: "24px",
-  xl: "32px",
-  xxl: "48px",
-  section: "80px",
-});
-export const shape = stylex.defineVars({
-  fine: "1px",
-  feedback: "2px",
-  small: "4px",
-  control: "8px",
-  panel: "18px",
-  pill: "999px",
-  round: "50%",
-  touch: "44px",
-  header: "76px",
-  progress: "3px",
-  content: "1440px",
-  reading: "900px",
-});
-export const shadow = stylex.defineVars({
-  contact: "2px 5px 8px #40321d20, 0 1px 2px #40321d18",
-  lifted: "8px 18px 28px #40321d24, 2px 4px 8px #40321d14",
-  detail: "2px 3px 3px #0002",
-  metal: "1px 0 2px #0004",
-  cup: "3px 5px 7px #4c392f40, inset 2px 3px 5px #0006",
-  book: "inset 6px 0 8px #172d1a35, inset 9px 0 1px #ffffff18",
-  inset: "inset 0 3px 8px #15191180, inset 0 0 2px #000",
-});
+import { palette } from "#design/tokens.stylex";
+
 export const material = stylex.defineVars({
   book: palette.olive,
   bookSpine: "#884b39",
@@ -132,33 +54,4 @@ export const light = stylex.defineVars({
   glowOpacity: "1",
   bulbOpacity: "1",
   warmth: "#ffda8640",
-});
-export const media = stylex.defineConsts({
-  touch: "@media (hover: none)",
-  phone: "@media (max-width: 600px)",
-  tablet: "@media (min-width: 601px) and (max-width: 1023px)",
-  compact: "@media (max-width: 1023px)",
-  reduce: "@media (prefers-reduced-motion: reduce)",
-});
-export const motionToken = stylex.defineConsts({
-  magneticReachX: "8px",
-  magneticReachY: "10px",
-  scrollLerp: 0.12,
-  magneticStrength: 0.22,
-  magneticLimit: 7,
-  magneticStiffness: 180,
-  magneticDamping: 18,
-  magneticMass: 0.5,
-  wave: "3s",
-  fast: "160ms",
-  normal: "280ms",
-  slow: "650ms",
-  record: "8s",
-  ease: "cubic-bezier(0.22, 1, 0.36, 1)",
-  lift: "-5px",
-  tilt: "-5deg",
-  base: "0",
-  objects: "2",
-  overlay: "100",
-  tooltip: "10",
 });

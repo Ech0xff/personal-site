@@ -1,7 +1,7 @@
 # AGENTS.md
 
 English-only personal site and lightweight CMS built with Next.js 16, React 19,
-Supabase, StyleX, and Bun. Legacy admin UI uses Tailwind CSS 4 and SCSS.
+Supabase, StyleX, and Bun. Public and administration roots share design tokens.
 
 ## Project Constraints
 
@@ -58,23 +58,22 @@ runtime. Add `.client`/`.server` only to clarify an environment boundary, and
 
 Preserve framework, tool, generated, declaration, and `index` filenames.
 `page.client.tsx` is not a framework filename: use a subject name inside
-`_components`. Colocated styles share the component basename, including
-`index.scss` for `index.tsx`. Ordinary directories use lowercase kebab-case;
+`_components`. Colocated styles share the component basename, using `.style.ts` for StyleX declarations or `.css` for third-party adapters. Ordinary directories use lowercase kebab-case;
 preserve route segments and framework conventions.
 
 ## File Placement
 
 - `src/app`: Routes, layouts, handlers; local UI in `_components`, page-level
   hooks in `_hooks`.
-- `src/legacy/components/ui`: Reusable presentation primitives and editor integrations.
-- `src/legacy/components/shared`: Site-wide UI and providers.
-- `src/legacy/components/features/<feature>`: Feature UI and private supporting modules.
+- `src/components/ui`: Reusable presentation primitives and editor integrations.
+- `src/components/shared`: Site-wide UI and providers.
+- `src/app/(admin)/dashboard/_components/features/<feature>`: Dashboard feature UI and private supporting modules.
 - `src/lib/client`: Browser clients and service adapters.
 - `src/lib/server`: Server clients, services, and caches.
 - `src/lib/shared`: Environment-neutral domain modules and services.
 - `src/types`: Cross-domain types, declarations, and generated database types.
-- `src/legacy/styles`: Legacy styles, tokens, and mixins.
-- `src/legacy/helpers` and `src/legacy/theme`: Legacy UI helpers and browser theme state.
+- `src/design`: Shared StyleX tokens, administration themes, and style input types.
+- `src/lib/client/theme`: Browser appearance preference state.
 - `scripts`: Maintenance and development utilities.
 - `supabase`: Database configuration, schemas, and seed data.
 - `public`: Static assets addressed by URL.
@@ -93,18 +92,19 @@ utilities; import auth and image services from their owners.
 
 ## Imports and Styling
 
-- Use `#legacy/*`, `#lib/*`, and `#types`/`#types/*`
+- Use `#components/*`, `#design/*`, `#lib/*`, and `#types`/`#types/*`
   across source areas; use relative imports within a feature.
   Aliases live in `tsconfig.json`; `#dictionary` uses conditional imports in
   `package.json` for server reads and the client provider.
-- In legacy UI, prefer Tailwind utilities. Use colocated SCSS for complex selectors, generated
-  content, and third-party overrides; reserve inline styles for dynamic values
-  or cases these do not handle cleanly.
-- Legacy tokens belong in `src/legacy/styles/variables.scss`.
-
-- The public site in `src/app/(site)` uses its own StyleX token system and
-  components instead of legacy Tailwind, SCSS, UI components, or assets. See
-  [the redesign guide](./DOCS/REDESIGN.md) for its boundaries and conventions.
+- Use StyleX for owned component styles. Shared foundations and semantic tokens
+  belong in `src/design`; public scene materials remain in `(site)/_design`.
+- Compose component overrides with typed `xstyle` inputs, explicit variants, and
+  sizes. Keep geometry with its component and rendered colors in tokens.
+- Plain CSS is reserved for root resets and scoped third-party adapters. Adapters
+  consume variables supplied by StyleX; do not add Tailwind or Sass.
+- The public root keeps its own shell, providers, scrolling behavior, and assets.
+  It shares tokens without importing administration components or providers.
+  See [the design guide](./DOCS/REDESIGN.md) for boundaries and conventions.
 
 ## Development and Documentation
 

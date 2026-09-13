@@ -2,7 +2,7 @@ import { useMotionValue } from "framer-motion";
 import Lenis from "lenis";
 import { useEffect, useRef, useState } from "react";
 
-import { motionToken } from "../_design/tokens.stylex";
+import { motionToken } from "#design/tokens.stylex";
 
 export function useDeskScroll(locked: boolean) {
   const instance = useRef<Lenis | null>(null);

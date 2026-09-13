@@ -22,7 +22,8 @@
       "#lib/*": ["./src/lib/*"],
       "#types": ["./src/types/index.ts"],
       "#types/*": ["./src/types/*"],
-      "#legacy/*": ["./src/legacy/*"]
+      "#design/*": ["./src/design/*"],
+      "#components/*": ["./src/components/*"]
     }
   },
   "include": [

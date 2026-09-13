@@ -3,8 +3,8 @@ import babelConfig from "./babel.config.js";
 export default {
   plugins: {
     "@stylexjs/postcss-plugin": {
-      // Match literal route-group parentheses rather than glob grouping.
-      include: ["src/app/[(]site[)]/**/*.{ts,tsx}"],
+      // Both roots and shared components feed the same generated stylesheet.
+      include: ["src/**/*.{ts,tsx}"],
       babelConfig: {
         babelrc: false,
         configFile: false,
@@ -13,6 +13,5 @@ export default {
       },
       useCSSLayers: true,
     },
-    "@tailwindcss/postcss": {},
   },
 };

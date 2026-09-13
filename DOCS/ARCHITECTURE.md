@@ -6,17 +6,18 @@ rules, see [AGENTS.md](../AGENTS.md).
 ## Independent UI Roots
 
 The public reading desk lives in `src/app/(site)` at `/`, with `/posts`,
-`/thoughts`, `/events`, and `/system`. It owns its StyleX design system, local
-content and audio, and Lenis controller. Posts, Thoughts, and Events remain
+`/thoughts`, `/events`, and `/system`. It owns its scene materials, local
+content and audio, and Lenis controller; foundational StyleX tokens are shared. Posts, Thoughts, and Events remain
 placeholders; old article detail URLs return 404.
 
-Authentication and dashboard routes retain their root layout in
-`src/app/(legacy)`. Their components, styles, UI helpers, and browser theme
-state live in `src/legacy`, imported through `#legacy/*`. These resources are
-not loaded by the public root. Crossing UI roots loads a new document. API
-handlers remain outside both groups. Only the five former redesign page URLs
-redirect; static audio URLs and persisted preference keys stay compatible.
-See the [redesign guide](./REDESIGN.md) for public interaction behavior.
+Authentication and dashboard routes retain a separate root layout in
+`src/app/(admin)`. Reusable components live in `src/components`, dashboard
+features stay beside their routes, and browser theme state lives in
+`src/lib/client/theme`. Both roots import the generated StyleX entrypoint and
+shared tokens from `src/design`; each owns its reset and providers. Public pages
+never mount administration providers. Crossing roots loads a new document.
+API handlers, URLs, and stored preference keys remain unchanged. See the
+[design guide](./REDESIGN.md) for token ownership and public interaction behavior.
 
 ## Data and Authorization
 
@@ -68,11 +69,11 @@ OAuth returns through `/api/auth/callback` to `/dashboard/account` or `/auth`.
 
 `content-renderer.component.tsx` combines Markdown/GFM, directives, heading IDs,
 and syntax highlighting. Directives under
-`src/legacy/components/features/content/_components/directive-render` require both
+`src/app/(admin)/dashboard/_components/features/content/_components/directive-render` require both
 registration and a renderer. `pre-render.component.tsx` handles code blocks and
 PlantUML; see [supported syntax](../README.md#markdown-support).
 
-Legacy root and auth loading boundaries reuse the legacy loading component.
+Administration root and auth loading boundaries reuse the shared loading component.
 Markdown rendering and editor integrations remain available for dashboard previews.
 
 ## Module Ownership
@@ -80,15 +81,18 @@ Markdown rendering and editor integrations remain available for dashboard previe
 Shared auth/session queries accept the caller's client. Browser image compression
 and uploads live in `lib/client/images`; shared image services handle storage
 queries and deletion. Browser RPC calls stay in client services. Shared theme
-values live in `lib/shared/theme`, with legacy browser state in
-`src/legacy/theme/theme.atom.ts`; routes live
+values live in `lib/shared/theme`, with browser state in
+`src/lib/client/theme/theme.atom.ts`; routes live
 in `lib/shared/routes`.
 
 The theme atom owns preference persistence, system and storage listeners, and
 HTML theme attributes through a single update path. Subscribing to either theme
 atom mounts these listeners; the last unsubscribe removes them. Storage is read
 on mount, while ordinary atom reads use in-memory state. The pre-paint
-`ThemeScript` applies the initial appearance before React mounts.
+`ThemeScript` applies the initial appearance before React mounts, including the
+StyleX dark color and shadow classes. Storage failures fall back to the system
+preference. Theme classes live on `html`, so modals and portals inherit them.
+The public root remains light; `/system` demonstrates dark tokens in a local sample.
 
 Thought image URLs are deduplicated at service read/write boundaries and in
 upload state, preserving first occurrence and order so URLs can serve as keys.

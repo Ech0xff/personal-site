@@ -49,7 +49,7 @@
   // Supabase generates redundant unions for empty enum and composite-type maps.
   "overrides": [
     {
-      "files": ["src/app/[(]site[)]/**/*.ts", "src/app/[(]site[)]/**/*.tsx"],
+      "files": ["src/**/*.ts", "src/**/*.tsx"],
       "rules": {
         "@stylexjs/valid-styles": "error",
         "@stylexjs/valid-shorthands": "error",

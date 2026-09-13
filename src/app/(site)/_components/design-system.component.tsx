@@ -2,18 +2,19 @@
 import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 
-import { foundation } from "../_design/foundation.style";
 import {
   color,
   font,
-  light,
-  material,
   media,
   palette,
   shadow,
   shape,
   space,
-} from "../_design/tokens.stylex";
+} from "#design/tokens.stylex";
+
+import { foundation } from "../_design/foundation.style";
+import { light, material } from "../_design/tokens.stylex";
+import { AdminTokenSamples } from "./admin-token-samples.component";
 import { DeskLink } from "./desk-navigation.component";
 import { Magnetic } from "./magnetic.component";
 import { lampOff } from "./reading-desk.style";
@@ -308,6 +309,7 @@ export function DesignSystem() {
           motion skips spatial hover movement.
         </p>
       </section>
+      <AdminTokenSamples />
     </div>
   );
 }

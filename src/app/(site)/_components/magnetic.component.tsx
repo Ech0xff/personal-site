@@ -3,7 +3,8 @@ import * as stylex from "@stylexjs/stylex";
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 
-import { motionToken, shape } from "../_design/tokens.stylex";
+import { motionToken, shape } from "#design/tokens.stylex";
+
 import { useMagnetic } from "./use-magnetic.hook";
 
 const styles = stylex.create({
