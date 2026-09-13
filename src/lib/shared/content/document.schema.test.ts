@@ -116,6 +116,32 @@ describe("BlockNote content boundaries", () => {
       ]).success,
     ).toBe(false);
   });
+  test("events accept body-only and media-only documents while posts still require a heading", () => {
+    const base = {
+      kind: "events",
+      status: "show",
+      published_at: "2026-09-13T00:00:00Z",
+    };
+    for (const content of [
+      [{ type: "paragraph", content: "A small moment" }],
+      [{ type: "image", props: { url: "https://example.com/photo.webp" } }],
+    ]) {
+      expect(contentInputSchema.parse({ ...base, content }).title).toBe("");
+      expect(
+        contentInputSchema.safeParse({ ...base, kind: "posts", content })
+          .success,
+      ).toBe(false);
+    }
+    expect(contentInputSchema.safeParse({ ...base, content: [] }).success).toBe(
+      false,
+    );
+    expect(
+      contentInputSchema.parse({
+        ...base,
+        content: [{ type: "heading", content: "Optional event title" }],
+      }).title,
+    ).toBe("Optional event title");
+  });
   test("validates content type metadata and preserves original-language text", () => {
     const input = {
       kind: "posts",

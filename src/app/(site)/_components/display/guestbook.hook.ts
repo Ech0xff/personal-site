@@ -27,7 +27,7 @@ export function useGuestbook() {
     }
     const entry = {
       ...parsed.data,
-      id: crypto.randomUUID(),
+      id: `local-${crypto.getRandomValues(new Uint32Array(4)).join("-")}`,
       date: new Date().toISOString(),
     };
     setEntries((previous) => [entry, ...previous].slice(0, 50));

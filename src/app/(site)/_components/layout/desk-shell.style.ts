@@ -53,13 +53,13 @@ export const shell = stylex.create({
     "::before": {
       content: '""',
       position: "absolute",
-      inset: 0,
+      inset: "0 0 -16px",
       backgroundColor: color.navigationGlass,
       backdropFilter: "blur(10px)",
       opacity: 0,
       zIndex: -1,
       pointerEvents: "none",
-      maskImage: { default: "none", [media.phone]: material.menuMask },
+      maskImage: material.menuMask,
       transitionProperty: "opacity, bottom",
       transitionDelay: { default: "80ms", [media.reduce]: "0s" },
       transitionDuration: { default: motionToken.normal, [media.reduce]: "0s" },
@@ -70,8 +70,7 @@ export const shell = stylex.create({
   headerScrolled: { "::before": { opacity: 1 } },
   headerMenu: {
     "::before": {
-      opacity: 1,
-      bottom: { default: 0, [media.phone]: "-190px" },
+      bottom: { default: "-16px", [media.phone]: "-190px" },
       transitionDelay: "0s",
     },
   },
@@ -113,7 +112,11 @@ export const shell = stylex.create({
   },
   currentDot: { opacity: 1 },
   content: { display: "flex", flexDirection: "column", minHeight: "100svh" },
-  main: { flexGrow: 1 },
+  homeContent: {
+    height: { default: "100svh", [media.compact]: "auto" },
+    overflowY: { default: "clip", [media.compact]: "visible" },
+  },
+  main: { flexGrow: 1, minHeight: 0 },
   skip: {
     position: "fixed",
     left: space.md,

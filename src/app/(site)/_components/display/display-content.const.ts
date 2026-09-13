@@ -8,10 +8,6 @@ export const displayPrograms: readonly Readonly<{
   { id: "stats", label: "Stats" },
   { id: "guestbook", label: "Guestbook" },
 ];
-export const deskStatistics = [
-  { label: "Posts", value: "24" },
-  { label: "Thoughts", value: "137" },
-] as const;
 export const deskTotalVisits = 1284;
 export const sampleGuestbook: readonly GuestbookEntry[] = [
   {

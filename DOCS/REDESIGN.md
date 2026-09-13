@@ -1,17 +1,19 @@
 # Reading Desk Redesign
 
-The public reading desk starts at `/`. Its Posts, Thoughts, Events,
-and System pages live below that prefix. Posts, Thoughts, and Events currently
-show only their heading and `Not implemented yet.`; their sample articles have
-been removed. The homepage has no footer. Copy belongs to the layout, desk, and display feature constants; the
-playlist is shared with scripts through `src/lib/shared/audio/playlist.const.ts`.
-These pages load no Supabase configuration, CMS content, or administration
-features. Appearance preferences and tokens are shared with the administration root. UI copy is English; the greeting sequence is decorative.
+The public reading desk starts at `/`. Posts groups all public articles by year with title/date rows and counts,
+with UUID article detail routes; Thoughts and Events show full documents using
+the shared feed and timeline. The homepage has no footer. Copy belongs to the
+layout, desk, and display features. The playlist remains shared with scripts.
+Appearance preferences and tokens are shared with administration. UI copy is
+English; business content stays in its original language. Public content and
+counts use anonymous server-side Supabase reads; see
+[Architecture](./ARCHITECTURE.md#public-content-and-caching).
 
 ## Development and Preview
 
 Use the [standard development commands](../README.md#development), then visit
-`/`. Public pages do not require database credentials. Authentication requires
+`/`. The reading desk shell works without database credentials; content and counts
+show an unavailable state if Supabase is unconfigured. Authentication requires
 `ADMIN_TOKEN`; the dashboard also requires Supabase credentials.
 
 To build just the public pages when Supabase is unavailable:
@@ -36,8 +38,7 @@ and there is no shared `app/layout.tsx`. Navigating between roots loads a new
 document; navigation inside the public site keeps its curtain controller mounted.
 Dashboard operations use authenticated Server Actions. The five former redesign page
 URLs permanently redirect to their unprefixed counterparts, while audio URLs
-and storage keys remain unchanged. Old article detail URLs return 404 until
-new detail pages are implemented. The public layout permits search indexing.
+and storage keys remain unchanged. Article details use `/posts/<uuid>`; unknown or hidden articles show a not-found page. The public layout permits search indexing.
 The old favicon remains at `public/favicon.ico`; the public site uses a blank
 favicon until a new identity is chosen.
 
@@ -102,7 +103,10 @@ changes. Pre-paint classes prevent the wrong theme from flashing before hydratio
 Cross-tab changes update appearance without resetting content or playback.
 The System guide shows locally scoped Light and Dark examples covering interface
 colors, materials, lighting, and shadows. Its sample overrides do not change the
-page preference. The lamp independently toggles its local glow and bulb opacity.
+page preference. The lamp independently toggles a separate intensity token group for glow and
+bulb opacity, without changing the inherited warm-light palette. Theme changes
+share one 300 ms document crossfade for manual, system, and cross-tab updates.
+Reduced motion and unsupported browsers switch directly.
 
 GitHub, Email, X, and Bilibili icons follow the introduction. Their local URLs
 intentionally remain `null`. Unconfigured entries use `aria-disabled` buttons
@@ -172,7 +176,8 @@ See [Architecture](./ARCHITECTURE.md) for the token login and content data flow.
   caption. Each greeting appears once, including Hello, Hallo, and Ciallo~. A fresh
   randomized permutation is chosen only when an intro actually runs. The initial
   curtain has no fixed greeting, preventing a pre-hydration Hello flash.
-- Greetings play on fresh homepage loads and reloads only. The persistent root
+- Greetings play once on direct loads and reloads of every public page, including
+  article details. The persistent root
   prevents replay on internal returns; browser history restoration and reduced
   motion bypass them. No session or daily storage is involved.
 - Ordinary public site links cover the old page, navigate, then reveal the new
@@ -222,8 +227,10 @@ and suspends updates while the document is hidden. It has no live region.
 ## Responsive Navigation and Scrolling
 
 The sticky header remains at the viewport top while scrolling, with a translucent
-theme surface and background blur once scrolled. On phone menu expansion, this
-surface extends down with a fading edge to keep links readable over content,
+theme surface at 80% opacity, background blur, and the same fading lower edge
+at every breakpoint after scrolling away from the top. At scroll position zero,
+the backing surface is fully transparent, including with the phone menu open.
+On phone menu expansion, this surface extends down to keep links readable over content,
 without a bordered panel. The progress line remains above the header, and the
 curtain covers both. The shared header-height token keeps the lamp cord connected to the top edge
 on every breakpoint. The light field starts lower on the desk and remains
@@ -236,6 +243,11 @@ or clicking outside close it. The backing surface animates its bottom edge over
 phone navigation is inert immediately while its visual fade completes.
 Arrow Down focuses the first link and Escape
 returns focus to the trigger. Desktop and tablet retain the inline navigation.
+
+At widths of 1024 px and above, the home desk uses the viewport height remaining
+below the header, without a minimum scene height. Its shell clips decorative
+overflow so the wide homepage stays on one screen. Compact home layouts and
+content routes retain normal document scrolling.
 
 The redesign root owns one Lenis 1.3.26 instance with `autoRaf`, wheel smoothing,
 and a token-controlled lerp of 0.12. Touch retains native inertia (`syncTouch:
@@ -344,7 +356,7 @@ See [TODO](./TODO.md#redesign-follow-up) for the remaining integration work.
 
 ## Display Content
 
-Stats shows fixture counts for posts and thoughts. Total visits use an eye icon
+Stats shows live public counts for posts and thoughts. Total visits use an eye icon
 beside the toggleable, locally persisted like; there is no daily visitor or
 bookmark action. The total remains a fixture until the analytics service is wired.
 
@@ -395,11 +407,70 @@ navigation hook; the shell composes the header, content, and curtain.
 The server homepage composes the computer's rendered content slots. Stats and
 Guestbook have independent Suspense fallbacks sized to the display viewport.
 Selecting a program immediately selects its slot; scan animation is decorative.
-The shell never imports data-access components. Current fixtures do not suspend
-and there are no artificial delays. Future public Supabase reads, error handling,
-cache invalidation, and write policies are tracked together in [TODO](./TODO.md).
+The shell never imports data-access components. Stats reads suspend locally without artificial delays; failed counts remain
+inside their panel. Guestbook persistence and analytics remain in [TODO](./TODO.md).
 
 Automated checks retain five critical boundary suites. Browser acceptance covers
 theme synchronization, desktop and mobile object controls, playback recovery,
 guestbook persistence, and dashboard editing/upload flows. See the
 [verification workflow](../README.md#verification).
+
+## Public Reading Layout
+
+Posts, Thoughts, Events, and article details share the same centered reading
+container: a 768 px maximum outer width with 24 px side padding (720 px of content),
+and 40 px side padding on phones to leave room for the compact TOC. The directory
+is outside this shared content width. At 1280 px and above,
+the TOC sits independently to its right, 132–180 px below the viewport top.
+Full contents use a thin left rail, hierarchical indents, and an accent-colored
+visible section range. Narrower views use a fixed rail of short lines with a single
+bright, long peak centered on the visible section range and tapered neighbors.
+The compact rail always includes every heading: row spacing compresses to fit the
+available height, and the rail cannot scroll.
+Mouse hover, keyboard focus, or a touch tap morphs those same lines into the full
+scrollable directory over 440 ms: the rail expands, rows spread, and labels appear.
+The motion hook measures the two layouts at interaction boundaries and animates
+transforms and opacity; it does not animate row heights or repeatedly correct
+scroll positions through a resize observer. Pending animations are cancelled on
+reversal, breakpoint changes, reduced motion, and unmount.
+The expanded directory starts at the viewport top and spans `100dvh`,
+following the current viewport as mobile browser toolbars expand or retract,
+covering the navigation rather than reserving space for it. Only the directory's
+own 36 px heading is subtracted from its internal scroll area, which fills the
+remaining height even when there are few headings.
+A fading canvas veil keeps text legible without a bordered popup or article shift.
+Reduced motion removes the transition. Selection, outside clicks, and Escape
+close it; long directories keep the current link visible. Touch pointer-leave
+events never schedule hover dismissal, and pointer focus cannot toggle a tap twice.
+Internal pointer presses are tracked before focus changes: WebKit can blur the
+trigger to the document body before dispatching a chapter click. That blur must
+not collapse or inert the links; keyboard focus leaving the TOC still dismisses it.
+Browser regression checks include repeated chapter taps, internal scrolling to the
+last chapter, hash history, outside dismissal, and keyboard exit in mobile WebKit.
+The TOC portals into an untransformed shell host beside the animated main element.
+This keeps viewport coordinates stable during page entry while the shell still
+applies its transition focus lock to the directory.
+Native heading links retain hashes, history, header clearance, and Lenis support.
+
+The Posts archive has a left rule for each year, a yearly count, left-aligned
+titles, and right-aligned dates. Its summary shows the public post count and
+approximate non-whitespace characters in document text (including titles).
+Phones place the date beneath the title. Tags and per-post excerpts are omitted.
+Public lists have no pagination or load-more control. Dashboard pagination is
+unchanged. Shared visibility controls use a blue selected segment, and all Posts
+table columns, including action groups, center beneath their headings. The auth
+card has a token-driven border and shadow in both themes. Its return link uses
+the shared magnetic interaction. The token field keeps its filled background and
+accent underline at rest; its label floats only on focus or when populated.
+
+Page introductions use live public totals: Posts and Thoughts include approximate
+non-whitespace document character counts; Events reports its recorded event count.
+Events do not require a heading and can render body text or media alone.
+
+Readonly document images in both roots open the shared native-dialog image viewer,
+including Posts, Thoughts, and Events. Exported image triggers are keyboard-accessible
+buttons. The viewer uses transparent image and control surfaces, with borderless
+zoom-in/out magnifiers and a percentage label. Clicking anywhere except the zoom
+buttons dismisses it, including the image, padding, and percentage; Escape and
+focus restoration remain supported. Its surface is excluded from Lenis scrolling. Thoughts use 16 px vertical entry padding
+with no separate media reservation or bottom margin; images remain inline.

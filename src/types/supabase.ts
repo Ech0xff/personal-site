@@ -24,7 +24,7 @@ export type Database = {
           id?: string
           published_at: string
           status?: string
-          title: string
+          title?: string
         }
         Update: {
           color?: string

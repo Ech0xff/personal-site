@@ -1,6 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 
 const lightColors = {
+  tocVeil: "linear-gradient(90deg, #ffffff00, #ffffff 24px)",
   canvas: "#ffffff",
   surface: "#ffffff",
   text: "#18181b",
@@ -9,7 +10,7 @@ const lightColors = {
   onAccent: "#ffffff",
   objectLabel: "#ffffff",
   objectLabelBackground: "#2563eb",
-  navigationGlass: "#f4f4f5ee",
+  navigationGlass: "#f4f4f5cc",
   line: "#e4e4e7",
   focus: "#2563eb",
   curtain: "#f4f4f5",
@@ -45,9 +46,7 @@ const lightColors = {
   overlay: "#09090b80",
   scrollbar: "#d4d4d8",
   viewerCanvas: "#09090be6",
-  viewerSurface: "#18181bf2",
   viewerText: "#fafafa",
-  viewerBorder: "#3f3f46",
   viewerHover: "#ffffff26",
   imageShade: "#09090b1a",
   imageGradient: "linear-gradient(to top, #09090bb3, transparent)",
@@ -64,6 +63,7 @@ const lightColors = {
 export const color = stylex.defineVars(lightColors);
 export const lightTheme = stylex.createTheme(color, lightColors);
 export const darkTheme = stylex.createTheme(color, {
+  tocVeil: "linear-gradient(90deg, #09090b00, #09090b 24px)",
   canvas: "#09090b",
   surface: "#18181b",
   text: "#fafafa",
@@ -72,7 +72,7 @@ export const darkTheme = stylex.createTheme(color, {
   onAccent: "#ffffff",
   objectLabel: "#ffffff",
   objectLabelBackground: "#2563eb",
-  navigationGlass: "#18181bee",
+  navigationGlass: "#18181bcc",
   line: "#27272a",
   focus: "#60a5fa",
   curtain: "#18181b",
@@ -108,9 +108,7 @@ export const darkTheme = stylex.createTheme(color, {
   overlay: "#09090b80",
   scrollbar: "#52525b",
   viewerCanvas: "#09090be6",
-  viewerSurface: "#18181bf2",
   viewerText: "#fafafa",
-  viewerBorder: "#3f3f46",
   viewerHover: "#ffffff26",
   imageShade: "#09090b1a",
   imageGradient: "linear-gradient(to top, #09090bb3, transparent)",
@@ -170,7 +168,7 @@ export const shape = stylex.defineVars({
   header: "76px",
   progress: "3px",
   content: "1440px",
-  reading: "900px",
+  reading: "768px",
 });
 const lightShadows = {
   panel: "0 16px 36px #09090b18",
@@ -187,6 +185,7 @@ const lightShadows = {
 export const shadow = stylex.defineVars(lightShadows);
 export const lightShadowTheme = stylex.createTheme(shadow, lightShadows);
 export const media = stylex.defineConsts({
+  tocWide: "@media (min-width: 1280px)",
   touch: "@media (hover: none)",
   phone: "@media (max-width: 600px)",
   tablet: "@media (min-width: 601px) and (max-width: 1023px)",
@@ -203,6 +202,8 @@ export const motionToken = stylex.defineConsts({
   magneticDamping: 18,
   magneticMass: 0.5,
   wave: "3s",
+  themeDuration: 300,
+  tocExpand: "440ms",
   fast: "160ms",
   normal: "280ms",
   slow: "650ms",
@@ -287,9 +288,11 @@ const lightMaterials = {
 };
 export const material = stylex.defineVars(lightMaterials);
 export const lightMaterialTheme = stylex.createTheme(material, lightMaterials);
-const lightLighting = {
+export const lampIntensity = stylex.defineVars({
   glowOpacity: "1",
   bulbOpacity: "1",
+});
+const lightLighting = {
   warmth: "#ffda8640",
 };
 export const lighting = stylex.defineVars(lightLighting);
@@ -334,7 +337,7 @@ export const darkLightingTheme = stylex.createTheme(lighting, {
   warmth: "#ffbc571a",
 });
 // Lamp state is a local override, independent of the global color scheme.
-export const lampOff = stylex.createTheme(lighting, {
+export const lampOff = stylex.createTheme(lampIntensity, {
   glowOpacity: "0",
   bulbOpacity: "0.25",
 });

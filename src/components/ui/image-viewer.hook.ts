@@ -59,6 +59,11 @@ export function useImageViewer() {
     const handleDelegatedClick = (event: MouseEvent) => {
       const target = event.target;
       if (!(target instanceof Element)) return;
+      const dialog = dialogRef.current;
+      if (dialog?.open && dialog.contains(target)) {
+        if (!target.closest("[data-viewer-control]")) close();
+        return;
+      }
       const trigger = target.closest<HTMLElement>("[data-viewer-trigger]");
       if (!trigger) return;
       const { src, alt } = trigger.dataset;
@@ -72,7 +77,7 @@ export function useImageViewer() {
     return () => {
       document.removeEventListener("click", handleDelegatedClick);
     };
-  }, [open]);
+  }, [open, close]);
   return {
     image,
     scale,

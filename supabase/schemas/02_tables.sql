@@ -19,7 +19,7 @@ CREATE INDEX idx_thoughts_status ON public.thoughts(status);
 
 CREATE TABLE public.events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  title VARCHAR(255) NOT NULL CHECK (btrim(title) <> ''),
+  title VARCHAR(255) NOT NULL DEFAULT '',
   content JSONB NOT NULL CHECK (jsonb_typeof(content) = 'array'),
   color TEXT NOT NULL DEFAULT '#3b82f6' CHECK (color ~ '^#[0-9a-fA-F]{6}$'),
   status TEXT NOT NULL DEFAULT 'hide' CHECK (status IN ('hide', 'show')),

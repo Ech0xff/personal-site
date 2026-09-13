@@ -7,7 +7,7 @@ import {
   shape,
   media,
   motionToken,
-  lighting,
+  lampIntensity,
   material,
 } from "#design/tokens.stylex";
 
@@ -60,9 +60,11 @@ const styles = stylex.create({
   neck: { fill: material.lampShade, pointerEvents: "visiblePainted" },
   bulb: {
     fill: material.bulb,
-    opacity: lighting.bulbOpacity,
+    opacity: lampIntensity.bulbOpacity,
     pointerEvents: "visiblePainted",
-    transition: `opacity ${motionToken.slow} ease`,
+    transitionProperty: "opacity",
+    transitionDuration: { default: motionToken.slow, [media.reduce]: "0s" },
+    transitionTimingFunction: "ease",
   },
   highlight: { fill: material.highlight, pointerEvents: "none" },
   hint: {

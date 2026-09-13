@@ -49,7 +49,7 @@ export function useDeskScroll(locked: boolean) {
       frame = 0;
       const limit = document.documentElement.scrollHeight - window.innerHeight;
       setScrollable(limit > 1);
-      setScrolled(window.scrollY > 8);
+      setScrolled(window.scrollY > 0);
       progress.set(
         limit > 1 ? Math.max(0, Math.min(1, window.scrollY / limit)) : 0,
       );

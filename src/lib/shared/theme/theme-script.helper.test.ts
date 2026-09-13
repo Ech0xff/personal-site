@@ -98,3 +98,13 @@ describe("shared pre-paint theme", () => {
     ]);
   });
 });
+
+describe("deterministic display timezone", () => {
+  test("missing and invalid settings use the same explicit default on server and client", async () => {
+    const { resolveAppTimeZone } = await import("../utils/date.helper");
+    for (const value of [undefined, "", "  ", "Invalid/Timezone"]) {
+      expect(resolveAppTimeZone(value)).toBe("America/New_York");
+    }
+    expect(resolveAppTimeZone("Asia/Shanghai")).toBe("Asia/Shanghai");
+  });
+});

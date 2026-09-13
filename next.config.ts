@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 import { ROUTES } from "#lib/shared/routes/routes.const";
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: ["*.*.*.*", "[::1]"],
   cacheComponents: true,
   serverExternalPackages: [
     "@blocknote/core",

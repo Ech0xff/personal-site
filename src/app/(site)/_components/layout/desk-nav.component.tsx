@@ -124,9 +124,15 @@ export function DeskNav({
                 shell.link,
                 objectMarker,
                 foundation.focus,
-                pathname === item.href && shell.current,
+                (pathname === item.href ||
+                  pathname.startsWith(`${item.href}/`)) &&
+                  shell.current,
               )}
-              aria-current={pathname === item.href ? "page" : undefined}
+              aria-current={
+                pathname === item.href || pathname.startsWith(`${item.href}/`)
+                  ? "page"
+                  : undefined
+              }
             >
               <Magnetic>
                 {item.label}
@@ -134,7 +140,9 @@ export function DeskNav({
                   aria-hidden="true"
                   {...stylex.props(
                     shell.dot,
-                    pathname === item.href && shell.currentDot,
+                    (pathname === item.href ||
+                      pathname.startsWith(`${item.href}/`)) &&
+                      shell.currentDot,
                   )}
                 />
               </Magnetic>

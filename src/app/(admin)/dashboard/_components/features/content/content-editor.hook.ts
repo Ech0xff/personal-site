@@ -34,7 +34,7 @@ export function useContentEditor(
             kind,
             title: "",
             content:
-              kind === "thoughts"
+              kind !== "posts"
                 ? []
                 : [
                     { type: "heading", props: { level: 1 }, content: "" },

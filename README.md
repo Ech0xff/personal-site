@@ -1,8 +1,7 @@
 # Personal Site
 
 An English-only personal site and single-owner CMS built with Next.js 16,
-React 19, BlockNote, Supabase, StyleX, and Bun. The public reading desk uses
-local content; Posts, Thoughts, and Events remain placeholders. The dashboard
+React 19, BlockNote, Supabase, StyleX, and Bun. The public reading desk links to published Posts, Thoughts, and Events. The dashboard
 manages block-based content and a public file bucket.
 
 ## Getting Started
@@ -18,6 +17,11 @@ bun run supabase:setup
 Setup writes local Supabase credentials to `.env.development`, preserving other
 values. Add a non-empty `ADMIN_TOKEN`, then run `bun run dev`.
 Open [the site](http://localhost:3000) or [sign in](http://localhost:3000/auth).
+Development also accepts any IPv4 address (including loopback and LAN addresses)
+and IPv6 loopback through `allowedDevOrigins`. A bare `*` is not supported by
+Next.js's origin matcher; the IPv4 rule is `*.*.*.*`. This setting only applies to
+the development server. Without an allowed origin, development scripts are
+rejected and the opening curtain remains visible.
 The token has no length or complexity requirement. There are no user accounts,
 registration, OAuth providers, or Supabase Auth login flows.
 
@@ -71,7 +75,8 @@ and remain available on touch devices.
 Content opens in a full-width BlockNote editor with manual saving. Publish time
 and visibility live in the top toolbar; there is no separate preview mode.
 New entries start hidden, with the current publish time. Posts and Events derive
-their titles from the first document heading; Events also have a color. Images and attachments live in
+their titles from the first document heading. Posts require a heading; Events
+may contain only body text or media, with an empty stored title. Events also have a color. Images and attachments live in
 the content document. There are no author, location, tag, or configuration fields.
 
 The database stores native BlockNote JSON. The editor supports standard blocks,
@@ -105,10 +110,21 @@ The old `/dashboard/images` address redirects to `/dashboard/files`.
 ## Public Site
 
 The reading-desk homepage is at `/`; its token guide is at `/system`. Public
-pages retain local content, their own providers, scrolling, and assets. They
+pages retain their own providers, scrolling, and assets. They
 share one neutral Light/Dark token system and a synchronized System/Light/Dark
-preference with the dashboard, and can run without Supabase.
-Posts, Thoughts, and Events remain placeholders; `/posts/[slug]` returns 404.
+preference with the dashboard. `/posts` groups all public articles by year, with title/date rows, yearly counts,
+and total post and approximate non-whitespace character counts;
+`/posts/<uuid>` opens the article with a responsive table of contents.
+Thoughts and Events show all public documents in a feed and timeline. Public
+pages have no pagination; the dashboard retains its existing pagination.
+Show makes content public regardless of publish time, including future events.
+The homepage displays live public Posts and Thoughts counts.
+
+Content and counts require the public Supabase URL and anonymous key. Missing
+configuration or unavailable data produces a local unavailable state; the rest
+of the reading desk remains usable. Public queries run on each request. Cache
+Components reuse document rendering, not database reads or visibility decisions.
+See [Architecture](./DOCS/ARCHITECTURE.md#public-content-and-caching) for boundaries.
 See the [design guide](./DOCS/REDESIGN.md) for the public UI and audio sources.
 
 ## Database
@@ -126,6 +142,15 @@ bun run supabase:types
 Reset deletes local data. Do not point reset at a remote database as part of
 ordinary development. `--no-seed` skips both application schemas and fixtures.
 
+The `BEGIN DEMO CONTENT` block in `supabase/seed.sql` adds 9 public Posts,
+6 Thoughts, and 5 Events, plus one hidden record per kind. It covers multiple
+years, a future publication date, a long article with nested/repeated headings,
+an 80-link directory stress case, inline images, and untitled/media-only Events. Demo content has explicit demo
+labels and stable UUIDs; its `ON CONFLICT DO NOTHING` inserts can be reapplied
+without replacing edited records. To add demos to an existing local database,
+apply only that block without resetting the database. Sample images use public
+HTTPS URLs so they also work when browsing the site from another LAN device.
+
 - Start services and update local env: `bun run supabase:setup`
 - Start / stop while preserving data: `bunx supabase start` / `bunx supabase stop`
 - Inspect local service status: `bunx supabase status`
@@ -135,6 +160,14 @@ The application tables are `posts`, `thoughts`, and `events`. Anonymous database
 access can read only published content; writes require service-role access from
 the authorized server layer. Seed creates the public file bucket with a 50 MiB
 limit. There are no application auth, tag, configuration, or webhook tables/functions.
+
+Existing databases with the former mandatory event-title constraint can be
+updated without resetting data:
+
+```sql
+ALTER TABLE public.events DROP CONSTRAINT IF EXISTS events_title_check;
+ALTER TABLE public.events ALTER COLUMN title SET DEFAULT '';
+```
 
 ## Deployment
 

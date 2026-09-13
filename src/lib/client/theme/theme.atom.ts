@@ -15,6 +15,8 @@ import type {
   ResolvedTheme,
 } from "#lib/shared/theme/theme.type";
 
+import { applyThemeChange } from "./theme-transition.service";
+
 type ThemeState = Readonly<{
   preference: ThemePreference;
   systemDark: boolean;
@@ -33,10 +35,15 @@ const _theme = atom<ThemeState>({
   systemDark: false,
 });
 
+const desiredTheme = atom<ThemeState>({
+  preference: Theme.SYSTEM,
+  systemDark: false,
+});
+
 const stateAtom = atom(
   (get) => get(_theme),
   (get, set, update: ThemeUpdate) => {
-    const current = get(_theme);
+    const current = get(desiredTheme);
     const next =
       update.type === "initialize"
         ? update.state
@@ -44,19 +51,26 @@ const stateAtom = atom(
           ? { ...current, systemDark: update.systemDark }
           : { ...current, preference: update.preference };
 
-    set(_theme, next);
-    if (typeof window === "undefined") return;
-
+    set(desiredTheme, next);
+    if (typeof window === "undefined") {
+      set(_theme, next);
+      return;
+    }
     const resolved = resolveTheme(next.preference, next.systemDark);
     const root = document.documentElement;
-    root.setAttribute(THEME_ATTRIBUTE, resolved);
-    root.setAttribute(THEME_PREFERENCE_ATTRIBUTE, next.preference);
-    root.style.colorScheme = resolved;
-    for (const name of darkThemeClasses)
-      root.classList.toggle(name, resolved === Theme.DARK);
-
-    for (const name of lightThemeClasses)
-      root.classList.toggle(name, resolved === Theme.LIGHT);
+    const animate =
+      update.type !== "initialize" &&
+      root.getAttribute(THEME_ATTRIBUTE) !== resolved;
+    applyThemeChange(() => {
+      set(_theme, next);
+      root.setAttribute(THEME_ATTRIBUTE, resolved);
+      root.setAttribute(THEME_PREFERENCE_ATTRIBUTE, next.preference);
+      root.style.colorScheme = resolved;
+      for (const name of darkThemeClasses)
+        root.classList.toggle(name, resolved === Theme.DARK);
+      for (const name of lightThemeClasses)
+        root.classList.toggle(name, resolved === Theme.LIGHT);
+    }, animate);
 
     if (update.type === "preference" && update.persist) {
       try {
@@ -115,7 +129,7 @@ export const themeAtom = atom(
       type: "preference",
       preference:
         typeof update === "function"
-          ? update(get(stateAtom).preference)
+          ? update(get(desiredTheme).preference)
           : update,
       persist: true,
     }),

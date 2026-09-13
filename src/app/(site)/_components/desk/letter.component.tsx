@@ -14,15 +14,15 @@ export function Letter() {
     >
       <span {...stylex.props(styles.letterUnder)} />
       <span {...stylex.props(styles.letterSheet)}>
-        <span {...stylex.props(styles.letterHeader)}>A NOTE TO SELF</span>
+        <span {...stylex.props(styles.letterHeader)}>THINKING OUT LOUD</span>
         <span {...stylex.props(styles.letterCopy)}>
-          Pay attention.
+          Small thoughts,
           <br />
-          The little things
+          everyday ramblings,
           <br />
-          are the big things.
+          and whatever comes to mind.
         </span>
-        <span {...stylex.props(styles.signature)}>— a passing thought</span>
+        <span {...stylex.props(styles.signature)}>— notes from my day</span>
       </span>
       <ObjectFeedback label="Thoughts" xstyle={styles.letterFrame} />
       <span {...stylex.props(styles.clip)} aria-hidden="true" />

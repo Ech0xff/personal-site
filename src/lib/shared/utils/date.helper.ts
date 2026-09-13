@@ -9,19 +9,19 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 /** The application's default time zone */
-export const APP_TIME_ZONE = (() => {
-  const envTimeZone =
-    process.env.NEXT_PUBLIC_APP_TIMEZONE || process.env.APP_TIMEZONE;
-
+export function resolveAppTimeZone(value: string | undefined) {
+  const candidate = value?.trim() || DEFAULT_TIME_ZONE;
   try {
-    dayjs.tz("2026-01-01 00:00", envTimeZone);
-    dayjs.tz.setDefault(envTimeZone);
-    return envTimeZone;
+    new Intl.DateTimeFormat("en", { timeZone: candidate }).format(0);
+    return candidate;
   } catch {
-    dayjs.tz.setDefault(DEFAULT_TIME_ZONE);
     return DEFAULT_TIME_ZONE;
   }
-})();
+}
+export const APP_TIME_ZONE = resolveAppTimeZone(
+  process.env.NEXT_PUBLIC_APP_TIMEZONE,
+);
+dayjs.tz.setDefault(APP_TIME_ZONE);
 
 const toDayjs = (dateInput: string | Date | null | undefined) => {
   if (!dateInput) return null;

@@ -1,12 +1,9 @@
 /** Evaluate once per root-layout mount; internal navigation never replays an intro. */
 export function shouldPlayIntro(
-  initialPath: string,
   navigationType: string | undefined,
   reducedMotion: boolean,
 ): boolean {
-  return (
-    initialPath === "/" && navigationType !== "back_forward" && !reducedMotion
-  );
+  return navigationType !== "back_forward" && !reducedMotion;
 }
 
 /** Draws are supplied by the caller so the permutation is deterministic in tests. */

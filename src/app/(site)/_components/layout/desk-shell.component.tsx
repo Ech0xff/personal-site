@@ -6,6 +6,7 @@ import { useState, type ReactNode } from "react";
 
 import ThemeSync from "#components/shared/theme-sync.component";
 import ThemeToggle from "#components/shared/theme-toggle.component";
+import { ImageViewer } from "#components/ui/image-viewer.component";
 
 import { foundation } from "../../_design/foundation.style";
 import { DeskCurtain } from "./desk-curtain.component";
@@ -15,11 +16,14 @@ import { useDeskNavigation } from "./desk-navigation.hook";
 import { shell } from "./desk-shell.style";
 import { HomeSignature } from "./home-signature.component";
 import { useDeskScroll } from "./use-desk-scroll.hook";
+import { ViewportOverlayContext } from "./viewport-overlay.component";
 export function DeskShell({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <Provider>
       <ThemeSync />
-      <DeskShellContent>{children}</DeskShellContent>
+      <ImageViewer>
+        <DeskShellContent>{children}</DeskShellContent>
+      </ImageViewer>
     </Provider>
   );
 }
@@ -27,48 +31,58 @@ function DeskShellContent({ children }: Readonly<{ children: ReactNode }>) {
   const navigation = useDeskNavigation();
   const { pathname, entryControls, content, active, navigate } = navigation;
   const [menuOpen, setMenuOpen] = useState(false);
+  const [overlayRoot, setOverlayRoot] = useState<HTMLDivElement | null>(null);
   const scroll = useDeskScroll(active);
   return (
     <NavigationContext value={navigate}>
-      <div {...stylex.props(shell.root)}>
-        <motion.div
-          data-scroll-progress=""
-          aria-hidden="true"
-          {...stylex.props(
-            shell.progress,
-            (!scroll.scrollable || active) && shell.hidden,
-          )}
-          style={{ scaleX: scroll.progress }}
-        />
-        <a {...stylex.props(shell.skip, foundation.focus)} href="#desk-main">
-          Skip to content
-        </a>
-        <div ref={content} {...stylex.props(shell.content)}>
-          <header
+      <ViewportOverlayContext value={overlayRoot}>
+        <div {...stylex.props(shell.root)}>
+          <motion.div
+            data-scroll-progress=""
+            aria-hidden="true"
             {...stylex.props(
-              shell.header,
-              scroll.scrolled && shell.headerScrolled,
-              menuOpen && shell.headerMenu,
+              shell.progress,
+              (!scroll.scrollable || active) && shell.hidden,
+            )}
+            style={{ scaleX: scroll.progress }}
+          />
+          <a {...stylex.props(shell.skip, foundation.focus)} href="#desk-main">
+            Skip to content
+          </a>
+          <div
+            ref={content}
+            {...stylex.props(
+              shell.content,
+              pathname === "/" && shell.homeContent,
             )}
           >
-            <HomeSignature current={pathname === "/"} />
-            <div {...stylex.props(shell.headerActions)}>
-              <DeskNav pathname={pathname} onOpenChange={setMenuOpen} />
-              <ThemeToggle />
-            </div>
-          </header>
-          <motion.main
-            id="desk-main"
-            tabIndex={-1}
-            {...stylex.props(shell.main)}
-            animate={entryControls}
-            initial={false}
-          >
-            {children}
-          </motion.main>
+            <header
+              {...stylex.props(
+                shell.header,
+                scroll.scrolled && shell.headerScrolled,
+                menuOpen && shell.headerMenu,
+              )}
+            >
+              <HomeSignature current={pathname === "/"} />
+              <div {...stylex.props(shell.headerActions)}>
+                <DeskNav pathname={pathname} onOpenChange={setMenuOpen} />
+                <ThemeToggle />
+              </div>
+            </header>
+            <motion.main
+              id="desk-main"
+              tabIndex={-1}
+              {...stylex.props(shell.main)}
+              animate={entryControls}
+              initial={false}
+            >
+              {children}
+            </motion.main>
+            <div ref={setOverlayRoot} data-viewport-overlays />
+          </div>
+          <DeskCurtain {...navigation} />
         </div>
-        <DeskCurtain {...navigation} />
-      </div>
+      </ViewportOverlayContext>
     </NavigationContext>
   );
 }

@@ -5,7 +5,7 @@ import DocumentView from "#components/ui/blocknote/document-view.component";
 import Loading from "#components/ui/loading.component";
 import { requireAdminPage } from "#lib/server/auth/session.service";
 import { listContent } from "#lib/server/content/content.service";
-import { renderDocument } from "#lib/server/content/document-render.service";
+import { renderCachedDocument } from "#lib/server/content/document-cache.service";
 import type { ContentKind } from "#lib/shared/content/content.schema";
 
 import ContentList from "./content-list.component";
@@ -31,7 +31,7 @@ async function ContentPageData({ kind, searchParams }: Props) {
         item.document ? (
           <DocumentView
             key={item.id}
-            html={await renderDocument(item.document)}
+            html={await renderCachedDocument(item.document)}
           />
         ) : null,
       ]),

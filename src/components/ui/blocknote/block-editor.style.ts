@@ -3,6 +3,7 @@ import * as stylex from "@stylexjs/stylex";
 import { color, font, shape } from "#design/tokens.stylex";
 export const blocknoteStyles = stylex.create({
   readonly: {
+    "--cms-anchor-offset": `calc(${shape.header} + 24px)`,
     minHeight: 0,
     "--cms-heading-one": font.subtitle,
     "--cms-heading-two": font.large,

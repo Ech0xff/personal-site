@@ -10,7 +10,7 @@ import {
   shadow,
   shape,
   space,
-  lighting,
+  lampIntensity,
   material,
   lampOff,
 } from "#design/tokens.stylex";
@@ -151,7 +151,7 @@ const styles = stylex.create({
     inset: 0,
     borderRadius: shape.control,
     backgroundImage: `radial-gradient(${material.glow},transparent)`,
-    opacity: lighting.glowOpacity,
+    opacity: lampIntensity.glowOpacity,
   },
   spacing: (size: string) => ({
     width: size,

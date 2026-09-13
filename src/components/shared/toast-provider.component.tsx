@@ -1,7 +1,6 @@
 "use client";
 
 import * as stylex from "@stylexjs/stylex";
-import { useAtomValue } from "jotai";
 import { Toaster } from "sonner";
 
 import {
@@ -12,9 +11,9 @@ import {
   font,
   layer,
 } from "#design/tokens.stylex";
-import { resolvedThemeAtom } from "#lib/client/theme/theme.atom";
+import { useResolvedTheme } from "#lib/client/theme/theme.hook";
 export default function ToastProvider() {
-  const theme = useAtomValue(resolvedThemeAtom);
+  const theme = useResolvedTheme();
   return (
     <Toaster
       theme={theme}

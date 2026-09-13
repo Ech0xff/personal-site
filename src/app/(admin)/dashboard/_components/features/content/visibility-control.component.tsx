@@ -17,7 +17,7 @@ export function VisibilityControl({
 }>) {
   return (
     <SegmentedToggle
-      variant="text"
+      variant="surface"
       size="sm"
       label={label}
       value={value}

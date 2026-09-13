@@ -21,12 +21,11 @@ export function useDeskNavigation() {
   const controls = useAnimationControls();
   const entryControls = useAnimationControls();
   const [state, setState] = useState<CurtainState>(() => ({
-    phase: pathname === "/" ? "intro" : "idle",
+    phase: "intro",
   }));
   const [word, setWord] = useState<string | null>(null);
   const introOrder = useRef<readonly string[] | null>(null);
   const content = useRef<HTMLDivElement>(null);
-  const initialPath = useRef(pathname);
   const previousPath = useRef(pathname);
   const busy = useRef(state.phase !== "idle");
   const sequence = useRef(0);
@@ -48,7 +47,6 @@ export function useDeskNavigation() {
       .some((entry) => "type" in entry && entry.type === "back_forward");
     if (
       !shouldPlayIntro(
-        initialPath.current,
         historyReturn ? "back_forward" : undefined,
         matchMedia("(prefers-reduced-motion: reduce)").matches,
       )
@@ -177,7 +175,11 @@ export function useDeskNavigation() {
     const id = ++sequence.current;
     busy.current = true;
     const label =
-      navigation.find((item) => item.href === href)?.label ?? "Design system";
+      navigation.find(
+        (item) =>
+          item.href === href ||
+          (item.href !== "/" && href.startsWith(`${item.href}/`)),
+      )?.label ?? "Design system";
     controls.set({ y: "125%" });
     setState({ phase: "covering", href, label });
     void controls

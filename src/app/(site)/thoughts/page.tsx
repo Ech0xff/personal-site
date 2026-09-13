@@ -1,4 +1,5 @@
-import { DeskPlaceholder } from "../_components/desk-placeholder.component";
+import { PublicContentPage } from "../_components/layout/public-content.component";
+export const metadata = { title: "Thoughts — Ech0xff" };
 export default function Page() {
-  return <DeskPlaceholder title="Thoughts" />;
+  return <PublicContentPage kind="thoughts" title="Thoughts" />;
 }

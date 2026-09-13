@@ -14,8 +14,12 @@ import {
 } from "./content.service";
 
 const identity = z.object({ kind: contentKindSchema, id: z.uuid() });
-const refreshContent = (kind: string) =>
+const refreshContent = (kind: string, id: string) => {
   revalidatePath(`/dashboard/${kind === "events" ? "event" : kind}`);
+  revalidatePath(`/${kind}`);
+  if (kind === "posts") revalidatePath(`/posts/${id}`);
+  if (kind !== "events") revalidatePath("/");
+};
 export async function loadContent(input: unknown) {
   return adminAction(async () => {
     const { kind, id } = identity.parse(input);
@@ -26,7 +30,7 @@ export async function saveContent(input: unknown) {
   return adminAction(async () => {
     const id = await writeContent(input);
     const { kind } = z.object({ kind: contentKindSchema }).parse(input);
-    refreshContent(kind);
+    refreshContent(kind, id);
     return id;
   });
 }
@@ -34,7 +38,7 @@ export async function deleteContent(input: unknown) {
   return adminAction(async () => {
     const { kind, id } = identity.parse(input);
     await removeContent(kind, id);
-    refreshContent(kind);
+    refreshContent(kind, id);
     return null;
   });
 }
@@ -44,7 +48,7 @@ export async function setContentStatus(input: unknown) {
       .extend({ status: statusSchema })
       .parse(input);
     await changeContentStatus(kind, id, status);
-    refreshContent(kind);
+    refreshContent(kind, id);
     return null;
   });
 }

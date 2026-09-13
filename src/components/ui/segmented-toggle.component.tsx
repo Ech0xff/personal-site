@@ -78,8 +78,8 @@ const styles = stylex.create({
     transitionTimingFunction: "ease",
   },
   selected: {
-    backgroundColor: color.surfaceSelected,
-    color: color.text,
+    backgroundColor: color.accent,
+    color: color.onAccent,
     boxShadow: shadow.subtle,
   },
   unselected: {

@@ -1,6 +1,7 @@
 import "server-only";
 import { z } from "zod";
 
+import { contentRecordSchema } from "#lib/shared/content/content-record.schema";
 import {
   contentInputSchema,
   type ContentKind,
@@ -8,21 +9,12 @@ import {
   type ContentSummary,
 } from "#lib/shared/content/content.schema";
 import { documentText } from "#lib/shared/content/document.helper";
-import { documentSchema } from "#lib/shared/content/document.schema";
-import { statusSchema } from "#lib/shared/content/status.schema";
+import type { statusSchema } from "#lib/shared/content/status.schema";
 
 import { InputError } from "../actions/action.service";
 import { requireAdmin } from "../auth/session.service";
 import { makeAdminClient } from "../supabase.client";
 
-const recordSchema = z.object({
-  id: z.uuid(),
-  title: z.string().default(""),
-  content: documentSchema,
-  color: z.string().default("#3b82f6"),
-  status: statusSchema,
-  published_at: z.string(),
-});
 export async function listContent(
   kind: ContentKind,
   page = 0,
@@ -37,7 +29,7 @@ export async function listContent(
   if (error) throw error;
   return {
     items: data.slice(0, 30).map((row) => {
-      const { content, ...record } = recordSchema.parse(row);
+      const { content, ...record } = contentRecordSchema.parse(row);
       return {
         ...record,
         kind,
@@ -60,7 +52,7 @@ export async function readContent(
     .maybeSingle();
   if (error) throw error;
   if (!data) throw new InputError("This content no longer exists.");
-  return { ...recordSchema.parse(data), kind };
+  return { ...contentRecordSchema.parse(data), kind };
 }
 export async function writeContent(input: unknown) {
   await requireAdmin();

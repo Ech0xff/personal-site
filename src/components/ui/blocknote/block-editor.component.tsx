@@ -2,11 +2,10 @@
 import { BlockNoteView } from "@blocknote/mantine";
 import { useCreateBlockNote } from "@blocknote/react";
 import * as stylex from "@stylexjs/stylex";
-import { useAtomValue } from "jotai";
 import { toast } from "sonner";
 
 import { uploadFile } from "#lib/client/files/file-upload.service";
-import { resolvedThemeAtom } from "#lib/client/theme/theme.atom";
+import { useResolvedTheme } from "#lib/client/theme/theme.hook";
 
 import { blocknoteStyles } from "./block-editor.style";
 import type { BlockEditorProps } from "./block-editor.type";
@@ -20,7 +19,7 @@ export default function BlockEditor({
   onChange,
   onUploadChange,
 }: BlockEditorProps) {
-  const theme = useAtomValue(resolvedThemeAtom);
+  const theme = useResolvedTheme();
   const editor = useCreateBlockNote({
     initialContent: initialContent.length ? initialContent : undefined,
     uploadFile: async (file) => {

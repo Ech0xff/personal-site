@@ -1,15 +1,24 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { deskStatistics, deskTotalVisits } from "./display-content.const";
+import { readPublicCounts } from "#lib/server/content/public-content.service";
+
+import { deskTotalVisits } from "./display-content.const";
 import { DisplayLike } from "./display-like.component";
 import { panel } from "./display-panel.style";
 
-export function DisplayStats() {
+export async function DisplayStats() {
+  const statistics = await readPublicCounts().catch(() => null);
   return (
     <>
       <h2 {...stylex.props(panel.title)}>At a glance</h2>
+      {statistics === null && <output>Counts unavailable.</output>}
       <dl {...stylex.props(panel.rows)}>
-        {deskStatistics.map((item) => (
+        {(
+          statistics ?? [
+            { label: "Posts", value: "—" },
+            { label: "Thoughts", value: "—" },
+          ]
+        ).map((item) => (
           <div key={item.label} {...stylex.props(panel.row)}>
             <dt>{item.label}</dt>
             <dd {...stylex.props(panel.value)}>{item.value}</dd>

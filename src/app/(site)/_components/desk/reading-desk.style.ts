@@ -9,6 +9,7 @@ import {
   shape,
   space,
   lighting,
+  lampIntensity,
   material,
 } from "#design/tokens.stylex";
 
@@ -24,7 +25,7 @@ export const desk = stylex.create({
     marginInline: "auto",
     width: "100%",
     height: {
-      default: `max(800px, calc(100svh - ${shape.header}))`,
+      default: `calc(100svh - ${shape.header})`,
       [media.compact]: "auto",
     },
     paddingInline: {
@@ -57,8 +58,10 @@ export const desk = stylex.create({
     left: "50%",
     transform: "translateX(-50%)",
     backgroundImage: `radial-gradient(ellipse, ${material.glow} 0%, ${lighting.warmth} 40%, transparent 70%)`,
-    opacity: lighting.glowOpacity,
-    transition: `opacity ${motionToken.slow} ease`,
+    opacity: lampIntensity.glowOpacity,
+    transitionProperty: "opacity",
+    transitionDuration: { default: motionToken.slow, [media.reduce]: "0s" },
+    transitionTimingFunction: "ease",
     pointerEvents: "none",
   },
   intro: {

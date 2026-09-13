@@ -5,6 +5,9 @@ import Link from "next/link";
 import { type ReactNode } from "react";
 
 import Button from "#components/ui/button.component";
+import { feedStyles } from "#components/ui/content/content-feed.style";
+import { EventsTimeline } from "#components/ui/content/events-timeline.component";
+import { ThoughtsFeed } from "#components/ui/content/thoughts-feed.component";
 import type {
   ContentKind,
   ContentSummary,
@@ -15,9 +18,7 @@ import { ContentActions } from "./content-actions.component";
 import { useContentList } from "./content-list.hook";
 import { listStyles as styles } from "./content-list.style";
 import { contentLabels } from "./content.const";
-import { EventsTimeline } from "./events-timeline.component";
 import { PostsTable } from "./posts-table.component";
-import { ThoughtsFeed } from "./thoughts-feed.component";
 import { VisibilityControl } from "./visibility-control.component";
 
 export default function ContentList({
@@ -40,7 +41,7 @@ export default function ContentList({
       value={item.status}
       disabled={pending}
       onChange={() => mutate(item, false)}
-      label={`Visibility of ${item.title || "thought"}`}
+      label={`Visibility of ${item.title || subject.toLowerCase()}`}
     />
   );
   const actions = (item: ContentSummary) => (
@@ -51,7 +52,7 @@ export default function ContentList({
     />
   );
   const body = (item: ContentSummary) => (
-    <div {...stylex.props(styles.body)}>
+    <div {...stylex.props(feedStyles.body)}>
       {documents[item.id] ?? <p>{item.excerpt}</p>}
     </div>
   );

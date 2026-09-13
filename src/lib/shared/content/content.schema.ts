@@ -23,7 +23,7 @@ export const contentInputSchema = z
   })
   .transform((value) => ({ ...value, title: documentTitle(value.content) }))
   .superRefine((value, context) => {
-    if (value.kind !== "thoughts" && !value.title)
+    if (value.kind === "posts" && !value.title)
       context.addIssue({
         code: "custom",
         path: ["content"],

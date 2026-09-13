@@ -2,15 +2,15 @@ import * as stylex from "@stylexjs/stylex";
 
 import { formatTime } from "#lib/shared/utils/date.helper";
 
-import { listStyles as styles } from "./content-list.style";
-import type { ContentListViewProps } from "./content-list.type";
+import { feedStyles as styles } from "./content-feed.style";
+import type { ContentFeedProps } from "./content-feed.type";
 export function ThoughtsFeed({
   items,
-  page,
+  page = 0,
   visibility,
   actions,
   body,
-}: ContentListViewProps) {
+}: ContentFeedProps) {
   return (
     <div {...stylex.props(styles.feed)}>
       {items.map((item, index) => (
@@ -23,10 +23,12 @@ export function ThoughtsFeed({
               #{page * 30 + index + 1}　•　
               {formatTime(item.published_at, "MM/DD, HH:mm")}
             </time>
-            <div {...stylex.props(styles.actions)}>
-              {visibility(item)}
-              {actions(item)}
-            </div>
+            {(visibility || actions) && (
+              <div {...stylex.props(styles.entryActions)}>
+                {visibility?.(item)}
+                {actions?.(item)}
+              </div>
+            )}
           </header>
           {body(item)}
         </article>

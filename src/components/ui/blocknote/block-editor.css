@@ -69,3 +69,31 @@
   [data-content-type="heading"][data-level="6"] {
   --level: 1em;
 }
+
+[data-cms-blocknote][data-readonly] :is(h1, h2, h3, h4, h5, h6)[id] {
+  scroll-margin-top: var(--cms-anchor-offset);
+}
+[data-cms-blocknote][data-readonly] :is(img, video, audio, table) {
+  max-width: 100%;
+}
+[data-cms-blocknote][data-readonly] pre {
+  overflow-x: auto;
+}
+
+/* Exported BlockNote media uses the shared image viewer's delegated trigger. */
+[data-cms-blocknote][data-readonly] [data-viewer-trigger] {
+  display: block;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+  border-radius: var(--bn-border-radius);
+}
+[data-cms-blocknote][data-readonly] [data-viewer-trigger]:focus-visible {
+  outline: 2px solid var(--bn-colors-selected-background);
+  outline-offset: 4px;
+}
+[data-cms-blocknote][data-readonly] [data-viewer-trigger] img {
+  display: block;
+}

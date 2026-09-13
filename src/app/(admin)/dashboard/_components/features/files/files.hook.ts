@@ -15,6 +15,7 @@ type Upload = {
 export function useFiles() {
   const router = useRouter();
   const input = useRef<HTMLInputElement>(null);
+  const nextUpload = useRef(0);
   const [uploads, setUploads] = useState<Upload[]>([]);
   const [uploading, setUploading] = useState(false);
   const [pending, startTransition] = useTransition();
@@ -23,7 +24,7 @@ export function useFiles() {
     setUploading(true);
     setUploads(
       files.map((file) => ({
-        id: crypto.randomUUID(),
+        id: `upload-${++nextUpload.current}`,
         file,
         status: "pending",
       })),

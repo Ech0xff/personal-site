@@ -7,8 +7,8 @@ see [AGENTS.md](../AGENTS.md).
 
 The public reading desk lives in `src/app/(site)` at `/`, with `/posts`,
 `/thoughts`, `/events`, and `/system`. It owns local content, scene materials,
-audio, and Lenis scrolling. Content pages remain placeholders and old article
-detail URLs return 404.
+audio, and Lenis scrolling. Published content is available at the three content
+routes, with UUID article detail URLs below `/posts`.
 
 Authentication and dashboard live in the separate `(admin)` root. Both roots
 share StyleX foundations from `src/design`; each owns its reset and providers.
@@ -43,18 +43,26 @@ anyone to read file bytes, independent of document visibility.
 
 ## Content and Editor
 
+Posts, Thoughts, and Events receive their record UUID from PostgreSQL on insert;
+new editor drafts omit `id`, and updates send only an existing record ID. Modal
+instances and upload progress rows use local counters for UI identity. The local
+guestbook demo uses random local keys through `getRandomValues`, which also works
+on LAN HTTP origins; these keys never become content record IDs.
+
 Posts, Thoughts, and Events remain separate tables with UUID, native BlockNote
 JSONB content, visibility, and publish time. Posts and Events store a title
-derived from the first document heading on every save;
-Events have a color. There are no author, location, standalone image arrays,
+derived from the first document heading on every save. Only Posts require a
+heading; Events may omit it and store an empty title. New Events start with a
+plain document, and Events have a color. There are no author, location, standalone image arrays,
 tags, configuration records, or application user tables.
 
 BlockNote provides editing; Thoughts and Events render static HTML through the
 server-only BlockNote exporter. Documents are validated before export and text is
 escaped by the exporter. Exports run serially because the library temporarily
-sets JSDOM globals. The renderer is reused, but private content is not cached.
+sets JSDOM globals. Cache Components reuse HTML exports keyed by validated
+document content after authorization; database records and sessions are not cached.
 Lists do not initialize browser editor instances. The editor runtime loads only
-when editing. Posts use a table.
+when editing. Dashboard Posts use a table; public Posts use a reading list.
 Each data page has an explicit Suspense boundary below the shared dashboard
 layout, covering session checks, queries, and static document rendering during
 both direct visits and client navigation. The route-level loading file alone
@@ -96,10 +104,33 @@ There are no database overrides, locale prefixes, language cookies, or AI
 translation. Business content keeps its original language.
 
 Dashboard data is requested under session authorization without shared caching.
-Successful mutations revalidate the relevant dashboard path and refresh the
-list. Unused content cache tags, webhook handlers, trigger functions, and cache
-maintenance endpoints were removed together. Future public content integration
-must introduce cache readers and invalidation as a single change.
+Successful mutations revalidate the dashboard path, matching public list, article
+path, and homepage counts where relevant. There are no cached database queries,
+content cache tags, webhooks, or cache maintenance endpoints.
+
+## Public Content and Caching
+
+A separate server-only anonymous Supabase client uses RLS and explicit `show`
+filters. Queries use `no-store` after `connection()` inside local Suspense
+boundaries; no cached ancestor owns the queries. React `cache()` deduplicates
+article reads for metadata and content within a request, not across requests.
+Public lists fetch all rows in batches, advancing by the actual returned count
+until the reported total is reached, including when the database caps a batch.
+Lists sort by descending publish time and then ID. Publish time does not schedule
+visibility. Counts use filtered exact count queries.
+
+`use cache` with `cacheLife('hours')` caches BlockNote HTML and article anchor/TOC
+preparation by the complete document input. Changed documents get a new key;
+permission and visibility checks always precede reuse. HTML caches cannot bypass
+Show/Hide or administrator authorization. Article IDs are UUIDs; missing and
+hidden records use the route's not-found state. Rendering preserves validated
+media and original-language content.
+
+Thought and event presentations live in `components/ui/content`, with optional
+administration action slots. Public pages receive server-rendered documents and
+do not load the editing runtime. The article title is rendered once outside the
+body. Stable unique heading anchors power the viewport-aware TOC, native hash
+links, and Lenis scrolling.
 
 ## Shared Appearance and Modals
 
@@ -108,20 +139,31 @@ synchronization component within their own runtime. One `theme` preference is
 shared across tabs and roots; System resolves the current OS setting. The
 pre-paint ThemeScript and runtime use the same complete sets of color, shadow,
 material, and lighting classes. Storage failures fall back to System while local
-controls remain usable. Portals inherit the theme from `html`.
+controls remain usable. Each root has an isolated Jotai store. Theme-dependent
+React attributes use a hydration-safe per-boundary snapshot before subscribing
+to the actual preference. Portals inherit the theme from `html`.
+
+Manual, OS, and storage changes share a 300 ms document View Transition whenever
+the resolved theme changes. Initialization has no animation. The new snapshot
+contains final colors, without a second component-color transition. Reduced
+motion, hidden tabs, and unsupported browsers apply the theme directly. Pending
+transitions yield to the latest preference; audio and editor state remain intact.
 
 All token definitions and light/dark overrides live in `design/tokens.stylex.ts`.
 Both roots share neutral surfaces and a blue accent. The reading desk keeps its
-material colors with dark ambient variants. Lamp on/off is a local lighting
-override independent of the color scheme. See the [design guide](./REDESIGN.md).
+material colors with dark ambient variants. Lamp on/off overrides a separate
+intensity token group, preserving the current theme's warmth. See the [design guide](./REDESIGN.md).
 
 Dashboard editors fill the dashboard-anchored modal surface without a maximum
 reading width. Metadata and icon controls sit in the top toolbar, and the
 document itself owns its heading. Borderless inputs use floating labels.
 A shared Loading component fills the content area for navigation, server data,
 and editor loading. Focus follows the active modal and returns to its opener when
-closed. Files image previews use the native-dialog viewer with fit-to-viewport zoom
-and focus restoration; other file previews and downloads retain their URL links.
+closed. Files and readonly document images in both roots share the native-dialog viewer
+with fit-to-viewport zoom and focus restoration. The serialized BlockNote exporter
+adds escaped, accessible image triggers within its existing DOM context; the public
+shell mounts the environment-neutral viewer without administration providers.
+Other file previews and downloads retain their URL links.
 Reusable controls stay in `components/ui`; feature-specific hooks and
 styles remain with their dashboard feature.
 
@@ -134,10 +176,9 @@ slot renders. Program selection is immediate; scan animations do not gate data.
 Stats rendering is separate from the local like control. Guestbook form state,
 submission effects, and list rendering have separate owners.
 
-Current content remains synchronous local fixtures. The slots support future
-server-side Supabase reads initiated during page rendering, rather than fetching
-on the first tab click. Public read policies, cache consumers/invalidation,
-errors/retries, and moderated writes remain a coordinated follow-up in
+Stats reads public Posts and Thoughts counts during server rendering. Failed
+counts display an unavailable state within the panel. Visits, CLI, and Guestbook
+remain local fixtures; moderated guestbook writes and analytics are tracked in
 [TODO](./TODO.md).
 
 Desk preferences belong to each feature. The shared storage atom factory validates

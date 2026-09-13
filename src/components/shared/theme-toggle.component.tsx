@@ -1,13 +1,12 @@
 "use client";
 
 import * as stylex from "@stylexjs/stylex";
-import { useAtom } from "jotai";
 import { Monitor, Moon, Sun } from "lucide-react";
 
 import IconButton from "#components/ui/icon-button.component";
 import type { StyleInput } from "#design/style.type";
 import { shape } from "#design/tokens.stylex";
-import { themeAtom } from "#lib/client/theme/theme.atom";
+import { useThemePreference } from "#lib/client/theme/theme.hook";
 import { defaultDictionary } from "#lib/shared/dictionary/dictionary.const";
 import { getNextTheme } from "#lib/shared/theme/theme.helper";
 const styles = stylex.create({
@@ -43,7 +42,7 @@ const styles = stylex.create({
   },
 });
 const ThemeToggle = ({ xstyle }: { xstyle?: StyleInput }) => {
-  const [preference, setTheme] = useAtom(themeAtom);
+  const [preference, setTheme] = useThemePreference();
   const labels = defaultDictionary.common.theme;
   const description = defaultDictionary.common.switchTheme
     .replace("{current}", labels[preference])

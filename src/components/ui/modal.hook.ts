@@ -2,6 +2,7 @@ import { usePathname } from "next/navigation";
 import {
   useCallback,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -12,35 +13,40 @@ import { MODAL_ANCHOR, MODAL_BOUNDARY } from "./modal.const";
 import type { Options, ModalId, ModalEntry } from "./modal.type";
 export function useModalStack() {
   const pathname = usePathname();
+  const instanceId = useId();
+  const nextModal = useRef(0);
   const defaultOptionsRef = useRef<Options>({
     boundary: MODAL_BOUNDARY.VIEWPORT,
     positionAnchor: MODAL_ANCHOR.BODY,
   });
   const previousPathname = useRef(pathname);
   const [modals, setModals] = useState<ModalEntry[]>([]);
-  const open = useCallback((content: ReactNode, options?: Partial<Options>) => {
-    const resolvedOptions = {
-      ...defaultOptionsRef.current,
-      ...options,
-    };
-    if (resolvedOptions.boundary === MODAL_BOUNDARY.VIEWPORT) {
-      document
-        .querySelectorAll<HTMLElement>(":popover-open")
-        .forEach((popover) => popover.hidePopover());
-    }
-    const id = crypto.randomUUID();
-    const returnFocus = document.activeElement;
-    setModals((currentModals) => [
-      ...currentModals,
-      {
-        id,
-        content,
-        options: resolvedOptions,
-        returnFocus,
-      },
-    ]);
-    return id;
-  }, []);
+  const open = useCallback(
+    (content: ReactNode, options?: Partial<Options>) => {
+      const resolvedOptions = {
+        ...defaultOptionsRef.current,
+        ...options,
+      };
+      if (resolvedOptions.boundary === MODAL_BOUNDARY.VIEWPORT) {
+        document
+          .querySelectorAll<HTMLElement>(":popover-open")
+          .forEach((popover) => popover.hidePopover());
+      }
+      const id = `${instanceId}-modal-${++nextModal.current}`;
+      const returnFocus = document.activeElement;
+      setModals((currentModals) => [
+        ...currentModals,
+        {
+          id,
+          content,
+          options: resolvedOptions,
+          returnFocus,
+        },
+      ]);
+      return id;
+    },
+    [instanceId],
+  );
   const close = useCallback((id?: ModalId) => {
     setModals((currentModals) => {
       if (id) {

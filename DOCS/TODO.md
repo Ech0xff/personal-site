@@ -19,13 +19,11 @@ relevant file or issue when possible.
 
 See the [redesign guide](./REDESIGN.md) for the public reading desk and source research.
 
-- [ ] Connect public Posts, Thoughts, and Events to BlockNote content once their designs are agreed; introduce public rendering, cache consumers, and invalidation together. Public copy remains source-controlled.
 - [ ] Add CMS audio import from uploaded files or URLs, extract editable title/artist/duration metadata, and store audio plus precomputed spectra durably. Reuse the [built-in analysis format](./REDESIGN.md#built-in-music-and-audio-analysis); production decoding should run as bounded background work.
-- [ ] Implement new `/posts/[slug]` detail pages with real CMS content; these URLs currently return 404.
-- [ ] Check explicit playback, curved-slider touch/keyboard behavior, and visuals on physical Safari/iOS devices before production rollout.
+- [ ] Check explicit playback, curved-slider touch/keyboard behavior, TOC morph smoothness, and visuals on physical Safari/iOS devices before production rollout.
 
 - [ ] Choose a new redesign favicon and visual signature; the public site currently uses a blank favicon.
 
 - [ ] Configure the redesign GitHub, Email, X, and Bilibili destinations; the current icons intentionally have empty destinations.
 
-- [ ] Connect the server-composed display slots to public Supabase reads. Implement public read policies, cache consumers/invalidation, panel failures/retries, and moderated guestbook writes with an explicit email-display policy together. Verify slow and failed streaming reads; current fixtures are synchronous.
+- [ ] Connect visits to analytics and Guestbook to moderated persistent storage with an explicit email-display policy. Public content and Posts/Thoughts counts already use live Supabase reads.

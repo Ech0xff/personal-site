@@ -45,7 +45,9 @@ export function PostsTable({
                   index === items.length - 1 && styles.lastCell,
                 )}
               >
-                {visibility(item)}
+                <div {...stylex.props(styles.cellContent)}>
+                  {visibility(item)}
+                </div>
               </td>
               <td
                 {...stylex.props(
@@ -62,7 +64,7 @@ export function PostsTable({
                   index === items.length - 1 && styles.lastCell,
                 )}
               >
-                {actions(item)}
+                <div {...stylex.props(styles.cellContent)}>{actions(item)}</div>
               </td>
             </tr>
           ))}
