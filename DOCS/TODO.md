@@ -6,6 +6,11 @@ relevant file or issue when possible.
 ## Maintenance
 
 - [ ] Decide whether to standardize the casing of the `DOCS` directory.
+- [ ] Remove the `jsdom` 26.1.0 override and `@blocknote/server-util` DOM-origin
+      patch once BlockNote's server renderer works
+      with Lambda's disabled `require(esm)` support and a production article
+      renders without DOM initialization errors. Keep the native Node regression
+      check in the document rendering suite.
 
 ## Review Follow-up
 

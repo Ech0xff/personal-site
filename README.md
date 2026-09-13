@@ -211,6 +211,14 @@ bun --env-file=.env.development run build
 bun --env-file=.env.development run start
 ```
 
+The `jsdom` override in `package.json` keeps BlockNote's server renderer compatible
+with Lambda's disabled `require(esm)` support. The Bun patch for
+`@blocknote/server-util` gives its isolated DOM a non-opaque origin so storage
+access during rendering does not throw; this does not fetch the origin URL.
+The document rendering suite checks both in native Node with that restriction;
+Bun-only tests do not reproduce the module error. See [TODO](./DOCS/TODO.md)
+before removing these compatibility fixes.
+
 There are no OAuth callback URLs, webhook secrets, or webhook binding steps.
 See [Architecture](./DOCS/ARCHITECTURE.md) for authorization and data flow.
 

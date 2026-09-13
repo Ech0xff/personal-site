@@ -67,6 +67,9 @@
     "type-fest": "5.8.0",
     "typescript": "^7.0.2"
   },
+  "overrides": {
+    "jsdom": "26.1.0"
+  },
   "ignoreScripts": [
     "sharp",
     "unrs-resolver"
@@ -82,5 +85,8 @@
       "default": "./src/lib/client/dictionary/dictionary-provider.component.tsx"
     }
   },
-  "license": "GPL-3.0-only"
+  "license": "GPL-3.0-only",
+  "patchedDependencies": {
+    "@blocknote/server-util@0.54.2": "patches/@blocknote%2Fserver-util@0.54.2.patch"
+  }
 }

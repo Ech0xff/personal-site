@@ -1,5 +1,7 @@
 import { describe, expect, mock, test } from "bun:test";
 
+import { spawn } from "bun";
+
 await mock.module("server-only", () => ({}));
 // Next compiles StyleX; these rendering tests exercise HTML, not generated CSS.
 await mock.module("#components/ui/blocknote/link-card.style", () => ({
@@ -10,6 +12,36 @@ await mock.module("#components/ui/blocknote/link-card.style", () => ({
   ),
 }));
 const { renderDocument } = await import("./document-render.service");
+
+test("loads the document renderer with Lambda's native Node module restrictions", async () => {
+  const child = spawn(
+    [
+      "node",
+      "--no-experimental-require-module",
+      "--input-type=module",
+      "-e",
+      `import { ServerBlockNoteEditor } from "@blocknote/server-util";
+       const editor = ServerBlockNoteEditor.create();
+       await editor._withJSDOM(async () => {
+         window.localStorage.setItem("renderer-smoke", "ready");
+         if (window.localStorage.getItem("renderer-smoke") !== "ready") {
+           throw new Error("Renderer DOM storage is unavailable");
+         }
+       });
+       console.log(await editor.blocksToFullHTML([
+         { type: "paragraph", content: "Native Node rendering" }
+       ]));`,
+    ],
+    { stdout: "pipe", stderr: "pipe" },
+  );
+  const [exitCode, html, error] = await Promise.all([
+    child.exited,
+    new Response(child.stdout).text(),
+    new Response(child.stderr).text(),
+  ]);
+  expect(exitCode, error).toBe(0);
+  expect(html).toContain("Native Node rendering");
+});
 
 describe("dashboard static documents", () => {
   test("renders formatted and nested content without an editable surface", async () => {
