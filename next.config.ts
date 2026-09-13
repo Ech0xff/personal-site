@@ -4,6 +4,11 @@ import { ROUTES } from "#lib/shared/routes/routes.const";
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  serverExternalPackages: [
+    "@blocknote/core",
+    "@blocknote/react",
+    "@blocknote/server-util",
+  ],
   reactCompiler: true,
   reactStrictMode: false,
   async redirects() {
@@ -14,8 +19,13 @@ const nextConfig: NextConfig = {
         permanent: true,
       })),
       {
+        source: "/dashboard/images",
+        destination: ROUTES.DASHBOARD.FILES,
+        permanent: true,
+      },
+      {
         source: "/dashboard",
-        destination: ROUTES.DASHBOARD.ACCOUNT,
+        destination: ROUTES.DASHBOARD.POSTS,
         permanent: false,
       },
     ];

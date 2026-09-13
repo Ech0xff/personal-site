@@ -11,8 +11,8 @@ loaded by these pages. UI copy is English; the greeting sequence is decorative.
 ## Development and Preview
 
 Use the [standard development commands](../README.md#development), then visit
-`/`. Public pages do not require database credentials. Authentication and the
-dashboard still do.
+`/`. Public pages do not require database credentials. Authentication requires
+`ADMIN_TOKEN`; the dashboard also requires Supabase credentials.
 
 To build just the public pages when Supabase is unavailable:
 
@@ -34,7 +34,7 @@ Reusable controls live in `src/components`; shared StyleX tokens live in
 `src/design`. Each group owns a root layout,
 and there is no shared `app/layout.tsx`. Navigating between roots loads a new
 document; navigation inside the public site keeps its curtain controller mounted.
-API handlers remain at their original locations. The five former redesign page
+Dashboard operations use authenticated Server Actions. The five former redesign page
 URLs permanently redirect to their unprefixed counterparts, while audio URLs
 and storage keys remain unchanged. Old article detail URLs return 404 until
 new detail pages are implemented. The public layout permits search indexing.
@@ -118,22 +118,31 @@ The hero uses the same handwritten font token as the Thoughts letter.
 
 ## Administration Design System
 
-Authentication and dashboard pages preserve their layout and business behavior
-while using the shared palette, typography, shapes, and semantic colors. Additional
-semantics cover input and selected surfaces, disabled and focus feedback,
-success/warning/error/info states, overlays, layer order, and syntax highlighting.
-There is no Tailwind, Sass, old variable bridge, or separate administration palette.
-`/system` shows shared form and status tokens with a locally scoped dark example.
-Existing responsive administration breakpoints and component geometry are retained.
+Authentication and the four dashboard sections share typography, shapes, and
+semantic token names. Administration applies its own white/zinc light palette,
+neutral dark palette, and blue accent. Its sidebar, post table, thought feed,
+event timeline, and file gallery follow the original CMS layout. Additional semantics cover input and
+selected surfaces, disabled and status colors, overlays, image-viewer surfaces,
+and code tokens. `/system` includes shared form and status samples with a locally
+scoped dark example. At widths up to 767 px, the sidebar becomes a top navigation. Its Menu disclosure
+reuses the homepage hover, touch, and keyboard behavior; expansion animates the
+header height and pushes the content down. Closed links are inert.
 
-Owned components compose StyleX declarations through `xstyle`, variants, and size
-props. Color values stay in token modules; tag and event colors remain business
-content. CodeMirror uses its theme/highlighting extensions with shared tokens.
-Markdown maps elements to StyleX renderers; a scoped CSS adapter styles Prism's
-generated token spans and line numbers. The color picker also has a scoped CSS
-adapter. These adapters consume StyleX-supplied custom properties. Sonner uses
-its class-name API with StyleX styles. All appearance state stays in the admin root,
+Owned components compose StyleX declarations through `xstyle`, variants, and
+sizes. Color values stay in token modules; event colors remain business content.
+BlockNote uses a scoped CSS adapter supplied by StyleX variables. Sonner uses
+its class-name API with StyleX styles. Appearance state stays in the admin root,
 including pre-paint theme classes, system changes, and cross-tab persistence.
+Inputs use borderless surfaces and labels that rise on focus or populated values.
+Buttons and icon actions use the shared `Magnetic` primitive with stationary hit
+areas, transparent surfaces, and semantic hover colors. Compact dashboard controls
+keep their sensing area within their bounds. Close controls draw a circular outline
+on hover or keyboard focus, with reduced-motion support. Publish time appears as
+English date text that opens a date/time picker; event color is a single clickable
+swatch. Hide/Show remains text-only.
+Content loading uses one shared inline component; editing occupies the full
+content surface with metadata in the toolbar and no separate preview mode.
+See [Architecture](./ARCHITECTURE.md) for the token login and content data flow.
 
 ## Interaction Rules
 

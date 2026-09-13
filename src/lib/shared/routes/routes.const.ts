@@ -12,12 +12,9 @@ export const ROUTES = {
 
   // Dashboard routes
   DASHBOARD: {
-    CONFIG: "/dashboard/config",
+    FILES: "/dashboard/files",
     POSTS: "/dashboard/posts",
     THOUGHTS: "/dashboard/thoughts",
     EVENT: "/dashboard/event",
-    TAGS: "/dashboard/tags",
-    IMAGES: "/dashboard/images",
-    ACCOUNT: "/dashboard/account",
   },
 } as const;

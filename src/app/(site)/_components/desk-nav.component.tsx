@@ -2,6 +2,8 @@
 import * as stylex from "@stylexjs/stylex";
 import { useEffect } from "react";
 
+import { useDisclosureMenu } from "#components/ui/disclosure-menu.hook";
+import { Magnetic } from "#components/ui/magnetic.component";
 import {
   color,
   font,
@@ -16,8 +18,6 @@ import { objectMarker } from "../_design/object-feedback.stylex";
 import { navigation } from "./desk-content.const";
 import { DeskLink } from "./desk-navigation.component";
 import { shell } from "./desk-shell.style";
-import { Magnetic } from "./magnetic.component";
-import { useDeskMenu } from "./use-desk-menu.hook";
 
 const styles = stylex.create({
   root: { position: "relative" },
@@ -83,7 +83,7 @@ export function DeskNav({
   pathname,
   onOpenChange,
 }: Readonly<{ pathname: string; onOpenChange: (open: boolean) => void }>) {
-  const menu = useDeskMenu(pathname);
+  const menu = useDisclosureMenu(pathname);
   useEffect(() => onOpenChange(menu.open), [menu.open, onOpenChange]);
   return (
     <div

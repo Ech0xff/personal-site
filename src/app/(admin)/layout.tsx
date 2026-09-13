@@ -4,11 +4,12 @@ import { Agentation } from "agentation";
 import type { Metadata } from "next";
 
 import ThemeScript from "#components/shared/theme-script.component";
-import ToastWatcher from "#components/shared/toast-watcher.component";
+import ToastProvider from "#components/shared/toast-provider.component";
 import { ImageViewer } from "#components/ui/image-viewer.component";
 import ModalProvider from "#components/ui/modal-provider.component";
 import { MODAL_ANCHOR } from "#components/ui/modal.const";
 import { adminRoot } from "#design/admin-root.style";
+import { lightTheme } from "#design/admin-theme.stylex";
 import { DictionaryProvider } from "#lib/client/dictionary/dictionary-provider.component";
 import { getDictionary } from "#lib/server/dictionary/dictionary.service";
 
@@ -40,7 +41,7 @@ const RootLayout = async ({ children }: Readonly<LayoutProps>) => {
     <html
       suppressHydrationWarning
       lang="en"
-      {...stylex.props(adminRoot.document)}
+      {...stylex.props(lightTheme, adminRoot.document)}
     >
       <head>
         <ThemeScript />
@@ -48,7 +49,7 @@ const RootLayout = async ({ children }: Readonly<LayoutProps>) => {
       <body style={{ anchorName: MODAL_ANCHOR.BODY }}>
         <DictionaryProvider dictionary={dictionary}>
           <ModalProvider>
-            <ToastWatcher />
+            <ToastProvider />
             <SpeedInsights />
             <ImageViewer>{children}</ImageViewer>
           </ModalProvider>

@@ -4,6 +4,9 @@ import type { ComponentPropsWithRef } from "react";
 
 import type { StyleInput } from "#design/style.type";
 import { font, space, shape, motionToken, color } from "#design/tokens.stylex";
+
+import { Magnetic } from "./magnetic.component";
+
 const spin = stylex.keyframes({
   to: {
     rotate: "360deg",
@@ -11,49 +14,11 @@ const spin = stylex.keyframes({
 });
 const styles = stylex.create({
   primary: {
-    borderTopColor: "transparent",
-    borderRightColor: "transparent",
-    borderBottomColor: "transparent",
-    borderLeftColor: "transparent",
-    backgroundColor: {
-      default: color.accent,
-      ":hover": color.accentHover,
-    },
-    color: color.onAccent,
+    color: { default: color.accentText, ":hover": color.accentHover },
   },
-  secondary: {
-    borderTopColor: color.line,
-    borderRightColor: color.line,
-    borderBottomColor: color.line,
-    borderLeftColor: color.line,
-    backgroundColor: {
-      default: color.surface,
-      ":hover": color.surfaceHover,
-    },
-    color: color.text,
-  },
-  ghost: {
-    borderTopColor: "transparent",
-    borderRightColor: "transparent",
-    borderBottomColor: "transparent",
-    borderLeftColor: "transparent",
-    backgroundColor: {
-      default: "transparent",
-      ":hover": color.surfaceHover,
-    },
-    color: color.secondary,
-  },
-  danger: {
-    borderTopColor: color.dangerBorder,
-    borderRightColor: color.dangerBorder,
-    borderBottomColor: color.dangerBorder,
-    borderLeftColor: color.dangerBorder,
-    backgroundColor: {
-      default: color.dangerSurface,
-      ":hover": `color-mix(in srgb, ${color.dangerBorder} 30%, transparent)`,
-    },
-    color: color.dangerText,
-  },
+  secondary: { color: { default: color.text, ":hover": color.accentText } },
+  ghost: { color: { default: color.secondary, ":hover": color.accentText } },
+  danger: { color: color.dangerText },
   sm: {
     height: space.xl,
     paddingLeft: space.sm,
@@ -81,18 +46,11 @@ const styles = stylex.create({
     alignItems: "center",
     justifyContent: "center",
     gap: space.xs,
-    borderTopLeftRadius: shape.control,
-    borderTopRightRadius: shape.control,
-    borderBottomRightRadius: shape.control,
-    borderBottomLeftRadius: shape.control,
-    borderTopWidth: shape.fine,
-    borderRightWidth: shape.fine,
-    borderBottomWidth: shape.fine,
-    borderLeftWidth: shape.fine,
-    borderTopStyle: "solid",
-    borderRightStyle: "solid",
-    borderBottomStyle: "solid",
-    borderLeftStyle: "solid",
+    borderRadius: shape.pill,
+    borderWidth: 0,
+    backgroundColor: "transparent",
+    cursor: "pointer",
+    outlineOffset: "4px",
     fontWeight: font.medium,
     transitionProperty:
       "color, background-color, border-color, text-decoration-color",
@@ -132,6 +90,7 @@ export interface ButtonProps extends ComponentPropsWithRef<"button"> {
   variant?: keyof typeof variants;
   size?: keyof typeof sizes;
   loading?: boolean;
+  magnetic?: boolean;
 }
 export default function Button({
   children,
@@ -139,9 +98,18 @@ export default function Button({
   variant = "primary",
   size = "md",
   loading = false,
+  magnetic = true,
   disabled,
   ...props
 }: ButtonProps) {
+  const content = (
+    <>
+      {loading && (
+        <LoaderCircle aria-hidden="true" {...stylex.props(styles.icon)} />
+      )}
+      {children}
+    </>
+  );
   return (
     <button
       type="button"
@@ -150,10 +118,7 @@ export default function Button({
       aria-busy={loading || undefined}
       {...stylex.props([styles.button, variants[variant], sizes[size], xstyle])}
     >
-      {loading && (
-        <LoaderCircle aria-hidden="true" {...stylex.props(styles.icon)} />
-      )}
-      {children}
+      {magnetic ? <Magnetic compact>{content}</Magnetic> : content}
     </button>
   );
 }

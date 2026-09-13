@@ -1,110 +1,117 @@
 # Architecture
 
-For setup and operations, see [README](../README.md). For naming and placement
-rules, see [AGENTS.md](../AGENTS.md).
+For setup and operations, see [README](../README.md). For naming and placement,
+see [AGENTS.md](../AGENTS.md).
 
 ## Independent UI Roots
 
 The public reading desk lives in `src/app/(site)` at `/`, with `/posts`,
-`/thoughts`, `/events`, and `/system`. It owns its scene materials, local
-content and audio, and Lenis controller; foundational StyleX tokens are shared. Posts, Thoughts, and Events remain
-placeholders; old article detail URLs return 404.
+`/thoughts`, `/events`, and `/system`. It owns local content, scene materials,
+audio, and Lenis scrolling. Content pages remain placeholders and old article
+detail URLs return 404.
 
-Authentication and dashboard routes retain a separate root layout in
-`src/app/(admin)`. Reusable components live in `src/components`, dashboard
-features stay beside their routes, and browser theme state lives in
-`src/lib/client/theme`. Both roots import the generated StyleX entrypoint and
-shared tokens from `src/design`; each owns its reset and providers. Public pages
-never mount administration providers. Crossing roots loads a new document.
-API handlers, URLs, and stored preference keys remain unchanged. See the
-[design guide](./REDESIGN.md) for token ownership and public interaction behavior.
+Authentication and dashboard live in the separate `(admin)` root. Both roots
+share StyleX foundations from `src/design`; each owns its reset and providers.
+Public pages never import administration providers or the BlockNote editor.
+Crossing roots loads a new document. See the [design guide](./REDESIGN.md).
 
-## Data and Authorization
+## Authentication and Data Access
 
-Shared services accept a Supabase client so callers choose the identity:
+The single owner signs in with server-only `ADMIN_TOKEN`, with no length or
+complexity requirement. An empty value disables login. The server compares
+fixed-length token hashes and signs a seven-day JWT using a domain-separated
+key derived from the configured token. The HttpOnly, SameSite cookie is Secure
+in production and contains no original token. Rotation invalidates existing
+sessions; logout clears the cookie. No Supabase user session is used.
 
-- `makeStaticClient`: Anonymous public reads.
-- `makeBrowserClient`: Browser session reads and mutations.
-- `makeServerClient`: Cookie-backed server session access.
-- `makeAdminClient`: Privileged server operations using the service-role key.
+Protected Server Components read initial data through services. Server Actions
+load editor data and perform saves, status changes, deletion, and upload signing.
+Every entry point checks the session, including service reads; a layout check
+alone is insufficient. Next.js Server Actions enforce browser same-origin
+submission. Expected action errors return discriminated results so failed saves
+retain editor content. Session reads are behind Suspense and are not shared-cache
+entries. Server modules use `import "server-only"`.
 
-The dashboard layout controls sign-in access and navigation. Database RLS and
-privileged endpoint checks authorize operations; hiding an admin link does not.
+Only the server creates the service-role Supabase client. A separate browser
+client with session persistence disabled uploads to a signed object path. RLS
+allows anonymous reads of `show` content and no anonymous table writes. Storage
+object listing and deletion require server access; public bucket URLs allow
+anyone to read file bytes, independent of document visibility.
 
-## Cache Invalidation
+## Content and Editor
 
-The retained CMS data layer uses `"use cache"` with shared tags in
-`src/lib/server/cache/index.ts`. Lists, summaries, config, and individual posts
-have separate tags.
+Posts, Thoughts, and Events remain separate tables with UUID, native BlockNote
+JSONB content, visibility, and publish time. Posts and Events store a title
+derived from the first document heading on every save;
+Events have a color. There are no author, location, standalone image arrays,
+tags, configuration records, or application user tables.
 
-- `/api/webhook`: Validates the bearer secret and payload, maps tables to tags,
-  and revalidates with stale-while-revalidate behavior. Post changes also refresh
-  the individual post tag.
-- Config Server Actions: Require admin access and immediately expire the
-  config tag.
-- `/api/admin/cache/revalidate-all`: Requires admin access and immediately
-  expires all known content tags.
+BlockNote provides editing; Thoughts and Events render static HTML through the
+server-only BlockNote exporter. Documents are validated before export and text is
+escaped by the exporter. Exports run serially because the library temporarily
+sets JSDOM globals. The renderer is reused, but private content is not cached.
+Lists do not initialize browser editor instances. The editor runtime loads only
+when editing. Posts use a table.
+Each data page has an explicit Suspense boundary below the shared dashboard
+layout, covering session checks, queries, and static document rendering during
+both direct visits and client navigation. The route-level loading file alone
+cannot cover every sibling navigation. Each page authenticates before returning
+content; the shared layout renders only the shell.
+Standard blocks are validated with Zod at the service boundary; block
+structure, inline formatting, nested children, tables, and media props survive
+save/load. Database-generated types are regenerated from the local schema.
+Posts send lightweight list summaries; Thoughts and Events send their documents
+for inline rendering. Raw JSON is never displayed. New documents
+start hidden. Saves are explicit and wait for uploads to finish. Failed saves
+keep the current document, including when the session expires.
 
-The public reading desk currently has no CMS cache consumers. Content tags and
-webhook invalidation remain available to the retained data layer; future public
-content integration must update consumers and invalidation together.
+Owned component styles use StyleX; scoped BlockNote CSS consumes its variables.
+The editor uses the resolved administration theme. Old CodeMirror, Markdown
+renderers/directives, PlantUML, and external link-preview logic are removed.
 
-## Configuration
+## File Storage
 
-Global config includes `DICTIONARY`, which merges admin overrides with
-`src/lib/shared/dictionary/dictionary.const.ts`. Objects merge recursively;
-arrays replace defaults. Zod validates overrides, and dynamic messages use ICU
-formatting with supported placeholders and explicit rich-text renderers.
+Both Files and BlockNote use one browser upload service. Ordinary JPEG/PNG/WebP
+photos reuse browser WebP compression; GIF, SVG, and other file types retain their
+bytes. Client and server validate upload descriptors against the bucket's 50 MiB
+limit. The authorized server generates a unique path and a signed upload token;
+the browser uploads bytes directly to Supabase and only then uses the public URL.
+The signed credential authorizes that path, not general bucket management.
 
-The `#dictionary` conditional import resolves to the server reader or client
-provider. Config saves and deletions use admin Server Actions to expire the
-config cache; the dashboard refreshes the current route.
+Storage metadata owns the file name, MIME type, size, and creation time; there
+is no duplicate application file table. The service-role-only `list_files` SQL function reads Storage metadata without
+modifying it, providing case-insensitive original-name substring search and
+stable pagination, time/size sorting, and filtered totals. The standard Storage listing omits original-name metadata. Upload failures can be retried. Canceling an
+editor does not remove uploaded objects; deletion is explicit and may break
+existing content links. There is no background garbage collector.
 
-The interface uses English without locale routing, language cookies, or a
-translation API. Business content keeps its original language. Old
-language-prefixed and translation-preview URLs return 404 without redirects.
-OAuth returns through `/api/auth/callback` to `/dashboard/account` or `/auth`.
+## Dictionary and Refresh
 
-## Content Rendering
+The shared English dictionary is source-controlled. The `#dictionary`
+conditional import resolves to a static server reader or the client provider.
+There are no database overrides, locale prefixes, language cookies, or AI
+translation. Business content keeps its original language.
 
-`content-renderer.component.tsx` combines Markdown/GFM, directives, heading IDs,
-and syntax highlighting. Directives under
-`src/app/(admin)/dashboard/_components/features/content/_components/directive-render` require both
-registration and a renderer. `pre-render.component.tsx` handles code blocks and
-PlantUML; see [supported syntax](../README.md#markdown-support).
+Dashboard data is requested under session authorization without shared caching.
+Successful mutations revalidate the relevant dashboard path and refresh the
+list. Unused content cache tags, webhook handlers, trigger functions, and cache
+maintenance endpoints were removed together. Future public content integration
+must introduce cache readers and invalidation as a single change.
 
-Administration root and auth loading boundaries reuse the shared loading component.
-Markdown rendering and editor integrations remain available for dashboard previews.
+## Shared Appearance and Modals
 
-## Module Ownership
+Browser theme state lives in `lib/client/theme`. Its atom owns preference
+persistence, system/storage listeners, and HTML attributes through one update
+path. The pre-paint ThemeScript applies the resolved light or dark StyleX theme
+before React mounts. Administration colors are neutral with a blue accent;
+public scene colors remain independent. Storage failures fall back to the system preference;
+portals inherit theme classes from `html`. The public root remains light.
 
-Shared auth/session queries accept the caller's client. Browser image compression
-and uploads live in `lib/client/images`; shared image services handle storage
-queries and deletion. Browser RPC calls stay in client services. Shared theme
-values live in `lib/shared/theme`, with browser state in
-`src/lib/client/theme/theme.atom.ts`; routes live
-in `lib/shared/routes`.
-
-The theme atom owns preference persistence, system and storage listeners, and
-HTML theme attributes through a single update path. Subscribing to either theme
-atom mounts these listeners; the last unsubscribe removes them. Storage is read
-on mount, while ordinary atom reads use in-memory state. The pre-paint
-`ThemeScript` applies the initial appearance before React mounts, including the
-StyleX dark color and shadow classes. Storage failures fall back to the system
-preference. Theme classes live on `html`, so modals and portals inherit them.
-The public root remains light; `/system` demonstrates dark tokens in a local sample.
-
-Thought image URLs are deduplicated at service read/write boundaries and in
-upload state, preserving first occurrence and order so URLs can serve as keys.
-Recent-plan row IDs exist only in editor state and are omitted when saving.
-
-Dashboard editors fill their modal boundary and use a flat `Stack` surface.
-`ModalPanel` is reserved for floating panels. Inline destructive actions use
-transparent icon buttons with danger colors on hover; configuration delete
-buttons retain their filled treatment. List rows keep content-driven height
-rather than inheriting the fixed height of ordinary buttons.
-
-Tag editors use the dashboard-anchored modal boundary. A continuous saturation
-and brightness palette, hue slider, and hex input update only `meta.color`,
-preserving other metadata fields. Modal focus follows the active entry ID and
-returns to its opener, even while a removed layer is animating out.
+Dashboard editors fill the dashboard-anchored modal surface without a maximum
+reading width. Metadata and icon controls sit in the top toolbar, and the
+document itself owns its heading. Borderless inputs use floating labels.
+A shared Loading component fills the content area for navigation, server data,
+and editor loading. Floating panels
+use ModalPanel. Focus follows the active modal and returns to its opener when
+closed. Reusable controls stay in `components/ui`; feature-specific hooks and
+styles remain with their dashboard feature.

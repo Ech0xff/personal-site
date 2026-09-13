@@ -1,6 +1,7 @@
 "use client";
 import * as stylex from "@stylexjs/stylex";
 
+import { Magnetic } from "#components/ui/magnetic.component";
 import {
   color,
   font,
@@ -14,7 +15,6 @@ import { foundation } from "../_design/foundation.style";
 import { signature } from "../_design/object-feedback.stylex";
 import { profile } from "./desk-content.const";
 import { DeskLink } from "./desk-navigation.component";
-import { Magnetic } from "./magnetic.component";
 import { useSignatureSize } from "./use-signature-size.hook";
 
 const styles = stylex.create({

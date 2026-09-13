@@ -2,6 +2,7 @@
 import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 
+import { Magnetic } from "#components/ui/magnetic.component";
 import {
   color,
   font,
@@ -16,7 +17,6 @@ import { foundation } from "../_design/foundation.style";
 import { light, material } from "../_design/tokens.stylex";
 import { AdminTokenSamples } from "./admin-token-samples.component";
 import { DeskLink } from "./desk-navigation.component";
-import { Magnetic } from "./magnetic.component";
 import { lampOff } from "./reading-desk.style";
 const styles = stylex.create({
   root: {

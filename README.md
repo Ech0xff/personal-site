@@ -1,49 +1,39 @@
 # Personal Site
 
-A personal site and lightweight CMS built with Next.js 16, React 19, Supabase,
-StyleX, and Bun. The reading-desk homepage uses local content; Posts, Thoughts,
-and Events are placeholders. The dashboard manages content, tags, images,
-site configuration, and accounts using the same shared StyleX tokens.
-
-The interface is English; content keeps its original language. Routes have no
-language prefix.
+An English-only personal site and single-owner CMS built with Next.js 16,
+React 19, BlockNote, Supabase, StyleX, and Bun. The public reading desk uses
+local content; Posts, Thoughts, and Events remain placeholders. The dashboard
+manages block-based content and a public file bucket.
 
 ## Getting Started
 
 Requires Node.js 20.9+, Bun, and a running Docker-compatible runtime for local
-Supabase. To use a remote Supabase project, skip local setup and copy
-`.env.example` to `.env.development` with your project's values.
+Supabase. For a hosted Supabase project, skip local setup and configure its keys.
 
 ```bash
-git clone https://github.com/muyu258/personal-site.git
-cd personal-site
 bun install
 bun run supabase:setup
 ```
 
 Setup writes local Supabase credentials to `.env.development`, preserving other
-values. Set `WEBHOOK_SECRET` in that file, then start the app:
+values. Add a non-empty `ADMIN_TOKEN`, then run `bun run dev`.
+Open [the site](http://localhost:3000) or [sign in](http://localhost:3000/auth).
+The token has no length or complexity requirement. There are no user accounts,
+registration, OAuth providers, or Supabase Auth login flows.
 
-```bash
-bun run dev
-```
-
-Open [the site](http://localhost:3000) or [sign in](http://localhost:3000/auth)
-with email/password. Sign-up is available on the auth page. To grant an existing
-user admin access, run `bun run menu dev` and choose `Promote user to admin`.
-
-Local tools: [Supabase Studio](http://localhost:54323) and
-[email inbox](http://localhost:54324).
+Local tools: [Supabase Studio](http://localhost:54323).
 
 ### Environment Variables
 
+- `ADMIN_TOKEN`: Server-only dashboard access token. An empty or missing value disables login.
 - `NEXT_PUBLIC_SUPABASE_URL`: Supabase API URL.
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Public anonymous key.
-- `SUPABASE_SERVICE_ROLE_KEY`: Server-only key for privileged operations.
-- `WEBHOOK_SECRET`: Private secret used by content webhooks.
-- `NEXT_PUBLIC_APP_TIMEZONE`: Optional application timezone.
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Public key used for signed browser uploads.
+- `SUPABASE_SERVICE_ROLE_KEY`: Server-only key for authorized content and storage operations.
+- `NEXT_PUBLIC_APP_TIMEZONE`: Optional display and editor timezone.
 
-Keep environment files out of Git. Restart the dev server after changing them.
+Keep environment files out of Git. Restart after changing them. Rotating
+`ADMIN_TOKEN` invalidates existing dashboard sessions. Sessions expire after
+seven days; signing out removes the current browser's cookie.
 
 ## Development
 
@@ -54,138 +44,111 @@ Keep environment files out of Git. Restart the dev server after changing them.
 - Check types / test: `bun run typecheck` / `bun run test`
 - Check formatting, lint, and types: `bun run check`
 - Regenerate icons from `public/svg-icons`: `bun run gen:icons`
-- Maintenance menu: `bun run menu dev` / `bun run menu prod`
-
-The maintenance menu rebinds webhooks or promotes users to admin. It loads
-`.env.development` for `dev` and `.env.production` for `prod`.
 
 ### Verification
 
 Apply formatting and lint fixes to affected files, review the diff, then run
-the relevant checks:
+`bun run check` and relevant tests. Routing, caching, and runtime boundary
+changes also require `bun run build`. Verify UI flows in a browser, including
+session expiry, authorization, saves, uploads, and mobile/light/dark layouts.
 
-- Markdown-only changes: `bun run fmt -- <files>`.
-- Source changes: `bun run check` and relevant tests with `bun run test`.
-- Routing, caching, or server/client integration: also run `bun run build`.
-- UI changes: verify affected flows in the app, including roles, cache updates,
-  and light/dark or mobile/desktop layouts as applicable. There is no browser
-  test suite.
+GitHub Actions runs formatting, lint, types, and tests; it does not build the
+app. Husky's pre-commit hook runs `bun run check` over the working tree without
+modifying or staging files. `bun install` installs hooks; `bun run prepare`
+reinstalls them.
 
-GitHub Actions runs formatting, lint, types, and tests on branch pushes; it does
-not build the app. Husky's pre-commit hook runs `bun run check` on the whole
-working tree, including unstaged changes, without modifying or staging files.
-`bun install` installs the hooks; `bun run prepare` reinstalls them.
+## Dashboard
+
+`/dashboard` opens Posts. Navigation contains Posts, Thoughts, Events, and Files.
+On narrow screens, navigation stays visible with icons only. Publish dates open
+the native date/time picker directly. Timeline years, dates, and color markers use
+the shared magnetic interaction. Files provides sorting and pagination without a
+search field; preview actions appear inside the image on hover or keyboard focus
+and remain available on touch devices.
+Content opens in a full-width BlockNote editor with manual saving. Publish time
+and visibility live in the top toolbar; there is no separate preview mode.
+New entries start hidden, with the current publish time. Posts and Events derive
+their titles from the first document heading; Events also have a color. Images and attachments live in
+the content document. There are no author, location, tag, or configuration fields.
+
+The database stores native BlockNote JSON. The editor supports standard blocks,
+including headings, lists, tables, code, images, audio, video, and file links.
+Old Markdown directives, PlantUML, and Markdown source/split modes are removed.
+Existing Markdown data is not converted.
+
+The interface uses the shared English dictionary in source. Changing copy or
+metadata requires a code change; business content keeps its original language.
+There is no locale routing, dictionary override database, or translation service.
+
+### Files
+
+Files use the public Supabase Storage bucket `files`. Any file type can be
+uploaded, up to 50 MiB per file. JPEG, PNG, and WebP images are compressed in the
+browser to WebP (1920px maximum dimension, 2 MB target, initial quality 0.85).
+GIF, SVG, and other file types keep their original bytes. Compression failures
+are reported instead of silently uploading the original photo.
+
+Uploads receive unique object paths and never overwrite existing files. The
+original name is kept as metadata. The Files page supports name search,
+pagination, time/size sorting, image previews, copying links, downloads, and deletion. Browser
+uploads use server-issued signed credentials; the service-role key stays on the
+server. Copying a file's public URL grants access to its bytes, including files
+referenced only by hidden content.
+
+Canceling an editor or deleting a document leaves uploaded files in the bucket.
+Remove files explicitly from Files; deleting a referenced file breaks its link.
+The old `/dashboard/images` address redirects to `/dashboard/files`.
 
 ## Public Site
 
-The reading-desk homepage is at `/`; its live token guide is at `/system`.
-It shares StyleX tokens with authentication and the dashboard while retaining
-local content and a separate root layout, so the public pages
-can run without Supabase. Authentication and dashboard routes still require
-Supabase. The former `/redesign` page URLs permanently redirect to their
-unprefixed counterparts; audio resources keep their `/redesign/*` URLs.
-Old `/posts/[slug]` detail URLs currently return 404. See the [redesign guide](./DOCS/REDESIGN.md)
-for build verification, design tokens, interaction rules, and audio sources.
+The reading-desk homepage is at `/`; its token guide is at `/system`. Public
+pages retain local content, their own providers, scrolling, and assets. They
+share design tokens with the dashboard and can run without Supabase.
+Posts, Thoughts, and Events remain placeholders; `/posts/[slug]` returns 404.
+See the [design guide](./DOCS/REDESIGN.md) for the public UI and audio sources.
 
 ## Database
 
-Schema sources live in `supabase/schemas`; local fixtures live in
-`supabase/seed.sql`. The CLI loads both through its seed configuration.
-This repository does not use Supabase migration history.
-
-After changing the schema, rebuild the local database and regenerate types:
+Schema sources live in `supabase/schemas`; fixtures live in `supabase/seed.sql`.
+The CLI loads schemas through its seed configuration. This repository does not
+use migration history. After schema changes, rebuild the local database and
+regenerate types:
 
 ```bash
 bunx supabase db reset --local
 bun run supabase:types
 ```
 
-Reset deletes local data; do not reset a database containing data you need to keep.
-Use an isolated Supabase workdir with a distinct project ID and unused ports
-for schema experiments.
-`--no-seed` skips both project schemas and fixtures; it does not create an empty
-copy of the application tables.
+Reset deletes local data. Do not point reset at a remote database as part of
+ordinary development. `--no-seed` skips both application schemas and fixtures.
 
 - Start services and update local env: `bun run supabase:setup`
-- Start / stop services, preserving data: `bunx supabase start` /
-  `bunx supabase stop`
-- Inspect local URLs and keys: `bunx supabase status`
-- Refresh local env from running services: `bun run supabase:env`
+- Start / stop while preserving data: `bunx supabase start` / `bunx supabase stop`
+- Inspect local service status: `bunx supabase status`
+- Refresh local environment: `bun run supabase:env`
 
-The seed creates the public `images` storage bucket. Uploads and deletions
-require admin access.
-
-## Site Configuration
-
-Use **Dashboard → Config** to edit About Me, recent plans, playlists, OAuth
-provider availability, and dictionary overrides.
-
-### Dictionary
-
-The dictionary controls metadata and shared interface copy. In its editor,
-**Defaults** lists available fields, **Overrides** accepts partial JSON, and
-**Effective** previews the merged result:
-
-```json
-{
-  "meta": { "siteTitle": "My personal site" },
-  "home": { "hero": "Welcome", "bio": "Notes from my corner of the web." }
-}
-```
-
-Missing fields use the defaults; arrays such as `home.typing` are replaced
-entirely. Remove a field to restore its default, or use **Delete** to clear all
-overrides. Keys and types are validated; dynamic messages must use supported
-ICU syntax and placeholders. Rich-text tags are rendered explicitly, never as
-raw HTML.
-
-Saving updates metadata and copy without redeploying. Refresh other open tabs
-to see the changes. See [Architecture](./DOCS/ARCHITECTURE.md#configuration) for
-storage and cache behavior.
-
-## Markdown Support
-
-Content supports GFM, syntax highlighting, heading anchors, image previews, and
-custom directives:
-
-```md
-:ref[Read the post]{type="post" id="post-id"}
-
-:::card{title="Note" tone="info"}
-Callout content.
-:::
-
-:meta{url="https://example.com"}
-```
-
-Reference types are `post`, `thought`, `event`, `file`, and `external`.
-For files and external links, `id` is the target URL.
-
-Use `plantuml` or `puml` code fences for diagrams:
-
-````md
-```plantuml
-@startuml
-Alice -> Bob: Hello
-@enduml
-```
-````
-
-Diagram source is encoded and sent to the public PlantUML server at
-`https://www.plantuml.com/plantuml/svg/{encoded}`; avoid sensitive content.
+The application tables are `posts`, `thoughts`, and `events`. Anonymous database
+access can read only published content; writes require service-role access from
+the authorized server layer. Seed creates the public file bucket with a 50 MiB
+limit. There are no application auth, tag, configuration, or webhook tables/functions.
 
 ## Deployment
 
-Configure the [environment variables](#environment-variables) for the target
-Supabase project, then build and serve the app. If OAuth is enabled, allow the
-deployed site and `/api/auth/callback` in Supabase's auth redirect URLs.
+Provide the environment variables above at build and runtime, provision the
+schema and `files` bucket in the target Supabase project, then build and serve.
+For a local production verification using local Supabase credentials:
 
-Content webhooks target `/api/webhook` with
-`Authorization: Bearer <WEBHOOK_SECRET>`. Use the maintenance menu to rebind
-them when the target changes.
+```bash
+bun --env-file=.env.development run build
+bun --env-file=.env.development run start
+```
+
+There are no OAuth callback URLs, webhook secrets, or webhook binding steps.
+See [Architecture](./DOCS/ARCHITECTURE.md) for authorization and data flow.
 
 ## Documentation
 
-- [AGENTS.md](./AGENTS.md): development conventions, naming, and file placement.
-- [Architecture](./DOCS/ARCHITECTURE.md): runtime boundaries, caching, and rendering.
+- [AGENTS.md](./AGENTS.md): development conventions and module ownership.
+- [Architecture](./DOCS/ARCHITECTURE.md): runtime boundaries and data flow.
+- [Design guide](./DOCS/REDESIGN.md): tokens, public UI, and audio.
 - [TODO](./DOCS/TODO.md): outstanding work.

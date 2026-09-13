@@ -6,9 +6,10 @@ Supabase, StyleX, and Bun. Public and administration roots share design tokens.
 ## Project Constraints
 
 - Use Bun and the scripts in `package.json`.
-- Keep browser, server-session, static-public, and service-role Supabase clients
-  within their runtime boundaries. Never expose the service-role key to clients.
-- Keep English defaults in the shared dictionary with admin overrides, routes
+- Keep signed browser uploads and service-role Supabase operations within their
+  runtime boundaries. Authenticate dashboard reads and Server Actions with the
+  admin token session. Never expose the service-role key to clients.
+- Keep English defaults in the source-controlled shared dictionary, routes
   without language prefixes, and business content in its original language.
   Do not add locale routing or AI translation.
 - Update cache tags, consumers, and invalidation paths together.
@@ -85,9 +86,9 @@ route-shared hooks. Keep layout-specific content beside its layout. Share code
 when actual reuse warrants it; split modules for independent responsibilities
 or runtime dependencies, not for every private declaration.
 
-Browser image compression and uploads belong in `lib/client/images`.
-Shared storage and session services accept a Supabase client and never import
-browser adapters. The shared utility barrel exports only environment-neutral
+Browser image compression belongs in `lib/client/images`; general file uploads
+belong in `lib/client/files`. Auth, content, and storage I/O belong in their
+`lib/server` domains. Server Actions authenticate before invoking services. The shared utility barrel exports only environment-neutral
 utilities; import auth and image services from their owners.
 
 ## Imports and Styling

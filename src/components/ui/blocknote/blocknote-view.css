@@ -1,0 +1,71 @@
+/* Scoped adapter: all application colors and fonts come from StyleX variables. */
+[data-cms-blocknote] .bn-root {
+  --bn-colors-editor-text: inherit;
+  --bn-colors-editor-background: inherit;
+  --bn-colors-menu-text: inherit;
+  --bn-colors-menu-background: inherit;
+  --bn-colors-tooltip-text: inherit;
+  --bn-colors-tooltip-background: inherit;
+  --bn-colors-hovered-text: inherit;
+  --bn-colors-hovered-background: inherit;
+  --bn-colors-selected-text: inherit;
+  --bn-colors-selected-background: inherit;
+  --bn-colors-disabled-text: inherit;
+  --bn-colors-disabled-background: inherit;
+  --bn-colors-shadow: inherit;
+  --bn-colors-border: inherit;
+  --bn-colors-side-menu: inherit;
+  --bn-border-radius: inherit;
+  --bn-font-family: inherit;
+}
+[data-cms-blocknote] .bn-editor {
+  padding-inline: 44px;
+}
+[data-cms-blocknote] pre {
+  font-family: var(--cms-code-font);
+}
+@media (max-width: 600px) {
+  [data-cms-blocknote] .bn-editor {
+    padding-inline: 30px 12px;
+  }
+}
+
+[data-cms-blocknote] [data-file-block] .bn-add-file-button {
+  background-color: var(--bn-colors-disabled-background);
+  color: var(--bn-colors-disabled-text);
+}
+[data-cms-blocknote]
+  .bn-editor[contenteditable="true"]
+  [data-file-block]
+  .bn-add-file-button:hover,
+[data-cms-blocknote] [data-file-block] .bn-file-name-with-icon:hover,
+[data-cms-blocknote] .ProseMirror-selectednode .bn-file-name-with-icon {
+  background-color: var(--bn-colors-hovered-background);
+  color: var(--bn-colors-hovered-text);
+}
+
+[data-cms-blocknote][data-readonly] .bn-editor {
+  padding: 0;
+  background: transparent;
+}
+
+[data-cms-blocknote][data-readonly] [data-content-type="heading"] {
+  padding-top: 6px;
+  --level: var(--cms-heading-one);
+}
+[data-cms-blocknote][data-readonly]
+  [data-content-type="heading"][data-level="2"] {
+  --level: var(--cms-heading-two);
+}
+[data-cms-blocknote][data-readonly]
+  [data-content-type="heading"][data-level="3"] {
+  --level: 1.15em;
+}
+[data-cms-blocknote][data-readonly]
+  [data-content-type="heading"][data-level="4"],
+[data-cms-blocknote][data-readonly]
+  [data-content-type="heading"][data-level="5"],
+[data-cms-blocknote][data-readonly]
+  [data-content-type="heading"][data-level="6"] {
+  --level: 1em;
+}

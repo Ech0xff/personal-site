@@ -9,6 +9,7 @@ import {
 // The pre-paint script uses the same constants as the runtime, without serializing functions.
 export const createThemeScript = (
   darkThemeClasses: readonly string[],
+  lightThemeClasses: readonly string[] = [],
 ): string => `(() => {
   const Theme = ${JSON.stringify(Theme)};
   let stored;
@@ -25,4 +26,5 @@ export const createThemeScript = (
   root.setAttribute(${JSON.stringify(THEME_PREFERENCE_ATTRIBUTE)}, preference);
   root.style.colorScheme = resolved;
   for (const name of ${JSON.stringify(darkThemeClasses)}) root.classList.toggle(name, resolved === Theme.DARK);
+  for (const name of ${JSON.stringify(lightThemeClasses)}) root.classList.toggle(name, resolved === Theme.LIGHT);
 })();`;

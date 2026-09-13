@@ -1,10 +1,10 @@
 import * as stylex from "@stylexjs/stylex";
 
+import { Magnetic } from "#components/ui/magnetic.component";
 import { color, motionToken, shape, space } from "#design/tokens.stylex";
 
 import { foundation } from "../_design/foundation.style";
 import { socialLinks } from "./desk-content.const";
-import { Magnetic } from "./magnetic.component";
 
 const styles = stylex.create({
   root: {

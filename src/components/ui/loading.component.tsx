@@ -1,45 +1,45 @@
 import * as stylex from "@stylexjs/stylex";
+import { LoaderCircle } from "lucide-react";
 
-import Stack from "#components/ui/stack.component";
-import { color, font, layer } from "#design/tokens.stylex";
-const pulse = stylex.keyframes({
-  "50%": {
-    opacity: 0.5,
-  },
-});
+import { color, font, media, space } from "#design/tokens.stylex";
+
+const spin = stylex.keyframes({ to: { transform: "rotate(360deg)" } });
 const styles = stylex.create({
-  column: {
-    position: "fixed",
-    top: "0px",
-    right: "0px",
-    bottom: "0px",
-    left: "0px",
-    zIndex: layer.loading,
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: space.sm,
+    flex: "1",
+    width: "100%",
+    minHeight: "240px",
+    color: color.muted,
+    fontSize: font.control,
   },
-  container: {
-    marginTop: "auto",
-    marginRight: "auto",
-    marginBottom: "auto",
-    marginLeft: "auto",
-    animationName: pulse,
-    animationDuration: "2s",
-    animationTimingFunction: "ease-in-out",
+  compact: { minHeight: "120px" },
+  spinner: {
+    width: "24px",
+    height: "24px",
+    color: color.accent,
+    willChange: "transform",
+    animationName: spin,
+    animationDuration: "900ms",
+    animationTimingFunction: "linear",
     animationIterationCount: "infinite",
-  },
-  container2: {
-    fontSize: font.navigation,
-    lineHeight: 1.5,
-    fontWeight: font.bold,
-    letterSpacing: ".5em",
-    color: color.text,
+    animationPlayState: { default: "running", [media.reduce]: "paused" },
   },
 });
-export default function Loading() {
+export default function Loading({ compact = false }: { compact?: boolean }) {
   return (
-    <Stack y xstyle={styles.column}>
-      <div {...stylex.props(styles.container)}>
-        <div {...stylex.props(styles.container2)}>LOADING</div>
-      </div>
-    </Stack>
+    <output
+      aria-live="polite"
+      {...stylex.props(styles.root, compact && styles.compact)}
+    >
+      <span aria-hidden {...stylex.props(styles.spinner)}>
+        <LoaderCircle size={24} />
+      </span>
+      <span>Loading…</span>
+    </output>
   );
 }

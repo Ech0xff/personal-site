@@ -1,7 +1,10 @@
 "use client";
 import { atom } from "jotai";
 
-import { darkThemeClasses } from "#design/admin-theme.helper";
+import {
+  darkThemeClasses,
+  lightThemeClasses,
+} from "#design/admin-theme.helper";
 import {
   Theme,
   THEME_STORAGE_KEY,
@@ -54,6 +57,9 @@ const stateAtom = atom(
     root.style.colorScheme = resolved;
     for (const name of darkThemeClasses)
       root.classList.toggle(name, resolved === Theme.DARK);
+
+    for (const name of lightThemeClasses)
+      root.classList.toggle(name, resolved === Theme.LIGHT);
 
     if (update.type === "preference" && update.persist) {
       try {
