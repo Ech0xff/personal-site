@@ -1,48 +1,67 @@
+"use client";
 import * as stylex from "@stylexjs/stylex";
+import { Eye, Link as LinkIcon } from "lucide-react";
 
-import { readPublicCounts } from "#lib/server/content/public-content.service";
+import { defaultDictionary } from "#lib/shared/dictionary/dictionary.const";
 
-import { deskTotalVisits } from "./display-content.const";
-import { DisplayLike } from "./display-like.component";
+import { foundation } from "../../_design/foundation.style";
+import { DeskLink } from "../layout/desk-navigation.component";
 import { panel } from "./display-panel.style";
-
-export async function DisplayStats() {
-  const statistics = await readPublicCounts().catch(() => null);
+import { useDisplayStats } from "./display-stats.hook";
+export function DisplayStats() {
+  const { stats, notice, liked, pending, like, retry } = useDisplayStats();
   return (
     <>
-      <h2 {...stylex.props(panel.title)}>At a glance</h2>
-      {statistics === null && <output>Counts unavailable.</output>}
+      <h2 {...stylex.props(panel.title)}>{copy.statsTitle}</h2>
+      {notice && (
+        <output>
+          {notice}{" "}
+          <button
+            type="button"
+            onClick={retry}
+            {...stylex.props(panel.button, foundation.focus)}
+          >
+            {copy.retry}
+          </button>
+        </output>
+      )}
       <dl {...stylex.props(panel.rows)}>
-        {(
-          statistics ?? [
-            { label: "Posts", value: "—" },
-            { label: "Thoughts", value: "—" },
-          ]
-        ).map((item) => (
-          <div key={item.label} {...stylex.props(panel.row)}>
-            <dt>{item.label}</dt>
-            <dd {...stylex.props(panel.value)}>{item.value}</dd>
+        {(["posts", "thoughts", "events"] as const).map((kind) => (
+          <div key={kind} {...stylex.props(panel.row)}>
+            <dt>
+              <DeskLink
+                href={`/${kind}`}
+                {...stylex.props(panel.statLink, foundation.focus)}
+              >
+                {kind[0].toUpperCase() + kind.slice(1)}{" "}
+                <LinkIcon size={12} aria-hidden />
+              </DeskLink>
+            </dt>
+            <dd {...stylex.props(panel.value)}>{stats?.[kind] ?? "—"}</dd>
           </div>
         ))}
       </dl>
       <div {...stylex.props(panel.actions)}>
-        <DisplayLike />
+        <button
+          type="button"
+          disabled={liked || pending}
+          aria-pressed={liked}
+          onClick={() => void like()}
+          {...stylex.props(panel.button, foundation.focus)}
+        >
+          {liked ? "♥" : "♡"} {stats?.likes ?? "—"} likes
+        </button>
         <span
-          aria-label={`${deskTotalVisits.toLocaleString("en-US")} total visits`}
           title="Total visits"
+          aria-label={`${stats?.visits ?? "Unknown"} total visits`}
           {...stylex.props(panel.metric)}
         >
-          <svg
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            {...stylex.props(panel.fieldIcon)}
-          >
-            <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
-            <circle cx="12" cy="12" r="3" />
-          </svg>
-          {deskTotalVisits.toLocaleString("en-US")}
+          <Eye size={16} aria-hidden />
+          {stats?.visits.toLocaleString("en-US") ?? "—"}
         </span>
       </div>
     </>
   );
 }
+
+const copy = defaultDictionary.desk;

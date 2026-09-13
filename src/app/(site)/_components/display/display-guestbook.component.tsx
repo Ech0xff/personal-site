@@ -1,8 +1,9 @@
 "use client";
 import * as stylex from "@stylexjs/stylex";
 
+import { defaultDictionary } from "#lib/shared/dictionary/dictionary.const";
+
 import { foundation } from "../../_design/foundation.style";
-import { sampleGuestbook } from "./display-content.const";
 import { panel } from "./display-panel.style";
 import { DisplayTabs } from "./display-tabs.component";
 import { GuestbookForm } from "./guestbook-form.component";
@@ -16,6 +17,11 @@ export function DisplayGuestbook() {
     draft,
     setDraft,
     entries,
+    total,
+    loading,
+    pending,
+    retry,
+    loadMore,
     notice,
     setNotice,
     submit,
@@ -44,9 +50,7 @@ export function DisplayGuestbook() {
               foundation.focus,
             )}
           >
-            {value === "read"
-              ? `Read (${entries.length + sampleGuestbook.length})`
-              : "Write"}
+            {value === "read" ? `Read (${total})` : "Write"}
           </button>
         ))}
       </DisplayTabs>
@@ -59,12 +63,48 @@ export function DisplayGuestbook() {
         {...stylex.props(panel.page, tab === "read" && panel.read)}
       >
         {tab === "read" ? (
-          <GuestbookList entries={[...entries, ...sampleGuestbook]} />
+          <>
+            <GuestbookList entries={entries} />
+            {loading && <output>{copy.loadingNotes}</output>}
+            {!loading && entries.length === 0 && !notice && (
+              <p>{copy.emptyNotes}</p>
+            )}
+            {entries.length < total && (
+              <button
+                type="button"
+                disabled={loading}
+                onClick={loadMore}
+                {...stylex.props(panel.button, foundation.focus)}
+              >
+                {copy.loadMore}
+              </button>
+            )}
+          </>
         ) : (
-          <GuestbookForm draft={draft} onChange={setDraft} onSubmit={submit} />
+          <GuestbookForm
+            draft={draft}
+            pending={pending}
+            onChange={setDraft}
+            onSubmit={submit}
+          />
         )}
       </div>
-      {notice && <output {...stylex.props(panel.notice)}>{notice}</output>}
+      {notice && (
+        <output {...stylex.props(panel.notice)}>
+          {notice}{" "}
+          {tab === "read" && (
+            <button
+              type="button"
+              onClick={retry}
+              {...stylex.props(panel.button)}
+            >
+              {copy.retry}
+            </button>
+          )}
+        </output>
+      )}
     </div>
   );
 }
+
+const copy = defaultDictionary.desk;

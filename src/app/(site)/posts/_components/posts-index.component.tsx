@@ -43,19 +43,20 @@ export async function PostsIndex() {
             </h2>
             <ul {...stylex.props(styles.list)}>
               {posts.map((post) => (
-                <li key={post.id} {...stylex.props(styles.row)}>
+                <li key={post.id}>
                   <DeskLink
                     href={`/posts/${post.id}`}
-                    {...stylex.props(styles.link, foundation.focus)}
+                    {...stylex.props(styles.row, foundation.focus)}
                   >
-                    {post.title}
+                    <span aria-hidden="true" {...stylex.props(styles.dash)} />
+                    <span {...stylex.props(styles.link)}>{post.title}</span>
+                    <time
+                      dateTime={post.published_at}
+                      {...stylex.props(styles.date)}
+                    >
+                      {formatTime(post.published_at)}
+                    </time>
                   </DeskLink>
-                  <time
-                    dateTime={post.published_at}
-                    {...stylex.props(styles.date)}
-                  >
-                    {formatTime(post.published_at)}
-                  </time>
                 </li>
               ))}
             </ul>

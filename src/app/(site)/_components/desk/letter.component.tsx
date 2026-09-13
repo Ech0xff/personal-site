@@ -24,7 +24,7 @@ export function Letter() {
         </span>
         <span {...stylex.props(styles.signature)}>— notes from my day</span>
       </span>
-      <ObjectFeedback label="Thoughts" xstyle={styles.letterFrame} />
+      <ObjectFeedback navigable label="Thoughts" xstyle={styles.letterFrame} />
       <span {...stylex.props(styles.clip)} aria-hidden="true" />
     </DeskLink>
   );

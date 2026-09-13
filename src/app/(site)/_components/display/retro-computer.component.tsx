@@ -24,12 +24,12 @@ import { displayProgramAtom } from "./display.atom";
 
 const scan = stylex.keyframes({
   "0%": { transform: "translateY(-10px)", opacity: 0 },
-  "20%": { opacity: 0.18 },
+  "20%": { opacity: 0.1 },
   "100%": { transform: "translateY(300px)", opacity: 0 },
 });
 const enter = stylex.keyframes({
-  from: { opacity: 0.7 },
-  to: { opacity: 1 },
+  from: { opacity: 0.35, transform: "translateY(3px)" },
+  to: { opacity: 1, transform: "translateY(0)" },
 });
 const styles = stylex.create({
   root: {
@@ -104,7 +104,7 @@ const styles = stylex.create({
   program: {
     height: "100%",
     animationName: { default: enter, [media.reduce]: "none" },
-    animationDuration: motionToken.fast,
+    animationDuration: motionToken.displaySwitch,
   },
   scan: {
     position: "absolute",
@@ -115,7 +115,7 @@ const styles = stylex.create({
     backgroundColor: material.phosphor,
     pointerEvents: "none",
     animationName: { default: scan, [media.reduce]: "none" },
-    animationDuration: "320ms",
+    animationDuration: motionToken.displayScan,
     animationTimingFunction: "linear",
     opacity: 0,
   },

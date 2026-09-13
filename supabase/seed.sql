@@ -108,3 +108,16 @@ VALUES ('ba64a7f4-990f-5b30-a1da-64fdf9643a32', '[Demo] A field guide to eighty 
 ON CONFLICT (id) DO NOTHING;
 
 -- END DEMO CONTENT
+
+-- Desk configuration defaults are also provisioned by the additive RPC schema.
+INSERT INTO public.configs(key, value) VALUES
+  ('desk.likes', '0'), ('desk.visits', '0'),
+  ('desk.guestbook', '{"entries":[],"recent":[]}')
+ON CONFLICT (key) DO NOTHING;
+
+-- Hidden editor fixture: native columns and a saved metadata card, with no live parsing.
+INSERT INTO public.posts(id, title, content, status, published_at) VALUES (
+  'd0000000-0000-4000-8000-000000000099', '[Demo hidden] Columns and website cards',
+  '[{"type":"heading","content":"[Demo hidden] Columns and website cards"},{"type":"columnList","children":[{"type":"column","props":{"width":1},"children":[{"type":"image","props":{"url":"https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=600","name":"A reading desk"}}]},{"type":"column","props":{"width":1},"children":[{"type":"linkCard","props":{"url":"https://example.com","title":"Example Domain","description":"A saved website preview inside native columns.","siteName":"Example"}}]}]}]'::jsonb,
+  'hide', '2026-09-13T00:00:00Z'
+) ON CONFLICT (id) DO NOTHING;

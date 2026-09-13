@@ -7,10 +7,12 @@ import { panel } from "./display-panel.style";
 import { GuestbookFieldIcon } from "./guestbook-field-icon.component";
 export function GuestbookForm({
   draft,
+  pending,
   onChange,
   onSubmit,
 }: Readonly<{
   draft: GuestbookDraft;
+  pending: boolean;
   onChange: (update: (previous: GuestbookDraft) => GuestbookDraft) => void;
   onSubmit: FormEventHandler<HTMLFormElement>;
 }>) {
@@ -93,7 +95,11 @@ export function GuestbookForm({
         />
       </label>
       <div {...stylex.props(panel.submitRow)}>
-        <button type="submit" {...stylex.props(panel.button, foundation.focus)}>
+        <button
+          disabled={pending}
+          type="submit"
+          {...stylex.props(panel.button, foundation.focus)}
+        >
           Leave a note ↗
         </button>
       </div>

@@ -1,8 +1,13 @@
 import { describe, expect, test } from "bun:test";
 
 import { contentInputSchema } from "./content.schema";
-import { documentText, hasDocumentContent } from "./document.helper";
+import {
+  documentText,
+  hasDocumentContent,
+  migrateMediaRows,
+} from "./document.helper";
 import { documentSchema, type BlockDocument } from "./document.schema";
+import { webUrlSchema } from "./link-metadata.schema";
 const sample: BlockDocument = [
   {
     id: "heading",
@@ -175,5 +180,131 @@ describe("BlockNote content boundaries", () => {
       contentInputSchema.safeParse({ ...input, published_at: "invalid" })
         .success,
     ).toBe(false);
+  });
+});
+
+describe("media rows and link cards", () => {
+  test("round trips mixed rows and recognizes card-only content", () => {
+    const source: BlockDocument = [
+      {
+        type: "mediaRow",
+        props: { columns: 3 },
+        children: [
+          { type: "image", props: { url: "https://example.com/photo.png" } },
+          {
+            type: "linkCard",
+            props: {
+              url: "https://example.com",
+              title: "Example",
+              description: "A useful website",
+            },
+          },
+          { type: "audio", props: { url: "https://example.com/audio.mp3" } },
+        ],
+      },
+    ];
+    expect(documentSchema.parse(JSON.parse(JSON.stringify(source)))).toEqual(
+      source,
+    );
+    expect(hasDocumentContent(source)).toBe(true);
+    expect(documentText(source)).toContain("A useful website");
+    expect(hasDocumentContent([{ type: "linkCard", props: { url: "" } }])).toBe(
+      false,
+    );
+  });
+  test("invalid or empty pasted text fails URL validation without throwing", () => {
+    for (const text of ["", "notes", "https://", "javascript:alert(1)"])
+      expect(webUrlSchema.safeParse(text).success).toBe(false);
+  });
+  test("rejects nested rows, text children, unsupported columns and unsafe card URLs", () => {
+    for (const children of [
+      [{ type: "paragraph", content: "Text" }],
+      [{ type: "mediaRow", children: [] }],
+    ]) {
+      expect(
+        documentSchema.safeParse([{ type: "mediaRow", children }]).success,
+      ).toBe(false);
+    }
+    expect(
+      documentSchema.safeParse([
+        { type: "mediaRow", props: { columns: 4 }, children: [] },
+      ]).success,
+    ).toBe(false);
+    for (const props of [
+      { url: "javascript:alert(1)" },
+      { url: "https://example.com", image: "javascript:alert(1)" },
+    ]) {
+      expect(
+        documentSchema.safeParse([{ type: "linkCard", props }]).success,
+      ).toBe(false);
+    }
+  });
+});
+
+describe("native columns", () => {
+  test("migrates legacy rows without losing media, order, or column counts", () => {
+    const source: BlockDocument = [
+      {
+        type: "mediaRow",
+        id: "row",
+        props: { columns: 2 },
+        children: [
+          {
+            type: "image",
+            id: "photo",
+            props: { url: "https://example.com/photo.png" },
+          },
+          {
+            type: "linkCard",
+            id: "link",
+            props: { url: "https://example.com" },
+          },
+          {
+            type: "audio",
+            id: "audio",
+            props: { url: "https://example.com/audio.mp3" },
+          },
+        ],
+      },
+    ];
+    const migrated = documentSchema.parse(migrateMediaRows(source));
+    expect(migrated.map((block) => block.type)).toEqual([
+      "columnList",
+      "columnList",
+    ]);
+    expect(
+      migrated.flatMap((row) =>
+        row.children?.flatMap((column) =>
+          column.children?.map((child) => child.id),
+        ),
+      ),
+    ).toEqual(["photo", "link", "audio", undefined]);
+    expect(documentSchema.parse(JSON.parse(JSON.stringify(migrated)))).toEqual(
+      migrated,
+    );
+    expect(hasDocumentContent(migrated)).toBe(true);
+    expect(source[0].type).toBe("mediaRow");
+  });
+  test("rejects orphan columns, invalid widths and malformed column lists", () => {
+    expect(
+      documentSchema.safeParse([
+        { type: "column", children: [{ type: "paragraph" }] },
+      ]).success,
+    ).toBe(false);
+    for (const children of [
+      [{ type: "column", children: [{ type: "paragraph" }] }],
+      [{ type: "paragraph" }, { type: "paragraph" }],
+      [
+        {
+          type: "column",
+          props: { width: -1 },
+          children: [{ type: "paragraph" }],
+        },
+        { type: "column", children: [{ type: "paragraph" }] },
+      ],
+    ])
+      expect(
+        documentSchema.safeParse([{ type: "columnList", children }]).success,
+      ).toBe(false);
   });
 });

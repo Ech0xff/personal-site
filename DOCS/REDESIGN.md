@@ -188,7 +188,7 @@ See [Architecture](./ARCHITECTURE.md) for the token login and content data flow.
 - The tilted display has three icon buttons for CLI, Stats, and Guestbook at
   the bottom right. The `>_` prompt appears only in CLI; the clock stays at the
   bottom left. Each icon has an accessible name and pressed state. The casing height stays fixed across programs. Selection displays the target panel immediately;
-  a decorative scan and opacity animation run independently of content readiness.
+  a 220 ms opacity/three-pixel entry transition and a faint scan run independently of content readiness.
   Reduced motion disables both animations. React Activity boundaries retain panel
   state and suspend effects while a program is hidden.
   The CLI retains its typed position while another program is selected. Its timer
@@ -332,7 +332,7 @@ for the selected song and preserves whether playback was paused or playing.
 
 The public shell has its own Jotai Provider. Each feature owns its stored atoms:
 record session, control pinning and playback mode; lamp state; clock format;
-display program; local likes; and guestbook tabs, drafts, and submitted messages.
+display program; the local like marker; and guestbook tabs and drafts.
 The shared `storedPreference` factory uses Jotai JSON storage, validates values
 with the owning schema, catches read/write failures, and reconciles storage
 events. The clock alone supplies migration of its old plain-string value.
@@ -356,13 +356,13 @@ See [TODO](./TODO.md#redesign-follow-up) for the remaining integration work.
 
 ## Display Content
 
-Stats shows live public counts for posts and thoughts. Total visits use an eye icon
-beside the toggleable, locally persisted like; there is no daily visitor or
-bookmark action. The total remains a fixture until the analytics service is wired.
+Stats reads public Posts, Thoughts and Events counts plus likes and page views
+through Supabase RPC. Each content label includes a small link icon and navigates
+to its route. The same marker appears beside navigable desk object labels.
+The eye displays total views; a successful like sets the local marker and disables
+the button. No visitor identity or cancel-like control is involved.
 
-Guestbook provides Read and Write tabs with keyboard arrow navigation. Seven fixture
-notes demonstrate names, optional email addresses, anonymous authors, and multiline
-comments. Read scrolls independently below its fixed tabs with its scrollbar hidden.
+Guestbook provides Read and Write tabs with keyboard arrow navigation. Public notes load from Supabase, 50 at a time with a Load more control. Read scrolls independently below its fixed tabs with its scrollbar hidden.
 Text selection is disabled in Read to avoid selection blocks while dragging the
 small scroll surface; Write retains native text selection and editing.
 It is keyboard-focusable, and `data-lenis-prevent` keeps wheel and touch input native
@@ -378,23 +378,24 @@ caret. The clock and program icons stay fixed in both views.
 
 Name and email are optional. Blank names render as Anonymous, and supplied email
 addresses appear below names in smaller text; missing addresses display
-`anoymous@unkonw.io`. Message headers place a circular avatar at the left and the date
+`No email provided`. Message headers place a circular avatar at the left and the date
 at the far right. Message text is trimmed and validated. Name, email, optional GitHub username,
-and message drafts persist as they are edited. Submitting retains up to 50 local
-notes, clears the message, returns to Read, and focuses its tab. All submitted text
+and message drafts persist as they are edited. Successful submission persists the note, clears the message, returns to Read,
+and focuses its tab. Failed or rate-limited submissions retain the draft. All submitted text
 is rendered as React text, never HTML. No storage-status copy is shown in the form.
 
 Avatars use only the optional GitHub username supplied in Write, via the account's
 `https://github.com/<username>.png?size=64` image URL. Email is display metadata and
 is never searched or sent to an avatar service. Usernames are validated before
-submission; old drafts and messages without this field remain compatible. The
-Muyu fixture uses the supplied `ech0xff` username. Missing usernames and failed
+submission; old drafts and messages without this field remain compatible. Missing usernames and failed
 images use the same person icon as the Write form. Loaded avatars retain their
 original colors and opacity inside the circular crop. There is no email lookup,
 Gravatar fallback, or GitHub API request.
 
-Public guestbook storage, moderation, and real statistics remain future work in
-[TODO](./TODO.md). This public site does not submit messages to Supabase.
+Comments publish immediately, with emails displayed. The database rejects new
+comments when ten have already succeeded in the last rolling 60 seconds, including
+concurrent requests. Admins can hide, restore and delete notes in Guestbook.
+See [Architecture](./ARCHITECTURE.md#desk-rpc) for RPC boundaries.
 
 ## Feature Boundaries and Display Loading
 
@@ -407,8 +408,8 @@ navigation hook; the shell composes the header, content, and curtain.
 The server homepage composes the computer's rendered content slots. Stats and
 Guestbook have independent Suspense fallbacks sized to the display viewport.
 Selecting a program immediately selects its slot; scan animation is decorative.
-The shell never imports data-access components. Stats reads suspend locally without artificial delays; failed counts remain
-inside their panel. Guestbook persistence and analytics remain in [TODO](./TODO.md).
+The shell never imports data-access components. Stats and Guestbook read on activation, with local loading, error and retry
+states; there are no artificial delays, polling or Realtime subscriptions.
 
 Automated checks retain five critical boundary suites. Browser acceptance covers
 theme synchronization, desktop and mobile object controls, playback recovery,
@@ -452,8 +453,10 @@ This keeps viewport coordinates stable during page entry while the shell still
 applies its transition focus lock to the directory.
 Native heading links retain hashes, history, header clearance, and Lenis support.
 
-The Posts archive has a left rule for each year, a yearly count, left-aligned
-titles, and right-aligned dates. Its summary shows the public post count and
+The Posts archive keeps yearly counts and uses a short horizontal dash beside
+each title, aligned with its first line. Each title/date row is one full-width
+link with no inter-row gap or vertical padding. Hover and keyboard focus paint
+a rectangular theme surface behind the entire row. Dates align right on desktop. Its summary shows the public post count and
 approximate non-whitespace characters in document text (including titles).
 Phones place the date beneath the title. Tags and per-post excerpts are omitted.
 Public lists have no pagination or load-more control. Dashboard pagination is
@@ -474,3 +477,23 @@ zoom-in/out magnifiers and a percentage label. Clicking anywhere except the zoom
 buttons dismisses it, including the image, padding, and percentage; Escape and
 focus restoration remain supported. Its surface is excluded from Lenis scrolling. Thoughts use 16 px vertical entry padding
 with no separate media reservation or bottom margin; images remain inline.
+
+## Columns and Link Cards
+
+The editor uses BlockNote's official multi-column extension. `/Two Columns` and
+`/Three Columns` create layouts; native drag handles move blocks into, between, or out
+of columns, and dividers resize widths. Undo/redo remains native. Columns accept
+ordinary blocks, including images, audio, video, files and cards, and stack on
+phones. Previously saved custom media rows remain readable and migrate to native
+columns on editing. There is no custom row toolbar.
+
+Standalone URL paragraphs offer Turn into link card, alongside `/Link card`.
+The only field is the URL. After a short typing pause, the authenticated editor
+fetches Microlink metadata and saves the snapshot alongside the document. A small
+refresh icon retries parsing. Late responses cannot overwrite a changed URL.
+Failures retain a usable link. Reading never requests metadata.
+
+Cards follow the historical meta directive: a compact publisher line, title,
+summary and hostname, with an optional cover at the right. Column cards place the
+cover above the text; narrow standalone cards keep a smaller cover. Both roots reuse
+shared surface, border, typography and motion tokens.

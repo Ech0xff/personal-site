@@ -23,7 +23,7 @@ export function BookStack() {
         <span {...stylex.props(styles.bookAuthor)}>WORDS BY ECH0XFF</span>
         <span {...stylex.props(styles.bookmark)} />
       </span>
-      <ObjectFeedback label="Posts" xstyle={styles.bookFrame} />
+      <ObjectFeedback navigable label="Posts" xstyle={styles.bookFrame} />
     </DeskLink>
   );
 }

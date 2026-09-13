@@ -137,6 +137,11 @@ export const desk = stylex.create({
     },
   },
   computer: {
+    zIndex: {
+      default: motionToken.displayLayer,
+      ":hover": motionToken.tooltip,
+      ":has(:focus-visible)": motionToken.tooltip,
+    },
     top: { default: "8%", [media.compact]: "20px" },
     left: { default: "1.5%", [media.compact]: "0" },
     width: {

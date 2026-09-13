@@ -1,0 +1,406 @@
+{
+  "reviewDate": "2026-09-13",
+  "timezone": "Asia/Shanghai",
+  "head": "82a1eac4516888c8be47bcd9a3e1d8394e57eff7",
+  "build": {
+    "reused": true,
+    "newBuildRun": false,
+    "buildId": "vEGY1s-2Uw18AJSURY1ns",
+    "mtime": "2026-09-13T12:57:57.740Z",
+    "next": "16.3.3",
+    "react": "19.2.8",
+    "bundler": "Turbopack",
+    "runtime": "Bun 1.4.0-canary.1",
+    "declaredBun": "1.3.14"
+  },
+  "checks": {
+    "check": "passed",
+    "tests": {
+      "pass": 22,
+      "fail": 0,
+      "files": 5,
+      "expectCalls": 101
+    }
+  },
+  "graph": {
+    "files": 213,
+    "lines": 13496,
+    "explicitClientEntries": 38,
+    "resolvedLocalEdges": 493,
+    "cycles": [],
+    "typeInclusiveCycles": [],
+    "boundaryViolations": [],
+    "browserToServerServicePaths": [],
+    "effectCalls": 36,
+    "effectOwnerFiles": 17,
+    "method": "Babel TypeScript/JSX AST, relative imports, project aliases, literal dynamic imports, Tarjan strongly connected components; type-only edges excluded from browser closure; use-server modules treated as RPC boundaries. The single #dictionary import was checked separately against package.json conditions. Dependencies and framework-generated graphs are outside this source-graph count."
+  },
+  "routeBytes": [
+    {
+      "route": "/dashboard/files",
+      "chunkCount": 17,
+      "raw": 1818883,
+      "gzip": 496057
+    },
+    {
+      "route": "/dashboard/event",
+      "chunkCount": 16,
+      "raw": 1156735,
+      "gzip": 328587
+    },
+    {
+      "route": "/dashboard/posts",
+      "chunkCount": 16,
+      "raw": 1156735,
+      "gzip": 328587
+    },
+    {
+      "route": "/dashboard/thoughts",
+      "chunkCount": 16,
+      "raw": 1156735,
+      "gzip": 328587
+    },
+    {
+      "route": "/",
+      "chunkCount": 15,
+      "raw": 1131556,
+      "gzip": 330647
+    },
+    {
+      "route": "/auth",
+      "chunkCount": 14,
+      "raw": 1120499,
+      "gzip": 314610
+    },
+    {
+      "route": "/posts/[id]",
+      "chunkCount": 14,
+      "raw": 687855,
+      "gzip": 220124
+    },
+    {
+      "route": "/system",
+      "chunkCount": 14,
+      "raw": 684800,
+      "gzip": 218238
+    },
+    {
+      "route": "/events",
+      "chunkCount": 13,
+      "raw": 673922,
+      "gzip": 214288
+    },
+    {
+      "route": "/posts",
+      "chunkCount": 13,
+      "raw": 673922,
+      "gzip": 214288
+    },
+    {
+      "route": "/thoughts",
+      "chunkCount": 13,
+      "raw": 673922,
+      "gzip": 214288
+    },
+    {
+      "route": "/_not-found",
+      "chunkCount": 8,
+      "raw": 456384,
+      "gzip": 136650
+    }
+  ],
+  "largestStaticAssets": [
+    {
+      "file": "public/redesign/miku.mp3",
+      "raw": 3571042
+    },
+    {
+      "file": "public/redesign/quiet-morning.wav",
+      "raw": 705644
+    },
+    {
+      "file": "public/redesign/miku.spectrum.bin",
+      "raw": 160672
+    },
+    {
+      "file": "public/favicon.ico",
+      "raw": 25931
+    },
+    {
+      "file": "public/redesign/quiet-morning.spectrum.bin",
+      "raw": 11536
+    },
+    {
+      "file": "public/svg-icons/github.svg",
+      "raw": 1067
+    },
+    {
+      "file": "public/redesign/miku.vtt",
+      "raw": 115
+    },
+    {
+      "file": "public/redesign/quiet-morning.vtt",
+      "raw": 77
+    }
+  ],
+  "publicAssetBytes": 4476084,
+  "identifiedProductionCode": {
+    "agentation": {
+      "source": "src/app/(admin)/layout.tsx",
+      "moduleId": 31012,
+      "chunk": "3k0z96ewq-iws.js",
+      "moduleRawBytes": 423011,
+      "moduleGzipBytes": 93046,
+      "chunkRawBytes": 427943,
+      "chunkGzipBytes": 95083,
+      "browserEncodedChunkBytes": 94956
+    },
+    "upload": {
+      "chunk": "2gyjtjxi154qd.js",
+      "rawBytes": 292077,
+      "gzipBytes": 82848,
+      "browserEncodedBytes": 82161,
+      "identifiedCode": [
+        "Supabase AuthClient/GoTrueClient",
+        "browser-image-compression maxWidthOrHeight/useWebWorker"
+      ]
+    },
+    "validation": {
+      "chunk": "3rrjuck24susc.js",
+      "rawBytes": 374751,
+      "gzipBytes": 86119,
+      "browserEncodedBytes": 85501,
+      "identifiedCode": "ZodError and validation code"
+    }
+  },
+  "publicData": [
+    {
+      "kind": "posts",
+      "rows": 9,
+      "databaseJsonBytes": 78213,
+      "databaseJsonGzip": 4373,
+      "documentJsonBytes": 74571,
+      "summaryBytes": 3481,
+      "withoutDocumentBytes": 3481,
+      "summaryGzip": 973,
+      "withoutDocumentGzip": 973
+    },
+    {
+      "kind": "thoughts",
+      "rows": 7,
+      "databaseJsonBytes": 3417,
+      "databaseJsonGzip": 1265,
+      "documentJsonBytes": 2456,
+      "summaryBytes": 4248,
+      "withoutDocumentBytes": 1708,
+      "summaryGzip": 1337,
+      "withoutDocumentGzip": 737
+    },
+    {
+      "kind": "events",
+      "rows": 6,
+      "databaseJsonBytes": 2656,
+      "databaseJsonGzip": 990,
+      "documentJsonBytes": 1580,
+      "summaryBytes": 3169,
+      "withoutDocumentBytes": 1517,
+      "summaryGzip": 1035,
+      "withoutDocumentGzip": 627
+    }
+  ],
+  "localHttp": [
+    {
+      "route": "/",
+      "samples": [
+        {
+          "status": 200,
+          "ttfbMs": 4.8,
+          "completeMs": 15.9,
+          "htmlBytes": 43993
+        },
+        {
+          "status": 200,
+          "ttfbMs": 2,
+          "completeMs": 9.5,
+          "htmlBytes": 43993
+        },
+        {
+          "status": 200,
+          "ttfbMs": 1.6,
+          "completeMs": 8.2,
+          "htmlBytes": 43993
+        },
+        {
+          "status": 200,
+          "ttfbMs": 1.4,
+          "completeMs": 8,
+          "htmlBytes": 43993
+        }
+      ]
+    },
+    {
+      "route": "/posts",
+      "samples": [
+        {
+          "status": 200,
+          "ttfbMs": 1.6,
+          "completeMs": 18.1,
+          "htmlBytes": 33398
+        },
+        {
+          "status": 200,
+          "ttfbMs": 1.7,
+          "completeMs": 22.4,
+          "htmlBytes": 33398
+        },
+        {
+          "status": 200,
+          "ttfbMs": 1.5,
+          "completeMs": 14.1,
+          "htmlBytes": 33398
+        },
+        {
+          "status": 200,
+          "ttfbMs": 1.3,
+          "completeMs": 13.2,
+          "htmlBytes": 33398
+        }
+      ]
+    },
+    {
+      "route": "/thoughts",
+      "samples": [
+        {
+          "status": 200,
+          "ttfbMs": 1.6,
+          "completeMs": 81.5,
+          "htmlBytes": 54026
+        },
+        {
+          "status": 200,
+          "ttfbMs": 1.1,
+          "completeMs": 11.8,
+          "htmlBytes": 54026
+        },
+        {
+          "status": 200,
+          "ttfbMs": 0.9,
+          "completeMs": 11,
+          "htmlBytes": 54026
+        },
+        {
+          "status": 200,
+          "ttfbMs": 0.9,
+          "completeMs": 9.8,
+          "htmlBytes": 54026
+        }
+      ]
+    },
+    {
+      "route": "/events",
+      "samples": [
+        {
+          "status": 200,
+          "ttfbMs": 1,
+          "completeMs": 18.2,
+          "htmlBytes": 57080
+        },
+        {
+          "status": 200,
+          "ttfbMs": 1,
+          "completeMs": 11.3,
+          "htmlBytes": 57080
+        },
+        {
+          "status": 200,
+          "ttfbMs": 0.9,
+          "completeMs": 9.5,
+          "htmlBytes": 57080
+        },
+        {
+          "status": 200,
+          "ttfbMs": 1.4,
+          "completeMs": 10.2,
+          "htmlBytes": 57080
+        }
+      ]
+    }
+  ],
+  "adminPayload": [
+    {
+      "route": "/dashboard/thoughts",
+      "status": 200,
+      "htmlBytes": 93416,
+      "rawDocumentProps": 9,
+      "renderedHtmlProps": 12
+    },
+    {
+      "route": "/dashboard/event",
+      "status": 200,
+      "htmlBytes": 92186,
+      "rawDocumentProps": 8,
+      "renderedHtmlProps": 11
+    }
+  ],
+  "browser": {
+    "server": "isolated production process at localhost:3107 using the existing build",
+    "engine": "Chromium through agent-browser",
+    "mutations": "One save POST intercepted and held in browser fetch before transmission; no content/storage writes issued",
+    "pendingSave": {
+      "heldPostCount": 1,
+      "closeButtonDisabled": true,
+      "documentEditable": false,
+      "visibilityButtonsDisabled": false,
+      "editorPresentAfterEscape": false
+    },
+    "filesTotals": {
+      "actualFiles": 2,
+      "actualBytes": 932790,
+      "outOfRangePageIndex": 100000,
+      "displayedFiles": 0,
+      "displayedSize": "0.0 KB",
+      "displayedPage": 100001
+    },
+    "introSamples": [
+      {
+        "route": "/posts",
+        "reducedMotion": false,
+        "ttfbMs": 6,
+        "domContentLoadedMs": 65,
+        "unlockedAtMs": 2241
+      },
+      {
+        "route": "/posts",
+        "reducedMotion": false,
+        "ttfbMs": 2,
+        "domContentLoadedMs": 37,
+        "unlockedAtMs": 2174
+      },
+      {
+        "route": "/posts",
+        "reducedMotion": false,
+        "ttfbMs": 3,
+        "domContentLoadedMs": 34,
+        "unlockedAtMs": 2175
+      }
+    ],
+    "mobileToc": {
+      "viewport": [390, 844],
+      "headings": 80,
+      "expanded": true,
+      "lastLinkHash": "#section-field-guide-16-4",
+      "closedAfterSelection": true,
+      "horizontalOverflow": false,
+      "reducedMotion": true
+    },
+    "applicationPageErrorsObserved": 0,
+    "excludedRun": "Initial localhost:3001 process served stale chunk references; its timings and resources were discarded."
+  },
+  "limitations": [
+    "Existing successful build was reused; no new build or cold-build timing.",
+    "No rsdoctor-data.json or Rsdoctor plugin exists; no Rsdoctor E1001/E1002 or package-wide tree-shaking analysis.",
+    "Gzip values are local per-file gzipSync estimates, not Brotli or unique session transfer totals; per-module gzip is attribution only, not guaranteed savings.",
+    "HTTP timings use four serial requests per route against local Supabase and an already-running server; not production p95 or Core Web Vitals.",
+    "No physical iOS/Safari, screen-reader, CPU-throttled trace, React Profiler, actual save/upload/delete, or expired-session end-to-end test in this review."
+  ]
+}

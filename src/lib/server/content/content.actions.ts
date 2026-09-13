@@ -18,7 +18,7 @@ const refreshContent = (kind: string, id: string) => {
   revalidatePath(`/dashboard/${kind === "events" ? "event" : kind}`);
   revalidatePath(`/${kind}`);
   if (kind === "posts") revalidatePath(`/posts/${id}`);
-  if (kind !== "events") revalidatePath("/");
+  revalidatePath("/");
 };
 export async function loadContent(input: unknown) {
   return adminAction(async () => {

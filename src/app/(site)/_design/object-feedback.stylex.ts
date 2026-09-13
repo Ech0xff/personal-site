@@ -41,6 +41,9 @@ export const feedback = stylex.create({
     zIndex: motionToken.tooltip,
   },
   label: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: space.xxs,
     position: "absolute",
     left: "50%",
     top: 0,

@@ -1,6 +1,14 @@
 import { describe, expect, mock, test } from "bun:test";
 
 await mock.module("server-only", () => ({}));
+// Next compiles StyleX; these rendering tests exercise HTML, not generated CSS.
+await mock.module("#components/ui/blocknote/link-card.style", () => ({
+  cardStyles: Object.fromEntries(
+    ["card", "copy", "title", "description", "source", "image", "logo"].map(
+      (name) => [name, {}],
+    ),
+  ),
+}));
 const { renderDocument } = await import("./document-render.service");
 
 describe("dashboard static documents", () => {
@@ -129,4 +137,67 @@ describe("public article documents", () => {
     expect(next.html).toContain("Updated");
     expect(next.html).not.toContain("Original");
   });
+});
+
+describe("custom content HTML", () => {
+  test("exports mixed rows, safe card links and image preview buttons", async () => {
+    const html = await renderDocument([
+      {
+        type: "mediaRow",
+        props: { columns: 3 },
+        children: [
+          { type: "image", props: { url: "https://example.com/image.png" } },
+          {
+            type: "linkCard",
+            props: {
+              url: "https://example.com",
+              title: "<script>Card</script>",
+              description: "Description",
+              image: "https://example.com/cover.png",
+            },
+          },
+          { type: "video", props: { url: "https://example.com/video.mp4" } },
+        ],
+      },
+    ]);
+    expect(html).toContain('data-content-type="mediaRow"');
+    expect(html).toContain('data-columns="3"');
+    expect(html).toContain('data-content-type="linkCard"');
+    expect(html).toContain('rel="noopener noreferrer"');
+    expect(html).toContain("&lt;script&gt;Card&lt;/script&gt;");
+    expect(html).toContain('data-viewer-trigger=""');
+    expect(html).not.toContain('data-src="https://example.com/cover.png"');
+    expect(html).toContain("Description");
+  });
+});
+
+test("exports official columns with widths, media controls and saved cards", async () => {
+  const html = await renderDocument([
+    {
+      type: "columnList",
+      children: [
+        {
+          type: "column",
+          props: { width: 0.8 },
+          children: [
+            {
+              type: "linkCard",
+              props: { url: "https://example.com", title: "Saved preview" },
+            },
+          ],
+        },
+        {
+          type: "column",
+          props: { width: 1.2 },
+          children: [
+            { type: "image", props: { url: "https://example.com/photo.png" } },
+          ],
+        },
+      ],
+    },
+  ]);
+  expect(html).toContain('data-node-type="columnList"');
+  expect(html).toContain('data-width="0.8"');
+  expect(html).toContain("Saved preview");
+  expect(html).toContain('data-viewer-trigger=""');
 });

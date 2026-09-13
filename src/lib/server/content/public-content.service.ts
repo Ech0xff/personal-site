@@ -69,14 +69,19 @@ export async function readPublicCounts() {
   await connection();
   const client = makePublicClient();
   return Promise.all(
-    (["posts", "thoughts"] as const).map(async (kind) => {
+    (["posts", "thoughts", "events"] as const).map(async (kind) => {
       const { count, error } = await client
         .from(kind)
         .select("id", { count: "exact", head: true })
         .eq("status", "show");
       if (error) throw error;
       return {
-        label: kind === "posts" ? "Posts" : "Thoughts",
+        label:
+          kind === "posts"
+            ? "Posts"
+            : kind === "thoughts"
+              ? "Thoughts"
+              : "Events",
         value: String(count ?? 0),
       };
     }),

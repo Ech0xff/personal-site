@@ -12,6 +12,7 @@ export const ROUTES = {
 
   // Dashboard routes
   DASHBOARD: {
+    GUESTBOOK: "/dashboard/guestbook",
     FILES: "/dashboard/files",
     POSTS: "/dashboard/posts",
     THOUGHTS: "/dashboard/thoughts",

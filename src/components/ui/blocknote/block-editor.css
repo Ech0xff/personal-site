@@ -97,3 +97,78 @@
 [data-cms-blocknote][data-readonly] [data-viewer-trigger] img {
   display: block;
 }
+
+/* Structural adapters for custom blocks and BlockNote's nested block containers. */
+[data-cms-blocknote] [data-content-type="linkCard"] {
+  container-type: inline-size;
+  width: 100%;
+}
+[data-cms-blocknote]
+  .bn-block:has(> [data-content-type="mediaRow"], > .node-mediaRow)
+  > .bn-block-group {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  width: 100%;
+}
+[data-cms-blocknote]
+  .bn-block:has(
+    > [data-content-type="mediaRow"][data-columns="3"],
+    > .node-mediaRow > [data-columns="3"]
+  )
+  > .bn-block-group {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+[data-cms-blocknote]
+  .bn-block:has(> [data-content-type="mediaRow"], > .node-mediaRow)
+  > .bn-block-group
+  > .bn-block-outer {
+  min-width: 0;
+}
+[data-cms-blocknote][data-readonly] [data-content-type="mediaRow"] {
+  display: none;
+}
+[data-cms-blocknote]
+  .bn-block:has(> [data-content-type="mediaRow"], > .node-mediaRow)
+  :is(img, video, audio) {
+  max-width: 100%;
+}
+@media (max-width: 600px) {
+  [data-cms-blocknote]
+    .bn-block:has(> [data-content-type="mediaRow"], > .node-mediaRow)
+    > .bn-block-group,
+  [data-cms-blocknote]
+    .bn-block:has(
+      > [data-content-type="mediaRow"][data-columns="3"],
+      > .node-mediaRow > [data-columns="3"]
+    )
+    > .bn-block-group {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+[data-cms-blocknote]
+  .bn-block:has(> [data-content-type="mediaRow"], > .node-mediaRow)
+  > .bn-block-group
+  > .bn-block-outer::before {
+  display: none;
+}
+
+/* Adapt upstream columns to narrow reading surfaces without changing their model. */
+[data-cms-blocknote] .bn-block-column-list {
+  gap: var(--cms-column-gap);
+}
+[data-cms-blocknote] .bn-block-column {
+  min-width: 0;
+  container: media-column / inline-size;
+}
+@media (max-width: 600px) {
+  [data-cms-blocknote] .bn-block-column-list {
+    flex-direction: column;
+  }
+  [data-cms-blocknote] .bn-block-column {
+    width: 100%;
+  }
+}

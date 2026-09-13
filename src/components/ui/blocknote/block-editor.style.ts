@@ -1,6 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { color, font, shape } from "#design/tokens.stylex";
+import { color, font, shape, space } from "#design/tokens.stylex";
 export const blocknoteStyles = stylex.create({
   readonly: {
     "--cms-anchor-offset": `calc(${shape.header} + 24px)`,
@@ -30,5 +30,6 @@ export const blocknoteStyles = stylex.create({
     "--bn-border-radius": shape.control,
     "--bn-font-family": font.body,
     "--cms-code-font": font.mono,
+    "--cms-column-gap": space.sm,
   },
 });

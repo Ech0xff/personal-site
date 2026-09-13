@@ -66,7 +66,7 @@ reinstalls them.
 
 ## Dashboard
 
-`/dashboard` opens Posts. Navigation contains Posts, Thoughts, Events, and Files.
+`/dashboard` opens Posts. Navigation contains Guestbook, Posts, Thoughts, Events, and Files.
 On narrow screens, navigation stays visible with icons only. Publish dates open
 the native date/time picker directly. Timeline years, dates, and color markers use
 the shared magnetic interaction. Files provides sorting and pagination without a
@@ -81,6 +81,14 @@ the content document. There are no author, location, tag, or configuration field
 
 The database stores native BlockNote JSON. The editor supports standard blocks,
 including headings, lists, tables, code, images, audio, video, and file links.
+Use `/Two Columns` or `/Three Columns`, or drag blocks beside each other, for the
+upstream BlockNote multi-column layout. Columns resize by dragging their dividers;
+media, text, and website cards use ordinary block controls. Phones stack columns.
+Previously saved custom media rows migrate to native columns when opened for editing.
+Use `/Link card`, or Turn into link card on a standalone URL, for a saved
+website preview. Enter only a URL: Microlink fills the preview automatically after
+a short typing pause. The refresh icon retries parsing; titles and descriptions
+have no manual fields. Reading pages use the saved preview.
 Old Markdown directives, PlantUML, and Markdown source/split modes are removed.
 Existing Markdown data is not converted.
 
@@ -118,7 +126,10 @@ and total post and approximate non-whitespace character counts;
 Thoughts and Events show all public documents in a feed and timeline. Public
 pages have no pagination; the dashboard retains its existing pagination.
 Show makes content public regardless of publish time, including future events.
-The homepage displays live public Posts and Thoughts counts.
+The homepage displays public Posts, Thoughts, and Events counts, site likes and
+page views through Supabase RPC. Likes are disabled after a successful click,
+using the existing browser-local marker. Guestbook notes are public immediately;
+optional email addresses remain public. Manage notes at `/dashboard/guestbook`.
 
 Content and counts require the public Supabase URL and anonymous key. Missing
 configuration or unavailable data produces a local unavailable state; the rest
@@ -156,10 +167,28 @@ HTTPS URLs so they also work when browsing the site from another LAN device.
 - Inspect local service status: `bunx supabase status`
 - Refresh local environment: `bun run supabase:env`
 
-The application tables are `posts`, `thoughts`, and `events`. Anonymous database
-access can read only published content; writes require service-role access from
-the authorized server layer. Seed creates the public file bucket with a 50 MiB
-limit. There are no application auth, tag, configuration, or webhook tables/functions.
+The application tables are `posts`, `thoughts`, `events`, and `configs`. Anonymous table
+access can read only published content. Content and storage writes require
+service-role access from the authorized server layer. Desk interactions use
+the constrained RPCs described in [Architecture](./DOCS/ARCHITECTURE.md#desk-rpc). Seed creates the public file bucket with a 50 MiB
+limit. The three `desk.*` configuration keys hold likes, visits and guestbook data.
+Anonymous clients can execute specific public RPCs but cannot modify tables.
+There are no application auth, tag or webhook tables.
+
+To add desk RPCs to an existing local database without resetting data:
+
+```bash
+docker exec -i supabase_db_personal-site psql -U postgres -d postgres -v ON_ERROR_STOP=1 < supabase/schemas/05_desk.sql
+bun run supabase:types
+bun scripts/verify-desk-rpc.ts
+```
+
+For a hosted database, apply `05_desk.sql` using its SQL editor before deploying.
+The script is additive and preserves existing config values. RPC verification
+creates and removes an isolated temporary database in the local Docker container;
+set `SUPABASE_DB_CONTAINER` when its name differs. It checks permissions, concurrent
+updates, moderation and the rolling limit of ten new notes per 60 seconds.
+The seed also includes a hidden native-column/link-card editor fixture.
 
 Existing databases with the former mandatory event-title constraint can be
 updated without resetting data:
@@ -188,4 +217,15 @@ See [Architecture](./DOCS/ARCHITECTURE.md) for authorization and data flow.
 - [AGENTS.md](./AGENTS.md): development conventions and module ownership.
 - [Architecture](./DOCS/ARCHITECTURE.md): runtime boundaries and data flow.
 - [Design guide](./DOCS/REDESIGN.md): tokens, public UI, and audio.
+- [Project review](./DOCS/REVIEW-2026-09-13.md): architecture and quality findings,
+  measured performance, and follow-up decisions as of September 13, 2026.
 - [TODO](./DOCS/TODO.md): outstanding work.
+
+## License
+
+Project code is available under [GPL-3.0-only](./LICENSE). The official
+`@blocknote/xl-multi-column` extension is used under its GPL-3.0 option;
+no commercial subscription is needed for this GPL release. Dependencies retain
+their own licenses. Blog posts, personal photographs, and other authored content
+are not covered by this software license. Corresponding project source is available
+at [muyu258/personal-site](https://github.com/muyu258/personal-site).

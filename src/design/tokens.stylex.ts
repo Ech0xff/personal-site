@@ -193,6 +193,9 @@ export const media = stylex.defineConsts({
   reduce: "@media (prefers-reduced-motion: reduce)",
 });
 export const motionToken = stylex.defineConsts({
+  displayLayer: "3",
+  displaySwitch: "220ms",
+  displayScan: "280ms",
   magneticReachX: "8px",
   magneticReachY: "10px",
   scrollLerp: 0.12,

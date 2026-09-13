@@ -3,6 +3,12 @@ import * as stylex from "@stylexjs/stylex";
 import { font, shape, space, material } from "#design/tokens.stylex";
 
 export const panel = stylex.create({
+  statLink: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "5px",
+    color: "inherit",
+  },
   title: {
     fontSize: font.small,
     fontWeight: font.medium,

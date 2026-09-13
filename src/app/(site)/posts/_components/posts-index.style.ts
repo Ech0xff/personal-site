@@ -1,6 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { color, font, media, space } from "#design/tokens.stylex";
+import { color, font, media, motionToken, space } from "#design/tokens.stylex";
 
 export const postsStyles = stylex.create({
   title: {
@@ -29,37 +29,41 @@ export const postsStyles = stylex.create({
     fontSize: font.bodySize,
     fontWeight: font.regular,
   },
-  list: {
-    listStyleType: "none",
-    margin: 0,
-    paddingBlock: 0,
-    paddingLeft: { default: space.xl, [media.phone]: space.md },
-    paddingRight: 0,
-    borderLeftWidth: "2px",
-    borderLeftStyle: "solid",
-    borderLeftColor: color.line,
-  },
+  list: { listStyleType: "none", margin: 0, padding: 0 },
   row: {
     display: "grid",
+    width: "100%",
     gridTemplateColumns: {
-      default: "minmax(0, 1fr) auto",
-      [media.phone]: "minmax(0, 1fr)",
+      default: "12px minmax(0, 1fr) auto",
+      [media.phone]: "12px minmax(0, 1fr)",
     },
     alignItems: "baseline",
-    columnGap: space.xl,
-    rowGap: space.xxs,
-    paddingBlock: space.sm,
-  },
-  link: {
-    minWidth: 0,
-    width: "fit-content",
-    maxWidth: "100%",
+    columnGap: space.sm,
+    rowGap: 0,
+    paddingBlock: 0,
+    paddingInline: space.xs,
+    minHeight: { default: 0, [media.phone]: "44px" },
+    backgroundColor: {
+      default: "transparent",
+      ":hover": color.surfaceMuted,
+      ":focus-visible": color.surfaceMuted,
+      ":active": color.surfaceStrong,
+    },
+    transitionProperty: "background-color",
+    transitionDuration: { default: motionToken.fast, [media.reduce]: "0s" },
     fontSize: { default: font.large, [media.phone]: font.bodySize },
     lineHeight: 1.6,
-    color: { default: color.text, ":hover": color.accentText },
-    overflowWrap: "anywhere",
   },
+  dash: {
+    alignSelf: "start",
+    width: "12px",
+    height: "1px",
+    backgroundColor: color.muted,
+    marginTop: "0.8em",
+  },
+  link: { minWidth: 0, color: color.text, overflowWrap: "anywhere" },
   date: {
+    gridColumn: { default: "3", [media.phone]: "2" },
     fontSize: { default: font.bodySize, [media.phone]: font.small },
     color: color.muted,
     whiteSpace: "nowrap",

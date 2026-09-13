@@ -22,7 +22,7 @@ export function Calendar() {
         <span {...stylex.props(styles.calendarDate)}>12</span>
         <span {...stylex.props(styles.calendarBottom)}>one day at a time.</span>
       </span>
-      <ObjectFeedback label="Events" />
+      <ObjectFeedback navigable label="Events" />
     </DeskLink>
   );
 }

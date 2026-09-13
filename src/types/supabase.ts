@@ -9,6 +9,21 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      configs: {
+        Row: {
+          key: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          value: Json
+        }
+        Update: {
+          key?: string
+          value?: Json
+        }
+        Relationships: []
+      }
       events: {
         Row: {
           color: string
@@ -86,6 +101,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      like_desk: { Args: never; Returns: number }
       list_files: {
         Args: {
           page_index?: number
@@ -104,6 +120,22 @@ export type Database = {
           type: string
         }[]
       }
+      manage_guestbook: {
+        Args: { entry_id: string; operation: string }
+        Returns: undefined
+      }
+      read_desk_stats: { Args: never; Returns: Json }
+      read_guestbook: { Args: { page_index?: number }; Returns: Json }
+      submit_guestbook: {
+        Args: {
+          author_email: string
+          author_name: string
+          github_username: string
+          message_text: string
+        }
+        Returns: Json
+      }
+      visit_desk: { Args: { page_path: string }; Returns: number }
     }
     Enums: {
       [_ in never]: never

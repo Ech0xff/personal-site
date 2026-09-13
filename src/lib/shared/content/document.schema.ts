@@ -1,5 +1,7 @@
-import type { PartialBlock } from "@blocknote/core";
 import { z } from "zod";
+
+import type { CmsBlock } from "./blocknote.schema";
+import { webUrlSchema } from "./link-metadata.schema";
 
 const safeUrl = z.string().refine((value) => {
   if (!value) return true;
@@ -89,13 +91,74 @@ const table = z.object({
     .min(1),
 });
 
-export const blockSchema: z.ZodType<PartialBlock> = z.lazy(() => {
+export const blockSchema: z.ZodType<CmsBlock> = z.lazy(() => {
   const base = {
     id: z.string().min(1).optional(),
     props: props.optional(),
     children: z.array(blockSchema).optional(),
   };
   return z.discriminatedUnion("type", [
+    z.object({
+      id: base.id,
+      type: z.literal("columnList"),
+      props: z.object({}).optional(),
+      children: z
+        .array(blockSchema)
+        .min(2)
+        .max(100)
+        .refine(
+          (children) => children.every((child) => child.type === "column"),
+          "Column lists require columns.",
+        ),
+    }),
+    z.object({
+      id: base.id,
+      type: z.literal("column"),
+      props: z.object({ width: z.number().positive().optional() }).optional(),
+      children: z
+        .array(blockSchema)
+        .min(1)
+        .refine(
+          (children) =>
+            children.every(
+              (child) => child.type !== "column" && child.type !== "columnList",
+            ),
+          "Columns require ordinary blocks.",
+        ),
+    }),
+    z.object({
+      id: base.id,
+      type: z.literal("linkCard"),
+      props: z.object({
+        url: z.union([z.literal(""), webUrlSchema]),
+        title: z.string().max(500).optional(),
+        description: z.string().max(2000).optional(),
+        siteName: z.string().max(200).optional(),
+        image: z.union([z.literal(""), webUrlSchema]).optional(),
+        icon: z.union([z.literal(""), webUrlSchema]).optional(),
+      }),
+      children: z.array(z.never()).optional(),
+    }),
+    z.object({
+      id: base.id,
+      type: z.literal("mediaRow"),
+      props: z
+        .object({ columns: z.union([z.literal(2), z.literal(3)]).optional() })
+        .optional(),
+      children: z
+        .array(blockSchema)
+        .max(100)
+        .refine(
+          (children) =>
+            children.every(
+              (child) =>
+                ["image", "video", "audio", "file", "linkCard"].includes(
+                  child.type ?? "",
+                ) && !child.children?.length,
+            ),
+          "Media rows only accept media and link cards.",
+        ),
+    }),
     z.object({
       ...base,
       type: z.enum([
@@ -132,5 +195,20 @@ export const blockSchema: z.ZodType<PartialBlock> = z.lazy(() => {
     z.object({ ...base, type: z.literal("table"), content: table }),
   ]);
 });
-export const documentSchema = z.array(blockSchema).max(5000);
+export const documentSchema = z
+  .array(blockSchema)
+  .max(5000)
+  .superRefine((blocks, context) => {
+    const visit = (items: readonly CmsBlock[], parent?: CmsBlock["type"]) => {
+      for (const block of items) {
+        if (block.type === "column" && parent !== "columnList")
+          context.addIssue({
+            code: "custom",
+            message: "Columns must belong to a column list.",
+          });
+        visit(block.children ?? [], block.type);
+      }
+    };
+    visit(blocks);
+  });
 export type BlockDocument = z.infer<typeof documentSchema>;
