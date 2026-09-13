@@ -1,14 +1,14 @@
 import { Edit, Eye, Save, X } from "lucide-react";
 
-import { PostContent } from "#components/features/content";
-import Button from "#components/ui/button.component";
-import { MarkdownEditor } from "#components/ui/codemirror";
-import DropdownPopover from "#components/ui/dropdown-popover.component";
-import IconButton from "#components/ui/icon-button.component";
-import Input from "#components/ui/input.component";
-import SegmentedToggle from "#components/ui/segmented-toggle.component";
-import Stack from "#components/ui/stack.component";
-import { cn } from "#lib/shared/utils";
+import { PostContent } from "#legacy/components/features/content";
+import Button from "#legacy/components/ui/button.component";
+import { MarkdownEditor } from "#legacy/components/ui/codemirror";
+import DropdownPopover from "#legacy/components/ui/dropdown-popover.component";
+import IconButton from "#legacy/components/ui/icon-button.component";
+import Input from "#legacy/components/ui/input.component";
+import SegmentedToggle from "#legacy/components/ui/segmented-toggle.component";
+import Stack from "#legacy/components/ui/stack.component";
+import { cn } from "#legacy/helpers/tailwind.helper";
 
 import type { BaseEditorProps } from "../../../_components/editor.type";
 import AuthorInput from "../../../_components/editor/author-input.component";

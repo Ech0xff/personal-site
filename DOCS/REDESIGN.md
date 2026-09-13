@@ -1,23 +1,23 @@
 # Reading Desk Redesign
 
-The independent prototype starts at `/redesign`. Its Posts, Thoughts, Events,
+The public reading desk starts at `/`. Its Posts, Thoughts, Events,
 and System pages live below that prefix. Posts, Thoughts, and Events currently
 show only their heading and `Not implemented yet.`; their sample articles have
 been removed. The homepage has no footer. All copy and audio settings are local
-fixtures in `src/app/redesign/_components/desk-content.const.ts`; no Supabase
+fixtures in `src/app/(site)/_components/desk-content.const.ts`; no Supabase
 configuration, CMS content, legacy components, or legacy theme resources are
 loaded by these pages. UI copy is English; the greeting sequence is decorative.
 
 ## Development and Preview
 
 Use the [standard development commands](../README.md#development), then visit
-`/redesign`. The prototype does not require database credentials. The existing
-site still does.
+`/`. Public pages do not require database credentials. Authentication and the
+dashboard still do.
 
-To build just the prototype when Supabase is unavailable:
+To build just the public pages when Supabase is unavailable:
 
 ```sh
-NODE_ENV=production bun run build --debug-build-paths 'src/app/redesign/**/page.tsx'
+NODE_ENV=production bun run build --debug-build-paths 'src/app/(site)/**/page.tsx'
 NODE_ENV=production bun run start --port 3001
 ```
 
@@ -28,17 +28,22 @@ whole-site deployment. See the [verification workflow](../README.md#verification
 
 ## Runtime and Build Boundaries
 
-The existing UI lives under the `(legacy)` route group, with the same public
-URLs and the original root providers. Redesign has a separate root layout. There
-is no shared `app/layout.tsx`. Navigating between roots loads a new document;
-navigation inside the prototype keeps its curtain controller mounted. API
-handlers remain at their original locations. The old favicon is served from
-`public/favicon.ico` at its existing URL; redesign uses a blank favicon until a new identity is chosen.
+The public UI lives under `(site)` and serves unprefixed URLs. Authentication
+and dashboard routes remain under `(legacy)` with their original providers;
+legacy UI dependencies live in `src/legacy`. Each group owns a root layout,
+and there is no shared `app/layout.tsx`. Navigating between roots loads a new
+document; navigation inside the public site keeps its curtain controller mounted.
+API handlers remain at their original locations. The five former redesign page
+URLs permanently redirect to their unprefixed counterparts, while audio URLs
+and storage keys remain unchanged. Old article detail URLs return 404 until
+new detail pages are implemented. The public layout permits search indexing.
+The old favicon remains at `public/favicon.ico`; the public site uses a blank
+favicon until a new identity is chosen.
 
 StyleX 0.19 uses the official Babel and PostCSS pipeline. `babel.config.js` must
 use the `.js` extension: this Next.js Babel loader rejects `.cjs` and `.mjs`
 configuration files. PostCSS reuses the Babel plugin options, scans only redesign
-sources, and replaces the single `@stylex` directive in its reset stylesheet.
+sources with literal-parenthesis glob matching for `(site)`, and replaces the single `@stylex` directive in its reset stylesheet.
 Runtime style injection is disabled. Next.js retains Turbopack and React Compiler.
 
 The Babel configuration applies to the project build, while the generated
@@ -53,8 +58,8 @@ can otherwise compile without the intended styling.
 
 ## Design System
 
-The live guide at `/redesign/system` consumes the same tokens and interaction
-styles as the homepage. Sources are in `src/app/redesign/_design`:
+The live guide at `/system` consumes the same tokens and interaction
+styles as the homepage. Sources are in `src/app/(site)/_design`:
 
 - **Foundations:** raw palette, system font stacks (including separate artistic and signature roles), typography scale, spacing,
   shape, and breakpoints.
@@ -129,7 +134,7 @@ The hero uses the same handwritten font token as the Thoughts letter.
 - Greetings play on fresh homepage loads and reloads only. The persistent root
   prevents replay on internal returns; browser history restoration and reduced
   motion bypass them. No session or daily storage is involved.
-- Ordinary prototype links cover the old page, navigate, then reveal the new
+- Ordinary public site links cover the old page, navigate, then reveal the new
   page. Modified clicks retain Next Link behavior. Inert content and a temporary
   scroll lock protect the transition; a six-second watchdog releases it if a
   navigation stalls. History changes cancel pending animations. The page heading
@@ -208,7 +213,7 @@ styles remain in StyleX.
 
 ## Built-in Music and Audio Analysis
 
-The prototype ships two audio files in `public/redesign`: the original 16-second
+The public site ships two audio files in `public/redesign`: the original 16-second
 synthesized “A quiet morning” (`quiet-morning.wav`) and “Miku feat. Hatsune Miku”
 by Anamanaguchi (`miku.mp3`, 223.125 seconds). The latter was obtained from the
 [artist's official track page](https://anamanaguchi.bandcamp.com/track/miku-feat-hatsune-miku)
@@ -319,7 +324,7 @@ caret. The clock and program icons stay fixed in both views.
 
 Name and email are optional. Blank names render as Anonymous, and supplied email
 addresses appear below names in smaller text; missing addresses display
-`anonymous@xxxx`. Message headers place a circular avatar at the left and the date
+`anoymous@unkonw.io`. Message headers place a circular avatar at the left and the date
 at the far right. Message text is trimmed and validated. Name, email, optional GitHub username,
 and message drafts persist as they are edited. Submitting retains up to 50 local
 notes, clears the message, returns to Read, and focuses its tab. All submitted text
@@ -335,4 +340,4 @@ original colors and opacity inside the circular crop. There is no email lookup,
 Gravatar fallback, or GitHub API request.
 
 Public guestbook storage, moderation, and real statistics remain future work in
-[TODO](./TODO.md). This prototype does not submit messages to Supabase.
+[TODO](./TODO.md). This public site does not submit messages to Supabase.

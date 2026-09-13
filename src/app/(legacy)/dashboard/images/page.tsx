@@ -1,9 +1,9 @@
 "use client";
 import { ArrowDownAZ, ArrowUpAZ, Calendar, HardDrive } from "lucide-react";
 
-import Button from "#components/ui/button.component";
-import Image from "#components/ui/image.component";
-import Stack from "#components/ui/stack.component";
+import Button from "#legacy/components/ui/button.component";
+import Image from "#legacy/components/ui/image.component";
+import Stack from "#legacy/components/ui/stack.component";
 import { formatTime } from "#lib/shared/utils/date.helper";
 import { formatSize } from "#lib/shared/utils/file-size.helper";
 

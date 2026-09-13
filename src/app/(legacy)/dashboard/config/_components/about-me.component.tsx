@@ -1,7 +1,7 @@
-import ContentRenderer from "#components/features/content/content-renderer.component";
-import { MarkdownEditor } from "#components/ui/codemirror";
+import ContentRenderer from "#legacy/components/features/content/content-renderer.component";
+import { MarkdownEditor } from "#legacy/components/ui/codemirror";
+import { cn } from "#legacy/helpers/tailwind.helper";
 import { CONFIG_KEY } from "#lib/shared/config";
-import { cn } from "#lib/shared/utils";
 
 import useConfig from "../_hooks/config.hook";
 import EditorShell from "./editor-shell.component";

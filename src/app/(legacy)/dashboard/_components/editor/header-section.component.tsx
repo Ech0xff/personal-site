@@ -1,4 +1,4 @@
-import Stack from "#components/ui/stack.component";
+import Stack from "#legacy/components/ui/stack.component";
 
 export default function HeaderSection({
   title,

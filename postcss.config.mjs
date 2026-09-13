@@ -3,7 +3,8 @@ import babelConfig from "./babel.config.js";
 export default {
   plugins: {
     "@stylexjs/postcss-plugin": {
-      include: ["src/app/redesign/**/*.{ts,tsx}"],
+      // Match literal route-group parentheses rather than glob grouping.
+      include: ["src/app/[(]site[)]/**/*.{ts,tsx}"],
       babelConfig: {
         babelrc: false,
         configFile: false,

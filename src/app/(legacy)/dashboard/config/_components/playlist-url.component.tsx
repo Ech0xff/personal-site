@@ -1,10 +1,10 @@
 import { useAtomValue } from "jotai";
 
-import Input from "#components/ui/input.component";
-import { resolvedThemeAtom } from "#lib/client/theme.atom";
+import Input from "#legacy/components/ui/input.component";
+import { cn } from "#legacy/helpers/tailwind.helper";
+import { resolvedThemeAtom } from "#legacy/theme/theme.atom";
 import { CONFIG_KEY, generatePlaylistUrl } from "#lib/shared/config";
 import type { ResolvedTheme } from "#lib/shared/theme/theme.type";
-import { cn } from "#lib/shared/utils";
 
 import useConfig from "../_hooks/config.hook";
 import EditorShell from "./editor-shell.component";

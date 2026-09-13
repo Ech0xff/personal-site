@@ -1,8 +1,4 @@
-import { Link2 } from "lucide-react";
 import type { z } from "zod";
-
-import SvgGithub from "#components/icons/Github";
-import SvgGoogle from "#components/icons/Google";
 
 import { defaultDictionary } from "../dictionary/dictionary.const";
 import { mergeDictionary } from "../dictionary/dictionary.helper";
@@ -11,7 +7,7 @@ import type {
   Dictionary,
   DictionaryOverride,
 } from "../dictionary/dictionary.type";
-import { CONFIG_KEY, IDENTITY_PROVIDER } from "./config.const";
+import { CONFIG_KEY } from "./config.const";
 import { defineConfig } from "./config.helper";
 import {
   oauthProvidersSchema,
@@ -21,7 +17,6 @@ import {
 import type {
   ConfigKey,
   ConfigDefinition,
-  IdentityProvider,
   OAuthProvider,
   RecentPlan,
 } from "./config.type";
@@ -99,28 +94,3 @@ export const generatePlaylistUrl = (
   url.searchParams.set("theme", theme);
   return url.toString();
 };
-
-export const providerConfig = {
-  [IDENTITY_PROVIDER.EMAIL]: {
-    label: "email",
-    icon: Link2,
-    color: "bg-surface-muted text-text-primary",
-  },
-  [IDENTITY_PROVIDER.GITHUB]: {
-    label: "GitHub",
-    icon: SvgGithub,
-    color: "bg-surface-inverse text-text-inverse",
-  },
-  [IDENTITY_PROVIDER.GOOGLE]: {
-    label: "Google",
-    icon: SvgGoogle,
-    color: "bg-surface-panel text-text-primary",
-  },
-} satisfies Record<
-  IdentityProvider,
-  {
-    label: string;
-    icon: React.ElementType;
-    color: string;
-  }
->;

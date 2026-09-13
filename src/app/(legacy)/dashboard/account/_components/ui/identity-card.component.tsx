@@ -3,13 +3,10 @@ import { assert } from "es-toolkit";
 import { includes } from "es-toolkit/compat";
 import { Link2Off, Loader2 } from "lucide-react";
 
-import Button from "#components/ui/button.component";
-import Stack from "#components/ui/stack.component";
-import {
-  IDENTITY_PROVIDER,
-  type IdentityProvider,
-  providerConfig,
-} from "#lib/shared/config";
+import { providerConfig } from "#legacy/auth/provider.const";
+import Button from "#legacy/components/ui/button.component";
+import Stack from "#legacy/components/ui/stack.component";
+import { IDENTITY_PROVIDER, type IdentityProvider } from "#lib/shared/config";
 
 const supportedProviders = Object.values(IDENTITY_PROVIDER);
 

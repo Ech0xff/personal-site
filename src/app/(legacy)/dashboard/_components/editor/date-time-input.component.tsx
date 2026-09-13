@@ -2,8 +2,8 @@
 import { CalendarDays } from "lucide-react";
 import { useEffect, useMemo, useRef } from "react";
 
-import Button from "#components/ui/button.component";
-import Input from "#components/ui/input.component";
+import Button from "#legacy/components/ui/button.component";
+import Input from "#legacy/components/ui/input.component";
 import {
   datetimeLocalToUtcIso,
   toDatetimeLocalValue,

@@ -1,11 +1,11 @@
-import Button from "#components/ui/button.component";
+import { providerConfig } from "#legacy/auth/provider.const";
+import Button from "#legacy/components/ui/button.component";
+import { cn } from "#legacy/helpers/tailwind.helper";
 import {
   CONFIG_KEY,
   OAUTH_PROVIDERS,
   type OAuthProvider,
-  providerConfig,
 } from "#lib/shared/config";
-import { cn } from "#lib/shared/utils";
 
 import useConfig from "../_hooks/config.hook";
 import EditorShell from "./editor-shell.component";

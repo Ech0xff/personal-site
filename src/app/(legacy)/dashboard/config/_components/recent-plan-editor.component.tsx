@@ -2,11 +2,11 @@
 import { Check, CircleDashed, Clock, Plus, Trash2, X } from "lucide-react";
 import { useState } from "react";
 
-import Button from "#components/ui/button.component";
-import IconButton from "#components/ui/icon-button.component";
-import Input from "#components/ui/input.component";
+import Button from "#legacy/components/ui/button.component";
+import IconButton from "#legacy/components/ui/icon-button.component";
+import Input from "#legacy/components/ui/input.component";
+import { cn } from "#legacy/helpers/tailwind.helper";
 import { CONFIG_KEY, type RecentPlan } from "#lib/shared/config";
-import { cn } from "#lib/shared/utils";
 
 import useConfig from "../_hooks/config.hook";
 import EditorShell from "./editor-shell.component";

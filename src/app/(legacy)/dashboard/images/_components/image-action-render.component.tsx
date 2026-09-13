@@ -3,8 +3,8 @@ import { Copy, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import IconButton from "#components/ui/icon-button.component";
-import Stack from "#components/ui/stack.component";
+import IconButton from "#legacy/components/ui/icon-button.component";
+import Stack from "#legacy/components/ui/stack.component";
 import type { ImageFile } from "#types";
 
 interface ImageActionButtonsProps {

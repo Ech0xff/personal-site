@@ -5,11 +5,11 @@ import { useState, type FormEvent } from "react";
 import { HexColorInput, HexColorPicker } from "react-colorful";
 import { z } from "zod";
 
-import { DEFAULT_TAG_COLOR } from "#components/features/tags/tag.const";
-import Button from "#components/ui/button.component";
-import IconButton from "#components/ui/icon-button.component";
-import Input from "#components/ui/input.component";
-import ModalPanel from "#components/ui/modal-panel.component";
+import { DEFAULT_TAG_COLOR } from "#legacy/components/features/tags/tag.const";
+import Button from "#legacy/components/ui/button.component";
+import IconButton from "#legacy/components/ui/icon-button.component";
+import Input from "#legacy/components/ui/input.component";
+import ModalPanel from "#legacy/components/ui/modal-panel.component";
 import type { TagWithCount } from "#types";
 
 const metaSchema = z.record(z.string(), z.json());

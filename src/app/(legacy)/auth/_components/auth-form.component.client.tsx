@@ -5,12 +5,13 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import Button from "#components/ui/button.component";
-import Input from "#components/ui/input.component";
-import SegmentedToggle from "#components/ui/segmented-toggle.component";
 import { useDictionary } from "#dictionary";
+import { providerConfig } from "#legacy/auth/provider.const";
+import Button from "#legacy/components/ui/button.component";
+import Input from "#legacy/components/ui/input.component";
+import SegmentedToggle from "#legacy/components/ui/segmented-toggle.component";
 import { makeBrowserClient } from "#lib/client/supabase.client";
-import { type OAuthProvider, providerConfig } from "#lib/shared/config";
+import { type OAuthProvider } from "#lib/shared/config";
 import { formatMessage } from "#lib/shared/dictionary/dictionary.helper";
 import { ROUTES } from "#lib/shared/routes/routes.const";
 

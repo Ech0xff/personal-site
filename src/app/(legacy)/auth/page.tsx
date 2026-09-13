@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import ThemeToggle from "#components/shared/theme-toggle.component";
 import { useDictionary } from "#dictionary";
+import ThemeToggle from "#legacy/components/shared/theme-toggle.component";
 import { loadConfigsByServer } from "#lib/server/services/configs.service";
 import { makeServerClient } from "#lib/server/supabase.client";
 import { getUserStatus } from "#lib/shared/auth/session.service";

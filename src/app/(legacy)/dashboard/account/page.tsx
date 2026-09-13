@@ -2,12 +2,13 @@
 import { Shield, User as UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import Button from "#components/ui/button.component";
-import SectionCard from "#components/ui/section-card.component";
-import Stack from "#components/ui/stack.component";
 import { useDictionary } from "#dictionary";
+import { providerConfig } from "#legacy/auth/provider.const";
+import Button from "#legacy/components/ui/button.component";
+import SectionCard from "#legacy/components/ui/section-card.component";
+import Stack from "#legacy/components/ui/stack.component";
 import { fetchAvailableOauthProvidersByBrowser } from "#lib/client/services";
-import { type OAuthProvider, providerConfig } from "#lib/shared/config";
+import { type OAuthProvider } from "#lib/shared/config";
 import { formatMessage } from "#lib/shared/dictionary/dictionary.helper";
 import { formatTime } from "#lib/shared/utils/date.helper";
 

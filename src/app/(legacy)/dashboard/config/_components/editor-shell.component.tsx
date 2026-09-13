@@ -3,11 +3,11 @@
 import { LoaderCircle, Save, Trash2, X } from "lucide-react";
 import { useState, type HTMLAttributes } from "react";
 
-import Button from "#components/ui/button.component";
-import ModalPanel from "#components/ui/modal-panel.component";
-import { useModal } from "#components/ui/modal-provider.component";
 import { useDictionary } from "#dictionary";
-import { cn } from "#lib/shared/utils";
+import Button from "#legacy/components/ui/button.component";
+import ModalPanel from "#legacy/components/ui/modal-panel.component";
+import { useModal } from "#legacy/components/ui/modal-provider.component";
+import { cn } from "#legacy/helpers/tailwind.helper";
 
 export type ConfigField = {
   key: string;

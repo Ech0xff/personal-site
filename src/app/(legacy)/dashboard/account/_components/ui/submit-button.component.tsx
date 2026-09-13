@@ -1,4 +1,4 @@
-import Button from "#components/ui/button.component";
+import Button from "#legacy/components/ui/button.component";
 export default function SubmitButton({
   pending,
   label,

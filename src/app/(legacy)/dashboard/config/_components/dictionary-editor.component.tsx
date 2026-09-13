@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 
-import { JsonEditor } from "#components/ui/codemirror";
-import SegmentedToggle from "#components/ui/segmented-toggle.component";
+import { JsonEditor } from "#legacy/components/ui/codemirror";
+import SegmentedToggle from "#legacy/components/ui/segmented-toggle.component";
 import { CONFIG_KEY } from "#lib/shared/config";
 import { defaultDictionary } from "#lib/shared/dictionary/dictionary.const";
 import { dictionaryOverrideSchema } from "#lib/shared/dictionary/dictionary.schema";

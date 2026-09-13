@@ -2,7 +2,7 @@
 import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
 
-import Input from "#components/ui/input.component";
+import Input from "#legacy/components/ui/input.component";
 import { makeBrowserClient } from "#lib/client/supabase.client";
 import { getUserStatus } from "#lib/shared/auth/session.service";
 

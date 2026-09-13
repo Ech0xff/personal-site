@@ -12,16 +12,16 @@ import {
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import LogoutButton from "#components/shared/logout-button.component";
-import ThemeToggle from "#components/shared/theme-toggle.component";
-import Button from "#components/ui/button.component";
-import DropdownPopover from "#components/ui/dropdown-popover.component";
-import Stack from "#components/ui/stack.component";
+import LogoutButton from "#legacy/components/shared/logout-button.component";
+import ThemeToggle from "#legacy/components/shared/theme-toggle.component";
+import Button from "#legacy/components/ui/button.component";
+import DropdownPopover from "#legacy/components/ui/dropdown-popover.component";
+import Stack from "#legacy/components/ui/stack.component";
+import { cn } from "#legacy/helpers/tailwind.helper";
 import { getDictionary } from "#lib/server/dictionary/dictionary.service";
 import { makeServerClient } from "#lib/server/supabase.client";
 import { getUserStatus } from "#lib/shared/auth/session.service";
 import { ROUTES } from "#lib/shared/routes/routes.const";
-import { cn } from "#lib/shared/utils/tailwind.helper";
 
 import DashboardModalOptions from "./_components/dashboard-modal-options.component";
 

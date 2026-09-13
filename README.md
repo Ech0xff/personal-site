@@ -1,8 +1,9 @@
 # Personal Site
 
 A personal site and lightweight CMS built with Next.js 16, React 19, Supabase,
-Tailwind CSS 4, and Bun. It publishes posts, thoughts, and events, with a dashboard
-for content, tags, images, site configuration, and accounts.
+StyleX, and Bun. The reading-desk homepage uses local content; Posts, Thoughts,
+and Events are placeholders. The legacy dashboard manages content, tags, images,
+site configuration, and accounts using Tailwind CSS 4 and SCSS.
 
 The interface is English; content keeps its original language. Routes have no
 language prefix.
@@ -75,11 +76,14 @@ not build the app. Husky's pre-commit hook runs `bun run check` on the whole
 working tree, including unstaged changes, without modifying or staging files.
 `bun install` installs the hooks; `bun run prepare` reinstalls them.
 
-## Redesign Preview
+## Public Site
 
-The independent reading-desk prototype is at `/redesign`; its live token guide
-is at `/redesign/system`. It uses StyleX, local content, and a separate root
-layout, so it can run without Supabase. See the [redesign guide](./DOCS/REDESIGN.md)
+The reading-desk homepage is at `/`; its live token guide is at `/system`.
+It uses StyleX, local content, and a separate root layout, so the public pages
+can run without Supabase. Authentication and dashboard routes still require
+Supabase. The former `/redesign` page URLs permanently redirect to their
+unprefixed counterparts; audio resources keep their `/redesign/*` URLs.
+Old `/posts/[slug]` detail URLs currently return 404. See the [redesign guide](./DOCS/REDESIGN.md)
 for build verification, design tokens, interaction rules, and audio sources.
 
 ## Database

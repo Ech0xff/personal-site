@@ -2,10 +2,10 @@
 import { Check, X } from "lucide-react";
 import { useRef, useState } from "react";
 
-import Button from "#components/ui/button.component";
-import IconButton from "#components/ui/icon-button.component";
-import Input from "#components/ui/input.component";
-import Stack from "#components/ui/stack.component";
+import Button from "#legacy/components/ui/button.component";
+import IconButton from "#legacy/components/ui/icon-button.component";
+import Input from "#legacy/components/ui/input.component";
+import Stack from "#legacy/components/ui/stack.component";
 
 type EditableInfoRowProps = {
   label: string;

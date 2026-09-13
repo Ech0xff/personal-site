@@ -1,8 +1,11 @@
 "use client";
 import { useEffect } from "react";
 
-import { useModal } from "#components/ui/modal-provider.component";
-import { MODAL_ANCHOR, MODAL_BOUNDARY } from "#components/ui/modal.const";
+import { useModal } from "#legacy/components/ui/modal-provider.component";
+import {
+  MODAL_ANCHOR,
+  MODAL_BOUNDARY,
+} from "#legacy/components/ui/modal.const";
 
 export default function DashboardModalOptions() {
   const { setDefaultOptions } = useModal();

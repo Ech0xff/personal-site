@@ -2,11 +2,14 @@
 
 import { Plus, Tags } from "lucide-react";
 
-import TagSphere from "#components/features/tags/tag-sphere.component";
-import Button from "#components/ui/button.component";
-import { useModal } from "#components/ui/modal-provider.component";
-import { MODAL_ANCHOR, MODAL_BOUNDARY } from "#components/ui/modal.const";
-import Stack from "#components/ui/stack.component";
+import TagSphere from "#legacy/components/features/tags/tag-sphere.component";
+import Button from "#legacy/components/ui/button.component";
+import { useModal } from "#legacy/components/ui/modal-provider.component";
+import {
+  MODAL_ANCHOR,
+  MODAL_BOUNDARY,
+} from "#legacy/components/ui/modal.const";
+import Stack from "#legacy/components/ui/stack.component";
 import type { TagWithCount } from "#types";
 
 import DashboardShell from "../_components/layout/dashboard-shell.component";

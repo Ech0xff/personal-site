@@ -25,15 +25,15 @@ relevant file or issue when possible.
 
 ## Redesign Follow-up
 
-See the [redesign guide](./REDESIGN.md) for the implemented prototype and source research.
+See the [redesign guide](./REDESIGN.md) for the public reading desk and source research.
 
 - [ ] Connect the approved redesign copy and content to CMS configuration and the shared dictionary; update cache consumers and invalidation together.
 - [ ] Add CMS audio import from uploaded files or URLs, extract editable title/artist/duration metadata, and store audio plus precomputed spectra durably. Reuse the [built-in analysis format](./REDESIGN.md#built-in-music-and-audio-analysis); production decoding should run as bounded background work.
-- [ ] Extend the approved design to content detail pages and plan the final public-route migration.
-- [ ] Verify the full production build and legacy public/admin flows with configured Supabase credentials; the prototype can be verified independently.
+- [ ] Implement new `/posts/[slug]` detail pages with real CMS content; these URLs currently return 404.
+- [ ] Run the full production build and verify authenticated admin editing, image management, OAuth completion, and cache invalidation with configured Supabase credentials and a test account. The migration build passed compilation and type checking but stopped prerendering `/auth` because `NEXT_PUBLIC_SUPABASE_URL` was unavailable; the public-only build passed.
 - [ ] Check explicit playback, curved-slider touch/keyboard behavior, and visuals on physical Safari/iOS devices before production rollout.
 
-- [ ] Choose a new redesign favicon and visual signature; the prototype currently uses a blank favicon.
+- [ ] Choose a new redesign favicon and visual signature; the public site currently uses a blank favicon.
 
 - [ ] Configure the redesign GitHub, Email, X, and Bilibili destinations; the current icons intentionally have empty destinations.
 - [ ] Implement the Posts, Thoughts, and Events pages after their designs are agreed; current routes are placeholders.

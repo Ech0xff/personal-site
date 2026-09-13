@@ -1,7 +1,7 @@
 # AGENTS.md
 
 English-only personal site and lightweight CMS built with Next.js 16, React 19,
-Supabase, Tailwind CSS 4, SCSS, and Bun.
+Supabase, StyleX, and Bun. Legacy admin UI uses Tailwind CSS 4 and SCSS.
 
 ## Project Constraints
 
@@ -66,14 +66,15 @@ preserve route segments and framework conventions.
 
 - `src/app`: Routes, layouts, handlers; local UI in `_components`, page-level
   hooks in `_hooks`.
-- `src/components/ui`: Reusable presentation primitives and editor integrations.
-- `src/components/shared`: Site-wide UI and providers.
-- `src/components/features/<feature>`: Feature UI and private supporting modules.
+- `src/legacy/components/ui`: Reusable presentation primitives and editor integrations.
+- `src/legacy/components/shared`: Site-wide UI and providers.
+- `src/legacy/components/features/<feature>`: Feature UI and private supporting modules.
 - `src/lib/client`: Browser clients and service adapters.
 - `src/lib/server`: Server clients, services, and caches.
 - `src/lib/shared`: Environment-neutral domain modules and services.
 - `src/types`: Cross-domain types, declarations, and generated database types.
-- `src/styles`: Global styles, tokens, and mixins.
+- `src/legacy/styles`: Legacy styles, tokens, and mixins.
+- `src/legacy/helpers` and `src/legacy/theme`: Legacy UI helpers and browser theme state.
 - `scripts`: Maintenance and development utilities.
 - `supabase`: Database configuration, schemas, and seed data.
 - `public`: Static assets addressed by URL.
@@ -92,17 +93,16 @@ utilities; import auth and image services from their owners.
 
 ## Imports and Styling
 
-- Use `#components/*`, `#lib/*`, `#styles/*`, and `#types`/`#types/*`
+- Use `#legacy/*`, `#lib/*`, and `#types`/`#types/*`
   across source areas; use relative imports within a feature.
   Aliases live in `tsconfig.json`; `#dictionary` uses conditional imports in
   `package.json` for server reads and the client provider.
-- Prefer Tailwind utilities. Use colocated SCSS for complex selectors, generated
+- In legacy UI, prefer Tailwind utilities. Use colocated SCSS for complex selectors, generated
   content, and third-party overrides; reserve inline styles for dynamic values
   or cases these do not handle cleanly.
-- Global tokens belong in `src/styles/variables.scss`; public-layout-only
-  variables belong in `src/app/(legacy)/(index)/layout.scss`.
+- Legacy tokens belong in `src/legacy/styles/variables.scss`.
 
-- The independent `/redesign` prototype uses its own StyleX token system and
+- The public site in `src/app/(site)` uses its own StyleX token system and
   components instead of legacy Tailwind, SCSS, UI components, or assets. See
   [the redesign guide](./DOCS/REDESIGN.md) for its boundaries and conventions.
 

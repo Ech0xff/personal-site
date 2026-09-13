@@ -2,8 +2,8 @@
 import { Edit, Eye, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-import Link from "#components/shared/link.component";
-import IconButton from "#components/ui/icon-button.component";
+import Link from "#legacy/components/shared/link.component";
+import IconButton from "#legacy/components/ui/icon-button.component";
 import { deletePostByBrowser } from "#lib/client/services";
 
 interface PostActionsProps {

@@ -1,1 +1,1 @@
-export { default } from "#components/ui/loading.component";
+export { default } from "#legacy/components/ui/loading.component";

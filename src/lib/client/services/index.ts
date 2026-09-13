@@ -4,6 +4,5 @@ export * from "./images.service";
 export * from "./oauth.service";
 export * from "./posts.service";
 export * from "./rpcs.service";
-export * from "./search.service";
 export * from "./tags.service";
 export * from "./thoughts.service";

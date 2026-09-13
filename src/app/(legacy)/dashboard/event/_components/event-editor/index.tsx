@@ -1,13 +1,13 @@
 import { Save, X } from "lucide-react";
 
-import EventCard from "#components/features/events/event-card.component";
-import Button from "#components/ui/button.component";
-import { MarkdownEditor } from "#components/ui/codemirror";
-import IconButton from "#components/ui/icon-button.component";
-import Input from "#components/ui/input.component";
-import SegmentedToggle from "#components/ui/segmented-toggle.component";
-import Stack from "#components/ui/stack.component";
-import { cn } from "#lib/shared/utils";
+import EventCard from "#legacy/components/features/events/event-card.component";
+import Button from "#legacy/components/ui/button.component";
+import { MarkdownEditor } from "#legacy/components/ui/codemirror";
+import IconButton from "#legacy/components/ui/icon-button.component";
+import Input from "#legacy/components/ui/input.component";
+import SegmentedToggle from "#legacy/components/ui/segmented-toggle.component";
+import Stack from "#legacy/components/ui/stack.component";
+import { cn } from "#legacy/helpers/tailwind.helper";
 
 import type { BaseEditorProps } from "../../../_components/editor.type";
 import DateTimeInput from "../../../_components/editor/date-time-input.component";

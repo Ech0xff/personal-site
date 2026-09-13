@@ -4,7 +4,7 @@ import { describe, it } from "node:test";
 import {
   readSpectrum,
   sampleSpectrum,
-} from "../src/app/redesign/_components/record-spectrum.helper";
+} from "../src/app/(site)/_components/record-spectrum.helper";
 import { analyzeAudio } from "./audio-analysis.helper";
 
 await describe("precomputed record spectra", async () => {

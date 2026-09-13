@@ -2,17 +2,17 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Agentation } from "agentation";
 import type { Metadata } from "next";
 
-import ThemeScript from "#components/shared/theme-script.component";
-import ToastWatcher from "#components/shared/toast-watcher.component";
-import { ImageViewer } from "#components/ui/image-viewer.component";
-import ModalProvider from "#components/ui/modal-provider.component";
-import { MODAL_ANCHOR } from "#components/ui/modal.const";
 import { useDictionary } from "#dictionary";
+import ThemeScript from "#legacy/components/shared/theme-script.component";
+import ToastWatcher from "#legacy/components/shared/toast-watcher.component";
+import { ImageViewer } from "#legacy/components/ui/image-viewer.component";
+import ModalProvider from "#legacy/components/ui/modal-provider.component";
+import { MODAL_ANCHOR } from "#legacy/components/ui/modal.const";
 import { DictionaryProvider } from "#lib/client/dictionary/dictionary-provider.component";
 import { getDictionary } from "#lib/server/dictionary/dictionary.service";
 
-import "#styles/tailwind.css";
-import "#styles/variables.scss";
+import "#legacy/styles/tailwind.css";
+import "#legacy/styles/variables.scss";
 
 interface LayoutProps {
   children: React.ReactNode;

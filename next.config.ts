@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
   reactStrictMode: false,
   async redirects() {
     return [
+      ...["", "/posts", "/thoughts", "/events", "/system"].map((path) => ({
+        source: `/redesign${path}`,
+        destination: path || "/",
+        permanent: true,
+      })),
       {
         source: "/dashboard",
         destination: ROUTES.DASHBOARD.ACCOUNT,

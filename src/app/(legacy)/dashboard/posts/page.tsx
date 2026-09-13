@@ -2,12 +2,12 @@
 
 import { type ReactNode, useCallback } from "react";
 
-import TagsList from "#components/features/posts/tags-list.component";
-import Link from "#components/shared/link.component";
-import { useModal } from "#components/ui/modal-provider.component";
-import Stack from "#components/ui/stack.component";
+import TagsList from "#legacy/components/features/posts/tags-list.component";
+import Link from "#legacy/components/shared/link.component";
+import { useModal } from "#legacy/components/ui/modal-provider.component";
+import Stack from "#legacy/components/ui/stack.component";
+import { cn } from "#legacy/helpers/tailwind.helper";
 import { updatePostStatusByBrowser } from "#lib/client/services";
-import { cn } from "#lib/shared/utils";
 import { formatTime } from "#lib/shared/utils/date.helper";
 
 import OpenEditorButton from "../_components/editor/open-editor-button.component";

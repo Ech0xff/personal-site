@@ -2,8 +2,8 @@
 
 import { useCallback } from "react";
 
-import EventTimeline from "#components/features/events/event-timeline.component";
-import { useModal } from "#components/ui/modal-provider.component";
+import EventTimeline from "#legacy/components/features/events/event-timeline.component";
+import { useModal } from "#legacy/components/ui/modal-provider.component";
 import { updateEventStatusByBrowser } from "#lib/client/services";
 
 import OpenEditorButton from "../_components/editor/open-editor-button.component";

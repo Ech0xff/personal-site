@@ -2,14 +2,14 @@
 import { Search, Tag, X } from "lucide-react";
 import { type KeyboardEvent, useMemo, useState } from "react";
 
-import Button from "#components/ui/button.component";
-import IconButton from "#components/ui/icon-button.component";
-import Input from "#components/ui/input.component";
-import ModalPanel from "#components/ui/modal-panel.component";
-import { useModal } from "#components/ui/modal-provider.component";
-import SegmentedToggle from "#components/ui/segmented-toggle.component";
-import Stack from "#components/ui/stack.component";
-import { cn } from "#lib/shared/utils";
+import Button from "#legacy/components/ui/button.component";
+import IconButton from "#legacy/components/ui/icon-button.component";
+import Input from "#legacy/components/ui/input.component";
+import ModalPanel from "#legacy/components/ui/modal-panel.component";
+import { useModal } from "#legacy/components/ui/modal-provider.component";
+import SegmentedToggle from "#legacy/components/ui/segmented-toggle.component";
+import Stack from "#legacy/components/ui/stack.component";
+import { cn } from "#legacy/helpers/tailwind.helper";
 import type { TagWithCount } from "#types";
 
 export type TagSelectorFilterMode = "all" | "unselected" | "selected";

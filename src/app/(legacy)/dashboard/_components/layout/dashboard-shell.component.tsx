@@ -2,9 +2,9 @@
 import { Loader2 } from "lucide-react";
 import type { ComponentPropsWithoutRef } from "react";
 
-import { MODAL_ANCHOR } from "#components/ui/modal.const";
-import Stack from "#components/ui/stack.component";
-import { cn } from "#lib/shared/utils";
+import { MODAL_ANCHOR } from "#legacy/components/ui/modal.const";
+import Stack from "#legacy/components/ui/stack.component";
+import { cn } from "#legacy/helpers/tailwind.helper";
 
 interface Props extends ComponentPropsWithoutRef<"div"> {
   children: React.ReactNode;
