@@ -4,12 +4,13 @@ import { Agentation } from "agentation";
 import type { Metadata } from "next";
 
 import ThemeScript from "#components/shared/theme-script.component";
+import ThemeSync from "#components/shared/theme-sync.component";
 import ToastProvider from "#components/shared/toast-provider.component";
 import { ImageViewer } from "#components/ui/image-viewer.component";
 import ModalProvider from "#components/ui/modal-provider.component";
 import { MODAL_ANCHOR } from "#components/ui/modal.const";
 import { adminRoot } from "#design/admin-root.style";
-import { lightTheme } from "#design/admin-theme.stylex";
+import { lightThemeClasses } from "#design/theme.helper";
 import { DictionaryProvider } from "#lib/client/dictionary/dictionary-provider.component";
 import { getDictionary } from "#lib/server/dictionary/dictionary.service";
 
@@ -41,13 +42,17 @@ const RootLayout = async ({ children }: Readonly<LayoutProps>) => {
     <html
       suppressHydrationWarning
       lang="en"
-      {...stylex.props(lightTheme, adminRoot.document)}
+      className={[
+        stylex.props(adminRoot.document).className,
+        ...lightThemeClasses,
+      ].join(" ")}
     >
       <head>
         <ThemeScript />
       </head>
       <body style={{ anchorName: MODAL_ANCHOR.BODY }}>
         <DictionaryProvider dictionary={dictionary}>
+          <ThemeSync />
           <ModalProvider>
             <ToastProvider />
             <SpeedInsights />

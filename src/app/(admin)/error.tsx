@@ -2,8 +2,8 @@
 
 import * as stylex from "@stylexjs/stylex";
 import { AlertTriangle, Home } from "lucide-react";
+import Link from "next/link";
 
-import Link from "#components/shared/link.component";
 import Stack from "#components/ui/stack.component";
 import { color, font, space, shape, motionToken } from "#design/tokens.stylex";
 import { useDictionary } from "#dictionary";
@@ -47,7 +47,7 @@ const styles = stylex.create({
     paddingLeft: space.xl,
     textAlign: "center",
   },
-  container2: {
+  content: {
     display: "flex",
     width: "56px",
     height: "56px",
@@ -64,7 +64,7 @@ const styles = stylex.create({
     width: "28px",
     height: "28px",
   },
-  column2: {
+  details: {
     gap: space.xs,
   },
   heading: {
@@ -121,10 +121,10 @@ export default function ErrorPage({ error }: Props) {
   return (
     <div {...stylex.props(styles.container)}>
       <Stack y xstyle={styles.column}>
-        <div {...stylex.props(styles.container2)}>
+        <div {...stylex.props(styles.content)}>
           <AlertTriangle {...stylex.props(styles.alertTriangle)} />
         </div>
-        <Stack y xstyle={styles.column2}>
+        <Stack y xstyle={styles.details}>
           <h1 {...stylex.props(styles.heading)}>
             {dictionary.errorPage.title}
           </h1>

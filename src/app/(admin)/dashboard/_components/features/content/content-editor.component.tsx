@@ -9,9 +9,10 @@ import Loading from "#components/ui/loading.component";
 import type { ContentKind } from "#lib/shared/content/content.schema";
 
 import { useContentEditor } from "./content-editor.hook";
-import { listStyles } from "./content-list.style";
 import { styles } from "./content-panel.style";
+import { contentLabels } from "./content.const";
 import PublishTime from "./publish-time.component";
+import { VisibilityControl } from "./visibility-control.component";
 export default function ContentEditor({
   kind,
   id,
@@ -28,12 +29,7 @@ export default function ContentEditor({
     <section {...stylex.props(styles.editor)} aria-label="Content editor">
       <header {...stylex.props(styles.header)}>
         <h2 {...stylex.props(styles.title)}>
-          {id ? "Edit" : "New"}{" "}
-          {kind === "posts"
-            ? "Post"
-            : kind === "thoughts"
-              ? "Thought"
-              : "Event"}
+          {id ? "Edit" : "New"} {contentLabels[kind].singular}
         </h2>
         <div {...stylex.props(styles.toolbar)}>
           {editor.state.type === "ready" && (
@@ -42,30 +38,10 @@ export default function ContentEditor({
                 value={editor.state.form.published_at}
                 onChange={(published_at) => editor.update({ published_at })}
               />
-              <fieldset
-                aria-label="Visibility"
-                {...stylex.props(listStyles.segmented)}
-              >
-                {(["hide", "show"] as const).map((status) => (
-                  <button
-                    key={status}
-                    type="button"
-                    aria-pressed={
-                      editor.state.type === "ready" &&
-                      editor.state.form.status === status
-                    }
-                    onClick={() => editor.update({ status })}
-                    {...stylex.props(
-                      listStyles.segment,
-                      editor.state.type === "ready" &&
-                        editor.state.form.status === status &&
-                        listStyles.selected,
-                    )}
-                  >
-                    {status === "hide" ? "Hide" : "Show"}
-                  </button>
-                ))}
-              </fieldset>
+              <VisibilityControl
+                value={editor.state.form.status}
+                onChange={(status) => editor.update({ status })}
+              />
               {kind === "events" && (
                 <label title="Event color" {...stylex.props(styles.colorField)}>
                   <span

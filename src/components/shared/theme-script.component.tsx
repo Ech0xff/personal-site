@@ -1,7 +1,4 @@
-import {
-  darkThemeClasses,
-  lightThemeClasses,
-} from "#design/admin-theme.helper";
+import { darkThemeClasses, lightThemeClasses } from "#design/theme.helper";
 import { createThemeScript } from "#lib/shared/theme/theme-script.helper";
 
 const source = createThemeScript(darkThemeClasses, lightThemeClasses);

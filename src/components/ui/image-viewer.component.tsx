@@ -2,14 +2,7 @@
 
 import * as stylex from "@stylexjs/stylex";
 import { Minus, Plus, X } from "lucide-react";
-import {
-  type ReactNode,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { type ReactNode } from "react";
 
 import {
   color,
@@ -19,8 +12,10 @@ import {
   shadow,
   motionToken,
 } from "#design/tokens.stylex";
+
+import { useImageViewer } from "./image-viewer.hook";
 const styles = stylex.create({
-  container: {
+  dialog: {
     position: "fixed",
     top: "0px",
     right: "0px",
@@ -50,7 +45,7 @@ const styles = stylex.create({
     backdropFilter: "blur(8px)",
     transitionDuration: motionToken.fast,
   },
-  container2: {
+  toolbar: {
     position: "fixed",
     bottom: space.md,
     left: "50%",
@@ -80,7 +75,7 @@ const styles = stylex.create({
     boxShadow: shadow.lifted,
     backdropFilter: "blur(12px)",
   },
-  button: {
+  close: {
     display: "flex",
     height: "40px",
     width: "40px",
@@ -100,7 +95,7 @@ const styles = stylex.create({
     width: "20px",
     height: "20px",
   },
-  button2: {
+  zoom: {
     display: "flex",
     height: "40px",
     width: "40px",
@@ -133,7 +128,7 @@ const styles = stylex.create({
     fontWeight: font.medium,
     fontVariantNumeric: "tabular-nums",
   },
-  container3: {
+  viewport: {
     height: "100dvh",
     width: "100dvw",
     overflow: "auto",
@@ -142,7 +137,7 @@ const styles = stylex.create({
     paddingBottom: "96px",
     paddingLeft: space.md,
   },
-  button3: {
+  canvas: {
     display: "flex",
     minHeight: "100%",
     width: "max-content",
@@ -158,81 +153,26 @@ const styles = stylex.create({
     boxShadow: shadow.viewer,
   },
 });
-type Image = {
-  src: string;
-  alt?: string;
-};
-const MIN_SCALE = 25;
-const MAX_SCALE = 300;
-const SCALE_STEP = 25;
-const VIEWPORT_PADDING = 32;
-const CONTROLS_SPACE = 112;
 export function ImageViewer({ children }: { children: ReactNode }) {
-  const [image, setImage] = useState<Image | null>(null);
-  const [scale, setScale] = useState(100);
-  const [fitWidth, setFitWidth] = useState<number>();
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const canZoomOut = scale > MIN_SCALE;
-  const canZoomIn = scale < MAX_SCALE;
-  const updateScale = (nextScale: number) => {
-    setScale(Math.min(MAX_SCALE, Math.max(MIN_SCALE, nextScale)));
-  };
-  const fitImageToViewport = (imageElement: HTMLImageElement) => {
-    const availableWidth = window.innerWidth - VIEWPORT_PADDING;
-    const availableHeight =
-      window.innerHeight - VIEWPORT_PADDING - CONTROLS_SPACE;
-    const widthScale = availableWidth / imageElement.naturalWidth;
-    const heightScale = availableHeight / imageElement.naturalHeight;
-    const fittedScale = Math.min(widthScale, heightScale, 1) * 100;
-    setFitWidth(
-      Math.max(1, Math.floor(imageElement.naturalWidth * (fittedScale / 100))),
-    );
-    setScale(100);
-  };
-  const open = useCallback((image: Image) => {
-    setScale(100);
-    setFitWidth(undefined);
-    setImage(image);
-  }, []);
-  const close = useCallback(() => {
-    setImage(null);
-  }, []);
-  useLayoutEffect(() => {
-    const dialog = dialogRef.current;
-    if (!image || !dialog) return;
-    const previousOverflow = document.body.style.overflow;
-    dialog.showModal();
-    document.body.style.overflow = "hidden";
-    return () => {
-      dialog.close();
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [image]);
-  useEffect(() => {
-    const handleDelegatedClick = (event: MouseEvent) => {
-      const target = event.target;
-      if (!(target instanceof Element)) return;
-      const trigger = target.closest<HTMLElement>("[data-viewer-trigger]");
-      if (!trigger) return;
-      const { src, alt } = trigger.dataset;
-      if (src)
-        open({
-          src,
-          alt,
-        });
-    };
-    document.addEventListener("click", handleDelegatedClick);
-    return () => {
-      document.removeEventListener("click", handleDelegatedClick);
-    };
-  }, [open]);
+  const {
+    image,
+    scale,
+    fitWidth,
+    dialogRef,
+    canZoomOut,
+    canZoomIn,
+    updateScale,
+    fitImageToViewport,
+    close,
+    scaleStep,
+  } = useImageViewer();
   return (
     <>
       {children}
       <dialog
         ref={dialogRef}
         aria-label={image?.alt || "Image viewer"}
-        {...stylex.props(styles.container)}
+        {...stylex.props(styles.dialog)}
         onCancel={(event) => {
           event.preventDefault();
           close();
@@ -243,10 +183,10 @@ export function ImageViewer({ children }: { children: ReactNode }) {
       >
         {image && (
           <>
-            <div {...stylex.props(styles.container2)}>
+            <div {...stylex.props(styles.toolbar)}>
               <button
                 type="button"
-                {...stylex.props(styles.button)}
+                {...stylex.props(styles.close)}
                 aria-label="Close image viewer"
                 title="Close image viewer"
                 onClick={close}
@@ -255,30 +195,30 @@ export function ImageViewer({ children }: { children: ReactNode }) {
               </button>
               <button
                 type="button"
-                {...stylex.props(styles.button2)}
+                {...stylex.props(styles.zoom)}
                 aria-label="Zoom out"
                 disabled={!canZoomOut}
-                onClick={() => updateScale(scale - SCALE_STEP)}
+                onClick={() => updateScale(scale - scaleStep)}
               >
                 <Minus {...stylex.props(styles.icon)} />
               </button>
               <span {...stylex.props(styles.label)}>{scale}%</span>
               <button
                 type="button"
-                {...stylex.props(styles.button2)}
+                {...stylex.props(styles.zoom)}
                 aria-label="Zoom in"
                 disabled={!canZoomIn}
-                onClick={() => updateScale(scale + SCALE_STEP)}
+                onClick={() => updateScale(scale + scaleStep)}
               >
                 <Plus {...stylex.props(styles.icon)} />
               </button>
             </div>
-            <div {...stylex.props(styles.container3)}>
+            <div {...stylex.props(styles.viewport)}>
               <button
                 type="button"
                 aria-label="Close image viewer"
                 onClick={close}
-                {...stylex.props(styles.button3)}
+                {...stylex.props(styles.canvas)}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img

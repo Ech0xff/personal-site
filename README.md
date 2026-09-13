@@ -51,6 +51,9 @@ Apply formatting and lint fixes to affected files, review the diff, then run
 `bun run check` and relevant tests. Routing, caching, and runtime boundary
 changes also require `bun run build`. Verify UI flows in a browser, including
 session expiry, authorization, saves, uploads, and mobile/light/dark layouts.
+The five Bun suites cover sessions, document validation/rendering, file safety,
+and pre-paint themes; presentation and desk interactions use targeted browser
+verification rather than per-helper test files.
 
 GitHub Actions runs formatting, lint, types, and tests; it does not build the
 app. Husky's pre-commit hook runs `bun run check` over the working tree without
@@ -103,7 +106,8 @@ The old `/dashboard/images` address redirects to `/dashboard/files`.
 
 The reading-desk homepage is at `/`; its token guide is at `/system`. Public
 pages retain local content, their own providers, scrolling, and assets. They
-share design tokens with the dashboard and can run without Supabase.
+share one neutral Light/Dark token system and a synchronized System/Light/Dark
+preference with the dashboard, and can run without Supabase.
 Posts, Thoughts, and Events remain placeholders; `/posts/[slug]` returns 404.
 See the [design guide](./DOCS/REDESIGN.md) for the public UI and audio sources.
 

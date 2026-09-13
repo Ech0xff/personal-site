@@ -4,7 +4,7 @@ export const Theme = {
   SYSTEM: "system",
 } as const;
 
-export const themes = Object.values(Theme);
+export const themes = [Theme.SYSTEM, Theme.LIGHT, Theme.DARK] as const;
 
 export const THEME_STORAGE_KEY = "theme";
 export const THEME_MEDIA_QUERY = "(prefers-color-scheme: dark)";

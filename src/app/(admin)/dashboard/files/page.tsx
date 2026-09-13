@@ -5,7 +5,7 @@ import Loading from "#components/ui/loading.component";
 import { requireAdminPage } from "#lib/server/auth/session.service";
 import { listFiles } from "#lib/server/files/files.service";
 
-import Files from "./_components/files.component";
+import Files from "../_components/features/files/files.component";
 type Props = {
   searchParams: Promise<{
     page?: string;

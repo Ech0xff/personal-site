@@ -3,10 +3,10 @@
 The public reading desk starts at `/`. Its Posts, Thoughts, Events,
 and System pages live below that prefix. Posts, Thoughts, and Events currently
 show only their heading and `Not implemented yet.`; their sample articles have
-been removed. The homepage has no footer. All copy and audio settings are local
-fixtures in `src/app/(site)/_components/desk-content.const.ts`; no Supabase
-configuration, CMS content, administration components or appearance state are
-loaded by these pages. UI copy is English; the greeting sequence is decorative.
+been removed. The homepage has no footer. Copy belongs to the layout, desk, and display feature constants; the
+playlist is shared with scripts through `src/lib/shared/audio/playlist.const.ts`.
+These pages load no Supabase configuration, CMS content, or administration
+features. Appearance preferences and tokens are shared with the administration root. UI copy is English; the greeting sequence is decorative.
 
 ## Development and Preview
 
@@ -63,9 +63,10 @@ can otherwise compile without the intended styling.
 
 The live guide at `/system` consumes the same tokens and interaction
 styles as the homepage. Shared foundations and semantics live in `src/design/tokens.stylex.ts`.
-Scene materials, lighting, and object markers remain in `src/app/(site)/_design`:
+The same file owns scene materials, lighting, and every light/dark override.
+Scene composition styles and object markers remain in `src/app/(site)/_design`:
 
-- **Foundations:** raw palette, system font stacks (including separate artistic and signature roles), typography scale, spacing,
+- **Foundations:** system font stacks (including separate artistic and signature roles), typography scale, spacing,
   shape, and breakpoints.
 - **Semantics:** canvas, surface, text, muted text, accent, focus, inverse text,
   reading widths, contact/lifted/inset shadows, and animation/layer constants.
@@ -79,9 +80,9 @@ its owner. StyleX styles belong in components or `.style.ts` modules; token
 exports and named `defineMarker` exports belong in `.stylex.ts` files as required
 by the compiler. Shared object feedback uses `when.ancestor` for hover and
 keyboard focus. On desktop, two-pixel frames loosely enclose each complete object; only
-the record uses a circular frame. Deep-terracotta pill labels overlap the top border and
+the record uses a circular frame. Accent-colored pill labels overlap the top border and
 rise seven pixels into place as the frame fades in. Dedicated `objectLabelBackground`
-and cream `objectLabel` tokens keep the label surface distinct from the desk and lamp glow.
+and contrasting `objectLabel` tokens keep the label surface distinct from the desk and lamp glow.
 The full border runs beneath the opaque label, meeting its actual edges without
 a fixed-width cutout. Mouse clicks do not retain object feedback after pointer
 exit; keyboard `:focus-visible` on an object or an inner control retains its
@@ -89,12 +90,19 @@ focus feedback. On phones (≤600 px), interactive object names remain visible a
 frames are suppressed, including during hover. Decorative items stay unlabelled.
 
 All rendered colors, including selection, gradients, material highlights, and
-shadows, are declared in the token module. The neutral light-stone curtain uses `color.curtain` (`palette.softStone`, #e4e2de)
-and `color.curtainText` (`palette.neutralInk`, #333330). The overlay, curved edges,
-greetings, and greeting dot consume these same semantics on both initial loads
-and page transitions. These colors are also displayed in the system guide. The administration theme overrides shared colors and shadows while retaining
-light/dark/system preferences. A future public dark theme must override semantic,
-material, lighting, and shadow variables together; no public theme switch is shipped.
+shadows, are defined in `src/design/tokens.stylex.ts`. The public and admin roots
+use the same neutral light/dark semantics and blue accent. Curtain, navigation,
+feedback labels, and controls consume these tokens. Physical materials retain
+their identity while dark variants adjust ambient light, highlights, and depth.
+
+The navigation theme button cycles System → Light → Dark → System. It stays
+available on phones and uses the same control as administration. Both roots
+share the existing `theme` storage key; System is the default and follows OS
+changes. Pre-paint classes prevent the wrong theme from flashing before hydration.
+Cross-tab changes update appearance without resetting content or playback.
+The System guide shows locally scoped Light and Dark examples covering interface
+colors, materials, lighting, and shadows. Its sample overrides do not change the
+page preference. The lamp independently toggles its local glow and bulb opacity.
 
 GitHub, Email, X, and Bilibili icons follow the introduction. Their local URLs
 intentionally remain `null`. Unconfigured entries use `aria-disabled` buttons
@@ -131,7 +139,7 @@ header height and pushes the content down. Closed links are inert.
 Owned components compose StyleX declarations through `xstyle`, variants, and
 sizes. Color values stay in token modules; event colors remain business content.
 BlockNote uses a scoped CSS adapter supplied by StyleX variables. Sonner uses
-its class-name API with StyleX styles. Appearance state stays in the admin root,
+its class-name API with StyleX styles. Appearance state is shared across both roots,
 including pre-paint theme classes, system changes, and cross-tab persistence.
 Inputs use borderless surfaces and labels that rise on focus or populated values.
 Buttons and icon actions use the shared `Magnetic` primitive with stationary hit
@@ -174,9 +182,10 @@ See [Architecture](./ARCHITECTURE.md) for the token login and content data flow.
   receives focus after a completed animated transition.
 - The tilted display has three icon buttons for CLI, Stats, and Guestbook at
   the bottom right. The `>_` prompt appears only in CLI; the clock stays at the
-  bottom left. Each icon has an accessible name and pressed state. The casing height stays fixed across programs. Switching uses
-  a 140ms fade out/in and a 320ms scanline; a newer selection cancels any pending
-  content swap, and reduced motion removes the transition.
+  bottom left. Each icon has an accessible name and pressed state. The casing height stays fixed across programs. Selection displays the target panel immediately;
+  a decorative scan and opacity animation run independently of content readiness.
+  Reduced motion disables both animations. React Activity boundaries retain panel
+  state and suspend effects while a program is hidden.
   The CLI retains its typed position while another program is selected. Its timer
   also suspends off-screen and in hidden documents; reduced motion shows complete
   static text. There is no manual pause control.
@@ -309,18 +318,18 @@ for the selected song and preserves whether playback was paused or playing.
 
 ## Persistent Desk Preferences
 
-The redesign shell has its own Jotai Provider. `desk-preferences.atom.ts` uses
-native `atomWithStorage` and `createJSONStorage` for the selected track, per-track
-positions, control pinning, playback mode, lamp on/off, 12/24-hour clock format,
-the selected display program, local like state, guestbook sub-tab, draft, and
-locally submitted messages. The removed manual typing-pause preference is ignored.
-There is no custom storage implementation. A JSON reviver validates persisted
-values and cross-tab events; a storage getter migrates the legacy plain-string
-clock entry to JSON and supplies a no-op fallback when storage is unavailable.
-Existing record and pin keys stay compatible.
+The public shell has its own Jotai Provider. Each feature owns its stored atoms:
+record session, control pinning and playback mode; lamp state; clock format;
+display program; local likes; and guestbook tabs, drafts, and submitted messages.
+The shared `storedPreference` factory uses Jotai JSON storage, validates values
+with the owning schema, catches read/write failures, and reconciles storage
+events. The clock alone supplies migration of its old plain-string value.
+Record recovery normalizes parsed values directly without serializing them again.
+All existing storage keys remain compatible. Playback intent, animation frames,
+and hover state stay transient.
 
 The server and initial client render use deterministic defaults; stored preferences
-load on mount. Native storage events synchronize preferences across tabs. Remote
+load on mount. Storage events synchronize preferences across tabs. Remote
 track/progress updates reconcile the active audio element in the paused state;
 they never autoplay. Local progress is saved at most once every five seconds and flushed
 on seeking, switching, pausing, hiding the page, and unmounting. Saving local
@@ -374,3 +383,23 @@ Gravatar fallback, or GitHub API request.
 
 Public guestbook storage, moderation, and real statistics remain future work in
 [TODO](./TODO.md). This public site does not submit messages to Supabase.
+
+## Feature Boundaries and Display Loading
+
+Public UI is grouped into layout, desk, record-player, and display modules.
+Component styles, state, schemas, and private hooks stay with their owner.
+The system route owns its design samples. Shared object feedback renders frames
+and labels while each object owns geometry. Navigation effects live in the
+navigation hook; the shell composes the header, content, and curtain.
+
+The server homepage composes the computer's rendered content slots. Stats and
+Guestbook have independent Suspense fallbacks sized to the display viewport.
+Selecting a program immediately selects its slot; scan animation is decorative.
+The shell never imports data-access components. Current fixtures do not suspend
+and there are no artificial delays. Future public Supabase reads, error handling,
+cache invalidation, and write policies are tracked together in [TODO](./TODO.md).
+
+Automated checks retain five critical boundary suites. Browser acceptance covers
+theme synchronization, desktop and mobile object controls, playback recovery,
+guestbook persistence, and dashboard editing/upload flows. See the
+[verification workflow](../README.md#verification).

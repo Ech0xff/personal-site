@@ -27,6 +27,5 @@ See the [redesign guide](./REDESIGN.md) for the public reading desk and source r
 - [ ] Choose a new redesign favicon and visual signature; the public site currently uses a blank favicon.
 
 - [ ] Configure the redesign GitHub, Email, X, and Bilibili destinations; the current icons intentionally have empty destinations.
-- [ ] Add a redesign dark theme by overriding semantic, material, lighting, and shadow tokens together.
 
-- [ ] Replace redesign display fixture statistics and the local guestbook with real data services, moderation, and an explicit email-display policy when backend integration is approved.
+- [ ] Connect the server-composed display slots to public Supabase reads. Implement public read policies, cache consumers/invalidation, panel failures/retries, and moderated guestbook writes with an explicit email-display policy together. Verify slow and failed streaming reads; current fixtures are synchronous.

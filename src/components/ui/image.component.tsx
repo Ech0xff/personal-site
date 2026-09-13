@@ -5,7 +5,7 @@ import { lightbox } from "#design/interaction.stylex";
 import type { StyleInput } from "#design/style.type";
 import { color, shape, motionToken } from "#design/tokens.stylex";
 const styles = stylex.create({
-  container: {
+  root: {
     position: "relative",
     width: "100%",
     transitionProperty:
@@ -13,7 +13,7 @@ const styles = stylex.create({
     transitionDuration: motionToken.fast,
     transitionTimingFunction: "ease",
   },
-  container2: {
+  framed: {
     borderTopLeftRadius: shape.control,
     borderTopRightRadius: shape.control,
     borderBottomRightRadius: shape.control,
@@ -44,7 +44,7 @@ const styles = stylex.create({
     },
     backgroundColor: color.surfaceMuted,
   },
-  container3: {
+  unframed: {
     borderTopLeftRadius: "0",
     borderTopRightRadius: "0",
     borderBottomRightRadius: "0",
@@ -55,20 +55,20 @@ const styles = stylex.create({
     borderLeftStyle: "none",
     backgroundColor: "transparent",
   },
-  container4: {
+  fixedSize: {
     aspectRatio: "1",
   },
-  container5: {
+  preview: {
     overflow: "hidden",
   },
   button: {
     cursor: "pointer",
   },
-  button2: {
+  fluidButton: {
     display: "block",
     minWidth: "100%",
   },
-  button3: {
+  fixedButton: {
     height: "100%",
     width: "100%",
   },
@@ -77,22 +77,22 @@ const styles = stylex.create({
     height: "auto",
     maxWidth: "none",
   },
-  image2: {
+  thumbnailImage: {
     display: "block",
     height: "100%",
     width: "100%",
   },
-  image3: {
+  fluidImage: {
     width: "100%",
     maxWidth: "100%",
   },
-  image4: {
+  contain: {
     objectFit: "contain",
   },
-  image5: {
+  cover: {
     objectFit: "cover",
   },
-  image6: {
+  hoverZoom: {
     transitionProperty: "transform, translate, scale",
     transitionDuration: motionToken.fast,
     transitionTimingFunction: "ease",
@@ -101,7 +101,7 @@ const styles = stylex.create({
       [stylex.when.ancestor(":hover", lightbox)]: 1.05,
     },
   },
-  container6: {
+  overlay: {
     pointerEvents: "none",
     position: "absolute",
     top: "0px",
@@ -153,21 +153,22 @@ export default function Image({
     <div
       {...props}
       {...stylex.props([
-        [styles.container, lightbox],
-        framed ? styles.container2 : styles.container3,
-        isFluid ? null : styles.container4,
-        styles.container5,
+        [styles.root, lightbox],
+        framed ? styles.framed : styles.unframed,
+        isFluid ? null : styles.fixedSize,
+        styles.preview,
         xstyle,
       ])}
     >
       <button
         type="button"
+        aria-label={alt ? `Preview ${alt}` : "Preview image"}
         data-viewer-trigger
         data-src={src}
         data-alt={alt}
         {...stylex.props([
           styles.button,
-          isFluid ? styles.button2 : styles.button3,
+          isFluid ? styles.fluidButton : styles.fixedButton,
         ])}
       >
         {/* oxlint-disable-next-line next/no-img-element -- This viewer accepts arbitrary remote URLs and preserves natural image dimensions. */}
@@ -175,14 +176,14 @@ export default function Image({
           src={src}
           alt={alt}
           {...stylex.props([
-            isFluid ? styles.image : styles.image2,
-            isFluid ? styles.image3 : null,
-            fit === "contain" ? styles.image4 : styles.image5,
-            isFluid ? null : styles.image6,
+            isFluid ? styles.image : styles.thumbnailImage,
+            isFluid ? styles.fluidImage : null,
+            fit === "contain" ? styles.contain : styles.cover,
+            isFluid ? null : styles.hoverZoom,
           ])}
           loading="lazy"
         />
-        {overlay ? <div {...stylex.props(styles.container6)} /> : null}
+        {overlay ? <div {...stylex.props(styles.overlay)} /> : null}
       </button>
       {actionRender?.()}
     </div>

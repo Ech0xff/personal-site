@@ -7,8 +7,8 @@ import { Monitor, Moon, Sun } from "lucide-react";
 import IconButton from "#components/ui/icon-button.component";
 import type { StyleInput } from "#design/style.type";
 import { shape } from "#design/tokens.stylex";
-import { useDictionary } from "#dictionary";
 import { themeAtom } from "#lib/client/theme/theme.atom";
+import { defaultDictionary } from "#lib/shared/dictionary/dictionary.const";
 import { getNextTheme } from "#lib/shared/theme/theme.helper";
 const styles = stylex.create({
   icon: {
@@ -43,11 +43,15 @@ const styles = stylex.create({
   },
 });
 const ThemeToggle = ({ xstyle }: { xstyle?: StyleInput }) => {
-  const dictionary = useDictionary();
-  const [, setTheme] = useAtom(themeAtom);
+  const [preference, setTheme] = useAtom(themeAtom);
+  const labels = defaultDictionary.common.theme;
+  const description = defaultDictionary.common.switchTheme
+    .replace("{current}", labels[preference])
+    .replace("{next}", labels[getNextTheme(preference)]);
   return (
     <IconButton
-      aria-label={dictionary.common.switchTheme}
+      aria-label={description}
+      title={description}
       onClick={() => setTheme(getNextTheme)}
       xstyle={[styles.icon, xstyle]}
     >

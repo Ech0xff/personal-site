@@ -73,7 +73,7 @@ preserve route segments and framework conventions.
 - `src/lib/server`: Server clients, services, and caches.
 - `src/lib/shared`: Environment-neutral domain modules and services.
 - `src/types`: Cross-domain types, declarations, and generated database types.
-- `src/design`: Shared StyleX tokens, administration themes, and style input types.
+- `src/design`: Shared StyleX tokens, light/dark themes, and style input types.
 - `src/lib/client/theme`: Browser appearance preference state.
 - `scripts`: Maintenance and development utilities.
 - `supabase`: Database configuration, schemas, and seed data.
@@ -97,14 +97,19 @@ utilities; import auth and image services from their owners.
   across source areas; use relative imports within a feature.
   Aliases live in `tsconfig.json`; `#dictionary` uses conditional imports in
   `package.json` for server reads and the client provider.
-- Use StyleX for owned component styles. Shared foundations and semantic tokens
-  belong in `src/design`; public scene materials remain in `(site)/_design`.
+- Use StyleX for owned component styles. All token definitions, including scene materials, lighting, and light/dark
+  overrides, belong in `src/design/tokens.stylex.ts`. Public scene composition
+  styles and interaction markers remain in `(site)/_design`.
 - Compose component overrides with typed `xstyle` inputs, explicit variants, and
   sizes. Keep geometry with its component and rendered colors in tokens.
 - Plain CSS is reserved for root resets and scoped third-party adapters. Adapters
   consume variables supplied by StyleX; do not add Tailwind or Sass.
+- Group public feature UI under `layout`, `desk`, `record-player`, and `display`;
+  keep the system guide local to its route. Do not import route modules from
+  shared modules or maintenance scripts.
 - The public root keeps its own shell, providers, scrolling behavior, and assets.
-  It shares tokens without importing administration components or providers.
+  Both roots reuse environment-neutral theme synchronization and controls,
+  without importing administration features or providers into the public root.
   See [the design guide](./DOCS/REDESIGN.md) for boundaries and conventions.
 
 ## Development and Documentation
@@ -115,7 +120,9 @@ fixes to affected files, then run relevant non-mutating checks.
 
 Use existing checks for simple lint, type, schema, or UI changes. Add tests for
 important behavior or regressions, preferably in existing suites; avoid tests
-that repeat implementation or library behavior.
+that repeat implementation or library behavior. Keep the five focused suites for
+authentication, document validation/rendering, files, and theme initialization;
+verify presentation and desktop interactions through targeted browser scenarios.
 
 Use focused Conventional Commits (`feat:`, `fix:`, `refactor:`, `chore:`,
 `docs:`) with imperative subjects. Include only task-related changes and report

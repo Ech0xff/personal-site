@@ -1,10 +1,7 @@
 "use client";
 import { atom } from "jotai";
 
-import {
-  darkThemeClasses,
-  lightThemeClasses,
-} from "#design/admin-theme.helper";
+import { darkThemeClasses, lightThemeClasses } from "#design/theme.helper";
 import {
   Theme,
   THEME_STORAGE_KEY,
@@ -87,7 +84,11 @@ stateAtom.onMount = (update) => {
   const onSystemChange = (event: MediaQueryListEvent) =>
     update({ type: "system", systemDark: event.matches });
   const onStorage = (event: StorageEvent) => {
-    if (event.storageArea !== localStorage) return;
+    try {
+      if (event.storageArea !== window.localStorage) return;
+    } catch {
+      return;
+    }
     if (event.key !== THEME_STORAGE_KEY && event.key !== null) return;
     update({
       type: "preference",

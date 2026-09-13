@@ -4,7 +4,8 @@ export const defaultDictionary = {
     siteDescription: "A place where technology and life intersect.",
   },
   common: {
-    switchTheme: "Switch theme",
+    switchTheme: "Theme: {current}. Switch to {next}",
+    theme: { system: "System", light: "Light", dark: "Dark" },
     menu: "Open navigation",
     copy: "Copy",
     copied: "Copied",

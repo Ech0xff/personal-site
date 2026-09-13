@@ -1,9 +1,9 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { blocknoteStyles } from "./blocknote-view.style";
+import { blocknoteStyles } from "./block-editor.style";
 
 import "@blocknote/mantine/style.css";
-import "./blocknote-view.css";
+import "./block-editor.css";
 
 export default function DocumentView({ html }: Readonly<{ html: string }>) {
   return (

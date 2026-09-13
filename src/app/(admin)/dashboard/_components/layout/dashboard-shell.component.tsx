@@ -3,23 +3,12 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentPropsWithoutRef } from "react";
 
-import Loading from "#components/ui/loading.component";
 import { MODAL_ANCHOR } from "#components/ui/modal.const";
 import Stack from "#components/ui/stack.component";
 import type { StyleInput } from "#design/style.type";
 import { color, font } from "#design/tokens.stylex";
 const styles = stylex.create({
-  row: {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: "0%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  label: {
-    color: color.muted,
-  },
-  column: {
+  root: {
     position: "relative",
     minWidth: 0,
     minHeight: 0,
@@ -28,7 +17,7 @@ const styles = stylex.create({
     flexBasis: "0%",
     overflow: "hidden",
   },
-  row2: {
+  header: {
     paddingTop: "20px",
     paddingRight: "20px",
     paddingBottom: "20px",
@@ -42,7 +31,7 @@ const styles = stylex.create({
     fontWeight: font.bold,
     color: color.text,
   },
-  column2: {
+  content: {
     paddingTop: "20px",
     paddingRight: "20px",
     paddingBottom: "20px",
@@ -55,39 +44,17 @@ const styles = stylex.create({
 });
 interface Props extends ComponentPropsWithoutRef<"div"> {
   children: React.ReactNode;
-  errorRender?: React.ReactNode;
-  optActions?: React.ReactNode;
+  actions?: React.ReactNode;
   xstyle?: StyleInput;
-  loading?: boolean;
-  error?: boolean;
   title: string;
 }
 export default function DashboardShell({
   children,
   xstyle,
   title,
-  optActions,
-  loading = false,
-  error = false,
-  errorRender,
+  actions,
   ...props
 }: Props) {
-  if (loading) {
-    return <Loading />;
-  }
-  if (error) {
-    return (
-      <Stack x xstyle={styles.row}>
-        {errorRender ? (
-          errorRender
-        ) : (
-          <span {...stylex.props(styles.label)}>
-            An error occurred while loading data.
-          </span>
-        )}
-      </Stack>
-    );
-  }
   return (
     <Stack
       y
@@ -95,13 +62,13 @@ export default function DashboardShell({
       style={{
         anchorName: MODAL_ANCHOR.DASHBOARD,
       }}
-      xstyle={[styles.column, xstyle]}
+      xstyle={[styles.root, xstyle]}
     >
-      <Stack x xstyle={styles.row2}>
+      <Stack x xstyle={styles.header}>
         <h2 {...stylex.props(styles.heading)}>{title}</h2>
-        {optActions && <div>{optActions}</div>}
+        {actions && <div>{actions}</div>}
       </Stack>
-      <Stack y xstyle={styles.column2}>
+      <Stack y xstyle={styles.content}>
         {children}
       </Stack>
     </Stack>

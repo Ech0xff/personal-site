@@ -13,6 +13,9 @@ detail URLs return 404.
 Authentication and dashboard live in the separate `(admin)` root. Both roots
 share StyleX foundations from `src/design`; each owns its reset and providers.
 Public pages never import administration providers or the BlockNote editor.
+Public features are grouped by layout, desk, record player, and display. The
+System guide owns its samples. Audio fixtures and spectrum parsing are shared
+with maintenance scripts through an environment-neutral audio domain.
 Crossing roots loads a new document. See the [design guide](./REDESIGN.md).
 
 ## Authentication and Data Access
@@ -100,18 +103,46 @@ must introduce cache readers and invalidation as a single change.
 
 ## Shared Appearance and Modals
 
-Browser theme state lives in `lib/client/theme`. Its atom owns preference
-persistence, system/storage listeners, and HTML attributes through one update
-path. The pre-paint ThemeScript applies the resolved light or dark StyleX theme
-before React mounts. Administration colors are neutral with a blue accent;
-public scene colors remain independent. Storage failures fall back to the system preference;
-portals inherit theme classes from `html`. The public root remains light.
+Browser theme state lives in `lib/client/theme`. Both roots mount the same
+synchronization component within their own runtime. One `theme` preference is
+shared across tabs and roots; System resolves the current OS setting. The
+pre-paint ThemeScript and runtime use the same complete sets of color, shadow,
+material, and lighting classes. Storage failures fall back to System while local
+controls remain usable. Portals inherit the theme from `html`.
+
+All token definitions and light/dark overrides live in `design/tokens.stylex.ts`.
+Both roots share neutral surfaces and a blue accent. The reading desk keeps its
+material colors with dark ambient variants. Lamp on/off is a local lighting
+override independent of the color scheme. See the [design guide](./REDESIGN.md).
 
 Dashboard editors fill the dashboard-anchored modal surface without a maximum
 reading width. Metadata and icon controls sit in the top toolbar, and the
 document itself owns its heading. Borderless inputs use floating labels.
 A shared Loading component fills the content area for navigation, server data,
-and editor loading. Floating panels
-use ModalPanel. Focus follows the active modal and returns to its opener when
-closed. Reusable controls stay in `components/ui`; feature-specific hooks and
+and editor loading. Focus follows the active modal and returns to its opener when
+closed. Files image previews use the native-dialog viewer with fit-to-viewport zoom
+and focus restoration; other file previews and downloads retain their URL links.
+Reusable controls stay in `components/ui`; feature-specific hooks and
 styles remain with their dashboard feature.
+
+## Public Display Composition
+
+The homepage Server Component supplies rendered CLI, Stats, and Guestbook slots
+to the client computer shell. Stats and Guestbook each have a local Suspense
+boundary; the clock, program buttons, and outer desk remain available while a
+slot renders. Program selection is immediate; scan animations do not gate data.
+Stats rendering is separate from the local like control. Guestbook form state,
+submission effects, and list rendering have separate owners.
+
+Current content remains synchronous local fixtures. The slots support future
+server-side Supabase reads initiated during page rendering, rather than fetching
+on the first tab click. Public read policies, cache consumers/invalidation,
+errors/retries, and moderated writes remain a coordinated follow-up in
+[TODO](./TODO.md).
+
+Desk preferences belong to each feature. The shared storage atom factory validates
+values, handles storage failures, and subscribes to cross-tab changes. The clock
+owns its legacy-value migration. Record session recovery and progress persistence
+are separate from playback commands and the audio element lifecycle; external
+session changes restore a paused player. Spectrum network I/O lives in the
+browser audio service; binary parsing stays environment-neutral.

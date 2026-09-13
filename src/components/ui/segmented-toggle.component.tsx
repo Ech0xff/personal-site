@@ -2,7 +2,6 @@
 
 import * as stylex from "@stylexjs/stylex";
 
-import Stack from "#components/ui/stack.component";
 import type { StyleInput } from "#design/style.type";
 import {
   color,
@@ -13,19 +12,29 @@ import {
   motionToken,
 } from "#design/tokens.stylex";
 const styles = stylex.create({
-  state: {
+  textGroup: { padding: 0, backgroundColor: "transparent", gap: space.xs },
+  textButton: {
+    padding: 0,
+    borderWidth: 0,
+    backgroundColor: "transparent",
+    boxShadow: "none",
+    fontSize: font.small,
+    color: color.muted,
+  },
+  textSelected: { color: color.accentText },
+  smallGroup: {
     paddingTop: "2px",
     paddingRight: "2px",
     paddingBottom: "2px",
     paddingLeft: "2px",
   },
-  state2: {
+  mediumGroup: {
     paddingTop: space.xxs,
     paddingRight: space.xxs,
     paddingBottom: space.xxs,
     paddingLeft: space.xxs,
   },
-  state3: {
+  smallButton: {
     paddingLeft: space.xs,
     paddingRight: space.xs,
     paddingTop: "2px",
@@ -33,7 +42,7 @@ const styles = stylex.create({
     fontSize: font.small,
     lineHeight: 1.5,
   },
-  state4: {
+  mediumButton: {
     paddingLeft: space.sm,
     paddingRight: space.sm,
     paddingTop: "6px",
@@ -41,7 +50,10 @@ const styles = stylex.create({
     fontSize: font.control,
     lineHeight: 1.5,
   },
-  container: {
+  group: {
+    borderWidth: 0,
+    margin: 0,
+    minWidth: 0,
     display: "flex",
     width: "min-content",
     alignItems: "center",
@@ -51,10 +63,10 @@ const styles = stylex.create({
     borderBottomLeftRadius: shape.control,
     backgroundColor: color.surfaceMuted,
   },
-  container2: {
+  disabled: {
     opacity: 0.6,
   },
-  button: {
+  option: {
     borderTopLeftRadius: shape.small,
     borderTopRightRadius: shape.small,
     borderBottomRightRadius: shape.small,
@@ -65,18 +77,18 @@ const styles = stylex.create({
     transitionDuration: motionToken.fast,
     transitionTimingFunction: "ease",
   },
-  button2: {
+  selected: {
     backgroundColor: color.surfaceSelected,
     color: color.text,
     boxShadow: shadow.subtle,
   },
-  button3: {
+  unselected: {
     color: {
       default: color.muted,
       ":hover": color.secondary,
     },
   },
-  button4: {
+  nonInteractive: {
     pointerEvents: "none",
   },
 });
@@ -86,7 +98,9 @@ export type SegmentedOption<T extends string> = {
 };
 interface SegmentedToggleProps<T extends string> {
   value: T;
-  options: SegmentedOption<T>[];
+  options: readonly SegmentedOption<T>[];
+  label?: string;
+  variant?: "surface" | "text";
   onChange: (value: T) => void;
   size?: "sm" | "md";
   disabled?: boolean;
@@ -95,6 +109,8 @@ interface SegmentedToggleProps<T extends string> {
 }
 export default function SegmentedToggle<T extends string>({
   value,
+  label,
+  variant = "surface",
   options,
   onChange,
   size = "md",
@@ -102,16 +118,20 @@ export default function SegmentedToggle<T extends string>({
   xstyle,
   buttonStyles,
 }: SegmentedToggleProps<T>) {
-  const wrapperSizeStyles = size === "sm" ? styles.state : styles.state2;
-  const buttonSizeStyles = size === "sm" ? styles.state3 : styles.state4;
+  const wrapperSizeStyles =
+    size === "sm" ? styles.smallGroup : styles.mediumGroup;
+  const buttonSizeStyles =
+    size === "sm" ? styles.smallButton : styles.mediumButton;
   return (
-    <Stack
-      xstyle={[
-        styles.container,
+    <fieldset
+      aria-label={label}
+      {...stylex.props([
+        styles.group,
         wrapperSizeStyles,
-        disabled && styles.container2,
+        disabled && styles.disabled,
+        variant === "text" && styles.textGroup,
         xstyle,
-      ]}
+      ])}
     >
       {options.map((option) => {
         const isActive = option.value === value;
@@ -120,12 +140,16 @@ export default function SegmentedToggle<T extends string>({
             key={option.value}
             type="button"
             aria-pressed={isActive}
-            onClick={() => onChange(option.value)}
+            onClick={() => {
+              if (!isActive) onChange(option.value);
+            }}
             {...stylex.props([
-              styles.button,
+              styles.option,
               buttonSizeStyles,
-              isActive ? styles.button2 : styles.button3,
-              disabled && styles.button4,
+              isActive ? styles.selected : styles.unselected,
+              disabled && styles.nonInteractive,
+              variant === "text" && styles.textButton,
+              variant === "text" && isActive && styles.textSelected,
               buttonStyles,
             ])}
             disabled={disabled}
@@ -134,6 +158,6 @@ export default function SegmentedToggle<T extends string>({
           </button>
         );
       })}
-    </Stack>
+    </fieldset>
   );
 }

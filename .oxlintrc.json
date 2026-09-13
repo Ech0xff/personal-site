@@ -57,6 +57,61 @@
       }
     },
     {
+      "files": [
+        "src/components/**/*.ts",
+        "src/components/**/*.tsx",
+        "src/design/**/*.ts",
+        "src/lib/**/*.ts",
+        "src/lib/**/*.tsx",
+        "scripts/**/*.ts"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "(?:^|/)(?:src/)?app/|\\((?:site|admin)\\)",
+                "message": "Route modules are consumers; shared modules and scripts must not import them."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/lib/shared/**/*.ts", "src/lib/shared/**/*.tsx"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^#(?:components|design)/|^#lib/(?:client|server)/|(?:^|/)(?:app|components|design|client|server)/|\\((?:site|admin)\\)",
+                "message": "Shared domain modules must remain environment-neutral and independent of UI."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/app/(site)/**/*.ts", "src/app/(site)/**/*.tsx"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "\\(admin\\)|^#lib/server/(?:auth|actions)/|^#components/ui/blocknote/block-editor|^#components/shared/(?:logout-button|toast-provider)",
+                "message": "The public root must not import administration features, providers or the editor."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
       "files": ["src/types/supabase.ts"],
       "rules": {
         "typescript/no-redundant-type-constituents": "off"

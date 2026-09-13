@@ -8,10 +8,22 @@ function paintTheme(
   systemDark: boolean,
   storageFails = false,
 ) {
+  const dark = [
+    "dark-colors",
+    "dark-shadows",
+    "dark-materials",
+    "dark-lighting",
+  ];
+  const light = [
+    "light-colors",
+    "light-shadows",
+    "light-materials",
+    "light-lighting",
+  ];
   const attributes = new Map<string, string>();
-  const classes = new Set(["root-layout", "dark-colors", "dark-shadows"]);
+  const classes = new Set(["root-layout", ...dark, ...light]);
   const style = { colorScheme: "" };
-  runInNewContext(createThemeScript(["dark-colors", "dark-shadows"]), {
+  runInNewContext(createThemeScript(dark, light), {
     localStorage: {
       getItem: () => {
         if (storageFails) throw new Error("Storage unavailable");
@@ -39,21 +51,33 @@ function paintTheme(
   };
 }
 
-describe("administration pre-paint theme", () => {
+describe("shared pre-paint theme", () => {
   test("a saved light preference overrides a dark system and preserves unrelated root classes", () => {
     expect(paintTheme("light", true)).toEqual({
       preference: "light",
       theme: "light",
       colorScheme: "light",
-      classes: ["root-layout"],
+      classes: [
+        "root-layout",
+        "light-colors",
+        "light-shadows",
+        "light-materials",
+        "light-lighting",
+      ],
     });
   });
-  test("a saved dark preference applies both shared dark overrides before hydration", () => {
+  test("a saved dark preference applies all dark overrides before hydration", () => {
     expect(paintTheme("dark", false)).toEqual({
       preference: "dark",
       theme: "dark",
       colorScheme: "dark",
-      classes: ["root-layout", "dark-colors", "dark-shadows"],
+      classes: [
+        "root-layout",
+        "dark-colors",
+        "dark-shadows",
+        "dark-materials",
+        "dark-lighting",
+      ],
     });
   });
   test("missing and invalid preferences follow the system", () => {
@@ -65,6 +89,12 @@ describe("administration pre-paint theme", () => {
   });
   test("blocked storage still paints the system appearance", () => {
     expect(paintTheme("light", true, true).theme).toBe("dark");
-    expect(paintTheme("dark", false, true).classes).toEqual(["root-layout"]);
+    expect(paintTheme("dark", false, true).classes).toEqual([
+      "root-layout",
+      "light-colors",
+      "light-shadows",
+      "light-materials",
+      "light-lighting",
+    ]);
   });
 });
