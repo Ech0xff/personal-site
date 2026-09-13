@@ -78,3 +78,9 @@ and reloads the PostgREST schema cache. No remote reset or demo seed is used.
 
 Production deployment requires a non-empty `ADMIN_TOKEN` configured in Vercel.
 Without it, the public site works but administrator login remains disabled.
+The owner configured this as a Production Secret during the cutover.
+
+The production schema transaction completed on September 13, 2026 at 15:26 UTC.
+Database verification matched all 24 converted documents and confirmed the 25
+files, retained config values, public visibility, and restricted permissions.
+The local and remote `main` branches were then replaced by the redesign branch.

@@ -6,9 +6,6 @@ relevant file or issue when possible.
 ## Maintenance
 
 - [ ] Decide whether to standardize the casing of the `DOCS` directory.
-- [ ] Set the production Vercel `ADMIN_TOKEN` and verify dashboard sign-in after
-      the [CMS migration](./MIGRATION-2026-09-13.md). The public site does not
-      require this token.
 
 ## Review Follow-up
 
