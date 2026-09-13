@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript", "react", "jsx-a11y", "nextjs", "import"],
-  "jsPlugins": ["eslint-plugin-simple-import-sort"],
+  "jsPlugins": ["eslint-plugin-simple-import-sort", "@stylexjs/eslint-plugin"],
   "categories": {
     "correctness": "error"
   },
@@ -48,6 +48,14 @@
   },
   // Supabase generates redundant unions for empty enum and composite-type maps.
   "overrides": [
+    {
+      "files": ["src/app/redesign/**/*.ts", "src/app/redesign/**/*.tsx"],
+      "rules": {
+        "@stylexjs/valid-styles": "error",
+        "@stylexjs/valid-shorthands": "error",
+        "@stylexjs/no-unused": "warn"
+      }
+    },
     {
       "files": ["src/types/supabase.ts"],
       "rules": {

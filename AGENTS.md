@@ -100,7 +100,11 @@ utilities; import auth and image services from their owners.
   content, and third-party overrides; reserve inline styles for dynamic values
   or cases these do not handle cleanly.
 - Global tokens belong in `src/styles/variables.scss`; public-layout-only
-  variables belong in `src/app/(index)/layout.scss`.
+  variables belong in `src/app/(legacy)/(index)/layout.scss`.
+
+- The independent `/redesign` prototype uses its own StyleX token system and
+  components instead of legacy Tailwind, SCSS, UI components, or assets. See
+  [the redesign guide](./DOCS/REDESIGN.md) for its boundaries and conventions.
 
 ## Development and Documentation
 

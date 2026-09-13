@@ -1,0 +1,66 @@
+import * as stylex from "@stylexjs/stylex";
+
+import { color, font, motionToken, shape, space } from "./tokens.stylex";
+
+export const foundation = stylex.create({
+  focus: {
+    outline: { default: "none", ":focus-visible": `2px solid ${color.focus}` },
+    outlineOffset: "5px",
+  },
+  control: {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: space.xs,
+    minHeight: shape.touch,
+    paddingInline: space.md,
+    backgroundColor: color.surface,
+    color: color.text,
+    borderWidth: "1px",
+    borderStyle: "solid",
+    borderColor: `${color.line}`,
+    borderRadius: shape.control,
+    fontFamily: font.mono,
+    fontSize: font.small,
+    transitionDuration: motionToken.fast,
+    transitionProperty: "background-color, transform",
+    opacity: { default: 1, ":disabled": 0.45 },
+  },
+  eyebrow: {
+    fontFamily: font.mono,
+    fontSize: font.tiny,
+    letterSpacing: "0.13em",
+    fontWeight: font.regular,
+    color: color.muted,
+    lineHeight: 1.7,
+  },
+  note: {
+    fontFamily: font.handwritten,
+    fontSize: font.large,
+    color: color.muted,
+    fontWeight: font.regular,
+  },
+  caption: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    fontFamily: font.mono,
+    fontSize: font.small,
+    color: color.text,
+    paddingTop: space.md,
+    letterSpacing: "0.025em",
+  },
+  objectLink: { display: "block" },
+  srOnly: {
+    position: "absolute",
+    width: "1px",
+    height: "1px",
+    padding: 0,
+    margin: "-1px",
+    overflow: "hidden",
+    clipPath: "inset(50%)",
+    whiteSpace: "nowrap",
+    borderWidth: 0,
+    borderStyle: "solid",
+  },
+});

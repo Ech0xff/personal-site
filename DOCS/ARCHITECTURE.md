@@ -3,6 +3,15 @@
 For setup and operations, see [README](../README.md). For naming and placement
 rules, see [AGENTS.md](../AGENTS.md).
 
+## Independent UI Roots
+
+The original site and dashboard share the root layout in `src/app/(legacy)`,
+which retains their URLs, providers, and styles. The `/redesign` prototype has
+its own root layout, StyleX design system, local copy, local audio, and a
+root-scoped Lenis scrolling controller. API
+handlers remain outside these UI groups. See the [redesign guide](./REDESIGN.md)
+for the build boundary and interaction behavior.
+
 ## Data and Authorization
 
 Shared services accept a Supabase client so callers choose the identity:

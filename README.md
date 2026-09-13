@@ -75,6 +75,13 @@ not build the app. Husky's pre-commit hook runs `bun run check` on the whole
 working tree, including unstaged changes, without modifying or staging files.
 `bun install` installs the hooks; `bun run prepare` reinstalls them.
 
+## Redesign Preview
+
+The independent reading-desk prototype is at `/redesign`; its live token guide
+is at `/redesign/system`. It uses StyleX, local content, and a separate root
+layout, so it can run without Supabase. See the [redesign guide](./DOCS/REDESIGN.md)
+for build verification, design tokens, interaction rules, and audio sources.
+
 ## Database
 
 Schema sources live in `supabase/schemas`; local fixtures live in
