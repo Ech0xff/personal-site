@@ -90,7 +90,9 @@ website preview. Enter only a URL: Microlink fills the preview automatically aft
 a short typing pause. The refresh icon retries parsing; titles and descriptions
 have no manual fields. Reading pages use the saved preview.
 Old Markdown directives, PlantUML, and Markdown source/split modes are removed.
-Existing Markdown data is not converted.
+There is no automatic runtime Markdown conversion. The one-time hosted database
+conversion and recovery procedure is documented in the
+[production migration guide](./DOCS/MIGRATION-2026-09-13.md).
 
 The interface uses the shared English dictionary in source. Changing copy or
 metadata requires a code change; business content keeps its original language.
