@@ -5,6 +5,9 @@ relevant file or issue when possible.
 
 ## Maintenance
 
+- [ ] Provision the current desk RPCs in legacy local databases: `visit_desk`
+      still returns 404 after content migration. Follow the additive
+      [database workflow](../README.md#database) and verify visits and statistics.
 - [ ] Decide whether to standardize the casing of the `DOCS` directory.
 - [ ] Remove the `jsdom` 26.1.0 override and `@blocknote/server-util` DOM-origin
       patch once BlockNote's server renderer works

@@ -11,10 +11,16 @@ import "./reset.css";
 import "#design/stylex.css";
 
 export const metadata: Metadata = {
-  title: "Ech0xff — The little nest",
+  title: {
+    default: "The Little Nest",
+    template: "The Little Nest - %s",
+  },
   description: "A small corner for words, ideas, and everyday wonders.",
+  alternates: {
+    types: { "application/rss+xml": "/rss.xml" },
+  },
   icons: {
-    icon: "data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27/%3E",
+    icon: { url: "/favicon.svg", type: "image/svg+xml", sizes: "any" },
   },
 };
 export default function SiteLayout({

@@ -31,7 +31,12 @@ export async function PostsIndex() {
           Total <strong {...stylex.props(styles.total)}>{items.length}</strong>{" "}
           posts, approx{" "}
           <strong {...stylex.props(styles.total)}>{characters}</strong>{" "}
-          characters.
+          characters.{" "}
+          {/* RSS is an XML document, so use a full document navigation. */}
+          {/* oxlint-disable-next-line next/no-html-link-for-pages */}
+          <a href="/rss.xml" {...stylex.props(styles.total, foundation.focus)}>
+            Subscribe via RSS
+          </a>
         </p>
         {items.length === 0 && (
           <p {...stylex.props(styles.summary)}>

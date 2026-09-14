@@ -1,6 +1,9 @@
 import { describe, expect, mock, test } from "bun:test";
 
+import { ServerBlockNoteEditor } from "@blocknote/server-util";
 import { spawn } from "bun";
+
+import { renderPostFeed } from "./rss.helper";
 
 await mock.module("server-only", () => ({}));
 // Next compiles StyleX; these rendering tests exercise HTML, not generated CSS.
@@ -12,6 +15,57 @@ await mock.module("#components/ui/blocknote/link-card.style", () => ({
   ),
 }));
 const { renderDocument } = await import("./document-render.service");
+
+describe("RSS documents", () => {
+  test("preserves original text, escapes HTML, and limits the latest entries", async () => {
+    const title = '中文 & <title> "quotes" 😀';
+    const excerpt = '<script>alert("x")</script> & 中文 😀';
+    const posts = Array.from({ length: 21 }, (_, index) => ({
+      id: `00000000-0000-4000-8000-${String(index).padStart(12, "0")}`,
+      title,
+      excerpt: `${excerpt}\u0000\ud800`,
+      published_at: "2026-09-14T12:00:00+08:00",
+    }));
+    const xml = renderPostFeed(posts, "https://example.com");
+    await ServerBlockNoteEditor.create()._withJSDOM(async () => {
+      const parser = new window.DOMParser();
+      const document = parser.parseFromString(xml, "application/xml");
+      expect(document.querySelector("parsererror")).toBeNull();
+      expect(document.querySelectorAll("item")).toHaveLength(20);
+      expect(document.querySelector("item title")?.textContent).toBe(title);
+      expect(document.querySelector("item link")?.textContent).toBe(
+        `https://example.com/posts/${posts[0].id}`,
+      );
+      expect(document.querySelector("item pubDate")?.textContent).toBe(
+        "Mon, 14 Sep 2026 04:00:00 GMT",
+      );
+      expect(document.querySelector("item guid")?.textContent).toBe(
+        `urn:uuid:${posts[0].id}`,
+      );
+      const html = parser.parseFromString(
+        document.querySelector("item description")?.textContent ?? "",
+        "text/html",
+      );
+      expect(html.querySelector("script")).toBeNull();
+      expect(html.body.textContent).toBe(excerpt);
+    });
+  });
+  test("produces a discoverable valid feed when there are no posts", async () => {
+    await ServerBlockNoteEditor.create()._withJSDOM(async () => {
+      const document = new window.DOMParser().parseFromString(
+        renderPostFeed([], "https://example.com"),
+        "application/xml",
+      );
+      expect(document.querySelector("parsererror")).toBeNull();
+      expect(document.querySelectorAll("item")).toHaveLength(0);
+      expect(
+        document
+          .getElementsByTagNameNS("http://www.w3.org/2005/Atom", "link")[0]
+          ?.getAttribute("href"),
+      ).toBe("https://example.com/rss.xml");
+    });
+  });
+});
 
 test("loads the document renderer with Lambda's native Node module restrictions", async () => {
   const child = spawn(

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" fill="none">
+  <rect width="72" height="72" rx="16" fill="#fafafa"/>
+  <g fill="#202024" transform="translate(4 4)">
+    <path d="M39 20C35 14 29 11 22 11C10 11 2 20 2 32C2 44 10 53 22 53C30 53 36 49 40 43L33 37C30 42 27 45 22 45C16 45 12 41 11 36H29L33 32L29 28H11C12 23 16 19 22 19C27 19 31 22 34 27Z"/>
+    <path d="M30 14H41L48 24L55 14H64L53 32L64 50H53L46 40L39 50H29L41 32Z"/>
+  </g>
+</svg>

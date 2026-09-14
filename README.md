@@ -175,6 +175,9 @@ HTTPS URLs so they also work when browsing the site from another LAN device.
 - Inspect local service status: `bunx supabase status`
 - Refresh local environment: `bun run supabase:env`
 
+`supabase:setup` starts existing services and refreshes environment variables; it
+does not apply schema changes.
+
 The application tables are `posts`, `thoughts`, `events`, and `configs`. Anonymous table
 access can read only published content. Content and storage writes require
 service-role access from the authorized server layer. Desk interactions use

@@ -129,6 +129,12 @@ filters. Public list and article query results use `use cache` with
 `cacheLife("hours")`, keyed by content kind or normalized UUID. The underlying
 Supabase fetch remains `no-store`; the function result is the cache boundary.
 React `cache()` additionally deduplicates metadata and body reads within a request.
+`/rss.xml` serves RSS 2.0 summaries for the latest 20 public posts, using the
+same cached list and `content:posts` invalidation tag. It includes original-language
+titles, excerpts, publication dates, stable UUID identifiers, and absolute article
+links derived from the request origin. The response uses `no-store` so HTTP caches
+do not outlive content invalidation. The public layout advertises the feed, and the
+Posts page links to it. Readers can subscribe with the site's `/rss.xml` URL.
 Errors propagate outside the cache to the public error boundary.
 The persistent public shell proactively prefetches `/posts`, `/thoughts`, and
 `/events`, including when mobile navigation is collapsed. Each prefetch registers

@@ -1,5 +1,8 @@
 # Reading Desk Redesign
 
+The homepage document title is `The Little Nest`. Public child pages use
+`The Little Nest - <page title>`, with the article title on post detail pages.
+
 The public reading desk starts at `/`. Posts groups all public articles by year with title/date rows and counts,
 with UUID article detail routes; Thoughts and Events show full documents using
 the shared feed and timeline. The homepage has no footer. Copy belongs to the
@@ -39,8 +42,8 @@ document; navigation inside the public site keeps its curtain controller mounted
 Dashboard operations use authenticated Server Actions. The five former redesign page
 URLs permanently redirect to their unprefixed counterparts, while audio URLs
 and storage keys remain unchanged. Article details use `/posts/<uuid>`; unknown or hidden articles show a not-found page. The public layout permits search indexing.
-The old favicon remains at `public/favicon.ico`; the public site uses a blank
-favicon until a new identity is chosen.
+The public site uses the `ex` monogram in `public/favicon.svg`, with a light
+background that keeps the dark mark legible in both light and dark browser tabs.
 
 StyleX 0.19 uses the official Babel and PostCSS pipeline. `babel.config.js` must
 use the `.js` extension: this Next.js Babel loader rejects `.cjs` and `.mjs`
@@ -182,6 +185,8 @@ See [Architecture](./ARCHITECTURE.md) for the token login and content data flow.
   curtain has no fixed greeting, preventing a pre-hydration Hello flash. The final
   greeting remains through data waiting and reveal; direct loads never switch
   from a greeting to the route name.
+- Internal navigation covers over 400 ms and reveals over 550 ms once the
+  destination route is ready.
 - Greetings play once on direct loads and reloads of every public page, including
   article details. The persistent root
   prevents replay on internal returns; browser history restoration and reduced

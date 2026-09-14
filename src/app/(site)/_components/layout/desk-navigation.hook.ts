@@ -156,7 +156,7 @@ export function useDeskNavigation() {
     // An animation failure must not prevent navigation from starting.
     const watchdog = setTimeout(covered, 1500);
     void controls
-      .start({ y: "0%", transition: { duration: 0.25, ease: easing } })
+      .start({ y: "0%", transition: { duration: 0.4, ease: easing } })
       .then(() => {
         clearTimeout(watchdog);
         covered();
@@ -209,7 +209,7 @@ export function useDeskNavigation() {
   useEffect(() => {
     if (state.phase !== "revealing") return;
     const { round } = state;
-    const duration = state.presentation === "greeting" ? 0.65 : 0.35;
+    const duration = state.presentation === "greeting" ? 0.65 : 0.55;
     entryControls.set({ y: 20, opacity: 0 });
     void entryControls.start({
       y: 0,
