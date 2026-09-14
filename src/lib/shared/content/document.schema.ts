@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import type { CmsBlock } from "./blocknote.schema";
+import { columnLayoutSchema } from "./column-layout.schema";
 import { webUrlSchema } from "./link-metadata.schema";
 
 const safeUrl = z.string().refine((value) => {
@@ -101,7 +102,7 @@ export const blockSchema: z.ZodType<CmsBlock> = z.lazy(() => {
     z.object({
       id: base.id,
       type: z.literal("columnList"),
-      props: z.object({}).optional(),
+      props: columnLayoutSchema.optional(),
       children: z
         .array(blockSchema)
         .min(2)

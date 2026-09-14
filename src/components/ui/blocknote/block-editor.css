@@ -156,19 +156,150 @@
   display: none;
 }
 
-/* Adapt upstream columns to narrow reading surfaces without changing their model. */
+/* Layout attributes are shared by the editor node view and server exporter. */
+[data-cms-blocknote] .bn-editor {
+  container: cms-document / inline-size;
+}
 [data-cms-blocknote] .bn-block-column-list {
   gap: var(--cms-column-gap);
+  --cms-media-ratio: auto;
+  --cms-media-fit: cover;
 }
 [data-cms-blocknote] .bn-block-column {
   min-width: 0;
-  container: media-column / inline-size;
+  padding: 0;
 }
-@media (max-width: 600px) {
-  [data-cms-blocknote] .bn-block-column-list {
+[data-cms-blocknote] .bn-block-column-list[data-mediafit="contain"] {
+  --cms-media-fit: contain;
+}
+[data-cms-blocknote] .bn-block-column-list[data-medialayout="square"] {
+  --cms-media-ratio: 1;
+}
+[data-cms-blocknote] .bn-block-column-list[data-medialayout="landscape"] {
+  --cms-media-ratio: 4 / 3;
+}
+[data-cms-blocknote] .bn-block-column-list[data-medialayout="wide"] {
+  --cms-media-ratio: 16 / 9;
+}
+/* BlockNote writes previewWidth inline; the column owns width inside a layout. */
+[data-cms-blocknote]
+  .bn-block-column
+  :is(.bn-file-block-content-wrapper, .bn-visual-media-wrapper) {
+  width: 100% !important;
+  max-width: 100%;
+}
+[data-cms-blocknote] .bn-block-column .bn-resize-handle {
+  display: none;
+}
+[data-cms-blocknote]
+  .bn-block-column
+  :is(.bn-visual-media, [data-cms-card-image]) {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: none;
+  aspect-ratio: var(--cms-media-ratio);
+  object-fit: var(--cms-media-fit);
+}
+[data-cms-blocknote] .bn-block-column [data-viewer-trigger] {
+  width: 100%;
+}
+[data-cms-blocknote] .bn-block-column [data-cms-link-card] {
+  flex-direction: column-reverse;
+  width: 100%;
+}
+[data-cms-blocknote]
+  .bn-block-column-list[data-medialayout="original"]
+  [data-cms-card-image] {
+  aspect-ratio: 16 / 9;
+}
+[data-cms-blocknote]
+  .bn-block-column-list[data-medialayout="equalHeight"]
+  :is(.bn-visual-media, [data-cms-card-image]) {
+  height: var(--cms-media-height);
+  aspect-ratio: auto;
+}
+/* Shared grid rows align corresponding cards even when their text lengths differ. */
+[data-cms-blocknote] .bn-block-column-list[data-equalcards="true"] {
+  display: grid;
+  grid-template-columns: var(--cms-column-tracks);
+  grid-template-rows: repeat(var(--cms-column-rows), auto);
+  row-gap: 0;
+}
+[data-cms-blocknote]
+  .bn-block-column-list[data-equalcards="true"]
+  > .bn-block-column {
+  display: grid;
+  grid-row: 1 / span var(--cms-column-rows);
+  grid-template-rows: subgrid;
+}
+[data-cms-blocknote]
+  .bn-block-column-list[data-equalcards="true"]
+  > .bn-block-column
+  > .bn-block-outer {
+  align-self: start;
+}
+[data-cms-blocknote]
+  .bn-block-column-list[data-equalcards="true"]
+  > .bn-block-column
+  > .bn-block-outer:has([data-cms-link-card]),
+[data-cms-blocknote]
+  .bn-block-column-list[data-equalcards="true"]
+  :is(
+    .bn-block,
+    .node-linkCard,
+    [data-content-type="linkCard"],
+    [data-content-type="linkCard"] > div
+  ):has([data-cms-link-card]) {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  min-width: 0;
+  flex: 1;
+}
+[data-cms-blocknote]
+  .bn-block-column-list[data-equalcards="true"]
+  [data-cms-link-card] {
+  flex: 1;
+}
+@container cms-document (max-width: 640px) {
+  [data-cms-blocknote] .bn-block-column-list,
+  [data-cms-blocknote] .bn-block-column-list[data-equalcards="true"] {
+    display: flex;
     flex-direction: column;
   }
-  [data-cms-blocknote] .bn-block-column {
+  [data-cms-blocknote] .bn-block-column-list > .bn-block-column {
+    display: flex;
     width: 100%;
+    flex: none;
+  }
+  [data-cms-blocknote]
+    .bn-block-column-list[data-medialayout="equalHeight"]
+    :is(.bn-visual-media, [data-cms-card-image]) {
+    height: auto;
+    aspect-ratio: 4 / 3;
+  }
+  [data-cms-blocknote]
+    .bn-block-column-list[data-equalcards="true"]
+    [data-cms-link-card] {
+    flex: none;
+  }
+}
+
+/* Keep the additional action inside the editor gutter, including narrow screens. */
+[data-cms-blocknote] .bn-side-menu:has([data-column-controls]) {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+}
+[data-cms-blocknote] .bn-side-menu > [data-column-controls] {
+  grid-column: 2;
+}
+@media (max-width: 600px) {
+  [data-cms-blocknote] .bn-side-menu:has([data-column-controls]) {
+    grid-template-columns: max-content;
+  }
+  [data-cms-blocknote] .bn-side-menu > [data-column-controls] {
+    grid-column: 1;
   }
 }

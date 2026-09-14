@@ -1,5 +1,10 @@
 import { describe, expect, test } from "bun:test";
 
+import {
+  columnPercentages,
+  resizeColumnCount,
+  setColumnPercentage,
+} from "./column-layout.helper";
 import { contentInputSchema } from "./content.schema";
 import {
   documentText,
@@ -306,5 +311,86 @@ describe("native columns", () => {
       expect(
         documentSchema.safeParse([{ type: "columnList", children }]).success,
       ).toBe(false);
+  });
+});
+
+describe("column layout settings", () => {
+  const columns: BlockDocument = [
+    {
+      type: "column",
+      props: { width: 1 },
+      children: [{ id: "one", type: "paragraph", content: "One" }],
+    },
+    {
+      type: "column",
+      props: { width: 2 },
+      children: [
+        {
+          id: "two",
+          type: "image",
+          props: { url: "https://example.com/photo.png" },
+        },
+      ],
+    },
+    {
+      type: "column",
+      props: { width: 1 },
+      children: [{ id: "three", type: "paragraph", content: "Three" }],
+    },
+  ];
+  test("preserves content and order when reducing columns, without mutating the source", () => {
+    const before = JSON.stringify(columns);
+    const resized = resizeColumnCount(columns, 2);
+    expect(
+      resized.flatMap((column) => column.children?.map((child) => child.id)),
+    ).toEqual(["one", "two", "three"]);
+    expect(resized[1].children).toHaveLength(2);
+    expect(JSON.stringify(columns)).toBe(before);
+    expect(resizeColumnCount(resized, 4)).toHaveLength(4);
+    expect(
+      documentSchema.safeParse([{ type: "columnList", children: resized }])
+        .success,
+    ).toBe(true);
+  });
+  test("redistributes width while preserving other columns' relative proportions", () => {
+    const updated = setColumnPercentage(columns, 0, 40);
+    const widths = columnPercentages(updated);
+    expect(widths[0]).toBeCloseTo(40);
+    expect(widths[1]).toBeCloseTo(40);
+    expect(widths[2]).toBeCloseTo(20);
+    expect(columnPercentages(columns)).toEqual([25, 50, 25]);
+  });
+  test("round trips layout settings, defaults old rows, and rejects invalid input", () => {
+    const props = {
+      gap: 24,
+      mediaLayout: "wide",
+      mediaHeight: 320,
+      mediaFit: "contain",
+      equalCards: true,
+    };
+    const document = [{ type: "columnList", props, children: columns }];
+    expect(
+      documentSchema.parse(JSON.parse(JSON.stringify(document)))[0].props,
+    ).toEqual(props);
+    expect(
+      documentSchema.parse([
+        { type: "columnList", props: {}, children: columns },
+      ])[0].props,
+    ).toMatchObject({ gap: 8, mediaLayout: "original", equalCards: false });
+    for (const patch of [
+      { gap: -1 },
+      { gap: 65 },
+      { gap: 1.5 },
+      { mediaHeight: 641 },
+      { mediaLayout: "bad" },
+      { mediaFit: "fill" },
+      { equalCards: "true" },
+    ]) {
+      expect(
+        documentSchema.safeParse([
+          { ...document[0], props: { ...props, ...patch } },
+        ]).success,
+      ).toBe(false);
+    }
   });
 });

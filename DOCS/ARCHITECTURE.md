@@ -80,7 +80,14 @@ The editor uses the resolved administration theme. Old CodeMirror, Markdown
 renderers/directives and PlantUML remain removed. The shared custom BlockNote
 schema adds link cards and the official GPL-licensed multi-column extension.
 Editor, validation, and server export share the column/columnList structure, including
-column widths. Legacy media rows remain readable and migrate on editing. Card URLs
+column widths. An extended upstream column-list node persists validated gap,
+media layout/height/fit, and card alignment attributes. Its live node view and
+server serializer share DOM construction; the scoped CSS adapter uses the reading
+container width for stacking. Equal-card mode uses shared grid rows and subgrid;
+ordinary mode retains upstream flex column resizing. Layout controls use the
+existing BlockNote side-menu/popover components and shared StyleX buttons/inputs.
+Column reductions preserve content order in the last surviving column.
+Legacy media rows remain readable and migrate on editing. Card URLs
 and metadata are validated before serialization. Authenticated metadata actions call Microlink with a bounded
 timeout and persist the result in the document. Public rendering never fetches
 metadata or executes third-party HTML.

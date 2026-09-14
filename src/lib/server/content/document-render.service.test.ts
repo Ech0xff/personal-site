@@ -233,3 +233,54 @@ test("exports official columns with widths, media controls and saved cards", asy
   expect(html).toContain("Saved preview");
   expect(html).toContain('data-viewer-trigger=""');
 });
+
+test("exports saved layout controls and image dimensions without editor controls", async () => {
+  const html = await renderDocument([
+    {
+      type: "columnList",
+      props: {
+        gap: 24,
+        mediaLayout: "equalHeight",
+        mediaHeight: 320,
+        mediaFit: "contain",
+        equalCards: true,
+      },
+      children: [
+        {
+          type: "column",
+          props: { width: 1 },
+          children: [
+            {
+              type: "image",
+              props: { url: "https://example.com/a.png", previewWidth: 96 },
+            },
+          ],
+        },
+        {
+          type: "column",
+          props: { width: 2 },
+          children: [
+            {
+              type: "linkCard",
+              props: {
+                url: "https://example.com",
+                image: "https://example.com/b.png",
+                title: "A card",
+              },
+            },
+          ],
+        },
+      ],
+    },
+  ]);
+  expect(html).toContain('data-gap="24"');
+  expect(html).toContain('data-medialayout="equalHeight"');
+  expect(html).toContain('data-mediafit="contain"');
+  expect(html).toContain('data-equalcards="true"');
+  expect(html).toContain("--cms-media-height: 320px");
+  expect(html).toContain("--cms-column-gap: 24px");
+  expect(html).toContain("minmax(0, 1fr) minmax(0, 2fr)");
+  expect(html).toContain("data-cms-link-card");
+  expect(html).toContain("data-cms-card-image");
+  expect(html).not.toContain("Column layout");
+});

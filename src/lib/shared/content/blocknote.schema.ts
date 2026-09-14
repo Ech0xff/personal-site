@@ -4,6 +4,9 @@ import type {
   PartialBlock,
 } from "@blocknote/core";
 import type { multiColumnSchema } from "@blocknote/xl-multi-column";
+
+import type { columnLayoutProps } from "./column-layout.schema";
+
 export const linkCardConfig = {
   type: "linkCard",
   content: "none",
@@ -31,7 +34,12 @@ export type LinkCardProps = Readonly<{
 }>;
 
 export type CmsBlockSchema = DefaultBlockSchema &
-  typeof multiColumnSchema.blockSchema & {
+  Omit<typeof multiColumnSchema.blockSchema, "columnList"> & {
+    columnList: {
+      type: "columnList";
+      content: "none";
+      propSchema: typeof columnLayoutProps;
+    };
     linkCard: typeof linkCardConfig;
     mediaRow: typeof mediaRowConfig;
   };

@@ -81,9 +81,14 @@ the content document. There are no author, location, tag, or configuration field
 
 The database stores native BlockNote JSON. The editor supports standard blocks,
 including headings, lists, tables, code, images, audio, video, and file links.
-Use `/Two Columns` or `/Three Columns`, or drag blocks beside each other, for the
-upstream BlockNote multi-column layout. Columns resize by dragging their dividers;
-media, text, and website cards use ordinary block controls. Phones stack columns.
+Use `/Columns`, or drag blocks beside each other, to create a column layout.
+The Column layout button beside a block opens controls for column count, percentage
+widths, equal widths, and a 0–64 px gap. Removing columns moves their contents to
+the last remaining column. Images and videos fill their column width; choose
+original proportions, 1:1, 4:3, 16:9, or a shared media height, with crop/full-image
+fit controls. Equal card heights aligns corresponding content rows across columns.
+Dividers still support dragging. Reading areas at most 640 px wide stack columns
+in order, restore natural card heights, and use 4:3 for shared-height media.
 Previously saved custom media rows migrate to native columns when opened for editing.
 Use `/Link card`, or Turn into link card on a standalone URL, for a saved
 website preview. Enter only a URL: Microlink fills the preview automatically after

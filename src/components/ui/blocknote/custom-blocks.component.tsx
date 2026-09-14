@@ -5,11 +5,12 @@ import {
   useBlockNoteEditor,
   type ReactCustomBlockRenderProps,
 } from "@blocknote/react";
-import { withMultiColumn } from "@blocknote/xl-multi-column";
+import { ColumnBlock } from "@blocknote/xl-multi-column";
 import * as stylex from "@stylexjs/stylex";
 import { ExternalLink, Globe2, Link as LinkIcon, RotateCw } from "lucide-react";
 import Image from "next/image";
 
+import { columnLayoutBlock } from "#lib/shared/content/column-layout.extension";
 import { defaultDictionary } from "#lib/shared/dictionary/dictionary.const";
 
 import { cmsSchema, linkCardConfig, mediaRowConfig } from "./blocknote.schema";
@@ -54,6 +55,7 @@ function LinkCardEditor({
       )}
       {props.url && (
         <a
+          data-cms-link-card
           href={props.url}
           target="_blank"
           rel="noopener noreferrer"
@@ -92,6 +94,7 @@ function LinkCardEditor({
               unoptimized
               width={288}
               height={256}
+              data-cms-card-image
               src={props.image}
               alt=""
               {...stylex.props(styles.image)}
@@ -107,18 +110,18 @@ function LinkCardEditor({
     </div>
   );
 }
-export const editableCmsSchema = withMultiColumn(
-  BlockNoteSchema.create({
-    blockSpecs: {
-      ...defaultBlockSpecs,
-      linkCard: createReactBlockSpec(linkCardConfig, {
-        render: LinkCardEditor,
-      })(),
-      // Keep previously saved rows readable; new editing uses native blocks.
-      mediaRow: createReactBlockSpec(mediaRowConfig, {
-        render: () => <span />,
-      })(),
-    },
-  }),
-);
+export const editableCmsSchema = BlockNoteSchema.create({
+  blockSpecs: {
+    ...defaultBlockSpecs,
+    column: ColumnBlock,
+    columnList: columnLayoutBlock,
+    linkCard: createReactBlockSpec(linkCardConfig, {
+      render: LinkCardEditor,
+    })(),
+    // Keep previously saved rows readable; new editing uses native blocks.
+    mediaRow: createReactBlockSpec(mediaRowConfig, {
+      render: () => <span />,
+    })(),
+  },
+});
 const copy = defaultDictionary.editor;

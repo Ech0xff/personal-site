@@ -10,14 +10,16 @@ import {
   useCreateBlockNote,
   type DefaultReactSuggestionItem,
   SuggestionMenuController,
+  SideMenuController,
   getDefaultReactSlashMenuItems,
 } from "@blocknote/react";
 import {
-  getMultiColumnSlashMenuItems,
+  insertColumnList,
   multiColumnDropCursor,
   locales as columnLocales,
 } from "@blocknote/xl-multi-column";
 import * as stylex from "@stylexjs/stylex";
+import { Columns3 } from "lucide-react";
 import { toast } from "sonner";
 
 import { uploadFile } from "#lib/client/files/file-upload.service";
@@ -27,6 +29,7 @@ import { defaultDictionary } from "#lib/shared/dictionary/dictionary.const";
 
 import { blocknoteStyles } from "./block-editor.style";
 import type { BlockEditorProps } from "./block-editor.type";
+import { ColumnSideMenu } from "./column-settings.component";
 import { editableCmsSchema } from "./custom-blocks.component";
 import { EditorTools } from "./editor-tools.component";
 
@@ -61,6 +64,16 @@ export default function BlockEditor({
       }
     },
   });
+  const columnItems: DefaultReactSuggestionItem[] = [
+    {
+      title: copy.columns.insert,
+      subtext: copy.columns.insertHint,
+      group: "Basic blocks",
+      aliases: ["columns", "two columns", "three columns", "layout"],
+      icon: <Columns3 size={18} />,
+      onItemClick: () => insertColumnList(editor, 2),
+    },
+  ];
   const linkCardItem: DefaultReactSuggestionItem = {
     title: copy.linkCard,
     subtext: copy.linkCardHint,
@@ -90,20 +103,21 @@ export default function BlockEditor({
         formattingToolbar={editable}
         linkToolbar={editable}
         slashMenu={false}
-        sideMenu={editable}
+        sideMenu={false}
         filePanel={editable}
         tableHandles={editable}
       >
         {editable && (
           <>
+            <SideMenuController sideMenu={ColumnSideMenu} />
             <EditorTools editor={editor} />
             <SuggestionMenuController
               triggerCharacter="/"
               getItems={async (query) =>
                 filterSuggestionItems(
-                  combineByGroup<Omit<DefaultReactSuggestionItem, "key">>(
+                  combineByGroup<DefaultReactSuggestionItem>(
                     getDefaultReactSlashMenuItems(editor),
-                    getMultiColumnSlashMenuItems(editor),
+                    columnItems,
                     [linkCardItem],
                   ),
                   query,

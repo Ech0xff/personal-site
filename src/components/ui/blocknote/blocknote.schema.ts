@@ -3,7 +3,7 @@ import {
   createBlockSpec,
   defaultBlockSpecs,
 } from "@blocknote/core";
-import { withMultiColumn } from "@blocknote/xl-multi-column";
+import { ColumnBlock } from "@blocknote/xl-multi-column";
 import * as stylex from "@stylexjs/stylex";
 
 import {
@@ -11,6 +11,7 @@ import {
   mediaRowConfig,
   type LinkCardProps,
 } from "#lib/shared/content/blocknote.schema";
+import { columnLayoutBlock } from "#lib/shared/content/column-layout.extension";
 
 import { cardStyles } from "./link-card.style";
 export {
@@ -28,6 +29,7 @@ function styled(tag: string, className?: string) {
 export function renderLinkCard(props: LinkCardProps) {
   const card = document.createElement("a");
   card.className = stylex.props(cardStyles.card).className ?? "";
+  card.setAttribute("data-cms-link-card", "");
   card.href = props.url;
   card.target = "_blank";
   card.rel = "noopener noreferrer";
@@ -81,6 +83,7 @@ export function renderLinkCard(props: LinkCardProps) {
   card.append(copy);
   if (props.image) {
     const image = document.createElement("img");
+    image.setAttribute("data-cms-card-image", "");
     image.src = props.image;
     image.alt = "";
     image.loading = "lazy";
@@ -97,8 +100,12 @@ const mediaRow = createBlockSpec(mediaRowConfig, {
   render: () => ({ dom: document.createElement("span") }),
   toExternalHTML: () => ({ dom: document.createElement("span") }),
 })();
-export const cmsSchema = withMultiColumn(
-  BlockNoteSchema.create({
-    blockSpecs: { ...defaultBlockSpecs, linkCard, mediaRow },
-  }),
-);
+export const cmsSchema = BlockNoteSchema.create({
+  blockSpecs: {
+    ...defaultBlockSpecs,
+    linkCard,
+    mediaRow,
+    column: ColumnBlock,
+    columnList: columnLayoutBlock,
+  },
+});

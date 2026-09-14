@@ -1,0 +1,60 @@
+import * as stylex from "@stylexjs/stylex";
+
+import { color, font, space, shape } from "#design/tokens.stylex";
+
+export const columnSettingsStyles = stylex.create({
+  dropdown: { overflowY: "auto", padding: 0 },
+  panel: {
+    margin: 0,
+    borderWidth: 0,
+    minWidth: 0,
+    width: "320px",
+    maxWidth: "calc(100vw - 32px)",
+    maxHeight: "min(640px, 75vh)",
+    overflowY: "auto",
+    padding: space.md,
+    display: "flex",
+    flexDirection: "column",
+    gap: space.md,
+    color: color.text,
+    backgroundColor: color.surface,
+    borderRadius: shape.control,
+    fontFamily: font.body,
+  },
+  heading: { margin: 0, fontSize: font.bodySize, fontWeight: font.semibold },
+  row: {
+    display: "flex",
+    alignItems: "center",
+    gap: space.xs,
+    flexWrap: "wrap",
+  },
+  field: {
+    display: "flex",
+    flexDirection: "column",
+    gap: space.xs,
+    fontSize: font.small,
+    minWidth: 0,
+    flexGrow: "1",
+    flexShrink: "1",
+    flexBasis: "80px",
+  },
+  choices: {
+    borderWidth: 0,
+    margin: 0,
+    padding: 0,
+    minWidth: 0,
+    display: "flex",
+    flexWrap: "wrap",
+    gap: space.xxs,
+  },
+  selected: { backgroundColor: color.surfaceHover, color: color.accentText },
+  hint: { margin: 0, fontSize: font.tiny, color: color.muted, lineHeight: 1.5 },
+  check: {
+    display: "flex",
+    alignItems: "center",
+    gap: space.sm,
+    fontSize: font.small,
+    cursor: "pointer",
+  },
+  checkbox: { accentColor: color.accent },
+});

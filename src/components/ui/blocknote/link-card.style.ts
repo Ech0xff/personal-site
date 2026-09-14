@@ -4,10 +4,7 @@ import { color, font, shape, space, motionToken } from "#design/tokens.stylex";
 export const cardStyles = stylex.create({
   card: {
     display: "flex",
-    flexDirection: {
-      default: "row",
-      "@container media-column (min-width: 0px)": "column-reverse",
-    },
+    flexDirection: "row",
     width: "100%",
     minWidth: 0,
     minHeight: "128px",
@@ -76,22 +73,12 @@ export const cardStyles = stylex.create({
     textOverflow: "ellipsis",
   },
   image: {
-    width: {
-      default: "144px",
-      "@container media-column (min-width: 0px)": "100%",
-    },
-    height: {
-      default: null,
-      "@container media-column (min-width: 0px)": "140px",
-    },
+    width: "144px",
     flexShrink: 0,
     objectFit: "cover",
     alignSelf: "stretch",
     maxHeight: "160px",
-    maxWidth: {
-      default: "30%",
-      "@container media-column (min-width: 0px)": "100%",
-    },
+    maxWidth: "30%",
   },
   logo: { width: "16px", height: "16px", objectFit: "contain", flexShrink: 0 },
   tools: {
