@@ -176,12 +176,14 @@ See [Architecture](./ARCHITECTURE.md) for the token login and content data flow.
   the transition and any data wait. It has no spinner, loading caption, or timeout
   controls. Each greeting appears once, including Hello, Hallo, and Ciallo~. A fresh
   randomized permutation is chosen only when an intro actually runs. The initial
-  curtain has no fixed greeting, preventing a pre-hydration Hello flash.
+  curtain has no fixed greeting, preventing a pre-hydration Hello flash. The final
+  greeting remains through data waiting and reveal; direct loads never switch
+  from a greeting to the route name.
 - Greetings play once on direct loads and reloads of every public page, including
   article details. The persistent root
   prevents replay on internal returns; browser history restoration and reduced
   motion bypass them. No session or daily storage is involved.
-- Ordinary public site links cover the old page, navigate, then reveal the new
+- Ordinary public site links prefetch while covering the old page, navigate, then reveal the new
   page. Modified clicks retain Next Link behavior. Inert content and a temporary
   scroll lock protect the transition. Revealing requires the target route's
   complete data and document rendering, not merely a changed URL. Direct visits
@@ -464,7 +466,8 @@ Native heading links retain hashes, history, header clearance, and Lenis support
 The Posts archive uses the shared reading shell. Year groups keep their counts.
 Each row owns its left border and indentation (24 px, or 12 px on phones), so
 adjacent borders form a continuous line while each segment responds independently.
-Every title/date row is a full-width link at least 44 px high. Titles and dates
+Every title/date row is a full-width link at least 44 px high and requests full
+article prefetching when it enters the viewport. Titles and dates
 remain on one line at every width: titles truncate with an ellipsis, retain their
 full accessible text and native title tooltip, and dates remain intact on the
 right. Title sizes are 18 px / 14 px on phones; dates use 14 px / 12 px. Hover and

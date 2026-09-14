@@ -37,10 +37,10 @@ export function DeskCurtain({
         <span aria-hidden {...stylex.props(shell.curveTop)} />
         <span aria-hidden {...stylex.props(shell.curveBottom)} />
         <span {...stylex.props(shell.word)}>
-          {(state.phase !== "intro" || word !== null) && (
+          {(state.presentation !== "greeting" || word !== null) && (
             <i aria-hidden {...stylex.props(shell.wordDot)} />
           )}
-          {state.phase === "intro" ? word : label}
+          {state.presentation === "greeting" ? word : label}
         </span>
       </motion.div>
       <noscript>

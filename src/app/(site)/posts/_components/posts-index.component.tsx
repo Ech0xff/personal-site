@@ -50,6 +50,7 @@ export async function PostsIndex() {
                   <li key={post.id}>
                     <DeskLink
                       href={`/posts/${post.id}`}
+                      prefetch={true}
                       title={post.title}
                       {...stylex.props(styles.row, foundation.focus)}
                     >

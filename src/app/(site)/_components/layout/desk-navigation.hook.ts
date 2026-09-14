@@ -1,5 +1,6 @@
 "use client";
 import { useAnimationControls } from "framer-motion";
+import { PrefetchKind } from "next/dist/client/components/router-reducer/router-reducer-types";
 import { usePathname, useRouter } from "next/navigation";
 import {
   useCallback,
@@ -18,6 +19,7 @@ type CurtainState = Readonly<{
   href: string;
   round: number;
   animated: boolean;
+  presentation: "greeting" | "destination";
 }>;
 const easing = [0.76, 0, 0.24, 1] as const;
 const reducedMotion = () =>
@@ -39,6 +41,7 @@ export function useDeskNavigation() {
     href: pathname,
     round: 0,
     animated: true,
+    presentation: "greeting",
   }));
   const [word, setWord] = useState<string | null>(null);
   const content = useRef<HTMLDivElement>(null);
@@ -85,6 +88,7 @@ export function useDeskNavigation() {
         href,
         round,
         animated,
+        presentation: "destination",
       });
       if (!covering && push) router.push(href);
     },
@@ -105,6 +109,7 @@ export function useDeskNavigation() {
         ...previous,
         phase: "waiting",
         animated: false,
+        presentation: "destination",
       }));
       return;
     }
@@ -151,7 +156,7 @@ export function useDeskNavigation() {
     // An animation failure must not prevent navigation from starting.
     const watchdog = setTimeout(covered, 1500);
     void controls
-      .start({ y: "0%", transition: { duration: 0.5, ease: easing } })
+      .start({ y: "0%", transition: { duration: 0.25, ease: easing } })
       .then(() => {
         clearTimeout(watchdog);
         covered();
@@ -204,15 +209,16 @@ export function useDeskNavigation() {
   useEffect(() => {
     if (state.phase !== "revealing") return;
     const { round } = state;
+    const duration = state.presentation === "greeting" ? 0.65 : 0.35;
     entryControls.set({ y: 20, opacity: 0 });
     void entryControls.start({
       y: 0,
       opacity: 1,
-      transition: { duration: 0.65, delay: 0.1 },
+      transition: { duration },
     });
     const watchdog = setTimeout(() => finish(round), 1500);
     void controls
-      .start({ y: "-125%", transition: { duration: 0.65, ease: easing } })
+      .start({ y: "-125%", transition: { duration, ease: easing } })
       .then(() => {
         clearTimeout(watchdog);
         finish(round);
@@ -243,6 +249,8 @@ export function useDeskNavigation() {
 
   const navigate = (href: string) => {
     if (href === pathname || busy.current) return;
+    // Prepare the target while the old page is still being covered.
+    router.prefetch(href, { kind: PrefetchKind.FULL });
     begin(href, !reducedMotion(), true);
   };
   return {

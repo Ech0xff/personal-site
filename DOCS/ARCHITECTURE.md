@@ -126,7 +126,9 @@ Errors propagate outside the cache to the public error boundary.
 The persistent public shell proactively prefetches `/posts`, `/thoughts`, and
 `/events`, including when mobile navigation is collapsed. Each prefetch registers
 `onInvalidate` to warm the route again when Next.js marks it stale; cleanup stops
-renewal after the shell unmounts. This warms the browser router cache and server
+renewal after the shell unmounts. Article links request full-route prefetching
+in the viewport, including the body behind the Suspense boundary. A click also
+starts full prefetching immediately, overlapping preparation with the cover animation. This warms the browser router cache and server
 content caches on demand, not a permanent cache guarantee or cross-tab live update.
 
 Dashboard mutations expire these caches before the next server read. Direct
@@ -209,10 +211,13 @@ data rather than only resetting the existing error state. Registrations are scop
 up when Activity hides a route. Home and System register independently of the
 homepage's live Display programs. Media downloads do not gate readiness.
 
-Direct visits wait for both the greeting sequence and readiness. Internal links
-cover, navigate, wait, then reveal; history restoration and reduced motion use a
+Direct visits wait for both the greeting sequence and readiness. The final greeting
+stays visible through waiting and reveal, without switching to a destination label.
+Internal links prefetch and cover in parallel, navigate once covered, wait for
+readiness, then reveal. Their cover/reveal durations are 250/350 ms; the initial
+greeting reveal remains 650 ms. History restoration and reduced motion use a
 static data gate without replaying greetings. The curtain keeps its centered
-destination label throughout the wait, without a spinner or timeout controls.
+greeting or destination label throughout the wait, without a spinner or timeout controls.
 Animation watchdogs can skip a failed animation, never the data gate. The curtain exposes a keyboard-accessible waiting dialog, locks the
 underlying content, and restores focus to the visible heading after completion.
 
