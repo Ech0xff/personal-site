@@ -96,6 +96,9 @@ use the same neutral light/dark semantics and blue accent. Curtain, navigation,
 feedback labels, and controls consume these tokens. Physical materials retain
 their identity while dark variants adjust ambient light, highlights, and depth.
 
+On phones, opening Menu reveals the navigation glass background even at the
+top of the page. Closing it restores the background's scroll-dependent visibility.
+
 The navigation theme button cycles System → Light → Dark → System. It stays
 available on phones and uses the same control as administration. Both roots
 share the existing `theme` storage key; System is the default and follows OS

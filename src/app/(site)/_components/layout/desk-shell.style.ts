@@ -70,6 +70,7 @@ export const shell = stylex.create({
   headerScrolled: { "::before": { opacity: 1 } },
   headerMenu: {
     "::before": {
+      opacity: { default: null, [media.phone]: 1 },
       bottom: { default: "-16px", [media.phone]: "-190px" },
       transitionDelay: "0s",
     },
