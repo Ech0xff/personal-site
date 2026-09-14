@@ -1,14 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { color, font, media, shape, space } from "#design/tokens.stylex";
+import { color, font, space } from "#design/tokens.stylex";
 export const contentStyles = stylex.create({
-  page: {
-    width: "100%",
-    maxWidth: shape.reading,
-    marginInline: "auto",
-    paddingInline: { default: space.lg, [media.phone]: "40px" },
-    paddingBlock: space.xxl,
-  },
   title: {
     fontFamily: font.display,
     fontSize: "clamp(36px, 6vw, 56px)",

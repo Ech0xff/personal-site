@@ -135,8 +135,9 @@ optional email addresses remain public. Manage notes at `/dashboard/guestbook`.
 
 Content and counts require the public Supabase URL and anonymous key. Missing
 configuration or unavailable data produces a local unavailable state; the rest
-of the reading desk remains usable. Public queries run on each request. Cache
-Components reuse document rendering, not database reads or visibility decisions.
+of the reading desk remains usable. Public lists, articles, and document rendering use Cache Components; dashboard
+mutations invalidate the affected content. The public shell prefetches Posts,
+Thoughts, and Events and renews those prefetches when Next.js marks them stale.
 See [Architecture](./DOCS/ARCHITECTURE.md#public-content-and-caching) for boundaries.
 See the [design guide](./DOCS/REDESIGN.md) for the public UI and audio sources.
 

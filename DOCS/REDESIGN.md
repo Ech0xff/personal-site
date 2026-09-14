@@ -172,9 +172,9 @@ See [Architecture](./ARCHITECTURE.md) for the token login and content data flow.
   shift. Letters fan gently; the calendar page tilts around its binding.
   Coffee and pencil are decorative and have neither frames nor labels.
 
-- The curtain shows the greeting or destination name. While data is pending,
-  it shows the shared Loading component; after six seconds it adds retry and
-  return controls without revealing unfinished content. Each greeting appears once, including Hello, Hallo, and Ciallo~. A fresh
+- The curtain shows only the greeting or destination name, centered throughout
+  the transition and any data wait. It has no spinner, loading caption, or timeout
+  controls. Each greeting appears once, including Hello, Hallo, and Ciallo~. A fresh
   randomized permutation is chosen only when an intro actually runs. The initial
   curtain has no fixed greeting, preventing a pre-hydration Hello flash.
 - Greetings play once on direct loads and reloads of every public page, including
@@ -425,11 +425,12 @@ guestbook persistence, and dashboard editing/upload flows. See the
 
 ## Public Reading Layout
 
-Thoughts, Events, and article details share the same centered reading
-container: a 768 px maximum outer width with 24 px side padding (720 px of content),
+Posts, Thoughts, Events, article details, and content error states share the
+`ContentShell` reading container: a 768 px maximum outer width with 24 px side padding (720 px of content),
 and 40 px side padding on phones to leave room for the compact TOC. The directory
 is outside this shared content width. At 1280 px and above,
-the TOC sits independently to its right, 132–180 px below the viewport top.
+the fixed TOC derives its horizontal position from the same reading-width token
+plus a gap, 132–180 px below the viewport top. It never consumes body width.
 Full contents use a thin left rail, hierarchical indents, and an accent-colored
 visible section range. Narrower views use a fixed rail of short lines with a single
 bright, long peak centered on the visible section range and tapered neighbors.
@@ -460,14 +461,14 @@ This keeps viewport coordinates stable during page entry while the shell still
 applies its transition focus lock to the directory.
 Native heading links retain hashes, history, header clearance, and Lenis support.
 
-The Posts archive uses a separate centered container up to 1440 px wide with
-24 px side padding (16 px on phones). Year groups keep their counts and use a
-continuous theme line on the left, with 24 px inner indentation (12 px on phones).
+The Posts archive uses the shared reading shell. Year groups keep their counts.
+Each row owns its left border and indentation (24 px, or 12 px on phones), so
+adjacent borders form a continuous line while each segment responds independently.
 Every title/date row is a full-width link at least 44 px high. Titles and dates
 remain on one line at every width: titles truncate with an ellipsis, retain their
 full accessible text and native title tooltip, and dates remain intact on the
 right. Title sizes are 18 px / 14 px on phones; dates use 14 px / 12 px. Hover and
-keyboard focus paint the row surface. The summary may wrap and shows the public
+keyboard focus paint the whole row surface and accent its left border. The summary may wrap and shows the public
 count and approximate non-whitespace document characters, including titles.
 Tags and per-post excerpts are omitted.
 Public lists have no pagination or load-more control. Dashboard pagination is

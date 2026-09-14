@@ -10,10 +10,6 @@ import {
 } from "#design/tokens.stylex";
 
 export const postsStyles = stylex.create({
-  page: {
-    maxWidth: shape.content,
-    paddingInline: { default: space.lg, [media.phone]: space.md },
-  },
   title: {
     fontFamily: font.body,
     fontWeight: font.bold,
@@ -44,10 +40,6 @@ export const postsStyles = stylex.create({
     listStyleType: "none",
     margin: 0,
     padding: 0,
-    borderLeftWidth: shape.fine,
-    borderLeftStyle: "solid",
-    borderLeftColor: color.line,
-    paddingLeft: { default: space.lg, [media.phone]: space.sm },
   },
   row: {
     display: "grid",
@@ -57,7 +49,16 @@ export const postsStyles = stylex.create({
     columnGap: space.sm,
     rowGap: 0,
     paddingBlock: 0,
-    paddingInline: space.xs,
+    paddingLeft: { default: space.lg, [media.phone]: space.sm },
+    paddingRight: space.xs,
+    borderLeftWidth: shape.fine,
+    borderLeftStyle: "solid",
+    borderLeftColor: {
+      default: color.line,
+      ":hover": color.accent,
+      ":focus-visible": color.accent,
+      ":active": color.accent,
+    },
     minHeight: shape.touch,
     backgroundColor: {
       default: "transparent",
@@ -65,7 +66,7 @@ export const postsStyles = stylex.create({
       ":focus-visible": color.surfaceMuted,
       ":active": color.surfaceStrong,
     },
-    transitionProperty: "background-color",
+    transitionProperty: "background-color, border-color",
     transitionDuration: { default: motionToken.fast, [media.reduce]: "0s" },
     fontSize: { default: font.navigation, [media.phone]: font.control },
     lineHeight: 1.6,

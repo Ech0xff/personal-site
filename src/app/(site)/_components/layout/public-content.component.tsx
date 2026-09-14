@@ -11,6 +11,7 @@ import type {
   ContentSummary,
 } from "#lib/shared/content/content.schema";
 
+import { ContentShell } from "./content-shell.component";
 import { contentStyles as styles } from "./public-content.style";
 import { RouteReady, RoutePending } from "./route-ready.component";
 
@@ -39,7 +40,7 @@ async function PublicContentData({
   const characters = items.reduce((sum, item) => sum + item.characterCount, 0);
   return (
     <RouteReady href={`/${kind}`}>
-      <section {...stylex.props(styles.page)}>
+      <ContentShell>
         <h1 tabIndex={-1} {...stylex.props(styles.title)}>
           {title}
         </h1>
@@ -66,7 +67,7 @@ async function PublicContentData({
         ) : (
           <EventsTimeline items={items} body={body} />
         )}
-      </section>
+      </ContentShell>
     </RouteReady>
   );
 }

@@ -16,7 +16,6 @@ import { useRouteReadiness } from "./route-readiness.hook";
 type CurtainState = Readonly<{
   phase: "idle" | "intro" | "covering" | "waiting" | "revealing";
   href: string;
-  from: string;
   round: number;
   animated: boolean;
 }>;
@@ -38,12 +37,10 @@ export function useDeskNavigation() {
   const [state, setState] = useState<CurtainState>(() => ({
     phase: "intro",
     href: pathname,
-    from: "/",
     round: 0,
     animated: true,
   }));
   const [word, setWord] = useState<string | null>(null);
-  const [slowRound, setSlowRound] = useState<number | null>(null);
   const content = useRef<HTMLDivElement>(null);
   const curtain = useRef<HTMLDivElement>(null);
   const sequence = useRef(0);
@@ -52,7 +49,6 @@ export function useDeskNavigation() {
   const { register, isReady } = useRouteReadiness();
   const ready = pathname === state.href && isReady(state.href, state.round);
   const active = state.phase !== "idle" || !ready;
-  const slow = active && slowRound === state.round;
 
   const finish = useCallback(
     (round: number) => {
@@ -87,13 +83,12 @@ export function useDeskNavigation() {
       setState({
         phase: covering ? "covering" : "waiting",
         href,
-        from: pathname,
         round,
         animated,
       });
       if (!covering && push) router.push(href);
     },
-    [controls, entryControls, pathname, router],
+    [controls, entryControls, router],
   );
 
   useEffect(() => {
@@ -226,12 +221,6 @@ export function useDeskNavigation() {
   }, [controls, entryControls, finish, state]);
 
   useEffect(() => {
-    if (!active) return;
-    const timer = setTimeout(() => setSlowRound(state.round), 6000);
-    return () => clearTimeout(timer);
-  }, [active, state.round]);
-
-  useEffect(() => {
     const preference = matchMedia("(prefers-reduced-motion: reduce)");
     const change = () => {
       if (!preference.matches || state.phase === "idle") return;
@@ -265,11 +254,8 @@ export function useDeskNavigation() {
     content,
     curtain,
     active,
-    slow,
     navigate,
     label: routeLabel(state.href),
     readiness: { round: state.round, register },
-    retry: () => window.location.assign(state.href),
-    returnToSource: () => window.location.assign(state.from),
   };
 }

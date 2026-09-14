@@ -8,6 +8,7 @@ import { readPublicPost } from "#lib/server/content/public-content.service";
 import { documentText } from "#lib/shared/content/document.helper";
 import { formatTime } from "#lib/shared/utils/date.helper";
 
+import { ContentShell } from "../../_components/layout/content-shell.component";
 import { contentStyles as styles } from "../../_components/layout/public-content.style";
 import {
   RouteReady,
@@ -31,7 +32,7 @@ async function Article({ params }: Props) {
   const { html, headings } = await renderCachedArticle(post.content);
   return (
     <RouteReady href={`/posts/${id}`}>
-      <article id="post-article" {...stylex.props(styles.page)}>
+      <ContentShell as="article" id="post-article">
         <header>
           <h1 tabIndex={-1} {...stylex.props(styles.title)}>
             {post.title}
@@ -44,7 +45,7 @@ async function Article({ params }: Props) {
           <DocumentView html={html} />
         </div>
         {headings.length > 0 && <ArticleToc headings={headings} />}
-      </article>
+      </ContentShell>
     </RouteReady>
   );
 }

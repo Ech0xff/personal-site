@@ -7,11 +7,13 @@ import {
   media,
   motionToken,
   space,
+  shape,
 } from "#design/tokens.stylex";
 
 const top = "clamp(132px, 18dvh, 180px)";
 const expandedWidth = "min(304px, calc(100vw - 48px))";
-const desktopWidth = "min(232px, calc(50vw - 420px))";
+const desktopLeft = `calc(50% + ${shape.reading} / 2 + ${space.md})`;
+const desktopWidth = `min(232px, calc(50vw - ${shape.reading} / 2 - ${space.md} - ${space.lg}))`;
 const availableHeight = `calc(100dvh - ${top} - 24px)`;
 
 export const tocStyles = stylex.create({
@@ -19,7 +21,7 @@ export const tocStyles = stylex.create({
     position: "fixed",
     top,
     right: { default: "8px", [media.tocWide]: "auto" },
-    left: { default: "auto", [media.tocWide]: "calc(50% + 400px)" },
+    left: { default: "auto", [media.tocWide]: desktopLeft },
     width: { default: "32px", [media.tocWide]: desktopWidth },
     maxHeight: availableHeight,
     paddingInline: { default: 0, [media.tocWide]: space.sm },

@@ -123,6 +123,11 @@ filters. Public list and article query results use `use cache` with
 Supabase fetch remains `no-store`; the function result is the cache boundary.
 React `cache()` additionally deduplicates metadata and body reads within a request.
 Errors propagate outside the cache to the public error boundary.
+The persistent public shell proactively prefetches `/posts`, `/thoughts`, and
+`/events`, including when mobile navigation is collapsed. Each prefetch registers
+`onInvalidate` to warm the route again when Next.js marks it stale; cleanup stops
+renewal after the shell unmounts. This warms the browser router cache and server
+content caches on demand, not a permanent cache guarantee or cross-tab live update.
 
 Dashboard mutations expire these caches before the next server read. Direct
 database edits rely on request-driven background revalidation after one hour
@@ -206,10 +211,9 @@ homepage's live Display programs. Media downloads do not gate readiness.
 
 Direct visits wait for both the greeting sequence and readiness. Internal links
 cover, navigate, wait, then reveal; history restoration and reduced motion use a
-static data gate without replaying greetings. After six seconds, the curtain
-keeps waiting and offers a full destination reload or return to the source (Home
-on direct visits). Animation watchdogs can skip a failed animation, never the
-data gate. The curtain exposes a keyboard-accessible waiting dialog, locks the
+static data gate without replaying greetings. The curtain keeps its centered
+destination label throughout the wait, without a spinner or timeout controls.
+Animation watchdogs can skip a failed animation, never the data gate. The curtain exposes a keyboard-accessible waiting dialog, locks the
 underlying content, and restores focus to the visible heading after completion.
 
 ## Desk RPC

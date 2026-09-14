@@ -4,6 +4,7 @@ import { groupBy } from "es-toolkit";
 import { listPublicContent } from "#lib/server/content/public-content.service";
 import { formatTime } from "#lib/shared/utils/date.helper";
 
+import { ContentShell } from "../../_components/layout/content-shell.component";
 import { DeskLink } from "../../_components/layout/desk-navigation.component";
 import { contentStyles } from "../../_components/layout/public-content.style";
 import { RouteReady } from "../../_components/layout/route-ready.component";
@@ -21,7 +22,7 @@ export async function PostsIndex() {
   ).sort(([first], [second]) => Number(second) - Number(first));
   return (
     <RouteReady href="/posts">
-      <section {...stylex.props(contentStyles.page, styles.page)}>
+      <ContentShell>
         <h1 tabIndex={-1} {...stylex.props(contentStyles.title, styles.title)}>
           Posts
         </h1>
@@ -66,7 +67,7 @@ export async function PostsIndex() {
             </section>
           ))}
         </div>
-      </section>
+      </ContentShell>
     </RouteReady>
   );
 }

@@ -16,6 +16,7 @@ import { useDeskNavigation } from "./desk-navigation.hook";
 import { shell } from "./desk-shell.style";
 import { useDeskVisits } from "./desk-visits.hook";
 import { HomeSignature } from "./home-signature.component";
+import { useRoutePrefetch } from "./route-prefetch.hook";
 import { RouteReadinessContext } from "./route-readiness.hook";
 import { useDeskScroll } from "./use-desk-scroll.hook";
 import { ViewportOverlayContext } from "./viewport-overlay.component";
@@ -31,6 +32,7 @@ export function DeskShell({ children }: Readonly<{ children: ReactNode }>) {
 }
 function DeskShellContent({ children }: Readonly<{ children: ReactNode }>) {
   const navigation = useDeskNavigation();
+  useRoutePrefetch();
   const { pathname, entryControls, content, active, navigate } = navigation;
   useDeskVisits(pathname);
   const [menuOpen, setMenuOpen] = useState(false);
