@@ -1,8 +1,19 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { color, font, media, motionToken, space } from "#design/tokens.stylex";
+import {
+  color,
+  font,
+  media,
+  motionToken,
+  shape,
+  space,
+} from "#design/tokens.stylex";
 
 export const postsStyles = stylex.create({
+  page: {
+    maxWidth: shape.content,
+    paddingInline: { default: space.lg, [media.phone]: space.md },
+  },
   title: {
     fontFamily: font.body,
     fontWeight: font.bold,
@@ -29,20 +40,25 @@ export const postsStyles = stylex.create({
     fontSize: font.bodySize,
     fontWeight: font.regular,
   },
-  list: { listStyleType: "none", margin: 0, padding: 0 },
+  list: {
+    listStyleType: "none",
+    margin: 0,
+    padding: 0,
+    borderLeftWidth: shape.fine,
+    borderLeftStyle: "solid",
+    borderLeftColor: color.line,
+    paddingLeft: { default: space.lg, [media.phone]: space.sm },
+  },
   row: {
     display: "grid",
     width: "100%",
-    gridTemplateColumns: {
-      default: "12px minmax(0, 1fr) auto",
-      [media.phone]: "12px minmax(0, 1fr)",
-    },
-    alignItems: "baseline",
+    gridTemplateColumns: "minmax(0, 1fr) auto",
+    alignItems: "center",
     columnGap: space.sm,
     rowGap: 0,
     paddingBlock: 0,
     paddingInline: space.xs,
-    minHeight: { default: 0, [media.phone]: "44px" },
+    minHeight: shape.touch,
     backgroundColor: {
       default: "transparent",
       ":hover": color.surfaceMuted,
@@ -51,20 +67,19 @@ export const postsStyles = stylex.create({
     },
     transitionProperty: "background-color",
     transitionDuration: { default: motionToken.fast, [media.reduce]: "0s" },
-    fontSize: { default: font.large, [media.phone]: font.bodySize },
+    fontSize: { default: font.navigation, [media.phone]: font.control },
     lineHeight: 1.6,
   },
-  dash: {
-    alignSelf: "start",
-    width: "12px",
-    height: "1px",
-    backgroundColor: color.muted,
-    marginTop: "0.8em",
+  link: {
+    minWidth: 0,
+    color: color.text,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
-  link: { minWidth: 0, color: color.text, overflowWrap: "anywhere" },
   date: {
-    gridColumn: { default: "3", [media.phone]: "2" },
-    fontSize: { default: font.bodySize, [media.phone]: font.small },
+    gridColumn: "2",
+    fontSize: { default: font.control, [media.phone]: font.small },
     color: color.muted,
     whiteSpace: "nowrap",
     lineHeight: 1.6,

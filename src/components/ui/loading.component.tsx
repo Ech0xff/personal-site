@@ -1,6 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import { LoaderCircle } from "lucide-react";
 
+import type { StyleInput } from "#design/style.type";
 import { color, font, media, space } from "#design/tokens.stylex";
 
 const spin = stylex.keyframes({ to: { transform: "rotate(360deg)" } });
@@ -18,6 +19,7 @@ const styles = stylex.create({
     fontSize: font.control,
   },
   compact: { minHeight: "120px" },
+  inherit: { color: "inherit" },
   spinner: {
     width: "24px",
     height: "24px",
@@ -30,13 +32,29 @@ const styles = stylex.create({
     animationPlayState: { default: "running", [media.reduce]: "paused" },
   },
 });
-export default function Loading({ compact = false }: { compact?: boolean }) {
+export default function Loading({
+  compact = false,
+  tone = "default",
+  xstyle,
+}: Readonly<{
+  compact?: boolean;
+  tone?: "default" | "inherit";
+  xstyle?: StyleInput;
+}>) {
   return (
     <output
       aria-live="polite"
-      {...stylex.props(styles.root, compact && styles.compact)}
+      {...stylex.props(
+        styles.root,
+        compact && styles.compact,
+        tone === "inherit" && styles.inherit,
+        xstyle,
+      )}
     >
-      <span aria-hidden {...stylex.props(styles.spinner)}>
+      <span
+        aria-hidden
+        {...stylex.props(styles.spinner, tone === "inherit" && styles.inherit)}
+      >
         <LoaderCircle size={24} />
       </span>
       <span>Loading…</span>

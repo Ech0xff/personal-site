@@ -12,52 +12,62 @@ import type {
 } from "#lib/shared/content/content.schema";
 
 import { contentStyles as styles } from "./public-content.style";
+import { RouteReady, RoutePending } from "./route-ready.component";
 
-async function PublicDocument({ item }: Readonly<{ item: ContentSummary }>) {
-  if (!item.document) return null;
-  return <DocumentView html={await renderCachedDocument(item.document)} />;
-}
 async function PublicContentData({
   kind,
-}: Readonly<{ kind: Exclude<ContentKind, "posts"> }>) {
-  const items = await listPublicContent(kind).catch(() => null);
-  if (items === null)
-    return (
-      <output>Content is unavailable right now. Please try again later.</output>
-    );
+  title,
+}: Readonly<{ kind: Exclude<ContentKind, "posts">; title: string }>) {
+  const items = await listPublicContent(kind);
+  const documents = new Map(
+    await Promise.all(
+      items.map(
+        async (item) =>
+          [
+            item.id,
+            item.document ? await renderCachedDocument(item.document) : "",
+          ] as const,
+      ),
+    ),
+  );
   const body = (item: ContentSummary) => (
     <div {...stylex.props(styles.body)}>
-      <PublicDocument item={item} />
+      <DocumentView html={documents.get(item.id) ?? ""} />
     </div>
   );
   const total = <strong {...stylex.props(styles.total)}>{items.length}</strong>;
   const characters = items.reduce((sum, item) => sum + item.characterCount, 0);
   return (
-    <>
-      <p {...stylex.props(styles.description)}>
-        {kind === "thoughts" ? (
-          <>
-            Just some random ramblings. Total {total} entries, approx{" "}
-            <strong {...stylex.props(styles.total)}>{characters}</strong>{" "}
-            characters.
-          </>
-        ) : (
-          <>
-            A timeline of memorable moments and milestones. Total {total} events
-            recorded, documenting the journey.
-          </>
-        )}
-      </p>
-      {items.length === 0 ? (
+    <RouteReady href={`/${kind}`}>
+      <section {...stylex.props(styles.page)}>
+        <h1 tabIndex={-1} {...stylex.props(styles.title)}>
+          {title}
+        </h1>
         <p {...stylex.props(styles.description)}>
-          Nothing here yet. Check back soon.
+          {kind === "thoughts" ? (
+            <>
+              Just some random ramblings. Total {total} entries, approx{" "}
+              <strong {...stylex.props(styles.total)}>{characters}</strong>{" "}
+              characters.
+            </>
+          ) : (
+            <>
+              A timeline of memorable moments and milestones. Total {total}{" "}
+              events recorded, documenting the journey.
+            </>
+          )}
         </p>
-      ) : kind === "thoughts" ? (
-        <ThoughtsFeed items={items} body={body} />
-      ) : (
-        <EventsTimeline items={items} body={body} />
-      )}
-    </>
+        {items.length === 0 ? (
+          <p {...stylex.props(styles.description)}>
+            Nothing here yet. Check back soon.
+          </p>
+        ) : kind === "thoughts" ? (
+          <ThoughtsFeed items={items} body={body} />
+        ) : (
+          <EventsTimeline items={items} body={body} />
+        )}
+      </section>
+    </RouteReady>
   );
 }
 
@@ -66,13 +76,8 @@ export function PublicContentPage({
   title,
 }: Readonly<{ kind: Exclude<ContentKind, "posts">; title: string }>) {
   return (
-    <section {...stylex.props(styles.page)}>
-      <h1 tabIndex={-1} {...stylex.props(styles.title)}>
-        {title}
-      </h1>
-      <Suspense fallback={<output>Loading {kind}…</output>}>
-        <PublicContentData kind={kind} />
-      </Suspense>
-    </section>
+    <Suspense fallback={<RoutePending />}>
+      <PublicContentData kind={kind} title={title} />
+    </Suspense>
   );
 }

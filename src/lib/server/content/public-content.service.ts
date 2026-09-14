@@ -1,4 +1,5 @@
 import "server-only";
+import { cacheLife, cacheTag } from "next/cache";
 import { connection } from "next/server";
 import { cache } from "react";
 import { z } from "zod";
@@ -11,15 +12,17 @@ import type {
 import { documentText } from "#lib/shared/content/document.helper";
 
 import { makePublicClient } from "../supabase.client";
+import { contentListTag, publicPostTag } from "./content-cache.helper";
 
 type PublicContentSummary = ContentSummary &
   Readonly<{ characterCount: number }>;
 
-/** These queries are intentionally outside every use-cache boundary. */
 export async function listPublicContent(
   kind: ContentKind,
 ): Promise<PublicContentSummary[]> {
-  await connection();
+  "use cache";
+  cacheLife("hours");
+  cacheTag(contentListTag(kind));
   const client = makePublicClient();
   const items: PublicContentSummary[] = [];
   let total = Infinity;
@@ -51,10 +54,10 @@ export async function listPublicContent(
   return items;
 }
 
-// React cache deduplicates metadata and page reads within one request only.
-export const readPublicPost = cache(async (id: string) => {
-  await connection();
-  if (!z.uuid().safeParse(id).success) return null;
+async function readCachedPublicPost(id: string) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(publicPostTag(id));
   const { data, error } = await makePublicClient()
     .from("posts")
     .select("*")
@@ -63,6 +66,12 @@ export const readPublicPost = cache(async (id: string) => {
     .maybeSingle();
   if (error) throw error;
   return data ? contentRecordSchema.parse(data) : null;
+}
+
+// Deduplicate metadata and body reads, including UUID validation, within a request.
+export const readPublicPost = cache(async (id: string) => {
+  if (!z.uuid().safeParse(id).success) return null;
+  return readCachedPublicPost(id.toLowerCase());
 });
 
 export async function readPublicCounts() {

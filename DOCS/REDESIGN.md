@@ -172,8 +172,9 @@ See [Architecture](./ARCHITECTURE.md) for the token login and content data flow.
   shift. Letters fan gently; the calendar page tilts around its binding.
   Coffee and pencil are decorative and have neither frames nor labels.
 
-- The curtain contains only the greeting or destination name, with no footer
-  caption. Each greeting appears once, including Hello, Hallo, and Ciallo~. A fresh
+- The curtain shows the greeting or destination name. While data is pending,
+  it shows the shared Loading component; after six seconds it adds retry and
+  return controls without revealing unfinished content. Each greeting appears once, including Hello, Hallo, and Ciallo~. A fresh
   randomized permutation is chosen only when an intro actually runs. The initial
   curtain has no fixed greeting, preventing a pre-hydration Hello flash.
 - Greetings play once on direct loads and reloads of every public page, including
@@ -182,9 +183,12 @@ See [Architecture](./ARCHITECTURE.md) for the token login and content data flow.
   motion bypass them. No session or daily storage is involved.
 - Ordinary public site links cover the old page, navigate, then reveal the new
   page. Modified clicks retain Next Link behavior. Inert content and a temporary
-  scroll lock protect the transition; a six-second watchdog releases it if a
-  navigation stalls. History changes cancel pending animations. The page heading
-  receives focus after a completed animated transition.
+  scroll lock protect the transition. Revealing requires the target route's
+  complete data and document rendering, not merely a changed URL. Direct visits
+  also wait for readiness after greetings finish. History changes cancel old
+  animations and use a static waiting layer; reduced motion also uses static
+  waiting. The visible page heading receives focus after completion. See
+  [route readiness](./ARCHITECTURE.md#public-route-readiness).
 - The tilted display has three icon buttons for CLI, Stats, and Guestbook at
   the bottom right. The `>_` prompt appears only in CLI; the clock stays at the
   bottom left. Each icon has an accessible name and pressed state. The casing height stays fixed across programs. Selection displays the target panel immediately;
@@ -406,7 +410,10 @@ and labels while each object owns geometry. Navigation effects live in the
 navigation hook; the shell composes the header, content, and curtain.
 
 The server homepage composes the computer's rendered content slots. Stats and
-Guestbook have independent Suspense fallbacks sized to the display viewport.
+Guestbook use explicit request state to show the shared Loading component across
+the entire upper viewport, centered horizontally and vertically. The clock and
+program buttons stay available; read/write tabs and partial data are replaced
+during reads, including retries and loading more entries.
 Selecting a program immediately selects its slot; scan animation is decorative.
 The shell never imports data-access components. Stats and Guestbook read on activation, with local loading, error and retry
 states; there are no artificial delays, polling or Realtime subscriptions.
@@ -418,7 +425,7 @@ guestbook persistence, and dashboard editing/upload flows. See the
 
 ## Public Reading Layout
 
-Posts, Thoughts, Events, and article details share the same centered reading
+Thoughts, Events, and article details share the same centered reading
 container: a 768 px maximum outer width with 24 px side padding (720 px of content),
 and 40 px side padding on phones to leave room for the compact TOC. The directory
 is outside this shared content width. At 1280 px and above,
@@ -453,12 +460,16 @@ This keeps viewport coordinates stable during page entry while the shell still
 applies its transition focus lock to the directory.
 Native heading links retain hashes, history, header clearance, and Lenis support.
 
-The Posts archive keeps yearly counts and uses a short horizontal dash beside
-each title, aligned with its first line. Each title/date row is one full-width
-link with no inter-row gap or vertical padding. Hover and keyboard focus paint
-a rectangular theme surface behind the entire row. Dates align right on desktop. Its summary shows the public post count and
-approximate non-whitespace characters in document text (including titles).
-Phones place the date beneath the title. Tags and per-post excerpts are omitted.
+The Posts archive uses a separate centered container up to 1440 px wide with
+24 px side padding (16 px on phones). Year groups keep their counts and use a
+continuous theme line on the left, with 24 px inner indentation (12 px on phones).
+Every title/date row is a full-width link at least 44 px high. Titles and dates
+remain on one line at every width: titles truncate with an ellipsis, retain their
+full accessible text and native title tooltip, and dates remain intact on the
+right. Title sizes are 18 px / 14 px on phones; dates use 14 px / 12 px. Hover and
+keyboard focus paint the row surface. The summary may wrap and shows the public
+count and approximate non-whitespace document characters, including titles.
+Tags and per-post excerpts are omitted.
 Public lists have no pagination or load-more control. Dashboard pagination is
 unchanged. Shared visibility controls use a blue selected segment, and all Posts
 table columns, including action groups, center beneath their headings. The auth
@@ -466,7 +477,7 @@ card has a token-driven border and shadow in both themes. Its return link uses
 the shared magnetic interaction. The token field keeps its filled background and
 accent underline at rest; its label floats only on focus or when populated.
 
-Page introductions use live public totals: Posts and Thoughts include approximate
+Page introductions use the cached public list totals: Posts and Thoughts include approximate
 non-whitespace document character counts; Events reports its recorded event count.
 Events do not require a heading and can render body text or media alone.
 

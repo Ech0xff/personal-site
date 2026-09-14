@@ -109,25 +109,35 @@ There are no database overrides, locale prefixes, language cookies, or AI
 translation. Business content keeps its original language.
 
 Dashboard data is requested under session authorization without shared caching.
-Successful mutations revalidate the dashboard path, matching public list, article
-path, and homepage counts where relevant. There are no cached database queries,
-content cache tags, webhooks, or cache maintenance endpoints.
+Successful mutations immediately expire the matching public list tag and, for
+posts, the UUID detail tag with `updateTag`, then revalidate the dashboard, public
+list, article, and homepage paths. Missing article results carry the same detail
+tag so publishing also invalidates cached not-found results. There are no
+webhooks or cache maintenance endpoints.
 
 ## Public Content and Caching
 
 A separate server-only anonymous Supabase client uses RLS and explicit `show`
-filters. Queries use `no-store` after `connection()` inside local Suspense
-boundaries; no cached ancestor owns the queries. React `cache()` deduplicates
-article reads for metadata and content within a request, not across requests.
+filters. Public list and article query results use `use cache` with
+`cacheLife("hours")`, keyed by content kind or normalized UUID. The underlying
+Supabase fetch remains `no-store`; the function result is the cache boundary.
+React `cache()` additionally deduplicates metadata and body reads within a request.
+Errors propagate outside the cache to the public error boundary.
+
+Dashboard mutations expire these caches before the next server read. Direct
+database edits rely on request-driven background revalidation after one hour
+(the preset expires after one day); this is not a scheduled refresh or a strict
+one-hour visibility guarantee. Existing browser pages are not pushed updates.
 Public lists fetch all rows in batches, advancing by the actual returned count
 until the reported total is reached, including when the database caps a batch.
 Lists sort by descending publish time and then ID. Publish time does not schedule
 visibility. Counts use filtered exact count queries.
 
 `use cache` with `cacheLife('hours')` caches BlockNote HTML and article anchor/TOC
-preparation by the complete document input. Changed documents get a new key;
-permission and visibility checks always precede reuse. HTML caches cannot bypass
-Show/Hide or administrator authorization. Article IDs are UUIDs; missing and
+preparation by the complete document input. Changed documents get a new key.
+The public record cache is invalidated on Show/Hide changes before the next
+server read; administrator authorization always precedes private HTML reuse.
+Article IDs are UUIDs; missing and
 hidden records use the route's not-found state. Rendering preserves validated
 media and original-language content.
 
@@ -175,12 +185,32 @@ styles remain with their dashboard feature.
 ## Public Display Composition
 
 The homepage Server Component supplies rendered CLI, Stats, and Guestbook slots
-to the client computer shell. Stats and Guestbook each have a local Suspense
-boundary; the clock, program buttons, and outer desk remain available while a
-slot renders. Program selection is immediate; scan animations do not gate data.
-Guestbook form state, submission effects, and list rendering have separate owners.
-Activity hides inactive programs and suspends their effects; revealing a panel
-refreshes its data. Loading and failed requests stay local to their panel.
+to the client computer shell. Stats and Guestbook explicitly track browser reads;
+effect requests do not suspend. During reads, the shared Loading component fills
+and centers within the entire content viewport, while the clock, program buttons,
+and outer desk remain available. Program selection is immediate; scan animations
+do not gate data. Activity retains inactive programs and suspends their effects;
+reactivation refreshes data. Drafts and already fetched data survive loading.
+Errors and retries remain local; writes retain their own pending state.
+
+## Public Route Readiness
+
+Public content boundaries resolve the full page before a client `RouteReady`
+registration permits the curtain to reveal it. Thoughts and Events prepare all
+HTML in parallel before registering. Pending boundaries, including retries,
+block readiness; empty results, errors, and article not-found views register as
+complete. The public error page uses Next.js `retry()` to fetch fresh server
+data rather than only resetting the existing error state. Registrations are scoped to the route and navigation round and cleaned
+up when Activity hides a route. Home and System register independently of the
+homepage's live Display programs. Media downloads do not gate readiness.
+
+Direct visits wait for both the greeting sequence and readiness. Internal links
+cover, navigate, wait, then reveal; history restoration and reduced motion use a
+static data gate without replaying greetings. After six seconds, the curtain
+keeps waiting and offers a full destination reload or return to the source (Home
+on direct visits). Animation watchdogs can skip a failed animation, never the
+data gate. The curtain exposes a keyboard-accessible waiting dialog, locks the
+underlying content, and restores focus to the visible heading after completion.
 
 ## Desk RPC
 

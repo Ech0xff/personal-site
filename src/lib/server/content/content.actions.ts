@@ -1,11 +1,15 @@
 "use server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { z } from "zod";
 
-import { contentKindSchema } from "#lib/shared/content/content.schema";
+import {
+  contentKindSchema,
+  type ContentKind,
+} from "#lib/shared/content/content.schema";
 import { statusSchema } from "#lib/shared/content/status.schema";
 
 import { adminAction } from "../actions/action.service";
+import { contentListTag, publicPostTag } from "./content-cache.helper";
 import {
   changeContentStatus,
   readContent,
@@ -14,7 +18,9 @@ import {
 } from "./content.service";
 
 const identity = z.object({ kind: contentKindSchema, id: z.uuid() });
-const refreshContent = (kind: string, id: string) => {
+const refreshContent = (kind: ContentKind, id: string) => {
+  updateTag(contentListTag(kind));
+  if (kind === "posts") updateTag(publicPostTag(id.toLowerCase()));
   revalidatePath(`/dashboard/${kind === "events" ? "event" : kind}`);
   revalidatePath(`/${kind}`);
   if (kind === "posts") revalidatePath(`/posts/${id}`);

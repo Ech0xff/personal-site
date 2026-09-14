@@ -4,6 +4,7 @@ import * as stylex from "@stylexjs/stylex";
 import { defaultDictionary } from "#lib/shared/dictionary/dictionary.const";
 
 import { foundation } from "../../_design/foundation.style";
+import { DisplayLoading } from "./display-loading.component";
 import { panel } from "./display-panel.style";
 import { DisplayTabs } from "./display-tabs.component";
 import { GuestbookForm } from "./guestbook-form.component";
@@ -27,6 +28,7 @@ export function DisplayGuestbook() {
     submit,
     readTab,
   } = useGuestbook();
+  if (tab === "read" && loading) return <DisplayLoading />;
   return (
     <div {...stylex.props(panel.guestbook)}>
       <DisplayTabs label="Guestbook pages">
@@ -65,7 +67,6 @@ export function DisplayGuestbook() {
         {tab === "read" ? (
           <>
             <GuestbookList entries={entries} />
-            {loading && <output>{copy.loadingNotes}</output>}
             {!loading && entries.length === 0 && !notice && (
               <p>{copy.emptyNotes}</p>
             )}

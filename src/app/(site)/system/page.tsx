@@ -1,4 +1,9 @@
+import { RouteReady } from "../_components/layout/route-ready.component";
 import { DesignSystem } from "./_components/design-system.component";
 export default function SystemPage() {
-  return <DesignSystem />;
+  return (
+    <RouteReady href="/system">
+      <DesignSystem />
+    </RouteReady>
+  );
 }

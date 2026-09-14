@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 import {
   useCallback,
-  useEffect,
+  useLayoutEffect,
   useState,
   useRef,
   type FormEvent,
@@ -23,7 +23,7 @@ export function useGuestbook() {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
   const [notice, setNotice] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(tab === "read");
   const [pending, setPending] = useState(false);
   const submitting = useRef(false);
   const request = useRef<AbortController | null>(null);
@@ -54,7 +54,7 @@ export function useGuestbook() {
       if (!controller.signal.aborted) setLoading(false);
     }
   }, []);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (tab === "read") void load(0);
     return () => request.current?.abort();
   }, [load, tab]);

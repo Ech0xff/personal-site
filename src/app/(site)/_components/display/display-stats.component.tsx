@@ -6,10 +6,13 @@ import { defaultDictionary } from "#lib/shared/dictionary/dictionary.const";
 
 import { foundation } from "../../_design/foundation.style";
 import { DeskLink } from "../layout/desk-navigation.component";
+import { DisplayLoading } from "./display-loading.component";
 import { panel } from "./display-panel.style";
 import { useDisplayStats } from "./display-stats.hook";
 export function DisplayStats() {
-  const { stats, notice, liked, pending, like, retry } = useDisplayStats();
+  const { stats, loading, notice, liked, pending, like, retry } =
+    useDisplayStats();
+  if (loading) return <DisplayLoading />;
   return (
     <>
       <h2 {...stylex.props(panel.title)}>{copy.statsTitle}</h2>

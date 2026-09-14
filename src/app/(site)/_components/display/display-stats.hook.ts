@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
 import { likeDesk, readDeskStats } from "#lib/client/desk/desk.service";
 import type { DeskStats } from "#lib/shared/desk/desk.schema";
@@ -8,12 +8,14 @@ import { defaultDictionary } from "#lib/shared/dictionary/dictionary.const";
 import { deskLikedAtom } from "./stats.atom";
 export function useDisplayStats() {
   const [stats, setStats] = useState<DeskStats | null>(null);
+  const [loading, setLoading] = useState(true);
   const [notice, setNotice] = useState("");
   const [liked, setLiked] = useAtom(deskLikedAtom);
   const [pending, setPending] = useState(false);
   const liking = useRef(false);
   const [revision, setRevision] = useState(0);
-  useEffect(() => {
+  useLayoutEffect(() => {
+    setLoading(true);
     const controller = new AbortController();
     void readDeskStats(controller.signal)
       .then((data) => {
@@ -24,6 +26,9 @@ export function useDisplayStats() {
       })
       .catch(() => {
         if (!controller.signal.aborted) setNotice(copy.statsUnavailable);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
   }, [revision]);
@@ -45,6 +50,7 @@ export function useDisplayStats() {
   };
   return {
     stats,
+    loading,
     notice,
     liked,
     pending,
