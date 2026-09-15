@@ -7,7 +7,7 @@ relevant file or issue when possible.
 
 - [ ] Apply the updated desk RPCs to hosted and other legacy databases before
       deployment. Follow the additive [database workflow](../README.md#database)
-      and verify workspace publication, visits, and statistics.
+      and verify direct desk saving, legacy migration, visits, and statistics.
 - [ ] Decide whether to standardize the casing of the `DOCS` directory.
 - [ ] Remove the `jsdom` 26.1.0 override and `@blocknote/server-util` DOM-origin
       patch once BlockNote's server renderer works
@@ -45,7 +45,7 @@ acceptance scenarios, performance baselines, and owner decisions.
 
 See the [redesign guide](./REDESIGN.md) for the public reading desk and source research.
 
-- [ ] Add CMS audio import from uploaded files or URLs, extract editable title/artist/duration metadata, and store audio plus precomputed spectra durably. Reuse the [built-in analysis format](./REDESIGN.md#built-in-music-and-audio-analysis); production decoding should run as bounded background work.
+- [ ] Bring hosted `05_desk.sql` up to date and apply `06_audio.sql` (preview currently lacks the configuration and audio RPCs), then verify a real upload, URL import, and spectrum-only retry in the deployed Vercel Function. See [audio import operations](../README.md#audio-imports).
 - [ ] Check explicit playback, curved-slider touch/keyboard behavior, TOC morph smoothness, and visuals on physical Safari/iOS devices before production rollout.
 
 - [ ] Choose a new redesign favicon and visual signature; the public site currently uses a blank favicon.
@@ -56,3 +56,10 @@ See the [redesign guide](./REDESIGN.md) for the public reading desk and source r
 
 - [ ] Build schema-driven item metadata forms on the existing item configuration contract.
 - [ ] Add explicit item creation, duplication, and removal flows to the desk workbench.
+
+## Desk editor acceptance
+
+- [x] Use server-initialized Jotai configuration with direct Apply and persisted layout history.
+- [x] Add paper fields, a passage directory, common appearance settings, and automatic calendar dates.
+- [x] Add magnetic icon tabs, scoped Restore, paired initial/hover states, an explicit movement switch, and a compact recording editor. Omit empty content tabs and keep toolbar buttons transparent.
+- [x] Preserve fixed item coordinates through collision resolution and layout saves; keep desktop scale independent of movable content.

@@ -5,6 +5,8 @@ import {
   useRef,
   useState,
 } from "react";
+
+import { lockScrolling } from "#lib/client/scroll/scroll-lock.service";
 type Image = {
   src: string;
   alt?: string;
@@ -47,12 +49,11 @@ export function useImageViewer() {
   useLayoutEffect(() => {
     const dialog = dialogRef.current;
     if (!image || !dialog) return;
-    const previousOverflow = document.body.style.overflow;
+    const unlock = lockScrolling(document.body);
     dialog.showModal();
-    document.body.style.overflow = "hidden";
     return () => {
       dialog.close();
-      document.body.style.overflow = previousOverflow;
+      unlock();
     };
   }, [image]);
   useEffect(() => {

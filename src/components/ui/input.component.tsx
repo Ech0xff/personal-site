@@ -4,6 +4,8 @@ import type { ComponentPropsWithRef } from "react";
 import type { StyleInput } from "#design/style.type";
 import { color, font, motionToken, shape } from "#design/tokens.stylex";
 
+import { fieldStyles } from "./field.style";
+
 const styles = stylex.create({
   field: { display: "block", position: "relative", minWidth: 0, width: "100%" },
   input: {
@@ -13,6 +15,7 @@ const styles = stylex.create({
     borderRadius: shape.control,
     paddingInline: "14px",
     color: color.text,
+    fontFamily: font.body,
     backgroundColor: {
       default: color.surfaceMuted,
       ":focus": color.surfaceHover,
@@ -62,12 +65,14 @@ interface Props extends ComponentPropsWithRef<"input"> {
   controlSize?: keyof typeof sizes;
   invalid?: boolean;
   label?: string;
+  emphasized?: boolean;
 }
 export default function Input({
   controlSize = "md",
   invalid,
   xstyle,
   label,
+  emphasized = false,
   ...props
 }: Props) {
   const control = (
@@ -79,7 +84,9 @@ export default function Input({
         styles.input,
         sizes[controlSize],
         Boolean(label) && styles.floating,
+        emphasized && fieldStyles.emphasized,
         xstyle,
+        Boolean(invalid || props["aria-invalid"]) && fieldStyles.invalid,
       )}
     />
   );

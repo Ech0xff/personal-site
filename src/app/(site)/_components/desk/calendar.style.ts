@@ -17,12 +17,6 @@ export const styles = stylex.create({
     borderRadius: shape.small,
     position: "relative",
     width: "125px",
-    transform: {
-      default: "rotate(-7deg)",
-      ":hover": "rotate(-2deg)",
-      ":focus-visible": "rotate(-2deg)",
-      [media.reduce]: "rotate(-7deg)",
-    },
     transitionProperty: "transform",
     transitionDuration: { default: motionToken.slow, [media.reduce]: "0s" },
     transitionTimingFunction: motionToken.ease,

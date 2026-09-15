@@ -361,10 +361,10 @@ progress, changing playback mode, and pinning controls do not reload the audio.
 Playback intent, hover visibility, spectrum frames, and the current clock tick
 are transient and are not persisted.
 
-Future upload/URL ingestion, metadata prefill, and durable audio/analysis storage
-belong to the CMS integration phase. Reuse the analysis format above, analyze once
-per imported file, and keep decoding work outside ordinary playback requests.
-See [TODO](./TODO.md#redesign-follow-up) for the remaining integration work.
+The recording editor imports files and direct URLs with metadata prefill and
+durable audio/analysis storage. It reuses the analysis format above and keeps
+decoding outside ordinary playback requests. See [audio import operations](../README.md#audio-imports)
+for setup and deployment verification.
 
 ## Display Content
 
@@ -520,24 +520,25 @@ shared surface, border, typography and motion tokens.
 Item definitions own display names, config schemas/defaults, size limits, collision
 padding, and capabilities. Existing object renderers receive configuration through
 props. Introductory copy and terminal lines are configuration; guestbook data,
-statistics, and playback stay in their existing features. The lamp and introduction
-remain fixed and participate in collision detection. All other items allow dragging,
-including decorations. Reference layouts use desktop/tablet/phone dimensions and
-preserve the composition across viewport changes. Item internals use the named desk container. Browsing and editing both choose the active layout from the current window width; no manual device-size override is available.
+statistics, and playback stay in their existing features. The lamp and introduction default to fixed positions and participate in collision
+detection. Appearance can enable or disable dragging for each item, including
+decorations. The initial desktop composition retains the original display and record player in the upper corners, books and letter in the lower corners, and calendar and coffee below the centered introduction. Reference placements account for item frame padding. Reference layouts use desktop/tablet/phone dimensions and
+preserve the composition across viewport changes. Fixed items retain their saved positions and are placed before movable items. Saving another item never rewrites fixed placements. Desktop scaling depends only on the viewport; when movable items cannot fit, the canvas scrolls instead of shrinking fixed objects. Its scroll viewport reserves the header area so the lamp cord can extend above the scene without being clipped. Item internals use the named desk container. Browsing and editing both choose the active layout from the current window width; no manual device-size override is available.
 
-A 350 ms hold anywhere in an item’s hover area lifts the object; moving more than 8 px before activation cancels it. Short presses keep the original clicks. Inputs, sliders, and internal scroll areas retain their own interactions. Touch scrolling remains native until a hold activates dragging. Existing hover frames provide feedback during browsing. Editing hides those frames and shows a single editor boundary with its title centered on the top edge.
+A 350 ms hold anywhere in an item’s hover area lifts the object; moving more than 8 px before activation cancels it. Short presses keep the original clicks. Inputs, sliders, and internal scroll areas retain their own interactions. Gesture exclusion checks stop at the item boundary, so the outer desk scroll container does not disable dragging. Touch scrolling remains native until a hold activates dragging. Existing hover frames provide feedback during browsing. Editing hides those frames and shows a single editor boundary with its title centered on the top edge.
 Press feedback, the lifted frame, and a legal-position outline explain the gesture.
 The floating object may cross neighbors; release chooses the nearest clear rectangle.
 Escape and pointer cancellation restore its starting state. Visitors can always drag,
 regardless of authentication or edit mode. Personal positions persist independently
-of the published layout and do not copy public metadata or capability settings.
+of the saved layout and do not copy public metadata or capability settings.
 
 The display's lower-right Settings gear offers Reset layout to every visitor and an additional
 Edit desk action for administrators. Reset clears personal positions in every size class and restores the public composition. Settings actions use phosphor-colored icons with floating hover/focus labels. Editing happens in the home scene. Its icon toolbar is portaled to the document body and fixed above the bottom safe area, so it never displaces the scene. It wraps groups on narrow screens and keeps hints and notices outside normal flow. The toolbar
-provides undo/redo, draft saving, publishing, business-interaction
-preview, and exit. Both Settings and the toolbar offer Shuffle: only draggable items move, fixed items remain obstacles, and the collision solver places each randomized candidate within the canvas width and height. It retries bounded compositions and keeps the previous layout when no complete fit is found. Settings saves personal positions for the active breakpoint; editing adds a single undo step without publishing. The toolbar Reset restores the current breakpoint to its published layout as one undoable edit; it does not save or publish. Short presses select objects; resize handles preserve aspect ratio.
-Each completed drag/resize adds one history step. Unsaved exit asks before discarding.
-Drafts load independently of personal placement; failed saves preserve local edits.
+uses transparent magnetic buttons without a saved-status badge and provides undo/redo, business-interaction preview, and exit; saves happen at the
+end of an edit or completed layout gesture. Both Settings and the toolbar offer Shuffle: only draggable items move, fixed items remain obstacles, and the collision solver places each randomized candidate within the canvas width and height. It retries bounded compositions and keeps the previous layout when no complete fit is found. Settings saves personal positions for the active breakpoint; editing saves a single undo step. The toolbar Reset restores the current breakpoint to its layout at editor entry as one saved, undoable edit. Short presses select objects; resize handles preserve aspect ratio.
+Each successful drag/resize adds one history step; undo and redo also save.
+The server-loaded configuration is ready before entering edit mode. Failed layout
+saves return to the saved placement, while failed form saves keep their input.
 See [Architecture](./ARCHITECTURE.md#configurable-desk) for persistence and permissions.
 
 ## Ring Cursor
@@ -558,3 +559,42 @@ which is editable only in the editor. Returning to the diagram requests the curr
 source. Errors remain within the block and never prevent source access. Empty blocks
 start in source mode. Diagram clicks use the existing image viewer. Link-card edit
 controls appear inside the card and temporarily replace its bottom domain line.
+
+### Item content forms and recordings
+
+In edit mode the title has a separate pencil action. The name remains a drag handle
+for movable objects; introduction reserves space for its title and defaults to fixed. A
+centered native dialog resembles a sheet of paper with generous margins, subtle
+edges, and theme-aware surface and ink. Dedicated paper fields retain floating
+labels over ruled inputs; multiline text follows evenly spaced lines. Long forms scroll
+inside the dialog, which stays within the phone viewport. Compact form margins leave room for a live preview on the right; below the desktop breakpoint, the preview follows the fields. It reflects the unsaved content, scale, and initial/hover appearance. The preview keeps hover animation but its native inert subtree excludes clicks, focus, navigation, dragging, and playback. Escape and close confirm
+before dropping changed fields; backdrop clicks do not dismiss the editor. Apply
+persists the item and adds one undo step after success. There is no extra Save button.
+The pencil action has the shared magnetic effect without a hover background. Close
+uses the shared dashboard rotating cross and drawn ring, with magnetism and a
+retracting/fading exit transition. Content
+and Appearance are separate sections; names and the dragging toggle belong to Appearance; only type-specific fields
+remain in Content. Tabs use magnetic icons with accessible labels and the navigation bar’s accent dot for the active section. Items without type-specific fields omit Content. Movement uses a switch with explicit Draggable and Fixed states. The visible
+editor heading is omitted. Restore stays at the lower left in both tabs and resets
+only the active section.
+Appearance presents Initial and On hover side by side with matching rotation,
+horizontal/vertical offset, and scale labels. Values describe each state directly.
+Resizable items also expose minimum and maximum size. Current scale affects only
+the active breakpoint; other appearance values are shared. Terminal passages use a
+text directory without numeric prefixes, with drag ordering, keyboard-accessible move actions, and one
+active editor. Calendar dates automatically show the visitor’s current local day.
+The dialog shell opens immediately,
+with form loading and audio-library refresh indicators confined to its body.
+
+The record form uses a sortable track directory and one active editor with a compact
+play/pause, seek, and duration preview. Add recordings expands upload, URL import,
+and a compact persistent library. It supports uploading MP3/M4A/WAV/FLAC or importing a direct audio URL,
+editing title/artist, previewing, reordering and removing recordings. Duration comes
+from analysis. The library retains background jobs across dialog closures and offers
+manual retries. Audio and spectrum readiness are displayed independently: missing
+spectra never prevent playback. The first version limits imports to 50 MiB and
+15 minutes; music-platform share pages are not audio URLs.
+
+The login card retains its contrasting surface and border but omits the broad outer
+shadow that introduced dark color bands on the surrounding canvas. Its return link
+pairs the existing label with a left arrow.

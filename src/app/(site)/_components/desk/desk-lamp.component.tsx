@@ -102,7 +102,8 @@ const styles = stylex.create({
 export function DeskLamp({
   on,
   toggle,
-}: Readonly<{ on: boolean; toggle: () => void }>) {
+  preview = false,
+}: Readonly<{ on: boolean; toggle: () => void; preview?: boolean }>) {
   return (
     <>
       <span {...stylex.props(styles.cord)} aria-hidden="true" />
@@ -138,9 +139,11 @@ export function DeskLamp({
             {...stylex.props(styles.highlight)}
           />
         </svg>
-        <span {...stylex.props(styles.hint)} aria-hidden="true">
-          Click to turn {on ? "off" : "on"}
-        </span>
+        {!preview && (
+          <span {...stylex.props(styles.hint)} aria-hidden="true">
+            Click to turn {on ? "off" : "on"}
+          </span>
+        )}
       </button>
     </>
   );

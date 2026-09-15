@@ -5,7 +5,11 @@ import { ROUTES } from "#lib/shared/routes/routes.const";
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["*.*.*.*", "[::1]"],
   cacheComponents: true,
+  outputFileTracingIncludes: {
+    "/api/admin/audio/import": ["./node_modules/ffmpeg-static/ffmpeg"],
+  },
   serverExternalPackages: [
+    "ffmpeg-static",
     "@blocknote/core",
     "@blocknote/react",
     "@blocknote/server-util",

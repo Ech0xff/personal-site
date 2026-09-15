@@ -9,10 +9,6 @@ import { login } from "#lib/server/auth/auth.actions";
 const styles = stylex.create({
   form: { display: "flex", flexDirection: "column", gap: space.md },
   error: { color: color.dangerText },
-  input: {
-    backgroundColor: color.surfaceHover,
-    boxShadow: `inset 0 -2px ${color.focus}`,
-  },
 });
 export default function TokenForm() {
   const [state, action, pending] = useActionState(login, { error: "" });
@@ -20,7 +16,7 @@ export default function TokenForm() {
     <form action={action} {...stylex.props(styles.form)}>
       <Input
         label="Access token"
-        xstyle={styles.input}
+        emphasized
         id="admin-token"
         name="token"
         type="password"

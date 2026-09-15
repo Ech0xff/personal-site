@@ -1,159 +1,97 @@
-import { useEffect, useState } from "react";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useEffect, useEffectEvent, useState } from "react";
 
-import {
-  loadDeskWorkspace,
-  updateDeskConfiguration,
-} from "#lib/server/desk/desk-configuration.actions";
+import { createDeskEditorAtoms } from "#lib/client/desk/desk-editor.atom";
+import { updateDeskConfiguration } from "#lib/server/desk/desk-configuration.actions";
+import type { AudioAsset } from "#lib/shared/audio/audio.schema";
 import type {
   DeskBreakpoint,
   DeskConfiguration,
 } from "#lib/shared/desk/desk-layout.schema";
-import { defaultDictionary } from "#lib/shared/dictionary/dictionary.const";
 
-type Editing = Readonly<{
-  history: readonly DeskConfiguration[];
-  index: number;
-  saved: DeskConfiguration;
-  revision: number;
-  preview: DeskConfiguration | null;
-}>;
-export function useDeskEditor(initial: DeskConfiguration) {
-  const [published, setPublished] = useState(initial);
-  const [editing, setEditing] = useState<Editing | null>(null);
-  const [busy, setBusy] = useState(false);
-  const [notice, setNotice] = useState("");
-  const configuration = editing?.history[editing.index] ?? published;
-  const dirty =
-    editing !== null &&
-    JSON.stringify(configuration) !== JSON.stringify(editing.saved);
+export function useDeskEditor(
+  initial: DeskConfiguration,
+  initialAudio: readonly AudioAsset[],
+) {
+  const [atoms] = useState(() =>
+    createDeskEditorAtoms(initial, updateDeskConfiguration),
+  );
+  const [configuration, setConfiguration] = useAtom(atoms.configuration);
+  const [history, setHistory] = useAtom(atoms.history);
+  const saving = useAtomValue(atoms.saving);
+  const save = useSetAtom(atoms.save);
+  const [audioAssets, setAudioAssets] = useState(initialAudio);
+  const [baseline, setBaseline] = useState<DeskConfiguration | null>(null);
+  const [preview, setPreview] = useState<DeskConfiguration | null>(null);
+  const busy = saving.status === "saving";
+  const syncInitial = useEffectEvent((next: DeskConfiguration) => {
+    if (!baseline && !busy) {
+      setConfiguration(next);
+      setHistory({ entries: [next], index: 0 });
+    }
+  });
   useEffect(() => {
-    setPublished(initial);
+    syncInitial(initial);
   }, [initial]);
   useEffect(() => {
-    if (!dirty) return;
-    const prevent = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-    };
+    setAudioAssets((current) => [
+      ...new Map(
+        [...current, ...initialAudio].map((asset) => [asset.id, asset]),
+      ).values(),
+    ]);
+  }, [initialAudio]);
+  useEffect(() => {
+    if (!busy) return;
+    const prevent = (event: BeforeUnloadEvent) => event.preventDefault();
     window.addEventListener("beforeunload", prevent);
     return () => window.removeEventListener("beforeunload", prevent);
-  }, [dirty]);
-  const enter = async () => {
-    setBusy(true);
-    setNotice("");
-    try {
-      const result = await loadDeskWorkspace();
-      if (!result.ok) {
-        setNotice(result.error);
-        return;
-      }
-      const draft = result.data.draft ?? result.data.published ?? published;
-      setEditing({
-        history: [draft],
-        index: 0,
-        saved: draft,
-        revision: result.data.revision,
-        preview: null,
-      });
-    } catch {
-      setNotice(copy.loadFailed);
-    } finally {
-      setBusy(false);
+  }, [busy]);
+  const change = async (next: DeskConfiguration) => {
+    if (preview) {
+      setPreview(next);
+      return true;
     }
-  };
-  const change = (next: DeskConfiguration) =>
-    setEditing((state) =>
-      !state
-        ? state
-        : state.preview
-          ? { ...state, preview: next }
-          : {
-              ...state,
-              history: [...state.history.slice(0, state.index + 1), next],
-              index: state.index + 1,
-            },
-    );
-  const save = async (publish: boolean) => {
-    if (!editing || busy) return;
-    setBusy(true);
-    setNotice("");
-    try {
-      const result = await updateDeskConfiguration({
-        revision: editing.revision,
-        configuration,
-        publish,
-      });
-      if (!result.ok) {
-        setNotice(result.error);
-        return;
-      }
-      setEditing((state) =>
-        state
-          ? { ...state, saved: configuration, revision: result.data.revision }
-          : state,
-      );
-      if (publish) setPublished(configuration);
-      setNotice(publish ? copy.published : copy.draftSaved);
-    } catch {
-      setNotice(copy.saveFailed);
-    } finally {
-      setBusy(false);
-    }
-  };
-  const exit = () => {
-    if (busy || (dirty && !window.confirm(copy.discard))) return;
-    setEditing(null);
-    setNotice("");
+    return save(next);
   };
   return {
-    configuration: editing?.preview ?? configuration,
-    editing: editing !== null,
-    preview: Boolean(editing?.preview),
+    configuration: preview ?? configuration,
+    audioAssets,
+    setAudioAssets,
+    editing: baseline !== null,
+    preview: preview !== null,
     busy,
-    notice,
-    dirty,
-    enter,
-    exit,
+    notice: saving.status === "error" ? saving.error : "",
+    enter: () => {
+      setBaseline(configuration);
+      setHistory({ entries: [configuration], index: 0 });
+    },
+    exit: () => {
+      if (busy) return;
+      setPreview(null);
+      setBaseline(null);
+    },
     change,
     reset: (breakpoint: DeskBreakpoint) => {
-      if (!editing || busy || editing.preview) return;
-      const layout = published.layouts[breakpoint];
-      if (
-        JSON.stringify(configuration.layouts[breakpoint]) ===
-        JSON.stringify(layout)
-      )
-        return;
-      change({
+      if (!baseline || busy || preview) return;
+      void save({
         ...configuration,
-        layouts: { ...configuration.layouts, [breakpoint]: layout },
+        layouts: {
+          ...configuration.layouts,
+          [breakpoint]: baseline.layouts[breakpoint],
+        },
       });
-      setNotice("");
     },
-    save,
-    undo: () =>
-      setEditing((state) =>
-        state ? { ...state, index: Math.max(0, state.index - 1) } : state,
-      ),
-    redo: () =>
-      setEditing((state) =>
-        state
-          ? {
-              ...state,
-              index: Math.min(state.history.length - 1, state.index + 1),
-            }
-          : state,
-      ),
-    canUndo: editing !== null && editing.index > 0,
-    canRedo: editing !== null && editing.index < editing.history.length - 1,
+    undo: () => {
+      if (history.index > 0)
+        void save(history.entries[history.index - 1], history.index - 1);
+    },
+    redo: () => {
+      if (history.index < history.entries.length - 1)
+        void save(history.entries[history.index + 1], history.index + 1);
+    },
+    canUndo: history.index > 0,
+    canRedo: history.index < history.entries.length - 1,
     togglePreview: () =>
-      setEditing((state) =>
-        state
-          ? {
-              ...state,
-              preview: state.preview ? null : state.history[state.index],
-            }
-          : state,
-      ),
+      setPreview((current) => (current ? null : configuration)),
   };
 }
-
-const copy = defaultDictionary.desk.layout;

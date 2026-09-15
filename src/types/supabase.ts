@@ -9,6 +9,60 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      audio_assets: {
+        Row: {
+          artist: string
+          created_at: string
+          description_src: string | null
+          duration: number | null
+          error: string | null
+          id: string
+          run_id: string | null
+          source_path: string | null
+          source_url: string | null
+          spectrum_src: string | null
+          spectrum_status: string
+          src: string | null
+          started_at: string | null
+          status: string
+          title: string
+        }
+        Insert: {
+          artist?: string
+          created_at?: string
+          description_src?: string | null
+          duration?: number | null
+          error?: string | null
+          id: string
+          run_id?: string | null
+          source_path?: string | null
+          source_url?: string | null
+          spectrum_src?: string | null
+          spectrum_status?: string
+          src?: string | null
+          started_at?: string | null
+          status?: string
+          title?: string
+        }
+        Update: {
+          artist?: string
+          created_at?: string
+          description_src?: string | null
+          duration?: number | null
+          error?: string | null
+          id?: string
+          run_id?: string | null
+          source_path?: string | null
+          source_url?: string | null
+          spectrum_src?: string | null
+          spectrum_status?: string
+          src?: string | null
+          started_at?: string | null
+          status?: string
+          title?: string
+        }
+        Relationships: []
+      }
       configs: {
         Row: {
           key: string
@@ -124,17 +178,21 @@ export type Database = {
         Args: { entry_id: string; operation: string }
         Returns: undefined
       }
+      read_desk_audio: {
+        Args: never
+        Returns: {
+          artist: string
+          description_src: string
+          duration: number
+          id: string
+          spectrum_src: string
+          src: string
+          title: string
+        }[]
+      }
       read_desk_configuration: { Args: never; Returns: Json }
       read_desk_stats: { Args: never; Returns: Json }
       read_guestbook: { Args: { page_index?: number }; Returns: Json }
-      save_desk_configuration: {
-        Args: {
-          configuration: Json
-          expected_revision: number
-          publish?: boolean
-        }
-        Returns: Json
-      }
       submit_guestbook: {
         Args: {
           author_email: string

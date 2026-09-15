@@ -37,7 +37,7 @@ export function RecordSpectrum({
 }: Readonly<{
   audioRef: RefObject<HTMLAudioElement | null>;
   playing: boolean;
-  src: string;
+  src: string | null;
 }>) {
   const data = useRecordSpectrum(src);
   const pathRef = useRef<SVGPathElement>(null);

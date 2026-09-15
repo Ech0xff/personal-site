@@ -7,7 +7,6 @@ export const styles = stylex.create({
     position: "relative",
     width: "145px",
     height: "130px",
-    transform: "rotate(13deg)",
   },
   saucer: {
     position: "absolute",

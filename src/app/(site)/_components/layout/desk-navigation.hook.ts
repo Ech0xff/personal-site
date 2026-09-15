@@ -10,6 +10,8 @@ import {
   useState,
 } from "react";
 
+import { lockScrolling } from "#lib/client/scroll/scroll-lock.service";
+
 import { shouldPlayIntro, shuffleGreetings } from "./intro.helper";
 import { navigation, introGreetings } from "./navigation.const";
 import { useRouteReadiness } from "./route-readiness.hook";
@@ -188,11 +190,10 @@ export function useDeskNavigation() {
     const node = content.current;
     if (node) node.inert = active;
     if (!active) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const unlock = lockScrolling(document.body);
     curtain.current?.focus({ preventScroll: true });
     return () => {
-      document.body.style.overflow = previousOverflow;
+      unlock();
       if (node) node.inert = false;
     };
   }, [active]);

@@ -3,12 +3,13 @@ import { useEffect, useState } from "react";
 import { loadSpectrum } from "#lib/client/audio/spectrum.service";
 import { type RecordSpectrumData } from "#lib/shared/audio/spectrum.helper";
 
-export function useRecordSpectrum(src: string) {
+export function useRecordSpectrum(src: string | null) {
   const [loaded, setLoaded] = useState<Readonly<{
-    src: string;
+    src: string | null;
     data: RecordSpectrumData;
   }> | null>(null);
   useEffect(() => {
+    if (!src) return;
     const controller = new AbortController();
     const load = async () => {
       try {

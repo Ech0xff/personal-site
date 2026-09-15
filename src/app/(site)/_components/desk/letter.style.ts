@@ -17,12 +17,6 @@ export const styles = stylex.create({
     position: "relative",
     width: "100%",
     paddingBottom: "4px",
-    transform: {
-      default: "rotate(-8deg)",
-      ":hover": "rotate(-3deg)",
-      ":focus-visible": "rotate(-3deg)",
-      [media.reduce]: "rotate(-8deg)",
-    },
     transitionProperty: "transform",
     transitionDuration: { default: motionToken.slow, [media.reduce]: "0s" },
     transitionTimingFunction: motionToken.ease,

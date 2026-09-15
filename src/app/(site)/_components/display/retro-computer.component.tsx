@@ -1,7 +1,7 @@
 "use client";
 import * as stylex from "@stylexjs/stylex";
 import { useAtom } from "jotai";
-import { Activity, type ReactNode } from "react";
+import { Activity, useId, type ReactNode } from "react";
 
 import {
   font,
@@ -39,12 +39,6 @@ const styles = stylex.create({
     padding: "13px",
     backgroundColor: material.casing,
     boxShadow: `inset 0 -4px 0 ${material.casingShade}, ${shadow.lifted}`,
-    transform: {
-      default: "rotate(-4deg)",
-      ":hover": "rotate(0deg)",
-      ":has(:focus-visible)": "rotate(0deg)",
-      [media.reduce]: "rotate(-4deg)",
-    },
     transitionProperty: "transform",
     transitionDuration: { default: motionToken.slow, [media.reduce]: "0s" },
     transitionTimingFunction: motionToken.ease,
@@ -123,11 +117,15 @@ const styles = stylex.create({
 export function RetroComputer({
   programs,
   name,
+  preview = false,
 }: Readonly<{
   programs: Readonly<Record<DisplayProgram, ReactNode>>;
   name: string;
+  preview?: boolean;
 }>) {
-  const [program, setProgram] = useAtom(displayProgramAtom);
+  const [selectedProgram, setProgram] = useAtom(displayProgramAtom);
+  const program = preview ? "terminal" : selectedProgram;
+  const panelId = useId();
   return (
     <section
       aria-label="Desk display"
@@ -137,8 +135,8 @@ export function RetroComputer({
         <DeskClock />
         <div {...stylex.props(styles.viewport)}>
           <section
-            id="display-program-panel"
-            aria-labelledby={`display-${program}-button`}
+            id={panelId}
+            aria-labelledby={`${panelId}-${program}`}
             {...stylex.props(styles.panel)}
           >
             {displayPrograms.map(({ id }) => (
@@ -160,12 +158,12 @@ export function RetroComputer({
           {displayPrograms.map((item) => (
             <button
               key={item.id}
-              id={`display-${item.id}-button`}
+              id={`${panelId}-${item.id}`}
               type="button"
               aria-label={item.label}
               title={item.label}
               aria-pressed={program === item.id}
-              aria-controls="display-program-panel"
+              aria-controls={panelId}
               onClick={() => setProgram(item.id)}
               {...stylex.props(
                 styles.button,

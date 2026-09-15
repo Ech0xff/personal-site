@@ -4,9 +4,11 @@ import { join } from "node:path";
 
 import { file, spawn, which, write } from "bun";
 
+import {
+  analyzeAudio,
+  readAnalysisPcm,
+} from "#lib/shared/audio/audio-analysis.helper";
 import { playlist } from "#lib/shared/audio/playlist.const";
-
-import { analyzeAudio, readAnalysisPcm } from "./audio-analysis.helper";
 
 const temporary = await mkdtemp(join(tmpdir(), "redesign-spectrum-"));
 try {

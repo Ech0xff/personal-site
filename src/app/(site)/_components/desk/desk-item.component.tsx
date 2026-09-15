@@ -1,7 +1,9 @@
 import * as stylex from "@stylexjs/stylex";
 import { motion } from "framer-motion";
+import { Pencil } from "lucide-react";
 import { useEffect, useRef, type ReactNode } from "react";
 
+import { Magnetic } from "#components/ui/magnetic.component";
 import { deskItemDefinitions } from "#lib/shared/desk/desk-item.schema";
 import type {
   Box,
@@ -24,7 +26,8 @@ type Props = Readonly<{
   busy: boolean;
   selected: boolean;
   select: () => void;
-  commit: (box: Box, scale: number) => void;
+  edit: (trigger: HTMLButtonElement) => void;
+  commit: (box: Box, scale: number) => Promise<boolean>;
   preview: (box: Box | null) => void;
   measure: (id: string, size: Size) => void;
   children: ReactNode;
@@ -39,11 +42,15 @@ export function DeskItemFrame({
   busy,
   selected,
   select,
+  edit,
   commit,
   preview,
   measure,
   children,
 }: Props) {
+  const appearance = entry.item.appearance;
+  const baseTransform = `translate(${appearance.offsetX}px, ${appearance.offsetY}px) rotate(${appearance.rotation}deg)`;
+  const hoverTransform = `translate(${appearance.hoverX}px, ${appearance.hoverY}px) rotate(${appearance.hoverRotation}deg) scale(${appearance.hoverScale / entry.scale})`;
   const content = useRef<HTMLDivElement>(null);
   const definition = deskItemDefinitions[entry.item.type];
   const gesture = useDeskItemGesture({
@@ -77,7 +84,7 @@ export function DeskItemFrame({
     <motion.div
       data-desk-item={entry.item.id}
       data-item-state={gesture.phase}
-      data-item-draggable={definition.capabilities.draggable}
+      data-item-draggable={entry.item.appearance.draggable}
       {...stylex.props(styles.root, active && styles.active)}
       style={{
         left: entry.box.x,
@@ -87,12 +94,12 @@ export function DeskItemFrame({
         x: gesture.x,
         y: gesture.y,
       }}
-      drag={definition.capabilities.draggable}
+      drag={entry.item.appearance.draggable}
       dragListener={false}
       dragControls={gesture.controls}
       dragMomentum={false}
       onDragStartCapture={(event) => {
-        if (definition.capabilities.draggable) event.preventDefault();
+        if (entry.item.appearance.draggable) event.preventDefault();
       }}
       onDrag={gesture.drag}
       onDragEnd={gesture.finish}
@@ -103,7 +110,10 @@ export function DeskItemFrame({
       }}
       onClickCapture={(event) => {
         const target = event.target;
-        if (target instanceof Element && target.closest("[data-item-resize]"))
+        if (
+          target instanceof Element &&
+          target.closest("[data-item-resize], [data-item-edit]")
+        )
           return;
         if (
           gesture.suppressClick.current ||
@@ -126,13 +136,19 @@ export function DeskItemFrame({
         >
           <DeskItemContext
             value={{
-              draggable: definition.capabilities.draggable,
+              draggable: entry.item.appearance.draggable,
               editing,
               emphasized:
                 active || gesture.phase === "pressing" || (editing && selected),
             }}
           >
-            {children}
+            <div
+              {...stylex.props(
+                styles.appearance(baseTransform, hoverTransform),
+              )}
+            >
+              {children}
+            </div>
           </DeskItemContext>
         </motion.div>
       </motion.div>
@@ -146,17 +162,36 @@ export function DeskItemFrame({
           )}
         />
       )}
-      {definition.capabilities.draggable && editing && (
-        <button
-          type="button"
-          data-item-drag-handle
-          aria-label={`${defaultDictionary.desk.layout.move} ${entry.item.name}`}
-          title={`${defaultDictionary.desk.layout.holdToMove} ${entry.item.name}`}
-          onClick={select}
-          {...stylex.props(styles.handle, styles.handleVisible)}
-        >
-          {entry.item.name}
-        </button>
+      {editing && (
+        <div {...stylex.props(styles.editorTitle)}>
+          {entry.item.appearance.draggable ? (
+            <button
+              type="button"
+              data-item-drag-handle
+              disabled={busy}
+              aria-label={`${defaultDictionary.desk.layout.move} ${entry.item.name}`}
+              title={`${defaultDictionary.desk.layout.holdToMove} ${entry.item.name}`}
+              onClick={select}
+              {...stylex.props(styles.titleText)}
+            >
+              {entry.item.name}
+            </button>
+          ) : (
+            <span {...stylex.props(styles.titleText)}>{entry.item.name}</span>
+          )}
+          <button
+            type="button"
+            data-item-edit
+            disabled={busy || active}
+            aria-label={`${defaultDictionary.desk.itemEditor.edit} ${entry.item.name}`}
+            onClick={(event) => edit(event.currentTarget)}
+            {...stylex.props(styles.editButton)}
+          >
+            <Magnetic compact>
+              <Pencil size={13} aria-hidden />
+            </Magnetic>
+          </button>
+        </div>
       )}
       {editing &&
         selected &&

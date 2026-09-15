@@ -1,18 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
-import {
-  Check,
-  Circle,
-  Eye,
-  EyeOff,
-  Redo2,
-  RotateCcw,
-  RefreshCw,
-  Save,
-  Shuffle,
-  Undo2,
-  Upload,
-  X,
-} from "lucide-react";
+import { Eye, EyeOff, Redo2, RotateCcw, Shuffle, Undo2, X } from "lucide-react";
 import { createPortal } from "react-dom";
 
 import { color, font, shadow, shape } from "#design/tokens.stylex";
@@ -51,23 +38,6 @@ const styles = stylex.create({
     backgroundColor: color.line,
     marginInline: "3px",
   },
-  status: {
-    position: "absolute",
-    top: "-5px",
-    right: "-5px",
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "18px",
-    height: "18px",
-    borderRadius: shape.round,
-    borderWidth: "1px",
-    borderStyle: "solid",
-    borderColor: color.line,
-    backgroundColor: color.surface,
-    color: color.muted,
-  },
-  dirty: { color: color.accent },
   notice: {
     position: "absolute",
     bottom: "calc(100% + 12px)",
@@ -104,7 +74,12 @@ export function DeskEditorToolbar({
   shuffle: () => void;
 }>) {
   return createPortal(
-    <div role="toolbar" aria-label={copy.label} {...stylex.props(styles.dock)}>
+    <div
+      role="toolbar"
+      aria-label={copy.label}
+      aria-busy={editor.busy}
+      {...stylex.props(styles.dock)}
+    >
       <div aria-label="History" {...stylex.props(styles.group)}>
         <DeskAction
           label={copy.undo}
@@ -146,20 +121,6 @@ export function DeskEditorToolbar({
           {editor.preview ? <EyeOff {...icon} /> : <Eye {...icon} />}
         </DeskAction>
         <DeskAction
-          label={copy.save}
-          disabled={editor.busy || !editor.dirty}
-          onClick={() => void editor.save(false)}
-        >
-          <Save {...icon} />
-        </DeskAction>
-        <DeskAction
-          label={copy.publish}
-          disabled={editor.busy}
-          onClick={() => void editor.save(true)}
-        >
-          <Upload {...icon} />
-        </DeskAction>
-        <DeskAction
           label={copy.exit}
           disabled={editor.busy}
           onClick={editor.exit}
@@ -167,31 +128,9 @@ export function DeskEditorToolbar({
           <X {...icon} />
         </DeskAction>
       </div>
-      <output
-        aria-label={editor.dirty ? copy.unsaved : copy.saved}
-        {...stylex.props(styles.status, editor.dirty && styles.dirty)}
-      >
-        {editor.dirty ? (
-          <Circle size={8} aria-hidden />
-        ) : (
-          <Check size={12} aria-hidden />
-        )}
-      </output>
       {editor.notice && (
         <div {...stylex.props(styles.notice)}>
           <output>{editor.notice}</output>
-          {editor.notice === copy.conflict && (
-            <DeskAction
-              label={copy.reload}
-              disabled={editor.busy}
-              onClick={() => {
-                if (!editor.dirty || window.confirm(copy.reloadDiscard))
-                  void editor.enter();
-              }}
-            >
-              <RefreshCw {...icon} />
-            </DeskAction>
-          )}
         </div>
       )}
     </div>,

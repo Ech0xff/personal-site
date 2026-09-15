@@ -1,8 +1,10 @@
 import { z } from "zod";
 
-import { playlist } from "#lib/shared/audio/playlist.const";
-
-import { adjacentTrack, type RecordSession } from "./record-session.helper";
+import type { AudioTrack } from "#lib/shared/audio/audio.schema";
+import {
+  adjacentTrack,
+  type RecordSession,
+} from "#lib/shared/audio/record-session.helper";
 
 export const playbackModeSchema = z.enum([
   "repeat-all",
@@ -20,12 +22,13 @@ export function cyclePlaybackMode(mode: PlaybackMode): PlaybackMode {
   return mode === "repeat-one" ? "shuffle" : "repeat-all";
 }
 export function nextRecordTrack(
+  playlist: readonly AudioTrack[],
   id: RecordSession["trackId"],
   mode: PlaybackMode,
   direction: -1 | 1,
   random: number,
 ) {
-  if (mode !== "shuffle") return adjacentTrack(id, direction);
+  if (mode !== "shuffle") return adjacentTrack(playlist, id, direction);
   const candidates = playlist.filter((track) => track.id !== id);
   const index = Math.min(
     candidates.length - 1,

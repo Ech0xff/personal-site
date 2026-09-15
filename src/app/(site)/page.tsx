@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 
+import { readPublicAudioAssets } from "#lib/server/audio/audio-assets.service";
 import { readPublicDeskConfiguration } from "#lib/server/desk/desk-configuration.service";
 
 import { ReadingDesk } from "./_components/desk/reading-desk.component";
@@ -11,10 +12,14 @@ import {
 } from "./_components/layout/route-ready.component";
 
 async function HomeDesk() {
-  const configuration = await readPublicDeskConfiguration();
+  const [configuration, audioAssets] = await Promise.all([
+    readPublicDeskConfiguration(),
+    readPublicAudioAssets(),
+  ]);
   return (
     <RouteReady href="/">
       <ReadingDesk
+        audioAssets={audioAssets}
         items={configuration.items}
         layouts={configuration.layouts}
         programs={{

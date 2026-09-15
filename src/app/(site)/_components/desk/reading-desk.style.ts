@@ -9,6 +9,7 @@ import {
   lighting,
   lampIntensity,
   material,
+  shape,
 } from "#design/tokens.stylex";
 
 const wave = stylex.keyframes({
@@ -17,6 +18,14 @@ const wave = stylex.keyframes({
   "14%, 28%": { transform: "rotate(-10deg)" },
 });
 export const desk = stylex.create({
+  viewport: { position: "relative", overflowX: "clip" },
+  scrollViewport: {
+    overflowY: "auto",
+    marginTop: `calc(0px - ${shape.header})`,
+    paddingTop: shape.header,
+  },
+  scaledCanvas: { position: "relative" },
+  clippedCanvas: { overflow: "clip", overflowClipMargin: shape.header },
   scene: {
     position: "relative",
     width: "100%",

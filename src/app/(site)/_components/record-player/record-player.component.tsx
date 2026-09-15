@@ -1,5 +1,7 @@
 "use client";
+/* oxlint-disable jsx-a11y/media-has-caption -- Imported recordings may not have captions; preserve supplied caption tracks without inventing transcripts. */
 import * as stylex from "@stylexjs/stylex";
+import type { ReactNode } from "react";
 
 import {
   media,
@@ -8,7 +10,7 @@ import {
   shape,
   material,
 } from "#design/tokens.stylex";
-import { playlist } from "#lib/shared/audio/playlist.const";
+import type { AudioTrack } from "#lib/shared/audio/audio.schema";
 
 import { foundation } from "../../_design/foundation.style";
 import {
@@ -43,14 +45,6 @@ const styles = stylex.create({
     width: "100%",
     aspectRatio: "1",
     outline: "none",
-    transform: {
-      default: "rotate(-3deg)",
-      [stylex.when.ancestor(":hover", objectMarker)]:
-        "scale(1.02) rotate(0deg)",
-      [stylex.when.ancestor(":has(:focus-visible)", objectMarker)]:
-        "scale(1.02) rotate(0deg)",
-      [media.reduce]: "rotate(-3deg)",
-    },
     transitionProperty: "transform",
     transitionDuration: { default: motionToken.slow, [media.reduce]: "0s" },
     transitionTimingFunction: motionToken.ease,
@@ -138,8 +132,94 @@ const styles = stylex.create({
     transform: "rotate(-12deg)",
   },
 });
-export function RecordPlayer({ name }: Readonly<{ name: string }>) {
-  const player = useRecordPlayer();
+function RecordDeck({
+  name,
+  playing = false,
+  active = false,
+  toggle,
+  spectrum,
+  children,
+  statusId,
+}: Readonly<{
+  name: string;
+  playing?: boolean;
+  active?: boolean;
+  toggle?: () => void;
+  spectrum?: ReactNode;
+  children?: ReactNode;
+  statusId?: string;
+}>) {
+  return (
+    <div {...stylex.props(styles.deck)}>
+      <div {...stylex.props(styles.platter, objectMarker)}>
+        <ObjectFeedback label={name} round />
+        {spectrum}
+        <button
+          type="button"
+          {...stylex.props(styles.button)}
+          aria-label={active ? "Pause music" : "Play music"}
+          aria-pressed={active}
+          aria-describedby={statusId}
+          onClick={toggle}
+        >
+          <span
+            {...stylex.props(styles.disc, playing && styles.spinning)}
+            aria-hidden="true"
+          />
+          <span {...stylex.props(styles.hole)} aria-hidden="true">
+            <span {...stylex.props(styles.spindle)} />
+          </span>
+        </button>
+        {children}
+      </div>
+      <span
+        {...stylex.props(styles.arm, playing && styles.armPlaying)}
+        aria-hidden="true"
+      >
+        <i {...stylex.props(styles.pivot)} />
+        <i {...stylex.props(styles.needle)} />
+      </span>
+    </div>
+  );
+}
+const noop = () => {};
+export function RecordPlayerPreview({ name, tracks }: RecordProps) {
+  const track = tracks.at(0);
+  return (
+    <section {...stylex.props(styles.root, recordMarker)}>
+      {track ? (
+        <RecordDeck name={name}>
+          <RecordControls
+            title={track.title}
+            active={false}
+            toggle={noop}
+            position={0}
+            duration={track.duration}
+            previous={noop}
+            next={noop}
+            seek={noop}
+          />
+        </RecordDeck>
+      ) : (
+        <p>No recordings yet.</p>
+      )}
+    </section>
+  );
+}
+
+type RecordProps = Readonly<{ name: string; tracks: readonly AudioTrack[] }>;
+export function RecordPlayer(props: RecordProps) {
+  if (!props.tracks.length)
+    return (
+      <section {...stylex.props(styles.root)} aria-label={props.name}>
+        <ObjectFeedback label={props.name} />
+        <p>No recordings yet.</p>
+      </section>
+    );
+  return <PlayableRecordPlayer {...props} />;
+}
+function PlayableRecordPlayer({ name, tracks: playlist }: RecordProps) {
+  const player = useRecordPlayer(playlist);
   const { track } = player;
   const playing = player.state === "playing";
   const status = {
@@ -155,49 +235,31 @@ export function RecordPlayer({ name }: Readonly<{ name: string }>) {
       aria-label={`${track.title} — ${track.artist}`}
       data-playing={playing}
     >
-      <div {...stylex.props(styles.deck)}>
-        <div {...stylex.props(styles.platter, objectMarker)}>
-          <ObjectFeedback label={name} round />
+      <RecordDeck
+        name={name}
+        playing={playing}
+        active={player.active}
+        toggle={player.toggle}
+        statusId="record-status"
+        spectrum={
           <RecordSpectrum
             audioRef={player.audioRef}
             playing={playing}
             src={track.spectrumSrc}
           />
-          <button
-            type="button"
-            {...stylex.props(styles.button)}
-            aria-label={player.active ? "Pause music" : "Play music"}
-            aria-pressed={player.active}
-            aria-describedby="record-status"
-            onClick={player.toggle}
-          >
-            <span
-              {...stylex.props(styles.disc, playing && styles.spinning)}
-              aria-hidden="true"
-            />
-            <span {...stylex.props(styles.hole)} aria-hidden="true">
-              <span {...stylex.props(styles.spindle)} />
-            </span>
-          </button>
-          <RecordControls
-            title={track.title}
-            active={player.active}
-            toggle={player.toggle}
-            position={player.position}
-            duration={player.duration}
-            previous={player.previous}
-            next={player.next}
-            seek={player.seek}
-          />
-        </div>
-        <span
-          {...stylex.props(styles.arm, playing && styles.armPlaying)}
-          aria-hidden="true"
-        >
-          <i {...stylex.props(styles.pivot)} />
-          <i {...stylex.props(styles.needle)} />
-        </span>
-      </div>
+        }
+      >
+        <RecordControls
+          title={track.title}
+          active={player.active}
+          toggle={player.toggle}
+          position={player.position}
+          duration={player.duration}
+          previous={player.previous}
+          next={player.next}
+          seek={player.seek}
+        />
+      </RecordDeck>
       <output id="record-status" {...stylex.props(foundation.srOnly)}>
         {status}
       </output>
@@ -235,13 +297,15 @@ export function RecordPlayer({ name }: Readonly<{ name: string }>) {
               player.onPlaying();
           }}
         >
-          <track
-            kind="captions"
-            src={item.descriptionSrc}
-            srcLang="en"
-            label="Music description"
-            default
-          />
+          {item.descriptionSrc && (
+            <track
+              kind="captions"
+              src={item.descriptionSrc}
+              srcLang="en"
+              label="Music description"
+              default
+            />
+          )}
         </audio>
       ))}
     </section>

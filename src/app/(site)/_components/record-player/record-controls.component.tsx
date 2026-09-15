@@ -1,6 +1,8 @@
 import * as stylex from "@stylexjs/stylex";
 import { useAtom } from "jotai";
 
+import { formatPlaybackTime } from "#lib/shared/audio/record-session.helper";
+
 import { foundation } from "../../_design/foundation.style";
 import { styles } from "./record-controls.style";
 import {
@@ -12,7 +14,6 @@ import {
   recordControlsPinnedAtom,
 } from "./record-preferences.atom";
 import { RecordSeek } from "./record-seek.component";
-import { formatPlaybackTime } from "./record-session.helper";
 
 export function RecordControls({
   title,

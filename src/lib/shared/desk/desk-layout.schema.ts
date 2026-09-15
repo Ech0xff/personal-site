@@ -32,11 +32,6 @@ export const deskConfigurationSchema = z.object({
     ),
   layouts: layoutsSchema,
 });
-export const workspaceSchema = z.object({
-  revision: z.number().int().nonnegative(),
-  draft: deskConfigurationSchema.nullable(),
-  published: deskConfigurationSchema.nullable(),
-});
 const personalLayoutSchema = z.object({
   width: z.number().positive(),
   height: z.number().positive(),
@@ -51,4 +46,3 @@ export type DeskConfiguration = z.infer<typeof deskConfigurationSchema>;
 export type DeskLayout = z.infer<typeof layoutSchema>;
 export type DeskPlacement = Readonly<z.infer<typeof placementSchema>>;
 export type PersonalLayouts = z.infer<typeof personalLayoutsSchema>;
-export type DeskWorkspace = z.infer<typeof workspaceSchema>;

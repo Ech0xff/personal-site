@@ -8,6 +8,13 @@ import IconButton from "./icon-button.component";
 
 const styles = stylex.create({
   button: { position: "relative", borderRadius: "50%" },
+  content: {
+    position: "relative",
+    display: "grid",
+    placeItems: "center",
+    width: "40px",
+    height: "40px",
+  },
   ring: {
     position: "absolute",
     inset: 0,
@@ -35,7 +42,7 @@ const styles = stylex.create({
       default: 1,
       ":is(button:hover *, button:focus-visible *)": 0,
     },
-    transitionProperty: "stroke-dashoffset",
+    transitionProperty: "stroke-dashoffset, opacity",
     transitionDuration: { default: "500ms", [media.reduce]: "0s" },
     transitionTimingFunction: motionToken.ease,
   },
@@ -49,16 +56,18 @@ export default function CloseButton({ xstyle, ...props }: ButtonProps) {
       {...props}
       xstyle={[styles.button, xstyle]}
     >
-      <svg viewBox="0 0 40 40" aria-hidden {...stylex.props(styles.ring)}>
-        <circle
-          cx="20"
-          cy="20"
-          r="18"
-          pathLength="1"
-          {...stylex.props(styles.circle)}
-        />
-      </svg>
-      <X size={20} aria-hidden {...stylex.props(styles.cross)} />
+      <span {...stylex.props(styles.content)}>
+        <svg viewBox="0 0 40 40" aria-hidden {...stylex.props(styles.ring)}>
+          <circle
+            cx="20"
+            cy="20"
+            r="18"
+            pathLength="1"
+            {...stylex.props(styles.circle)}
+          />
+        </svg>
+        <X size={20} aria-hidden {...stylex.props(styles.cross)} />
+      </span>
     </IconButton>
   );
 }

@@ -4,12 +4,9 @@ import { cacheLife, cacheTag } from "next/cache";
 import { defaultDeskConfiguration } from "#lib/shared/desk/desk-defaults.const";
 import {
   deskConfigurationSchema,
-  workspaceSchema,
   type DeskConfiguration,
 } from "#lib/shared/desk/desk-layout.schema";
-import { defaultDictionary } from "#lib/shared/dictionary/dictionary.const";
 
-import { InputError } from "../actions/action.service";
 import { makeAdminClient, makePublicClient } from "../supabase.client";
 
 export const deskConfigurationTag = "desk:configuration";
@@ -28,26 +25,10 @@ export async function readPublicDeskConfiguration(): Promise<DeskConfiguration> 
   if (error) throw error;
   return data ? deskConfigurationSchema.parse(data) : defaultDeskConfiguration;
 }
-export async function readDeskWorkspace() {
-  const { data, error } = await makeAdminClient()
+export async function saveDeskConfiguration(configuration: DeskConfiguration) {
+  const { error } = await makeAdminClient()
     .from("configs")
-    .select("value")
-    .eq("key", "desk.workspace")
-    .single();
+    .upsert({ key: "desk.configuration", value: configuration });
   if (error) throw error;
-  return workspaceSchema.parse(data.value);
-}
-export async function saveDeskConfiguration(
-  revision: number,
-  configuration: DeskConfiguration,
-  publish: boolean,
-) {
-  const { data, error } = await makeAdminClient().rpc(
-    "save_desk_configuration",
-    { expected_revision: revision, configuration, publish },
-  );
-  if (error?.code === "40001")
-    throw new InputError(defaultDictionary.desk.layout.conflict);
-  if (error) throw error;
-  return workspaceSchema.parse(data);
+  return configuration;
 }

@@ -2,9 +2,10 @@
 import * as stylex from "@stylexjs/stylex";
 import { useId, type PointerEvent } from "react";
 
+import { formatPlaybackTime } from "#lib/shared/audio/record-session.helper";
+
 import { arcPoint, arcProgress } from "./record-arc.helper";
 import { styles } from "./record-controls.style";
-import { formatPlaybackTime } from "./record-session.helper";
 const seekPath = "M63.708 152.5 A65 65 0 0 0 176.292 152.5";
 
 export function RecordSeek({

@@ -28,7 +28,7 @@ type Options = Readonly<{
   canvasHeight?: number;
   canvasScale: number;
   disabled: boolean;
-  commit: (box: Box, scale: number) => void;
+  commit: (box: Box, scale: number) => Promise<boolean>;
   preview: (box: Box | null) => void;
 }>;
 export function useDeskItemGesture({
@@ -98,12 +98,12 @@ export function useDeskItemGesture({
       animate(scale, result.scale, transition),
     ]);
     if (phaseRef.current !== "settling") return;
-    commit(result.box, result.scale);
+    const saved = await commit(result.box, result.scale);
     preview(null);
     changePhase("idle");
     x.set(0);
     y.set(0);
-    scale.set(result.scale);
+    scale.set(saved ? result.scale : entry.scale);
     setTimeout(() => {
       suppressClick.current = false;
     }, 0);
@@ -119,6 +119,11 @@ export function useDeskItemGesture({
     };
     const release = () => {
       if (phaseRef.current === "pressing") cancelGesture();
+      // Motion may not emit drag-end when a hold is released before its first move frame.
+      else if (phaseRef.current === "dragging")
+        requestAnimationFrame(() => {
+          if (phaseRef.current === "dragging") cancelGesture();
+        });
     };
     const blur = () => cancelGesture();
     const touchMove = (event: TouchEvent) => {
@@ -143,28 +148,26 @@ export function useDeskItemGesture({
     if (
       disabled ||
       phaseRef.current !== "idle" ||
-      !definition.capabilities.draggable ||
+      !entry.item.appearance.draggable ||
       event.button !== 0 ||
       !event.isPrimary
     )
       return;
     suppressClick.current = false;
     const target = event.target;
-    if (
-      !(target instanceof Element) ||
-      target.closest(
-        "input, textarea, select, [contenteditable=true], [role=slider], [data-item-resize], [data-lenis-prevent]",
-      )
-    )
-      return;
+    if (!(target instanceof Element)) return;
+    // Only controls inside this item block dragging; the desk can itself scroll.
     for (
       let element: Element | null = target;
       element && element !== event.currentTarget;
       element = element.parentElement
     ) {
       if (
-        element.scrollHeight > element.clientHeight &&
-        /auto|scroll/.test(getComputedStyle(element).overflowY)
+        element.matches(
+          "input, textarea, select, [contenteditable=true], [role=slider], [data-item-resize], [data-item-edit], [data-lenis-prevent]",
+        ) ||
+        (element.scrollHeight > element.clientHeight &&
+          /auto|scroll/.test(getComputedStyle(element).overflowY))
       )
         return;
     }
@@ -234,10 +237,10 @@ export function useDeskItemGesture({
       const dx = ((pointer.clientX - startX) / canvasScale) * (west ? -1 : 1);
       const dy = ((pointer.clientY - startY) / canvasScale) * (north ? -1 : 1);
       const nextScale = Math.min(
-        definition.maxScale,
+        entry.item.appearance.maxScale,
         (canvasWidth - entry.padding * 2) / entry.width,
         Math.max(
-          definition.minScale,
+          entry.item.appearance.minScale,
           entry.scale +
             (dx * entry.width + dy * entry.height) /
               (entry.width ** 2 + entry.height ** 2),

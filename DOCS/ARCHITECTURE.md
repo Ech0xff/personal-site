@@ -290,14 +290,14 @@ browser audio service; binary parsing stays environment-neutral.
 `lib/shared/desk` owns explicit item definitions, Zod configuration schemas, defaults,
 and pure layout calculations. The public registry selects each item's renderer;
 `ReadingDesk` receives `items` and `layouts`. Each stable item ID links its props to
-positions in three reference canvases. Lamp and introduction are fixed obstacles.
+positions in three reference canvases. Lamp and introduction default to fixed obstacles.
 The remaining objects explicitly declare dragging and proportional resizing limits.
 Content, positioning, scale, and interaction feedback use separate wrappers.
 
 Layout adapts saved coordinates to the current canvas, places fixed objects first,
-and searches obstacle edges for the nearest legal rectangle with a 16 px gap.
+and searches obstacle edges for the nearest legal rectangle with a 16 px gap. Fixed objects keep their saved coordinates even when neighbors change size. Locking a movable item captures its current resolved placement; other layout saves preserve fixed entries.
 Distance ties use vertical then horizontal position. Resizing or dragging an item
-leaves other objects in place. Desktop uses an automatically fitted logical canvas below the header; gesture coordinates account for that uniform scale, and drops stay inside its bounds. Compact layouts can grow downward. Shuffle accepts only complete bounded arrangements and keeps the previous layout if no fit is found. Adaptation is derived and
+leaves other objects in place. Desktop fits its logical viewport below the header independently of item heights; gesture coordinates account for that uniform scale. Placement tries the viewport bounds first, then allows downward overflow with scrolling when no bounded position exists. Compact layouts can grow downward. Shuffle accepts only complete bounded arrangements and keeps the previous layout if no fit is found. Adaptation is derived and
 never overwrites reference layouts. Browser preferences store only deliberately
 moved IDs and reference dimensions per breakpoint; invalid IDs are ignored and
 collisions are resolved against current public sizes/configuration.
@@ -307,15 +307,81 @@ their existing clicks, inputs, and scrolling. Titles sit outside navigation link
 clicks retain their behavior; successful long presses suppress the release click.
 Cancellation restores the original placement. Persistence runs only after completion.
 
-Settings always exists in the display. Reset layout clears personal positions across all breakpoints without changing drafts or public configuration. Its authenticated Edit desk action loads a
-public draft through the existing admin session boundary. Editing uses independent
-history snapshots, proportional resize handles, device previews, and explicit save,
-publish, and exit controls. Preview restores business clicks without persisting its
-layout gestures. Failed saves retain current history; stale revisions require reload.
+Settings always exists in the display. Reset layout clears personal positions across
+all breakpoints without changing the saved configuration. Its authenticated Edit desk
+action opens the configuration already loaded by the server. Each desk owns Jotai
+atoms for its configuration, save state, and session undo/redo history. An async
+write atom calls the authenticated Server Action, then commits the returned
+configuration and history only on success. Concurrent submissions are rejected
+while a save is pending. Apply, completed layout gestures, reset, shuffle, undo,
+and redo use this same persistence path; there is no separate Save button. Reset
+restores the current breakpoint to its layout at editor entry. Preview restores
+business clicks and keeps its layout gestures temporary. Failed form saves retain
+inputs; failed layout saves restore the last saved placement.
 
-`desk.workspace` contains revision, draft, and published snapshots. The service-role
-save RPC locks that row and checks the expected revision before atomically updating
-it. Zod validation runs after authentication in the Server Action. Public reads use
-only `read_desk_configuration`, cached under `desk:configuration`; publishing invalidates
+`configs['desk.configuration']` contains only `items` and `layouts`. The admin Server
+Action validates the configuration and playable audio references, then upserts that
+single row using the service-role client. Save takes effect immediately; there is no
+persisted draft, version check, or publication step. Public reads use the constrained
+`read_desk_configuration` RPC, cached under `desk:configuration`; every save invalidates
 that tag. No public generic configs access is added. Defaults apply before the first
-publication. Apply the additive schema using the [database workflow](../README.md#database).
+save. The schema migrates legacy workspaces by choosing published content, falling
+back to the draft only if no published content exists.
+
+### Item metadata and audio imports
+
+Each editable item has a title action outside its inert business content. A native
+paper dialog owns a temporary item copy; Apply validates and persists it as one
+history step. Cancel never changes the desk. All items expose common name, dragging, and appearance fields in Appearance,
+with type-specific content kept in `config` and edited in Content. Items without resizing capability hide
+resize settings. Introduction reserves padding for its title. The shared paper
+field provides floating labels and ruled single/multiline inputs using theme tokens. The dialog shell is available immediately; form modules
+load inside its local Suspense boundaries, so opening an editor never invokes the
+page-navigation curtain. Pencil actions reuse the shared magnetic interaction.
+The dialog has magnetic icon-only Content/Appearance controls with navigation-style active dots and an accessible hidden title. Content is omitted when a type has no specific fields. Movement uses an accessible switch with Draggable and Fixed labels.
+Restore stays at the lower left and resets only the active section before Apply.
+The close control reuses dashboard rotation and ring feedback with magnetism; the
+ring retracts and fades on pointer exit.
+Terminal passages use a sortable directory and one active text area. A local preview renders the temporary item through the desk registry, with an inert content subtree and an outer hover marker. It never mounts desk gestures. Record previews share the vinyl drawing and controls without audio elements or playback-session hooks; display previews show the terminal with unique control IDs and leave the live display program unchanged.
+Navigation, image previews and item dialogs share a counted scroll lock, so an
+overlapping transition cannot unlock an open dialog or leave scrolling disabled.
+
+Appearance defaults remain in the item registry; old JSON rows receive those
+defaults when parsed. Initial and On hover expose matching rotation, horizontal/vertical offset, and
+scale fields. They describe the two states directly; hover scale is divided by the
+layout scale at render time to preserve its configured absolute size. Internal page/disc animations stay with the
+renderer. Dragging is configurable per item and is respected by gestures, personal positions,
+collision ordering, and shuffle. Current size belongs to each breakpoint; changed size limits clamp all
+three saved placements. Calendar month/day are derived from the visitor’s local
+date after hydration, refreshed at midnight and when the page becomes visible,
+and are no longer persisted fields.
+
+The recording editor uses a sortable directory and one active title/artist/preview
+pane. Upload, URL import, and persistent import records live in a collapsible
+Add recordings section. Its compact themed preview pauses when unmounted.
+
+Record configuration stores ordered asset IDs with title/artist overrides. Legacy
+empty record configuration resolves to the two built-in recordings; an explicit
+empty track list stays empty. Playback receives resolved assets rather than importing
+a fixed playlist. Session IDs are validated against the current list, preserving
+valid progress; removing the active recording pauses and selects the first remaining
+recording. Title and ordering changes do not reload audio.
+
+`audio_assets` stores ingestion and spectrum status separately from the saved desk configuration.
+Only administrators can sign uploads, inspect the library, start imports, or retry.
+Files upload directly into the `audio` bucket using a signed token. URL imports pin
+validated public DNS addresses for each connection and redirect, limit bytes and
+elapsed time, and never pass a network URL to FFmpeg. The import handler checks the
+admin session and same-origin header before returning a job ID. Its `after()` callback
+normalizes audio to MP3 and analyzes the actual playback file using the shared SP01
+algorithm. Run IDs fence stale attempts and an expired lease permits manual retry.
+The task has a 300-second platform budget, a shorter internal deadline, and no
+external queue or automatic retry. Interrupted tasks remain discoverable in the library.
+
+Playable audio can be applied and saved while spectrum generation is pending or
+failed. Spectrum-only retries preserve the playback URL. The public audio RPC resolves
+only assets referenced by the saved desk (including legacy defaults); it exposes
+no source URLs or task details. Completing analysis invalidates `desk:audio`; saving the desk
+invalidates `desk:configuration`, shared by configuration and asset reads. Removing a
+recording or canceling an editor retains assets for existing references and undo.
+Public storage URLs grant access to the bytes even before a recording is saved to the desk.

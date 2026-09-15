@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { recordConfigSchema } from "../audio/audio.schema";
+
 const text = z.string().max(4000);
 const webLink = z
   .url({ protocol: /^https?$/ })
@@ -35,8 +37,6 @@ const letterConfigSchema = z.object({
 });
 const calendarConfigSchema = z.object({
   heading: text,
-  month: text,
-  day: text,
   caption: text,
 });
 const emptyConfigSchema = z.object({}).strict();
@@ -45,6 +45,15 @@ const fixed = { draggable: false, resizable: false } as const;
 
 export const deskItemDefinitions = {
   display: {
+    appearance: {
+      rotation: -4,
+      offsetX: 0,
+      offsetY: 0,
+      hoverRotation: 0,
+      hoverX: 0,
+      hoverY: 0,
+      hoverScale: 1,
+    },
     name: "Display",
     configSchema: displayConfigSchema,
     defaultConfig: {
@@ -62,6 +71,15 @@ export const deskItemDefinitions = {
     maxScale: 1.3,
   },
   intro: {
+    appearance: {
+      rotation: 0,
+      offsetX: 0,
+      offsetY: 0,
+      hoverRotation: 0,
+      hoverX: 0,
+      hoverY: 0,
+      hoverScale: 1,
+    },
     name: "Introduction",
     configSchema: introConfigSchema,
     defaultConfig: {
@@ -75,11 +93,20 @@ export const deskItemDefinitions = {
     capabilities: fixed,
     width: 560,
     height: 320,
-    padding: 0,
+    padding: 24,
     minScale: 1,
     maxScale: 1,
   },
   lamp: {
+    appearance: {
+      rotation: 0,
+      offsetX: 0,
+      offsetY: 0,
+      hoverRotation: 0,
+      hoverX: 0,
+      hoverY: 0,
+      hoverScale: 1,
+    },
     name: "Lamp",
     configSchema: emptyConfigSchema,
     defaultConfig: {},
@@ -91,9 +118,18 @@ export const deskItemDefinitions = {
     maxScale: 1,
   },
   record: {
+    appearance: {
+      rotation: -3,
+      offsetX: 0,
+      offsetY: 0,
+      hoverRotation: 0,
+      hoverX: 0,
+      hoverY: 0,
+      hoverScale: 1.02,
+    },
     name: "Music",
-    configSchema: emptyConfigSchema,
-    defaultConfig: {},
+    configSchema: recordConfigSchema,
+    defaultConfig: recordConfigSchema.parse({}),
     capabilities: movable,
     width: 320,
     height: 340,
@@ -102,6 +138,15 @@ export const deskItemDefinitions = {
     maxScale: 1.3,
   },
   books: {
+    appearance: {
+      rotation: 5,
+      offsetX: 0,
+      offsetY: 0,
+      hoverRotation: 1,
+      hoverX: 0,
+      hoverY: -5,
+      hoverScale: 1,
+    },
     name: "Posts",
     configSchema: booksConfigSchema,
     defaultConfig: {
@@ -117,6 +162,15 @@ export const deskItemDefinitions = {
     maxScale: 1.4,
   },
   letter: {
+    appearance: {
+      rotation: -8,
+      offsetX: 0,
+      offsetY: 0,
+      hoverRotation: -3,
+      hoverX: 0,
+      hoverY: 0,
+      hoverScale: 1,
+    },
     name: "Thoughts",
     configSchema: letterConfigSchema,
     defaultConfig: {
@@ -132,12 +186,19 @@ export const deskItemDefinitions = {
     maxScale: 1.4,
   },
   calendar: {
+    appearance: {
+      rotation: -7,
+      offsetX: 0,
+      offsetY: 0,
+      hoverRotation: -2,
+      hoverX: 0,
+      hoverY: 0,
+      hoverScale: 1,
+    },
     name: "Events",
     configSchema: calendarConfigSchema,
     defaultConfig: {
       heading: "LIFE LATELY",
-      month: "SEPTEMBER",
-      day: "12",
       caption: "one day at a time.",
     },
     capabilities: movable,
@@ -148,6 +209,15 @@ export const deskItemDefinitions = {
     maxScale: 1.4,
   },
   coffee: {
+    appearance: {
+      rotation: 13,
+      offsetX: 0,
+      offsetY: 0,
+      hoverRotation: 13,
+      hoverX: 0,
+      hoverY: 0,
+      hoverScale: 1,
+    },
     name: "Coffee",
     configSchema: emptyConfigSchema,
     defaultConfig: {},
@@ -159,6 +229,15 @@ export const deskItemDefinitions = {
     maxScale: 1.5,
   },
   pencil: {
+    appearance: {
+      rotation: 0,
+      offsetX: 0,
+      offsetY: 0,
+      hoverRotation: 0,
+      hoverX: 0,
+      hoverY: 0,
+      hoverScale: 1,
+    },
     name: "Pencil",
     configSchema: emptyConfigSchema,
     defaultConfig: {},
@@ -170,49 +249,91 @@ export const deskItemDefinitions = {
     maxScale: 1.5,
   },
 } as const;
-const identity = {
+export const deskAppearanceSchema = z
+  .object({
+    draggable: z.boolean().optional(),
+    rotation: z.number().finite().min(-180).max(180),
+    offsetX: z.number().finite().min(-48).max(48),
+    offsetY: z.number().finite().min(-48).max(48),
+    hoverRotation: z.number().finite().min(-180).max(180),
+    hoverX: z.number().finite().min(-48).max(48),
+    hoverY: z.number().finite().min(-48).max(48),
+    hoverScale: z.number().finite().min(0.5).max(2),
+    minScale: z.number().finite().min(0.5).max(2),
+    maxScale: z.number().finite().min(0.5).max(2),
+  })
+  .refine((value) => value.minScale <= value.maxScale, {
+    path: ["maxScale"],
+    message: "Maximum scale must be at least the minimum scale.",
+  });
+export type DeskAppearance = z.infer<typeof deskAppearanceSchema> & {
+  draggable: boolean;
+};
+export function defaultDeskAppearance(
+  type: keyof typeof deskItemDefinitions,
+): DeskAppearance {
+  const definition = deskItemDefinitions[type];
+  return {
+    draggable: definition.capabilities.draggable,
+    ...definition.appearance,
+    minScale: definition.minScale,
+    maxScale: definition.maxScale,
+  };
+}
+const identity = (type: keyof typeof deskItemDefinitions) => ({
   id: z.string().min(1).max(100),
   name: z.string().min(1).max(80),
-};
+  appearance: deskAppearanceSchema
+    .prefault(() => defaultDeskAppearance(type))
+    .transform((value) => ({
+      ...value,
+      draggable:
+        value.draggable ?? deskItemDefinitions[type].capabilities.draggable,
+    })),
+});
 export const deskItemSchema = z.discriminatedUnion("type", [
   z.object({
-    ...identity,
+    ...identity("display"),
     type: z.literal("display"),
     config: displayConfigSchema,
   }),
   z.object({
-    ...identity,
+    ...identity("intro"),
     type: z.literal("intro"),
     config: introConfigSchema,
   }),
-  z.object({ ...identity, type: z.literal("lamp"), config: emptyConfigSchema }),
   z.object({
-    ...identity,
-    type: z.literal("record"),
+    ...identity("lamp"),
+    type: z.literal("lamp"),
     config: emptyConfigSchema,
   }),
   z.object({
-    ...identity,
+    ...identity("record"),
+    type: z.literal("record"),
+    config: recordConfigSchema,
+  }),
+  z.object({
+    ...identity("books"),
     type: z.literal("books"),
     config: booksConfigSchema,
   }),
   z.object({
-    ...identity,
+    ...identity("letter"),
     type: z.literal("letter"),
     config: letterConfigSchema,
   }),
   z.object({
-    ...identity,
+    ...identity("calendar"),
     type: z.literal("calendar"),
     config: calendarConfigSchema,
   }),
   z.object({
-    ...identity,
+    ...identity("coffee"),
     type: z.literal("coffee"),
     config: emptyConfigSchema,
   }),
   z.object({
-    ...identity,
+    ...identity("pencil"),
     type: z.literal("pencil"),
     config: emptyConfigSchema,
   }),
@@ -220,3 +341,14 @@ export const deskItemSchema = z.discriminatedUnion("type", [
 export type DeskItem = z.infer<typeof deskItemSchema>;
 export type DeskItemType = DeskItem["type"];
 export type IntroConfig = z.infer<typeof introConfigSchema>;
+
+export function restoreDeskItemContent(item: DeskItem): DeskItem {
+  const definition = deskItemDefinitions[item.type];
+  const restored = deskItemSchema.parse({
+    ...item,
+    name: definition.name,
+    appearance: defaultDeskAppearance(item.type),
+    config: definition.defaultConfig,
+  });
+  return { ...restored, name: item.name, appearance: item.appearance };
+}

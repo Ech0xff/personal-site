@@ -1,7 +1,18 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { color, font, shape, media } from "#design/tokens.stylex";
+import { color, font, shape, media, motionToken } from "#design/tokens.stylex";
 export const itemStyles = stylex.create({
+  appearance: (base: string, hover: string) => ({
+    transform: {
+      default: base,
+      ":hover": hover,
+      ":has(:focus-visible)": hover,
+      [media.reduce]: base,
+    },
+    transitionProperty: "transform",
+    transitionDuration: { default: motionToken.slow, [media.reduce]: "0s" },
+    transitionTimingFunction: motionToken.ease,
+  }),
   root: {
     position: "absolute",
     zIndex: { default: 2, ":hover": 5, ":focus-within": 5 },
@@ -9,25 +20,49 @@ export const itemStyles = stylex.create({
   },
   active: { zIndex: 10, userSelect: "none" },
   content: { position: "relative", transformOrigin: "top left" },
-  handle: {
+  editorTitle: {
     position: "absolute",
-    top: "-12px",
+    top: "-14px",
     left: "50%",
     transform: "translateX(-50%)",
-    paddingBlock: "3px",
-    paddingInline: "8px",
-    minHeight: "24px",
-    borderWidth: 0,
+    display: "flex",
+    alignItems: "center",
+    maxWidth: "calc(100% + 32px)",
     borderRadius: shape.pill,
     backgroundColor: color.objectLabelBackground,
     color: color.objectLabel,
     fontFamily: font.mono,
     fontSize: "11px",
+    zIndex: 3,
+  },
+  titleText: {
+    borderWidth: 0,
+    backgroundColor: "transparent",
+    color: "inherit",
+    font: "inherit",
+    paddingBlock: "5px",
+    paddingInline: "8px",
+    minHeight: "28px",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
     touchAction: "none",
     userSelect: "none",
-    opacity: { default: 0, [media.touch]: 1, ":focus-visible": 1 },
   },
-  handleVisible: { opacity: 1 },
+  editButton: {
+    display: "grid",
+    placeItems: "center",
+    borderWidth: 0,
+    backgroundColor: "transparent",
+    color: "inherit",
+    padding: "6px",
+    minWidth: "30px",
+    minHeight: "30px",
+    borderRadius: shape.pill,
+    cursor: "pointer",
+
+    opacity: { default: 1, ":disabled": 0.5 },
+  },
   resize: {
     position: "absolute",
     width: "22px",

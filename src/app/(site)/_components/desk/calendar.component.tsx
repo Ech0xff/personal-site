@@ -6,11 +6,13 @@ import { foundation } from "../../_design/foundation.style";
 import { objectMarker } from "../../_design/object-feedback.stylex";
 import { DeskLink } from "../layout/desk-navigation.component";
 import { ObjectFeedback } from "../object-feedback.component";
+import { useCalendarDate } from "./calendar-date.hook";
 import { styles } from "./calendar.style";
 export function Calendar({
   name,
   config,
 }: Readonly<Pick<Extract<DeskItem, { type: "calendar" }>, "name" | "config">>) {
+  const today = useCalendarDate();
   return (
     <div {...stylex.props(styles.calendar, objectMarker)}>
       <DeskLink
@@ -24,8 +26,16 @@ export function Calendar({
         </span>
         <span {...stylex.props(styles.calendarPaper)}>
           <span {...stylex.props(styles.calendarTop)}>{config.heading}</span>
-          <span {...stylex.props(styles.calendarMonth)}>{config.month}</span>
-          <span {...stylex.props(styles.calendarDate)}>{config.day}</span>
+          <span {...stylex.props(styles.calendarMonth)}>
+            {today
+              ? today
+                  .toLocaleDateString("en-US", { month: "long" })
+                  .toUpperCase()
+              : "TODAY"}
+          </span>
+          <span {...stylex.props(styles.calendarDate)}>
+            {today ? today.getDate() : "—"}
+          </span>
           <span {...stylex.props(styles.calendarBottom)}>{config.caption}</span>
         </span>
       </DeskLink>

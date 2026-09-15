@@ -3,6 +3,7 @@ import * as stylex from "@stylexjs/stylex";
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 
+import { Magnetic } from "#components/ui/magnetic.component";
 import {
   color,
   font,
@@ -23,7 +24,7 @@ const styles = stylex.create({
     padding: 0,
     borderWidth: 0,
     borderRadius: shape.control,
-    backgroundColor: { default: "transparent", ":hover": color.accentSurface },
+    backgroundColor: "transparent",
     color: { default: color.muted, ":hover": color.accent },
     outlineColor: color.accent,
     outlineOffset: "2px",
@@ -31,7 +32,7 @@ const styles = stylex.create({
     transitionProperty: "background-color, color",
     transitionDuration: motionToken.fast,
   },
-  selected: { backgroundColor: color.accentSurface, color: color.accent },
+  selected: { color: color.accent },
   display: {
     color: material.phosphor,
     backgroundColor: { default: "transparent", ":hover": material.highlight },
@@ -130,7 +131,7 @@ export function DeskAction({
           display && styles.display,
         )}
       >
-        {children}
+        <Magnetic compact>{children}</Magnetic>
       </button>
       {point &&
         createPortal(

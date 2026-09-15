@@ -36,10 +36,61 @@ await sql(`CREATE DATABASE ${database};`, "postgres");
 try {
   await sql(await Bun.file("supabase/schemas/02_tables.sql").text());
   await sql(await Bun.file("supabase/schemas/05_desk.sql").text());
+  // Upgrade legacy workspaces without turning an unpublished edit into live content.
+  await sql(`DELETE FROM public.configs WHERE key = 'desk.configuration';
+    INSERT INTO public.configs(key,value) VALUES ('desk.workspace', '{"revision":3,"published":{"items":[],"layouts":{},"marker":"live"},"draft":{"items":[],"layouts":{},"marker":"draft"}}');`);
+  await sql(await Bun.file("supabase/schemas/05_desk.sql").text());
+  assert(
+    (await sql(
+      "SELECT value->>'marker' FROM public.configs WHERE key='desk.configuration';",
+    )) === "live",
+    "Migration must prefer the current live configuration",
+  );
+  assert(
+    (await sql(
+      "SELECT count(*) FROM public.configs WHERE key='desk.workspace';",
+    )) === "0",
+    "Migration must remove the legacy workspace wrapper",
+  );
+  await sql(
+    "UPDATE public.configs SET value = 'null' WHERE key='desk.configuration';",
+  );
+  await sql(
+    "CREATE SCHEMA storage; CREATE TABLE storage.buckets(id text PRIMARY KEY, name text, public boolean, file_size_limit bigint);",
+  );
+  await sql(await Bun.file("supabase/schemas/06_audio.sql").text());
+  assert(
+    (await sql(
+      "SET ROLE anon; SELECT count(*) FROM public.read_desk_audio();",
+    )) === "2",
+    "Legacy defaults keep both built-in recordings",
+  );
+  assert(
+    (await sql(
+      "SELECT has_table_privilege('anon', 'public.audio_assets', 'SELECT');",
+    )) === "f",
+    "The import library must remain private",
+  );
+  await sql(
+    "INSERT INTO public.audio_assets(id,title,src,duration,status) VALUES('test-audio','Private import','/test.mp3',1,'ready');",
+  );
+  assert(
+    (await sql(
+      "SET ROLE anon; SELECT count(*) FROM public.read_desk_audio() WHERE id = 'test-audio';",
+    )) === "0",
+    "Unused imports must not appear in public reads",
+  );
+
+  assert(
+    (await sql(
+      "SELECT to_regprocedure('public.save_desk_configuration(bigint,jsonb,boolean)') IS NULL;",
+    )) === "t",
+    "The versioned save RPC must be removed",
+  );
   for (const role of ["anon", "authenticated"]) {
     assert(
       (await sql(
-        `SELECT has_function_privilege('${role}', 'public.save_desk_configuration(bigint,jsonb,boolean)', 'EXECUTE');`,
+        `SELECT has_table_privilege('${role}', 'public.configs', 'INSERT,UPDATE,DELETE');`,
       )) === "f",
       `${role} must not write desk configuration`,
     );
@@ -47,42 +98,17 @@ try {
       (await sql(
         `SELECT has_table_privilege('${role}', 'public.configs', 'SELECT');`,
       )) === "f",
-      `${role} must not read private drafts`,
+      `${role} must not read unrelated private configuration`,
     );
   }
-  const configuration = `' {"items":[],"layouts":{}}'::jsonb`;
-  const saves = await Promise.allSettled(
-    Array.from({ length: 2 }, () =>
-      sql(
-        `SET ROLE service_role; SELECT public.save_desk_configuration(0, ${configuration}, false)->>'revision';`,
-      ),
-    ),
-  );
-  assert(
-    saves.filter((result) => result.status === "fulfilled").length === 1,
-    "Only one concurrent writer may use the same revision",
-  );
-  assert(
-    saves.some(
-      (result) =>
-        result.status === "rejected" &&
-        String(result.reason).includes("Desk configuration changed"),
-    ),
-    "The stale writer must receive a revision conflict",
-  );
-  assert(
-    (await sql("SET ROLE anon; SELECT public.read_desk_configuration();")) ===
-      "null",
-    "Saving a draft must not publish it",
-  );
   await sql(
-    `SET ROLE service_role; SELECT public.save_desk_configuration(1, ${configuration}, true);`,
+    `SET ROLE service_role; UPDATE public.configs SET value = '{"items":[],"layouts":{}}' WHERE key = 'desk.configuration';`,
   );
   assert(
     (await sql(
       "SET ROLE anon; SELECT public.read_desk_configuration()->>'items';",
     )) === "[]",
-    "Public readers must receive the published snapshot",
+    "Saving configuration must immediately update public reads",
   );
   assert(
     (await sql(
@@ -95,6 +121,20 @@ try {
       "SELECT has_function_privilege('anon', 'public.manage_guestbook(uuid,text)', 'EXECUTE');",
     )) === "f",
     "Moderation must be private",
+  );
+  assert(
+    (await sql(
+      "SET ROLE anon; SELECT count(*) FROM public.read_desk_audio();",
+    )) === "0",
+    "A saved desk without recordings must not leak default assets",
+  );
+  await sql(
+    `UPDATE public.configs SET value = '{"items":[{"type":"record","config":{"tracks":[{"assetId":"test-audio"}]}}],"layouts":{}}' WHERE key = 'desk.configuration';`,
+  );
+  assert(
+    (await sql("SET ROLE anon; SELECT id FROM public.read_desk_audio();")) ===
+      "test-audio",
+    "Only the saved recording is resolved",
   );
   assert(
     (await sql("SET ROLE anon; SELECT public.read_desk_stats()->>'likes';")) ===
@@ -171,7 +211,7 @@ try {
     "Old timestamps must be removed",
   );
   console.log(
-    "PASS: RPC permissions, draft isolation, revision conflicts, atomic publishing, input checks, concurrent likes/notes, moderation and rolling-window expiry.",
+    "PASS: RPC permissions, desk migration, direct configuration saves, input checks, concurrent likes/notes, moderation and rolling-window expiry.",
   );
 } finally {
   await sql(`DROP DATABASE ${database} WITH (FORCE);`, "postgres");

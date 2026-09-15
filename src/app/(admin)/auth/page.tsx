@@ -1,11 +1,12 @@
 import * as stylex from "@stylexjs/stylex";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 import ThemeToggle from "#components/shared/theme-toggle.component";
 import { Magnetic } from "#components/ui/magnetic.component";
-import { color, font, shape, shadow, space } from "#design/tokens.stylex";
+import { color, font, shape, space } from "#design/tokens.stylex";
 import { hasAdminSession } from "#lib/server/auth/session.service";
 
 import TokenForm from "./_components/token-form.component";
@@ -27,7 +28,6 @@ const styles = stylex.create({
     borderWidth: shape.fine,
     borderStyle: "solid",
     borderColor: color.line,
-    boxShadow: shadow.panel,
     display: "flex",
     flexDirection: "column",
     gap: space.lg,
@@ -38,6 +38,7 @@ const styles = stylex.create({
     alignItems: "center",
   },
   title: { fontSize: font.heading, fontWeight: font.semibold },
+  backContent: { display: "inline-flex", alignItems: "center", gap: space.xs },
   back: {
     color: { default: color.secondary, ":hover": color.text },
     textDecoration: "none",
@@ -55,7 +56,12 @@ export default function AuthPage() {
       <section {...stylex.props(styles.card)}>
         <div {...stylex.props(styles.header)}>
           <Link href="/" {...stylex.props(styles.back)}>
-            <Magnetic>Back to site</Magnetic>
+            <Magnetic>
+              <span {...stylex.props(styles.backContent)}>
+                <ArrowLeft size={16} aria-hidden />
+                Back to site
+              </span>
+            </Magnetic>
           </Link>
           <ThemeToggle />
         </div>

@@ -1,27 +1,36 @@
 import { useStore } from "jotai";
 import { useCallback, useRef, useState, type RefObject } from "react";
 
-import { playlist } from "#lib/shared/audio/playlist.const";
-
-import { recordSessionAtom } from "./record-preferences.atom";
+import type { AudioTrack } from "#lib/shared/audio/audio.schema";
 import {
   clampPosition,
+  normalizeRecordSession,
   defaultRecordSession,
   type RecordSession,
-} from "./record-session.helper";
+} from "#lib/shared/audio/record-session.helper";
 
-export function useRecordSession(audioRef: RefObject<HTMLAudioElement | null>) {
+import { recordSessionAtom } from "./record-preferences.atom";
+
+export function useRecordSession(
+  audioRef: RefObject<HTMLAudioElement | null>,
+  playlist: readonly AudioTrack[],
+) {
   const store = useStore();
-  const session = useRef(defaultRecordSession);
+  const tracks = useRef(playlist);
+  tracks.current = playlist;
+  const session = useRef(
+    normalizeRecordSession(defaultRecordSession, playlist),
+  );
   const pendingPosition = useRef<number | null>(null);
   const ready = useRef(false);
   const lastWrite = useRef(0);
-  const [trackId, setTrackId] = useState(defaultRecordSession.trackId);
+  const [trackId, setTrackId] = useState(session.current.trackId);
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState<number>(playlist[0].duration);
   const track = playlist.find((item) => item.id === trackId) ?? playlist[0];
   const persist = useCallback(() => {
     if (!ready.current) return;
+    session.current = normalizeRecordSession(session.current, tracks.current);
     store.set(recordSessionAtom, session.current);
   }, [store]);
   const capture = useCallback(
@@ -46,7 +55,10 @@ export function useRecordSession(audioRef: RefObject<HTMLAudioElement | null>) {
     [audioRef],
   );
 
-  const readSession = useCallback(() => store.get(recordSessionAtom), [store]);
+  const readSession = useCallback(
+    () => normalizeRecordSession(store.get(recordSessionAtom), tracks.current),
+    [store],
+  );
   const subscribeSession = useCallback(
     (listener: () => void) => store.sub(recordSessionAtom, listener),
     [store],

@@ -182,7 +182,7 @@ The application tables are `posts`, `thoughts`, `events`, and `configs`. Anonymo
 access can read only published content. Content and storage writes require
 service-role access from the authorized server layer. Desk interactions use
 the constrained RPCs described in [Architecture](./DOCS/ARCHITECTURE.md#desk-rpc). Seed creates the public file bucket with a 50 MiB
-limit. The `desk.*` configuration keys hold likes, visits, guestbook data, and a versioned desktop workspace.
+limit. The `desk.*` configuration keys hold likes, visits, guestbook data, and one saved desktop configuration.
 Anonymous clients can execute specific public RPCs but cannot modify tables.
 There are no application auth, tag or webhook tables.
 
@@ -195,14 +195,18 @@ bun scripts/verify-desk-rpc.ts
 ```
 
 Desk administrators sign in at `/auth`, then open the homepage display's Settings
-and choose Edit desk. Save draft keeps changes private; Publish updates the public
-snapshot. Visitors' personal positions remain browser-local. Concurrent edits report
-a revision conflict; retain unsaved work before reloading the shared draft. Item
+and choose Edit desk. The server-loaded configuration opens immediately. Apply
+saves an item directly; completed layout gestures, reset, shuffle, undo, and redo
+also save. There is no separate Save button. Form inputs remain temporary until
+Apply succeeds, and undo/redo history stays in the current editor session.
+Visitors' personal positions remain browser-local. Item
 metadata defaults and the `items`/`layouts` injection contract are described in
 [Architecture](./DOCS/ARCHITECTURE.md#configurable-desk).
 
 For a hosted database, apply `05_desk.sql` using its SQL editor before deploying.
-The script is additive and preserves existing config values. RPC verification
+The script migrates the old workspace to one configuration, preferring its published
+content and falling back to its draft only when nothing was published. Existing saved
+configurations and unrelated config values are preserved. RPC verification
 creates and removes an isolated temporary database in the local Docker container;
 set `SUPABASE_DB_CONTAINER` when its name differs. It checks permissions, concurrent
 updates, moderation and the rolling limit of ten new notes per 60 seconds.
@@ -255,3 +259,38 @@ no commercial subscription is needed for this GPL release. Dependencies retain
 their own licenses. Blog posts, personal photographs, and other authored content
 are not covered by this software license. Corresponding project source is available
 at [muyu258/personal-site](https://github.com/muyu258/personal-site).
+
+### Audio imports
+
+Apply `supabase/schemas/06_audio.sql` after the desk schema to provision the protected
+asset table, public `audio` bucket and saved-desk audio RPC. This additive script also
+preserves the built-in track IDs without changing existing desk snapshots. Regenerate
+Supabase types after applying the schema. For local application without a reset:
+
+```bash
+docker exec -i supabase_db_personal-site psql -U postgres -d postgres -v ON_ERROR_STOP=1 < supabase/schemas/06_audio.sql
+bun run supabase:types
+```
+
+The recording editor supports files and public HTTP(S) audio URLs, up to 50 MiB and
+15 minutes. Upload completion starts background processing; keep the page open until
+the upload completes. Processing continues after the dialog closes. Reopen the audio
+library to add completed recordings or retry failures. Removing a recording from a
+playlist does not delete its audio or spectrum files.
+
+Production uses a Node.js Vercel Function with Fluid compute and `maxDuration = 300`.
+`ffmpeg-static` is a trusted install dependency; install dependencies on the target
+platform so its executable matches the deployment. Next's output tracing includes the
+binary only for `/api/admin/audio/import`. Do not reuse macOS `node_modules` for Linux
+production. Confirm the function bundle contains an executable FFmpeg and stays below
+the project's bundle limit. No additional service credentials are required beyond
+existing Supabase and admin settings. Runtime decoding is bounded background work,
+not a durable queue: failed or interrupted attempts require manual retry.
+
+Before deploying this feature, ensure the hosted desk schema (`05_desk.sql`) is current
+and apply the additive audio schema. Home-page prerendering requires both
+`read_desk_configuration` and `read_desk_audio` in the target database. Verify a
+real upload and URL import on the deployed Function, including spectrum-only retry;
+a local successful decode does not validate the Linux deployment artifact. See
+[Architecture](./DOCS/ARCHITECTURE.md#item-metadata-and-audio-imports) for permissions,
+saved configuration and task-state boundaries.

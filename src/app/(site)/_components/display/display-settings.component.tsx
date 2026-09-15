@@ -15,7 +15,7 @@ export function DisplaySettings({
   reset,
   shuffle,
 }: Readonly<{
-  enter: () => Promise<void>;
+  enter: () => void;
   busy: boolean;
   notice: string;
   reset: () => void;
@@ -57,7 +57,7 @@ export function DisplaySettings({
           <DeskAction
             label={defaultDictionary.desk.editDesk}
             disabled={busy}
-            onClick={() => void enter()}
+            onClick={enter}
             display
           >
             <LayoutDashboard size={20} strokeWidth={1.6} aria-hidden />

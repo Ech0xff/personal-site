@@ -1,6 +1,7 @@
 import { deskItemDefinitions, type DeskItem } from "./desk-item.schema";
 import type {
   DeskBreakpoint,
+  DeskConfiguration,
   DeskLayout,
   DeskPlacement,
   PersonalLayouts,
@@ -72,8 +73,13 @@ export function nearestPosition(
   target: Box,
   obstacles: readonly Box[],
   width: number,
+  height = Infinity,
 ): Box {
-  return findPosition(target, obstacles, width) ?? target;
+  return (
+    findPosition(target, obstacles, width, height) ??
+    findPosition(target, obstacles, width) ??
+    target
+  );
 }
 
 export function layoutDesk(
@@ -86,9 +92,7 @@ export function layoutDesk(
   const breakpoint = deskBreakpoint(viewport.width);
   const placed: PlacedItem[] = [];
   const ordered = [...items].sort(
-    (a, b) =>
-      Number(deskItemDefinitions[a.type].capabilities.draggable) -
-      Number(deskItemDefinitions[b.type].capabilities.draggable),
+    (a, b) => Number(a.appearance.draggable) - Number(b.appearance.draggable),
   );
   for (const item of ordered) {
     const definition = deskItemDefinitions[item.type];
@@ -100,8 +104,8 @@ export function layoutDesk(
       scale: 1,
     };
     let scale = Math.min(
-      Math.max(saved.scale, definition.minScale),
-      definition.maxScale,
+      Math.max(saved.scale, item.appearance.minScale),
+      item.appearance.maxScale,
       (viewport.width - padding * 2) / definition.width,
     );
     let width: number = definition.width;
@@ -115,17 +119,21 @@ export function layoutDesk(
           ? Math.min(560, Math.max(300, viewport.width - 748))
           : Math.min(560, viewport.width - 48);
       height = measured[item.id]?.height ?? 320;
-      x = (viewport.width - width) / 2;
-      y =
-        breakpoint === "desktop"
-          ? Math.max(165, viewport.height * 0.48 - height / 2)
-          : 165;
+      if (!Object.hasOwn(layout.placements, item.id)) {
+        x = (viewport.width - width - padding * 2) / 2;
+        y =
+          (breakpoint === "desktop"
+            ? Math.max(165, viewport.height * 0.48 - height / 2)
+            : 165) - padding;
+      }
     }
     if (item.type === "lamp") {
       height = definition.height;
       scale = 1;
-      x = (viewport.width - width) / 2;
-      y = 0;
+      if (!Object.hasOwn(layout.placements, item.id)) {
+        x = (viewport.width - width - padding * 2) / 2;
+        y = 0;
+      }
     }
     const desired = {
       x,
@@ -133,11 +141,12 @@ export function layoutDesk(
       width: width * scale + padding * 2,
       height: height * scale + padding * 2,
     };
-    const box = definition.capabilities.draggable
+    const box = item.appearance.draggable
       ? nearestPosition(
           desired,
           placed.map((entry) => entry.box),
           viewport.width,
+          breakpoint === "desktop" ? viewport.height : Infinity,
         )
       : desired;
     placed.push({ item, box, scale, width, height, padding });
@@ -145,8 +154,7 @@ export function layoutDesk(
   if (!personal) return placed;
   const movableOverrides = placed.filter(
     (entry) =>
-      deskItemDefinitions[entry.item.type].capabilities.draggable &&
-      personal.positions[entry.item.id],
+      entry.item.appearance.draggable && personal.positions[entry.item.id],
   );
   const result = placed.filter((entry) => !movableOverrides.includes(entry));
   for (const entry of movableOverrides) {
@@ -159,6 +167,7 @@ export function layoutDesk(
       },
       result.map((other) => other.box),
       viewport.width,
+      breakpoint === "desktop" ? viewport.height : Infinity,
     );
     result.push({ ...entry, box });
   }
@@ -191,9 +200,7 @@ export function shuffleDesk(
     state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
     return state / 4294967296;
   };
-  const fixed = entries.filter(
-    (entry) => !deskItemDefinitions[entry.item.type].capabilities.draggable,
-  );
+  const fixed = entries.filter((entry) => !entry.item.appearance.draggable);
   if (
     fixed.some(
       ({ box }) =>
@@ -204,9 +211,7 @@ export function shuffleDesk(
     )
   )
     return entries;
-  const movable = entries.filter(
-    (entry) => deskItemDefinitions[entry.item.type].capabilities.draggable,
-  );
+  const movable = entries.filter((entry) => entry.item.appearance.draggable);
   for (let attempt = 0; attempt < 32; attempt++) {
     const ordered = movable
       .map((entry) => ({ entry, order: random() }))
@@ -233,4 +238,67 @@ export function shuffleDesk(
       );
   }
   return entries;
+}
+
+/** Content and appearance are shared; the current size belongs to one breakpoint. */
+export function replaceDeskItem(
+  configuration: DeskConfiguration,
+  item: DeskItem,
+  breakpoint: DeskBreakpoint,
+  scale: number,
+  frozenPlacement?: DeskPlacement,
+): DeskConfiguration {
+  const clampScale = (value: number) =>
+    Math.min(
+      item.appearance.maxScale,
+      Math.max(item.appearance.minScale, value),
+    );
+  const layoutFor = (key: DeskBreakpoint) => {
+    const layout = configuration.layouts[key];
+    const placement = layout.placements[item.id];
+    if (key === breakpoint && frozenPlacement) {
+      return {
+        ...layout,
+        placements: {
+          ...layout.placements,
+          [item.id]: { ...frozenPlacement, scale: clampScale(scale) },
+        },
+      };
+    }
+    if (
+      !Object.hasOwn(layout.placements, item.id) ||
+      !deskItemDefinitions[item.type].capabilities.resizable
+    )
+      return layout;
+    return {
+      ...layout,
+      placements: {
+        ...layout.placements,
+        [item.id]: {
+          ...placement,
+          scale: clampScale(key === breakpoint ? scale : placement.scale),
+        },
+      },
+    };
+  };
+  return {
+    ...configuration,
+    items: configuration.items.map((current) =>
+      current.id === item.id ? item : current,
+    ),
+    layouts: {
+      desktop: layoutFor("desktop"),
+      tablet: layoutFor("tablet"),
+      phone: layoutFor("phone"),
+    },
+  };
+}
+
+/** Scene fitting must not depend on movable content, otherwise fixed objects shift. */
+export function deskCanvasScale(viewport: Size, available: Size): number {
+  return Math.min(
+    1,
+    available.width / viewport.width,
+    available.height / viewport.height,
+  );
 }

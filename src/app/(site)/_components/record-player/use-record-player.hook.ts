@@ -2,16 +2,18 @@
 import { useAtomValue } from "jotai";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { playlist } from "#lib/shared/audio/playlist.const";
+import type { AudioTrack } from "#lib/shared/audio/audio.schema";
+import { clampPosition } from "#lib/shared/audio/record-session.helper";
 
 import { nextRecordTrack } from "./record-playback.helper";
 import { playbackModeAtom } from "./record-preferences.atom";
-import { clampPosition } from "./record-session.helper";
 import { useRecordSession } from "./record-session.hook";
 
 type PlaybackState = "idle" | "loading" | "playing" | "blocked" | "error";
 type Intent = "idle" | "playing";
-export function useRecordPlayer() {
+export function useRecordPlayer(playlist: readonly AudioTrack[]) {
+  const tracks = useRef(playlist);
+  tracks.current = playlist;
   const playbackMode = useAtomValue(playbackModeAtom);
   const audioElements = useRef(new Map<string, HTMLAudioElement>());
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -35,7 +37,7 @@ export function useRecordPlayer() {
     captureProgress,
     readSession,
     subscribeSession,
-  } = useRecordSession(audioRef);
+  } = useRecordSession(audioRef, playlist);
   const [state, setState] = useState<PlaybackState>("idle");
   const active = state === "loading" || state === "playing";
 
@@ -87,7 +89,8 @@ export function useRecordPlayer() {
 
       setSession(restored);
       const selected =
-        playlist.find((item) => item.id === restored.trackId) ?? playlist[0];
+        tracks.current.find((item) => item.id === restored.trackId) ??
+        tracks.current[0];
       const time = restored.positions[selected.id] ?? 0;
       setTrackId(selected.id);
       setPosition(time);
@@ -135,11 +138,47 @@ export function useRecordPlayer() {
     setDuration,
   ]);
 
+  useEffect(() => {
+    if (!isReady()) return;
+    const selected =
+      playlist.find((item) => item.id === getSession().trackId) ?? playlist[0];
+    if (
+      selected.id === getSession().trackId &&
+      audioRef.current?.getAttribute("src") === selected.src
+    )
+      return;
+    stop();
+    const time = getSession().positions[selected.id] ?? 0;
+    setSession({ ...getSession(), trackId: selected.id });
+    setTrackId(selected.id);
+    setPosition(time);
+    setDuration(selected.duration);
+    setPendingPosition(time);
+    audioRef.current = audioElements.current.get(selected.id) ?? null;
+    if (audioRef.current) {
+      audioRef.current.src = selected.src;
+      audioRef.current.load();
+    }
+    persist();
+  }, [
+    playlist,
+    getSession,
+    isReady,
+    persist,
+    setDuration,
+    setPendingPosition,
+    setPosition,
+    setSession,
+    setTrackId,
+    stop,
+  ]);
+
   const select = (direction: -1 | 1, fromEnd = false) => {
     if (!isReady() || !audioRef.current) return;
     const nextIntent = intent.current;
     stop();
     const selected = nextRecordTrack(
+      playlist,
       getSession().trackId,
       playbackMode,
       direction,
