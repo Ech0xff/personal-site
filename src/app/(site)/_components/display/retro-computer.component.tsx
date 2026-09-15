@@ -122,7 +122,11 @@ const styles = stylex.create({
 });
 export function RetroComputer({
   programs,
-}: Readonly<{ programs: Readonly<Record<DisplayProgram, ReactNode>> }>) {
+  name,
+}: Readonly<{
+  programs: Readonly<Record<DisplayProgram, ReactNode>>;
+  name: string;
+}>) {
   const [program, setProgram] = useAtom(displayProgramAtom);
   return (
     <section
@@ -174,7 +178,7 @@ export function RetroComputer({
           ))}
         </fieldset>
       </div>
-      <ObjectFeedback label="Display" />
+      <ObjectFeedback label={name} />
     </section>
   );
 }

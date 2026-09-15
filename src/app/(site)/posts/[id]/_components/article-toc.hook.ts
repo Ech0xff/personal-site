@@ -90,7 +90,30 @@ export function useArticleToc(headings: readonly ArticleHeading[]) {
       const positions = nodes.map(
         (node) => node?.getBoundingClientRect().top ?? Infinity,
       );
-      const bottom = article.getBoundingClientRect().bottom;
+      const body = article.querySelector("[data-article-body]") ?? article;
+      const rect = body.getBoundingClientRect();
+      const bottom = rect.bottom;
+      const element = root.current;
+      if (element) {
+        const available = Math.max(
+          0,
+          Math.min(rect.height, window.innerHeight - header - 48),
+        );
+        element.style.setProperty("--toc-available-height", `${available}px`);
+        const height = Math.min(
+          element.getBoundingClientRect().height,
+          available,
+        );
+        // The reading rail stays visible after the body center scrolls above the viewport.
+        const top = Math.max(
+          header + 16,
+          Math.min(
+            rect.top + rect.height / 2 - height / 2,
+            (window.innerHeight - height) / 2,
+          ),
+        );
+        element.style.setProperty("--toc-top", `${top}px`);
+      }
       const visible = headings
         .filter(
           (_, index) =>
@@ -124,6 +147,7 @@ export function useArticleToc(headings: readonly ArticleHeading[]) {
     };
     const observer = new ResizeObserver(schedule);
     observer.observe(article);
+    if (root.current) observer.observe(root.current);
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule);
     window.addEventListener("popstate", restoreHash);

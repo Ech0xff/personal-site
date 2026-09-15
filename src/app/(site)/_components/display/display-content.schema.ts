@@ -1,5 +1,10 @@
 import { z } from "zod";
-export const displayProgramSchema = z.enum(["terminal", "stats", "guestbook"]);
+export const displayProgramSchema = z.enum([
+  "terminal",
+  "stats",
+  "guestbook",
+  "settings",
+]);
 export const guestbookTabSchema = z.enum(["read", "write"]);
 export type DisplayProgram = z.infer<typeof displayProgramSchema>;
 export {

@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, mock, test } from "bun:test";
 
 import {
   createSessionToken,
@@ -38,5 +38,20 @@ describe("single-token admin sessions", () => {
         new Date(now.getTime() + SESSION_SECONDS * 1000),
       ),
     ).toBe(false);
+  });
+  test("desk actions deny anonymous draft reads and writes before validating input", async () => {
+    await mock.module("server-only", () => ({}));
+    await mock.module("next/headers", () => ({
+      cookies: async () => ({ get: () => undefined }),
+    }));
+    const { loadDeskWorkspace, updateDeskConfiguration } =
+      await import("../desk/desk-configuration.actions");
+    for (const result of [
+      await loadDeskWorkspace(),
+      await updateDeskConfiguration({ revision: 0, publish: true }),
+    ]) {
+      expect(result.ok).toBe(false);
+      if (!result.ok) expect(result.unauthorized).toBe(true);
+    }
   });
 });

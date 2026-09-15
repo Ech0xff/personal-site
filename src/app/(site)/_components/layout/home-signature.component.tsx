@@ -10,10 +10,11 @@ import {
   shape,
   space,
 } from "#design/tokens.stylex";
+import { deskItemDefinitions } from "#lib/shared/desk/desk-item.schema";
 
 import { foundation } from "../../_design/foundation.style";
 import { signature } from "../../_design/object-feedback.stylex";
-import { profile } from "../desk/profile.const";
+const profile = deskItemDefinitions.intro.defaultConfig;
 import { DeskLink } from "./desk-navigation.component";
 import { useSignatureSize } from "./use-signature-size.hook";
 

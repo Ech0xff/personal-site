@@ -1,6 +1,5 @@
 "use client";
 import * as stylex from "@stylexjs/stylex";
-import { List } from "lucide-react";
 import { useId } from "react";
 
 import type { ArticleHeading } from "#lib/shared/content/article.helper";
@@ -54,13 +53,6 @@ export function ArticleToc({
             foundation.focus,
           )}
         />
-        <div
-          aria-hidden={!toc.expanded}
-          {...stylex.props(styles.header, toc.open && styles.headerExpanded)}
-        >
-          <List size={15} aria-hidden="true" />
-          <span>Contents</span>
-        </div>
         <nav
           ref={toc.navigation}
           id={id}

@@ -111,3 +111,39 @@ REVOKE ALL ON FUNCTION public.read_desk_stats(), public.like_desk(), public.visi
 GRANT EXECUTE ON FUNCTION public.read_desk_stats(), public.like_desk(), public.visit_desk(TEXT),
   public.read_guestbook(INTEGER), public.submit_guestbook(TEXT,TEXT,TEXT,TEXT) TO anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.manage_guestbook(UUID,TEXT) TO service_role;
+
+-- Desk configuration is published as one snapshot; drafts never reach public readers.
+INSERT INTO public.configs(key, value) VALUES
+  ('desk.workspace', '{"revision":0,"draft":null,"published":null}')
+ON CONFLICT (key) DO NOTHING;
+
+CREATE OR REPLACE FUNCTION public.read_desk_configuration()
+RETURNS JSONB LANGUAGE sql STABLE SECURITY DEFINER SET search_path = '' AS $$
+  SELECT value -> 'published' FROM public.configs WHERE key = 'desk.workspace';
+$$;
+REVOKE ALL ON FUNCTION public.read_desk_configuration() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.read_desk_configuration() TO anon, authenticated, service_role;
+
+CREATE OR REPLACE FUNCTION public.save_desk_configuration(expected_revision BIGINT, configuration JSONB, publish BOOLEAN DEFAULT false)
+RETURNS JSONB LANGUAGE plpgsql SECURITY DEFINER SET search_path = '' AS $$
+DECLARE workspace JSONB;
+BEGIN
+  SELECT value INTO workspace FROM public.configs WHERE key = 'desk.workspace' FOR UPDATE;
+  IF (workspace ->> 'revision')::bigint IS DISTINCT FROM expected_revision THEN
+    RAISE EXCEPTION 'Desk configuration changed. Reload before saving.' USING ERRCODE = '40001';
+  END IF;
+  IF configuration IS NULL OR jsonb_typeof(configuration -> 'items') IS DISTINCT FROM 'array'
+     OR jsonb_typeof(configuration -> 'layouts') IS DISTINCT FROM 'object' THEN
+    RAISE EXCEPTION 'Invalid desk configuration';
+  END IF;
+  workspace := jsonb_build_object(
+    'revision', expected_revision + 1,
+    'draft', configuration,
+    'published', CASE WHEN publish THEN configuration ELSE workspace -> 'published' END
+  );
+  UPDATE public.configs SET value = workspace WHERE key = 'desk.workspace';
+  RETURN workspace;
+END;
+$$;
+REVOKE ALL ON FUNCTION public.save_desk_configuration(BIGINT, JSONB, BOOLEAN) FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.save_desk_configuration(BIGINT, JSONB, BOOLEAN) TO service_role;

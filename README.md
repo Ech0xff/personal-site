@@ -182,7 +182,7 @@ The application tables are `posts`, `thoughts`, `events`, and `configs`. Anonymo
 access can read only published content. Content and storage writes require
 service-role access from the authorized server layer. Desk interactions use
 the constrained RPCs described in [Architecture](./DOCS/ARCHITECTURE.md#desk-rpc). Seed creates the public file bucket with a 50 MiB
-limit. The three `desk.*` configuration keys hold likes, visits and guestbook data.
+limit. The `desk.*` configuration keys hold likes, visits, guestbook data, and a versioned desktop workspace.
 Anonymous clients can execute specific public RPCs but cannot modify tables.
 There are no application auth, tag or webhook tables.
 
@@ -193,6 +193,13 @@ docker exec -i supabase_db_personal-site psql -U postgres -d postgres -v ON_ERRO
 bun run supabase:types
 bun scripts/verify-desk-rpc.ts
 ```
+
+Desk administrators sign in at `/auth`, then open the homepage display's Settings
+and choose Edit desk. Save draft keeps changes private; Publish updates the public
+snapshot. Visitors' personal positions remain browser-local. Concurrent edits report
+a revision conflict; retain unsaved work before reloading the shared draft. Item
+metadata defaults and the `items`/`layouts` injection contract are described in
+[Architecture](./DOCS/ARCHITECTURE.md#configurable-desk).
 
 For a hosted database, apply `05_desk.sql` using its SQL editor before deploying.
 The script is additive and preserves existing config values. RPC verification

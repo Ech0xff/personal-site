@@ -41,7 +41,7 @@ async function Article({ params }: Props) {
             {formatTime(post.published_at)}
           </time>
         </header>
-        <div {...stylex.props(styles.body)}>
+        <div data-article-body {...stylex.props(styles.body)}>
           <DocumentView html={html} />
         </div>
         {headings.length > 0 && <ArticleToc headings={headings} />}

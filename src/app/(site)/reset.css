@@ -38,3 +38,11 @@
     display: block;
   }
 }
+
+/* The public shell supplies the visual cursor, including portalled controls. */
+html[data-ring-cursor],
+html[data-ring-cursor] *,
+html[data-ring-cursor] *::before,
+html[data-ring-cursor] *::after {
+  cursor: none !important;
+}

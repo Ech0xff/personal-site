@@ -14,6 +14,13 @@ await mock.module("#components/ui/blocknote/link-card.style", () => ({
     ),
   ),
 }));
+await mock.module("#components/ui/blocknote/code-block.style", () => ({
+  codeStyles: Object.fromEntries(
+    ["root", "toolbar", "language", "button", "diagram", "image", "notice"].map(
+      (name) => [name, {}],
+    ),
+  ),
+}));
 const { renderDocument } = await import("./document-render.service");
 
 describe("RSS documents", () => {
@@ -337,4 +344,36 @@ test("exports saved layout controls and image dimensions without editor controls
   expect(html).toContain("data-cms-link-card");
   expect(html).toContain("data-cms-card-image");
   expect(html).not.toContain("Column layout");
+});
+
+test("highlights code, preserves copy text and exports switchable PlantUML", async () => {
+  const source = 'const greeting = "<hello>";\n  console.log(greeting);\n';
+  const uml = "@startuml\nAlice -> Bob: Hello\n@enduml";
+  const html = await renderDocument([
+    { type: "codeBlock", props: { language: "typescript" }, content: source },
+    { type: "codeBlock", props: { language: "puml" }, content: uml },
+    {
+      type: "codeBlock",
+      props: { language: "unknown-language" },
+      content: "<unsafe> & plain",
+    },
+  ]);
+  expect(html).toContain("--shiki-token-keyword");
+  expect(html).toContain('data-code-action="copy"');
+  expect(html).toContain('data-code-action="toggle"');
+  expect(html).toContain("https://www.plantuml.com/plantuml/svg/");
+  await ServerBlockNoteEditor.create()._withJSDOM(async () => {
+    const container = document.createElement("div");
+    container.innerHTML = html;
+    const blocks = container.querySelectorAll("[data-code-surface]");
+    expect(blocks).toHaveLength(3);
+    expect(blocks[0].querySelector("code")?.textContent).toBe(source);
+    expect(blocks[1].querySelector("code")?.textContent).toBe(uml);
+    expect(
+      blocks[1].querySelector("[data-code-source]")?.hasAttribute("hidden"),
+    ).toBe(true);
+    expect(blocks[2].querySelector("code")?.textContent).toBe(
+      "<unsafe> & plain",
+    );
+  });
 });

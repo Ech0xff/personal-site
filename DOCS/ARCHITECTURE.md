@@ -77,7 +77,7 @@ keep the current document, including when the session expires.
 
 Owned component styles use StyleX; scoped BlockNote CSS consumes its variables.
 The editor uses the resolved administration theme. Old CodeMirror, Markdown
-renderers/directives and PlantUML remain removed. The shared custom BlockNote
+renderers/directives remain removed. The shared custom BlockNote
 schema adds link cards and the official GPL-licensed multi-column extension.
 Editor, validation, and server export share the column/columnList structure, including
 column widths. An extended upstream column-list node persists validated gap,
@@ -91,6 +91,19 @@ Legacy media rows remain readable and migrate on editing. Card URLs
 and metadata are validated before serialization. Authenticated metadata actions call Microlink with a bounded
 timeout and persist the result in the document. Public rendering never fetches
 metadata or executes third-party HTML.
+
+Code blocks retain BlockNote's `codeBlock`/`language` format. The editor uses a searchable language combobox with alias matching, keyboard selection, and a styled listbox. Its input stays outside document content. Shiki's editor extension
+highlights the editable node; cached server export highlights readonly HTML with
+shared CSS-variable colors. Copy reads raw code text, preserving whitespace.
+Unknown languages fall back to text. PlantUML and `puml` use raw DEFLATE plus
+PlantUML encoding and the public SVG endpoint. Remote SVG is loaded as an image,
+never injected. Source/diagram selection lives outside the document; returning to
+the diagram encodes the latest source. Network failures stay inside the block,
+and diagrams share the native image viewer.
+
+Link cards initially show their saved snapshot. The in-card edit button replaces
+the domain footer with URL, refresh, and done controls. Loading/error states remain
+inside the card; existing stale-request protection and metadata persistence apply.
 
 ## File Storage
 
@@ -237,7 +250,7 @@ underlying content, and restores focus to the visible heading after completion.
 ## Desk RPC
 
 The browser desk client calls specific Supabase RPCs directly using the public
-key with auth persistence disabled. `configs` stores three fixed keys:
+key with auth persistence disabled. `configs` stores fixed keys:
 `desk.likes` and `desk.visits` are integer counters, while `desk.guestbook` holds
 an entries array and at most ten recent successful submission timestamps.
 Anonymous roles cannot read or write configs directly. Public functions use
@@ -271,3 +284,38 @@ owns its legacy-value migration. Record session recovery and progress persistenc
 are separate from playback commands and the audio element lifecycle; external
 session changes restore a paused player. Spectrum network I/O lives in the
 browser audio service; binary parsing stays environment-neutral.
+
+## Configurable Desk
+
+`lib/shared/desk` owns explicit item definitions, Zod configuration schemas, defaults,
+and pure layout calculations. The public registry selects each item's renderer;
+`ReadingDesk` receives `items` and `layouts`. Each stable item ID links its props to
+positions in three reference canvases. Lamp and introduction are fixed obstacles.
+The remaining objects explicitly declare dragging and proportional resizing limits.
+Content, positioning, scale, and interaction feedback use separate wrappers.
+
+Layout adapts saved coordinates to the current canvas, places fixed objects first,
+and searches obstacle edges for the nearest legal rectangle with a 16 px gap.
+Distance ties use vertical then horizontal position. Resizing or dragging an item
+leaves other objects in place. Desktop uses an automatically fitted logical canvas below the header; gesture coordinates account for that uniform scale, and drops stay inside its bounds. Compact layouts can grow downward. Shuffle accepts only complete bounded arrangements and keeps the previous layout if no fit is found. Adaptation is derived and
+never overwrites reference layouts. Browser preferences store only deliberately
+moved IDs and reference dimensions per breakpoint; invalid IDs are ignored and
+collisions are resolved against current public sizes/configuration.
+
+The gesture hook owns long-press timers and Motion controls. Mouse and touch dragging start with a hold in the item hover area; business surfaces retain
+their existing clicks, inputs, and scrolling. Titles sit outside navigation links and playback buttons, and use the existing object hover frame instead of a second frame. Ordinary
+clicks retain their behavior; successful long presses suppress the release click.
+Cancellation restores the original placement. Persistence runs only after completion.
+
+Settings always exists in the display. Reset layout clears personal positions across all breakpoints without changing drafts or public configuration. Its authenticated Edit desk action loads a
+public draft through the existing admin session boundary. Editing uses independent
+history snapshots, proportional resize handles, device previews, and explicit save,
+publish, and exit controls. Preview restores business clicks without persisting its
+layout gestures. Failed saves retain current history; stale revisions require reload.
+
+`desk.workspace` contains revision, draft, and published snapshots. The service-role
+save RPC locks that row and checks the expected revision before atomically updating
+it. Zod validation runs after authentication in the Server Action. Public reads use
+only `read_desk_configuration`, cached under `desk:configuration`; publishing invalidates
+that tag. No public generic configs access is added. Defaults apply before the first
+publication. Apply the additive schema using the [database workflow](../README.md#database).

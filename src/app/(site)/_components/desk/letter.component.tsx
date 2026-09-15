@@ -1,31 +1,32 @@
 import * as stylex from "@stylexjs/stylex";
 
+import type { DeskItem } from "#lib/shared/desk/desk-item.schema";
+
 import { foundation } from "../../_design/foundation.style";
 import { objectMarker } from "../../_design/object-feedback.stylex";
 import { DeskLink } from "../layout/desk-navigation.component";
 import { ObjectFeedback } from "../object-feedback.component";
 import { styles } from "./letter.style";
-export function Letter() {
+export function Letter({
+  name,
+  config,
+}: Readonly<Pick<Extract<DeskItem, { type: "letter" }>, "name" | "config">>) {
   return (
-    <DeskLink
-      href="/thoughts"
-      {...stylex.props(styles.letter, objectMarker, foundation.objectLink)}
-      aria-label="Read thoughts"
-    >
-      <span {...stylex.props(styles.letterUnder)} />
-      <span {...stylex.props(styles.letterSheet)}>
-        <span {...stylex.props(styles.letterHeader)}>THINKING OUT LOUD</span>
-        <span {...stylex.props(styles.letterCopy)}>
-          Small thoughts,
-          <br />
-          everyday ramblings,
-          <br />
-          and whatever comes to mind.
+    <div {...stylex.props(styles.letter, objectMarker)}>
+      <DeskLink
+        href="/thoughts"
+        aria-label="Read thoughts"
+        {...stylex.props(foundation.objectLink)}
+      >
+        <span {...stylex.props(styles.letterUnder)} />
+        <span {...stylex.props(styles.letterSheet)}>
+          <span {...stylex.props(styles.letterHeader)}>{config.heading}</span>
+          <span {...stylex.props(styles.letterCopy)}>{config.body}</span>
+          <span {...stylex.props(styles.signature)}>{config.signature}</span>
         </span>
-        <span {...stylex.props(styles.signature)}>— notes from my day</span>
-      </span>
-      <ObjectFeedback navigable label="Thoughts" xstyle={styles.letterFrame} />
-      <span {...stylex.props(styles.clip)} aria-hidden="true" />
-    </DeskLink>
+        <span {...stylex.props(styles.clip)} aria-hidden="true" />
+      </DeskLink>
+      <ObjectFeedback navigable label={name} xstyle={styles.letterFrame} />
+    </div>
   );
 }

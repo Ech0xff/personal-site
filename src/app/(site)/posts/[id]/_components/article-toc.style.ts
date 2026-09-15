@@ -10,11 +10,11 @@ import {
   shape,
 } from "#design/tokens.stylex";
 
-const top = "clamp(132px, 18dvh, 180px)";
+const top = "var(--toc-top, 50dvh)";
 const expandedWidth = "min(304px, calc(100vw - 48px))";
 const desktopLeft = `calc(50% + ${shape.reading} / 2 + ${space.md})`;
 const desktopWidth = `min(232px, calc(50vw - ${shape.reading} / 2 - ${space.md} - ${space.lg}))`;
-const availableHeight = `calc(100dvh - ${top} - 24px)`;
+const availableHeight = "var(--toc-available-height, calc(100dvh - 120px))";
 
 export const tocStyles = stylex.create({
   root: {
@@ -70,30 +70,10 @@ export const tocStyles = stylex.create({
     display: { default: "block", [media.tocWide]: "none" },
   },
   triggerHidden: { pointerEvents: "none", opacity: 0 },
-  header: {
-    display: "flex",
-    alignItems: "center",
-    gap: space.xs,
-    height: { default: 0, [media.tocWide]: "36px" },
-    overflow: "hidden",
-    whiteSpace: "nowrap",
-    opacity: { default: 0, [media.tocWide]: 1 },
-    transform: { default: "translateX(12px)", [media.tocWide]: "none" },
-    color: color.text,
-    fontSize: font.control,
-    fontWeight: font.semibold,
-    transitionProperty: "opacity, transform",
-    transitionDuration: {
-      default: motionToken.tocExpand,
-      [media.reduce]: "0s",
-    },
-    transitionTimingFunction: motionToken.ease,
-  },
-  headerExpanded: { height: "36px", opacity: 1, transform: "none" },
   navigation: {
     maxHeight: {
       default: availableHeight,
-      [media.tocWide]: `calc(${availableHeight} - 36px)`,
+      [media.tocWide]: availableHeight,
     },
     overflowY: { default: "clip", [media.tocWide]: "auto" },
     overflowX: { default: "clip", [media.tocWide]: "hidden" },
@@ -103,8 +83,8 @@ export const tocStyles = stylex.create({
     "::-webkit-scrollbar": { display: "none" },
   },
   navigationExpanded: {
-    height: "calc(100dvh - 36px)",
-    maxHeight: "calc(100dvh - 36px)",
+    height: "100dvh",
+    maxHeight: "100dvh",
     overflowY: "auto",
     overflowX: "hidden",
   },

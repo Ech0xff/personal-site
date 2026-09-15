@@ -14,6 +14,8 @@ const styles = stylex.create({
   },
 });
 const paths = {
+  settings:
+    "M10 3h4l1 3 3 1 3 3v4l-3 1-1 3-3 3h-4l-1-3-3-1-3-3v-4l3-1 1-3Z M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0",
   terminal: "m4 6 5 5-5 5m9 1h7",
   stats: "M4 19V5m0 14h16M8 15v-4m5 4V7m5 8V3",
   guestbook: "M5 4h14v13H9l-4 3V4Zm4 5h6m-6 4h4",

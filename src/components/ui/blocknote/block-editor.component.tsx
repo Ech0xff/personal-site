@@ -1,6 +1,7 @@
 "use client";
 import { combineByGroup } from "@blocknote/core";
 import {
+  SyntaxHighlightingExtension,
   filterSuggestionItems,
   insertOrUpdateBlockForSlashMenu,
 } from "@blocknote/core/extensions";
@@ -24,6 +25,7 @@ import { toast } from "sonner";
 
 import { uploadFile } from "#lib/client/files/file-upload.service";
 import { useResolvedTheme } from "#lib/client/theme/theme.hook";
+import { getCodeHighlighter } from "#lib/shared/content/code-highlight.service";
 import { migrateMediaRows } from "#lib/shared/content/document.helper";
 import { defaultDictionary } from "#lib/shared/dictionary/dictionary.const";
 
@@ -45,6 +47,9 @@ export default function BlockEditor({
   const theme = useResolvedTheme();
   const editor = useCreateBlockNote({
     schema: editableCmsSchema,
+    extensions: [
+      SyntaxHighlightingExtension({ createHighlighter: getCodeHighlighter }),
+    ],
     dropCursor: multiColumnDropCursor,
     dictionary: { ...en, multi_column: columnLocales.en },
     initialContent: initialContent.length

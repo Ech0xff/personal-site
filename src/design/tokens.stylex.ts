@@ -185,6 +185,9 @@ const lightShadows = {
 export const shadow = stylex.defineVars(lightShadows);
 export const lightShadowTheme = stylex.createTheme(shadow, lightShadows);
 export const media = stylex.defineConsts({
+  deskPhone: "@container desk (max-width: 600px)",
+  deskTablet: "@container desk (min-width: 601px) and (max-width: 1023px)",
+  deskCompact: "@container desk (max-width: 1023px)",
   tocWide: "@media (min-width: 1280px)",
   touch: "@media (hover: none)",
   phone: "@media (max-width: 600px)",

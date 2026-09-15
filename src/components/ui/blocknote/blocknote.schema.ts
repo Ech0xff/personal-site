@@ -13,6 +13,7 @@ import {
 } from "#lib/shared/content/blocknote.schema";
 import { columnLayoutBlock } from "#lib/shared/content/column-layout.extension";
 
+import { codeBlock } from "./code-block.extension";
 import { cardStyles } from "./link-card.style";
 export {
   type CmsBlock,
@@ -103,6 +104,7 @@ const mediaRow = createBlockSpec(mediaRowConfig, {
 export const cmsSchema = BlockNoteSchema.create({
   blockSpecs: {
     ...defaultBlockSpecs,
+    codeBlock,
     linkCard,
     mediaRow,
     column: ColumnBlock,

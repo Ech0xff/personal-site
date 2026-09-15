@@ -124,8 +124,17 @@ export type Database = {
         Args: { entry_id: string; operation: string }
         Returns: undefined
       }
+      read_desk_configuration: { Args: never; Returns: Json }
       read_desk_stats: { Args: never; Returns: Json }
       read_guestbook: { Args: { page_index?: number }; Returns: Json }
+      save_desk_configuration: {
+        Args: {
+          configuration: Json
+          expected_revision: number
+          publish?: boolean
+        }
+        Returns: Json
+      }
       submit_guestbook: {
         Args: {
           author_email: string

@@ -15,7 +15,7 @@ export const styles = stylex.create({
   letterFrame: { inset: "-23px" },
   letter: {
     position: "relative",
-    width: { default: "clamp(220px, 18vw, 260px)", [media.compact]: "260px" },
+    width: "100%",
     paddingBottom: "4px",
     transform: {
       default: "rotate(-8deg)",
@@ -69,8 +69,12 @@ export const styles = stylex.create({
     marginBottom: "26px",
   },
   letterCopy: {
+    whiteSpace: "pre-line",
     fontFamily: font.handwritten,
-    fontSize: { default: "clamp(22px, 1.9vw, 27px)", [media.compact]: "27px" },
+    fontSize: {
+      default: "clamp(22px, 1.9cqw, 27px)",
+      [media.deskCompact]: "27px",
+    },
     lineHeight: 1.3,
     color: color.text,
   },

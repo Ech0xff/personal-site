@@ -2,7 +2,9 @@ import "server-only";
 import { ServerBlockNoteEditor } from "@blocknote/server-util";
 
 import { cmsSchema } from "#components/ui/blocknote/blocknote.schema";
+import { createCodeSurface } from "#components/ui/blocknote/code-block.helper";
 import { prepareArticle } from "#lib/shared/content/article.helper";
+import { highlightCode } from "#lib/shared/content/code-highlight.service";
 import {
   documentSchema,
   type BlockDocument,
@@ -23,6 +25,24 @@ export async function renderDocument(document: BlockDocument): Promise<string> {
     return renderer._withJSDOM(async () => {
       const container = globalThis.document.createElement("div");
       container.innerHTML = html;
+      for (const pre of container.querySelectorAll("pre")) {
+        const code = pre.querySelector("code");
+        if (!code) continue;
+        const source = code.textContent;
+        const language =
+          pre
+            .closest('[data-content-type="codeBlock"]')
+            ?.getAttribute("data-language") ??
+          code.className.match(/language-([^ ]+)/)?.[1] ??
+          "text";
+        const highlighted = globalThis.document.createElement("div");
+        highlighted.innerHTML = await highlightCode(source, language);
+        const next = highlighted.querySelector("pre");
+        if (next)
+          (pre.closest("[data-code-surface]") ?? pre).replaceWith(
+            createCodeSurface(next, language, source).root,
+          );
+      }
       for (const image of container.querySelectorAll("img[src]")) {
         if (image.closest("a, button")) continue;
         const src = image.getAttribute("src");

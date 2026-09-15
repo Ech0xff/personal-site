@@ -40,6 +40,7 @@ export const feedback = stylex.create({
     transition: `opacity ${motionToken.normal} ease`,
     zIndex: motionToken.tooltip,
   },
+  visible: { opacity: 1 },
   label: {
     display: "inline-flex",
     alignItems: "center",
@@ -74,7 +75,11 @@ export const feedback = stylex.create({
     textAlign: "center",
     textShadow: "none",
     letterSpacing: "0.02em",
-    pointerEvents: "none",
+    pointerEvents: "auto",
+    touchAction: "none",
+    userSelect: "none",
+    borderWidth: 0,
+    cursor: "grab",
   },
   round: { borderRadius: shape.round },
 });

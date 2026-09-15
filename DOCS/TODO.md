@@ -5,9 +5,9 @@ relevant file or issue when possible.
 
 ## Maintenance
 
-- [ ] Provision the current desk RPCs in legacy local databases: `visit_desk`
-      still returns 404 after content migration. Follow the additive
-      [database workflow](../README.md#database) and verify visits and statistics.
+- [ ] Apply the updated desk RPCs to hosted and other legacy databases before
+      deployment. Follow the additive [database workflow](../README.md#database)
+      and verify workspace publication, visits, and statistics.
 - [ ] Decide whether to standardize the casing of the `DOCS` directory.
 - [ ] Remove the `jsdom` 26.1.0 override and `@blocknote/server-util` DOM-origin
       patch once BlockNote's server renderer works
@@ -51,3 +51,8 @@ See the [redesign guide](./REDESIGN.md) for the public reading desk and source r
 - [ ] Choose a new redesign favicon and visual signature; the public site currently uses a blank favicon.
 
 - [ ] Configure the redesign GitHub, Email, X, and Bilibili destinations; the current icons intentionally have empty destinations.
+
+## Desk Workbench
+
+- [ ] Build schema-driven item metadata forms on the existing item configuration contract.
+- [ ] Add explicit item creation, duplication, and removal flows to the desk workbench.

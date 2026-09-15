@@ -87,6 +87,7 @@ export const styles = stylex.create({
     lineHeight: 1.6,
   },
   bookTitle: {
+    whiteSpace: "pre-line",
     fontFamily: font.display,
     fontSize: "32px",
     fontWeight: font.regular,

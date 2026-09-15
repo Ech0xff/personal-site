@@ -1,0 +1,201 @@
+import * as stylex from "@stylexjs/stylex";
+import {
+  Check,
+  Circle,
+  Eye,
+  EyeOff,
+  Redo2,
+  RotateCcw,
+  RefreshCw,
+  Save,
+  Shuffle,
+  Undo2,
+  Upload,
+  X,
+} from "lucide-react";
+import { createPortal } from "react-dom";
+
+import { color, font, shadow, shape } from "#design/tokens.stylex";
+import { defaultDictionary } from "#lib/shared/dictionary/dictionary.const";
+
+import { DeskAction } from "../desk-action.component";
+import type { useDeskEditor } from "./desk-editor.hook";
+
+const styles = stylex.create({
+  dock: {
+    position: "fixed",
+    bottom: "max(20px, env(safe-area-inset-bottom))",
+    left: "50%",
+    transform: "translateX(-50%)",
+    zIndex: 40,
+    width: "max-content",
+    maxWidth: "calc(100vw - 24px)",
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "4px",
+    padding: "6px",
+    borderRadius: shape.panel,
+    borderWidth: "1px",
+    borderStyle: "solid",
+    borderColor: color.line,
+    backgroundColor: color.surface,
+    color: color.text,
+    boxShadow: shadow.panel,
+  },
+  group: { display: "flex", gap: "2px", alignItems: "center" },
+  divider: {
+    width: "1px",
+    height: "20px",
+    backgroundColor: color.line,
+    marginInline: "3px",
+  },
+  status: {
+    position: "absolute",
+    top: "-5px",
+    right: "-5px",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "18px",
+    height: "18px",
+    borderRadius: shape.round,
+    borderWidth: "1px",
+    borderStyle: "solid",
+    borderColor: color.line,
+    backgroundColor: color.surface,
+    color: color.muted,
+  },
+  dirty: { color: color.accent },
+  notice: {
+    position: "absolute",
+    bottom: "calc(100% + 12px)",
+    left: "50%",
+    transform: "translateX(-50%)",
+    width: "max-content",
+    maxWidth: "min(360px, calc(100vw - 32px))",
+    padding: "12px",
+    borderRadius: shape.control,
+    backgroundColor: color.surface,
+    color: color.text,
+    boxShadow: shadow.panel,
+    borderWidth: "1px",
+    borderStyle: "solid",
+    borderColor: color.line,
+    fontFamily: font.body,
+    fontSize: font.small,
+    lineHeight: 1.5,
+    textAlign: "center",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+  },
+});
+const icon = { size: 18, strokeWidth: 1.6, "aria-hidden": true } as const;
+
+export function DeskEditorToolbar({
+  editor,
+  reset,
+  shuffle,
+}: Readonly<{
+  editor: ReturnType<typeof useDeskEditor>;
+  reset: () => void;
+  shuffle: () => void;
+}>) {
+  return createPortal(
+    <div role="toolbar" aria-label={copy.label} {...stylex.props(styles.dock)}>
+      <div aria-label="History" {...stylex.props(styles.group)}>
+        <DeskAction
+          label={copy.undo}
+          disabled={!editor.canUndo || editor.busy || editor.preview}
+          onClick={editor.undo}
+        >
+          <Undo2 {...icon} />
+        </DeskAction>
+        <DeskAction
+          label={copy.redo}
+          disabled={!editor.canRedo || editor.busy || editor.preview}
+          onClick={editor.redo}
+        >
+          <Redo2 {...icon} />
+        </DeskAction>
+      </div>
+      <span aria-hidden {...stylex.props(styles.divider)} />
+      <div aria-label="Desk actions" {...stylex.props(styles.group)}>
+        <DeskAction
+          label={copy.shuffle}
+          disabled={editor.busy || editor.preview}
+          onClick={shuffle}
+        >
+          <Shuffle {...icon} />
+        </DeskAction>
+        <DeskAction
+          label={copy.reset}
+          disabled={editor.busy || editor.preview}
+          onClick={reset}
+        >
+          <RotateCcw {...icon} />
+        </DeskAction>
+        <DeskAction
+          label={editor.preview ? copy.backToEditing : copy.preview}
+          disabled={editor.busy}
+          pressed={editor.preview}
+          onClick={editor.togglePreview}
+        >
+          {editor.preview ? <EyeOff {...icon} /> : <Eye {...icon} />}
+        </DeskAction>
+        <DeskAction
+          label={copy.save}
+          disabled={editor.busy || !editor.dirty}
+          onClick={() => void editor.save(false)}
+        >
+          <Save {...icon} />
+        </DeskAction>
+        <DeskAction
+          label={copy.publish}
+          disabled={editor.busy}
+          onClick={() => void editor.save(true)}
+        >
+          <Upload {...icon} />
+        </DeskAction>
+        <DeskAction
+          label={copy.exit}
+          disabled={editor.busy}
+          onClick={editor.exit}
+        >
+          <X {...icon} />
+        </DeskAction>
+      </div>
+      <output
+        aria-label={editor.dirty ? copy.unsaved : copy.saved}
+        {...stylex.props(styles.status, editor.dirty && styles.dirty)}
+      >
+        {editor.dirty ? (
+          <Circle size={8} aria-hidden />
+        ) : (
+          <Check size={12} aria-hidden />
+        )}
+      </output>
+      {editor.notice && (
+        <div {...stylex.props(styles.notice)}>
+          <output>{editor.notice}</output>
+          {editor.notice === copy.conflict && (
+            <DeskAction
+              label={copy.reload}
+              disabled={editor.busy}
+              onClick={() => {
+                if (!editor.dirty || window.confirm(copy.reloadDiscard))
+                  void editor.enter();
+              }}
+            >
+              <RefreshCw {...icon} />
+            </DeskAction>
+          )}
+        </div>
+      )}
+    </div>,
+    document.body,
+  );
+}
+const copy = defaultDictionary.desk.layout;

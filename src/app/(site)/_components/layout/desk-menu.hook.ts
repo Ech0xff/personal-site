@@ -15,7 +15,7 @@ export function useDeskMenu(pathname: string) {
   const [phone, setPhone] = useState(false);
   const focusFirst = useRef(false);
   const openedByHover = useRef(false);
-  const root = useRef<HTMLDivElement>(null);
+  const root = useRef<HTMLElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const cancelClose = () => clearTimeout(timer.current);
@@ -82,7 +82,7 @@ export function useDeskMenu(pathname: string) {
     if (!root.current?.contains(document.activeElement))
       timer.current = setTimeout(() => setOpen(false), 160);
   };
-  const blur = (event: FocusEvent<HTMLDivElement>) => {
+  const blur = (event: FocusEvent<HTMLElement>) => {
     if (!event.currentTarget.contains(event.relatedTarget)) close();
   };
   const keyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
@@ -104,6 +104,7 @@ export function useDeskMenu(pathname: string) {
     blur,
     keyDown,
     close,
+    cancelClose,
     toggle: (event: MouseEvent<HTMLButtonElement>) => {
       cancelClose();
       // The first mouse click follows pointer-enter; keep that newly opened menu visible.

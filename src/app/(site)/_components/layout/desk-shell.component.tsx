@@ -10,12 +10,14 @@ import { ImageViewer } from "#components/ui/image-viewer.component";
 
 import { foundation } from "../../_design/foundation.style";
 import { DeskCurtain } from "./desk-curtain.component";
+import { useDeskMenu } from "./desk-menu.hook";
 import { DeskNav } from "./desk-nav.component";
 import { NavigationContext } from "./desk-navigation.component";
 import { useDeskNavigation } from "./desk-navigation.hook";
 import { shell } from "./desk-shell.style";
 import { useDeskVisits } from "./desk-visits.hook";
 import { HomeSignature } from "./home-signature.component";
+import { RingCursor } from "./ring-cursor.component";
 import { useRoutePrefetch } from "./route-prefetch.hook";
 import { RouteReadinessContext } from "./route-readiness.hook";
 import { useDeskScroll } from "./use-desk-scroll.hook";
@@ -24,6 +26,7 @@ export function DeskShell({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <Provider>
       <ThemeSync />
+      <RingCursor />
       <ImageViewer>
         <DeskShellContent>{children}</DeskShellContent>
       </ImageViewer>
@@ -35,7 +38,7 @@ function DeskShellContent({ children }: Readonly<{ children: ReactNode }>) {
   useRoutePrefetch();
   const { pathname, entryControls, content, active, navigate } = navigation;
   useDeskVisits(pathname);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const menu = useDeskMenu(pathname);
   const [overlayRoot, setOverlayRoot] = useState<HTMLDivElement | null>(null);
   const scroll = useDeskScroll(active);
   return (
@@ -68,15 +71,19 @@ function DeskShellContent({ children }: Readonly<{ children: ReactNode }>) {
               )}
             >
               <header
+                ref={menu.root}
+                onPointerEnter={menu.cancelClose}
+                onPointerLeave={menu.leave}
+                onBlur={menu.blur}
                 {...stylex.props(
                   shell.header,
                   scroll.scrolled && shell.headerScrolled,
-                  menuOpen && shell.headerMenu,
+                  menu.open && shell.headerMenu,
                 )}
               >
                 <HomeSignature current={pathname === "/"} />
                 <div {...stylex.props(shell.headerActions)}>
-                  <DeskNav pathname={pathname} onOpenChange={setMenuOpen} />
+                  <DeskNav pathname={pathname} menu={menu} />
                   <ThemeToggle />
                 </div>
               </header>

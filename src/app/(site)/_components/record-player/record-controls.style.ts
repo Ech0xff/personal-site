@@ -20,7 +20,7 @@ export const styles = stylex.create({
     pointerEvents: "none",
     opacity: {
       default: 0,
-      [media.phone]: 1,
+      [media.deskPhone]: 1,
       [media.touch]: 1,
       [stylex.when.ancestor(":hover", recordMarker)]: 1,
       [stylex.when.ancestor(":has(:focus-visible)", recordMarker)]: 1,
@@ -32,7 +32,7 @@ export const styles = stylex.create({
   interactive: {
     pointerEvents: {
       default: "none",
-      [media.phone]: "auto",
+      [media.deskPhone]: "auto",
       [media.touch]: "auto",
       [stylex.when.ancestor(":hover", recordMarker)]: "auto",
       [stylex.when.ancestor(":has(:focus-visible)", recordMarker)]: "auto",

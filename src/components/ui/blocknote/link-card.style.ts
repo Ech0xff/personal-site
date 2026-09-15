@@ -3,6 +3,7 @@ import * as stylex from "@stylexjs/stylex";
 import { color, font, shape, space, motionToken } from "#design/tokens.stylex";
 export const cardStyles = stylex.create({
   card: {
+    position: "relative",
     display: "flex",
     flexDirection: "row",
     width: "100%",
@@ -81,6 +82,13 @@ export const cardStyles = stylex.create({
     maxWidth: "30%",
   },
   logo: { width: "16px", height: "16px", objectFit: "contain", flexShrink: 0 },
+  editButton: {
+    position: "absolute",
+    top: space.xxs,
+    right: space.xxs,
+    backgroundColor: color.surface,
+  },
+  titleLink: { color: "inherit", textDecoration: "none" },
   tools: {
     display: "flex",
     gap: space.xs,

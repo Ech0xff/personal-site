@@ -4,7 +4,6 @@ import * as stylex from "@stylexjs/stylex";
 import { font, material, media, space } from "#design/tokens.stylex";
 
 import { foundation } from "../../_design/foundation.style";
-import { terminalLines } from "./terminal.const";
 import { useTypewriter } from "./use-typewriter.hook";
 const blink = stylex.keyframes({
   "0%, 49%": { opacity: 1 },
@@ -38,8 +37,10 @@ const styles = stylex.create({
     animationName: { default: blink, [media.reduce]: "none" },
   },
 });
-export function DisplayTerminal() {
-  const writer = useTypewriter();
+export function DisplayTerminal({
+  lines,
+}: Readonly<{ lines: readonly string[] }>) {
+  const writer = useTypewriter(lines);
   return (
     <div ref={writer.element} {...stylex.props(styles.root)}>
       <>
@@ -52,7 +53,7 @@ export function DisplayTerminal() {
             {...stylex.props(styles.cursor, writer.running && styles.blinking)}
           />
         </div>
-        <p {...stylex.props(foundation.srOnly)}>{terminalLines.join(" ")}</p>
+        <p {...stylex.props(foundation.srOnly)}>{lines.join(" ")}</p>
       </>
     </div>
   );

@@ -26,7 +26,7 @@ const spin = stylex.keyframes({
 const styles = stylex.create({
   root: {
     position: "relative",
-    width: { default: "clamp(270px, 24vw, 320px)", [media.compact]: "290px" },
+    width: "100%",
     maxWidth: "100%",
     textAlign: "center",
   },
@@ -138,7 +138,7 @@ const styles = stylex.create({
     transform: "rotate(-12deg)",
   },
 });
-export function RecordPlayer() {
+export function RecordPlayer({ name }: Readonly<{ name: string }>) {
   const player = useRecordPlayer();
   const { track } = player;
   const playing = player.state === "playing";
@@ -157,6 +157,7 @@ export function RecordPlayer() {
     >
       <div {...stylex.props(styles.deck)}>
         <div {...stylex.props(styles.platter, objectMarker)}>
+          <ObjectFeedback label={name} round />
           <RecordSpectrum
             audioRef={player.audioRef}
             playing={playing}
@@ -170,7 +171,6 @@ export function RecordPlayer() {
             aria-describedby="record-status"
             onClick={player.toggle}
           >
-            <ObjectFeedback label="Music" round />
             <span
               {...stylex.props(styles.disc, playing && styles.spinning)}
               aria-hidden="true"

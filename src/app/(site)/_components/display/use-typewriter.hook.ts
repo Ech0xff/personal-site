@@ -1,14 +1,13 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 
-import { terminalLines } from "./terminal.const";
 import {
   advanceTypewriter,
   initialTypewriterState,
   typingTiming,
 } from "./typewriter.helper";
 
-export function useTypewriter(active = true) {
+export function useTypewriter(terminalLines: readonly string[], active = true) {
   const element = useRef<HTMLDivElement>(null);
   const [state, setState] = useState(initialTypewriterState);
   const [visible, setVisible] = useState(false);
@@ -40,10 +39,12 @@ export function useTypewriter(active = true) {
       typingTiming[state.phase],
     );
     return () => clearTimeout(timer);
-  }, [running, state]);
+  }, [running, state, terminalLines]);
   const text = reduced
     ? terminalLines[0]
-    : Array.from(terminalLines[state.line]).slice(0, state.count).join("");
+    : Array.from(terminalLines[state.line] ?? terminalLines[0])
+        .slice(0, state.count)
+        .join("");
   return {
     element,
     text,

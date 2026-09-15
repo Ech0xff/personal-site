@@ -251,17 +251,15 @@ on every breakpoint. The light field starts lower on the desk and remains
 bounded by the scene. At widths up to 600 px, the right navigation becomes a
 `• Menu` disclosure. Its links appear below the trigger without a panel or
 border. Mouse hover, touch clicks, Enter/Space, and Arrow Down open it; Escape,
-leaving the group without keyboard focus, moving focus away, selecting a link,
-or clicking outside close it. The backing surface animates its bottom edge over
+leaving the whole navbar without keyboard focus, moving focus away, selecting a link,
+or clicking outside close it. The expanded background remains part of the navbar hit area. Menu-mode navigation dots sit to the left of labels. The backing surface animates its bottom edge over
 280ms; links enter after 70ms, and closing delays the backdrop by 80ms. Hidden
 phone navigation is inert immediately while its visual fade completes.
 Arrow Down focuses the first link and Escape
 returns focus to the trigger. Desktop and tablet retain the inline navigation.
 
 At widths of 1024 px and above, the home desk uses the viewport height remaining
-below the header, without a minimum scene height. Its shell clips decorative
-overflow so the wide homepage stays on one screen. Compact home layouts and
-content routes retain normal document scrolling.
+below the header, with a minimum usable scene height. Desktop composition scales uniformly into the available viewport below the header. Tablet and phone layouts retain normal document scrolling.
 
 The redesign root owns one Lenis 1.3.26 instance with `autoRaf`, wheel smoothing,
 and a token-controlled lerp of 0.12. Touch retains native inertia (`syncTouch:
@@ -440,7 +438,7 @@ Posts, Thoughts, Events, article details, and content error states share the
 and 40 px side padding on phones to leave room for the compact TOC. The directory
 is outside this shared content width. At 1280 px and above,
 the fixed TOC derives its horizontal position from the same reading-width token
-plus a gap, 132–180 px below the viewport top. It never consumes body width.
+plus a gap. Its vertical center follows the article body center, capped at the viewport center and kept below the sticky header when the body center scrolls above the viewport. The body excludes the title and date. There is no Contents heading, icon, or reserved heading space. ResizeObserver remeasures body changes including asynchronous images and diagrams. It never consumes body width.
 Full contents use a thin left rail, hierarchical indents, and an accent-colored
 visible section range. Narrower views use a fixed rail of short lines with a single
 bright, long peak centered on the visible section range and tapered neighbors.
@@ -452,11 +450,7 @@ The motion hook measures the two layouts at interaction boundaries and animates
 transforms and opacity; it does not animate row heights or repeatedly correct
 scroll positions through a resize observer. Pending animations are cancelled on
 reversal, breakpoint changes, reduced motion, and unmount.
-The expanded directory starts at the viewport top and spans `100dvh`,
-following the current viewport as mobile browser toolbars expand or retract,
-covering the navigation rather than reserving space for it. Only the directory's
-own 36 px heading is subtracted from its internal scroll area, which fills the
-remaining height even when there are few headings.
+On compact screens, the expanded directory starts at viewport top and fills `100dvh`; its list scrolls internally. The collapsed rail and wide-screen directory remain visible at the bottom of an article. No title or icon space is reserved.
 A fading canvas veil keeps text legible without a bordered popup or article shift.
 Reduced motion removes the transition. Selection, outside clicks, and Escape
 close it; long directories keep the current link visible. Touch pointer-leave
@@ -520,3 +514,47 @@ Cards follow the historical meta directive: a compact publisher line, title,
 summary and hostname, with an optional cover at the right. Column cards place the
 cover above the text; narrow standalone cards keep a smaller cover. Both roots reuse
 shared surface, border, typography and motion tokens.
+
+## Item Layout and Editing
+
+Item definitions own display names, config schemas/defaults, size limits, collision
+padding, and capabilities. Existing object renderers receive configuration through
+props. Introductory copy and terminal lines are configuration; guestbook data,
+statistics, and playback stay in their existing features. The lamp and introduction
+remain fixed and participate in collision detection. All other items allow dragging,
+including decorations. Reference layouts use desktop/tablet/phone dimensions and
+preserve the composition across viewport changes. Item internals use the named desk container. Browsing and editing both choose the active layout from the current window width; no manual device-size override is available.
+
+A 350 ms hold anywhere in an item’s hover area lifts the object; moving more than 8 px before activation cancels it. Short presses keep the original clicks. Inputs, sliders, and internal scroll areas retain their own interactions. Touch scrolling remains native until a hold activates dragging. Existing hover frames provide feedback during browsing. Editing hides those frames and shows a single editor boundary with its title centered on the top edge.
+Press feedback, the lifted frame, and a legal-position outline explain the gesture.
+The floating object may cross neighbors; release chooses the nearest clear rectangle.
+Escape and pointer cancellation restore its starting state. Visitors can always drag,
+regardless of authentication or edit mode. Personal positions persist independently
+of the published layout and do not copy public metadata or capability settings.
+
+The display's lower-right Settings gear offers Reset layout to every visitor and an additional
+Edit desk action for administrators. Reset clears personal positions in every size class and restores the public composition. Settings actions use phosphor-colored icons with floating hover/focus labels. Editing happens in the home scene. Its icon toolbar is portaled to the document body and fixed above the bottom safe area, so it never displaces the scene. It wraps groups on narrow screens and keeps hints and notices outside normal flow. The toolbar
+provides undo/redo, draft saving, publishing, business-interaction
+preview, and exit. Both Settings and the toolbar offer Shuffle: only draggable items move, fixed items remain obstacles, and the collision solver places each randomized candidate within the canvas width and height. It retries bounded compositions and keeps the previous layout when no complete fit is found. Settings saves personal positions for the active breakpoint; editing adds a single undo step without publishing. The toolbar Reset restores the current breakpoint to its published layout as one undoable edit; it does not save or publish. Short presses select objects; resize handles preserve aspect ratio.
+Each completed drag/resize adds one history step. Unsaved exit asks before discarding.
+Drafts load independently of personal placement; failed saves preserve local edits.
+See [Architecture](./ARCHITECTURE.md#configurable-desk) for persistence and permissions.
+
+## Ring Cursor
+
+The public shell replaces the system mouse pointer with a hollow ring, including
+inputs, text, and the image viewer. Its center follows pointer coordinates without
+smoothing. Hover springs into an enlarged accent ring, pressing contracts it, activated item dragging rotates a dashed ring, and release emits one fading expansion. Reduced motion keeps immediate scale feedback and disables springs, rotation, and ripples. A contrasting outline keeps
+it visible over imagery. The manual popover layer is raised above native dialogs,
+does not intercept events, and uses Motion values without rerendering desk items.
+Touch hides the ring. Text selection, insertion carets, focus outlines, and the
+administration cursor remain native. Reduced motion removes scale transitions.
+
+## Code and Diagram Blocks
+
+Searchable language input, syntax colors, and icon-based Copy appear inside one code-block surface. Search matches language names and aliases and supports Arrow keys, Enter, and Escape. Source/diagram buttons use matching SVG line icons. The BlockNote default background and padding are cleared to avoid nested frames. PlantUML
+blocks initially display the diagram; the code icon switches in place to source,
+which is editable only in the editor. Returning to the diagram requests the current
+source. Errors remain within the block and never prevent source access. Empty blocks
+start in source mode. Diagram clicks use the existing image viewer. Link-card edit
+controls appear inside the card and temporarily replace its bottom domain line.

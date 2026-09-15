@@ -2,9 +2,9 @@ import * as stylex from "@stylexjs/stylex";
 
 import { Magnetic } from "#components/ui/magnetic.component";
 import { color, motionToken, shape, space } from "#design/tokens.stylex";
+import type { IntroConfig } from "#lib/shared/desk/desk-item.schema";
 
 import { foundation } from "../../_design/foundation.style";
-import { socialLinks } from "./profile.const";
 
 const styles = stylex.create({
   root: {
@@ -49,11 +49,13 @@ const paths = {
   bilibili:
     "M8 2l3 4 M17 2l-3 4 M5 6h14a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z M8 11v3 M16 11v3 M10 17l2 1 2-1",
 } as const;
-export function SocialLinks() {
+export function SocialLinks({
+  links,
+}: Readonly<{ links: IntroConfig["links"] }>) {
   return (
     <div {...stylex.props(styles.root)} aria-label="Elsewhere">
       {(["github", "email", "x", "bilibili"] as const).map((kind) => {
-        const href = socialLinks[kind];
+        const href = links[kind];
         const label = {
           github: "GitHub",
           email: "Email",

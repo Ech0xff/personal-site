@@ -69,6 +69,13 @@ export const shell = stylex.create({
   },
   headerScrolled: { "::before": { opacity: 1 } },
   headerMenu: {
+    "::after": {
+      content: '""',
+      display: { default: "none", [media.phone]: "block" },
+      position: "absolute",
+      inset: "0 0 -190px",
+      zIndex: -1,
+    },
     "::before": {
       opacity: { default: null, [media.phone]: 1 },
       bottom: { default: "-16px", [media.phone]: "-190px" },
@@ -98,8 +105,9 @@ export const shell = stylex.create({
   current: { color: color.accent },
   dot: {
     position: "absolute",
-    bottom: 0,
-    left: "calc(50% - 2.5px)",
+    bottom: { default: 0, [media.phone]: "auto" },
+    top: { default: "auto", [media.phone]: "calc(50% - 2.5px)" },
+    left: { default: "calc(50% - 2.5px)", [media.phone]: "-14px" },
     width: "5px",
     height: "5px",
     borderRadius: shape.round,

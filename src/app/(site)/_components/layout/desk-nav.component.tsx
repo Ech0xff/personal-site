@@ -1,6 +1,5 @@
 "use client";
 import * as stylex from "@stylexjs/stylex";
-import { useEffect } from "react";
 
 import { Magnetic } from "#components/ui/magnetic.component";
 import {
@@ -14,7 +13,7 @@ import {
 
 import { foundation } from "../../_design/foundation.style";
 import { objectMarker } from "../../_design/object-feedback.stylex";
-import { useDeskMenu } from "./desk-menu.hook";
+import type { useDeskMenu } from "./desk-menu.hook";
 import { DeskLink } from "./desk-navigation.component";
 import { shell } from "./desk-shell.style";
 import { navigation } from "./navigation.const";
@@ -81,18 +80,10 @@ const styles = stylex.create({
 });
 export function DeskNav({
   pathname,
-  onOpenChange,
-}: Readonly<{ pathname: string; onOpenChange: (open: boolean) => void }>) {
-  const menu = useDeskMenu(pathname);
-  useEffect(() => onOpenChange(menu.open), [menu.open, onOpenChange]);
+  menu,
+}: Readonly<{ pathname: string; menu: ReturnType<typeof useDeskMenu> }>) {
   return (
-    <div
-      ref={menu.root}
-      {...stylex.props(styles.root)}
-      onPointerEnter={menu.enter}
-      onPointerLeave={menu.leave}
-      onBlur={menu.blur}
-    >
+    <div {...stylex.props(styles.root)} onPointerEnter={menu.enter}>
       <button
         ref={menu.trigger}
         type="button"

@@ -36,6 +36,54 @@ await sql(`CREATE DATABASE ${database};`, "postgres");
 try {
   await sql(await Bun.file("supabase/schemas/02_tables.sql").text());
   await sql(await Bun.file("supabase/schemas/05_desk.sql").text());
+  for (const role of ["anon", "authenticated"]) {
+    assert(
+      (await sql(
+        `SELECT has_function_privilege('${role}', 'public.save_desk_configuration(bigint,jsonb,boolean)', 'EXECUTE');`,
+      )) === "f",
+      `${role} must not write desk configuration`,
+    );
+    assert(
+      (await sql(
+        `SELECT has_table_privilege('${role}', 'public.configs', 'SELECT');`,
+      )) === "f",
+      `${role} must not read private drafts`,
+    );
+  }
+  const configuration = `' {"items":[],"layouts":{}}'::jsonb`;
+  const saves = await Promise.allSettled(
+    Array.from({ length: 2 }, () =>
+      sql(
+        `SET ROLE service_role; SELECT public.save_desk_configuration(0, ${configuration}, false)->>'revision';`,
+      ),
+    ),
+  );
+  assert(
+    saves.filter((result) => result.status === "fulfilled").length === 1,
+    "Only one concurrent writer may use the same revision",
+  );
+  assert(
+    saves.some(
+      (result) =>
+        result.status === "rejected" &&
+        String(result.reason).includes("Desk configuration changed"),
+    ),
+    "The stale writer must receive a revision conflict",
+  );
+  assert(
+    (await sql("SET ROLE anon; SELECT public.read_desk_configuration();")) ===
+      "null",
+    "Saving a draft must not publish it",
+  );
+  await sql(
+    `SET ROLE service_role; SELECT public.save_desk_configuration(1, ${configuration}, true);`,
+  );
+  assert(
+    (await sql(
+      "SET ROLE anon; SELECT public.read_desk_configuration()->>'items';",
+    )) === "[]",
+    "Public readers must receive the published snapshot",
+  );
   assert(
     (await sql(
       "SELECT has_table_privilege('anon', 'public.configs', 'INSERT,UPDATE,DELETE');",
@@ -123,7 +171,7 @@ try {
     "Old timestamps must be removed",
   );
   console.log(
-    "PASS: RPC permissions, input checks, 20 concurrent likes, 20 concurrent notes, moderation and rolling-window expiry.",
+    "PASS: RPC permissions, draft isolation, revision conflicts, atomic publishing, input checks, concurrent likes/notes, moderation and rolling-window expiry.",
   );
 } finally {
   await sql(`DROP DATABASE ${database} WITH (FORCE);`, "postgres");
