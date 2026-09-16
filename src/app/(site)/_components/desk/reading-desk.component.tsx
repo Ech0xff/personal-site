@@ -1,10 +1,11 @@
 "use client";
 import * as stylex from "@stylexjs/stylex";
 import { MotionConfig } from "framer-motion";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useCallback, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { lampOff, shape } from "#design/tokens.stylex";
+import { personalDeskLayoutsAtom } from "#lib/client/desk/desk-layout.atom";
 import type { AudioAsset } from "#lib/shared/audio/audio.schema";
 import {
   layoutDesk,
@@ -27,7 +28,6 @@ import { useDeskEditor } from "./desk-editor.hook";
 import { DeskItemFrame } from "./desk-item.component";
 import { renderDeskItem } from "./desk-item.registry";
 import { itemStyles } from "./desk-item.style";
-import { personalDeskLayoutsAtom } from "./desk-layout.atom";
 import { useDeskViewport } from "./desk-viewport.hook";
 import { ItemEditor } from "./item-editor.component";
 import { lampOnAtom } from "./lamp.atom";
@@ -47,7 +47,7 @@ export function ReadingDesk({
   const root = useRef<HTMLDivElement>(null);
   const landing = useRef<HTMLDivElement>(null);
   const [lampOn, setLampOn] = useAtom(lampOnAtom);
-  const [personal, setPersonal] = useAtom(personalDeskLayoutsAtom);
+  const setPersonal = useSetAtom(personalDeskLayoutsAtom);
   const [measured, setMeasured] = useState<Record<string, Size>>({});
   const editTrigger = useRef<HTMLButtonElement | null>(null);
   const [editingTarget, setEditingTarget] = useState<{
@@ -69,7 +69,7 @@ export function ReadingDesk({
     layout,
     viewport,
     measured,
-    editor.editing ? undefined : personal[breakpoint],
+    editor.personalLayouts?.[breakpoint],
   );
   const height = Math.max(
     viewport.height,

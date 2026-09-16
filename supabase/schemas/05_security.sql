@@ -11,5 +11,6 @@ CREATE POLICY "Published posts" ON public.posts FOR SELECT TO anon, authenticate
 CREATE POLICY "Published thoughts" ON public.thoughts FOR SELECT TO anon, authenticated USING (status = 'show');
 CREATE POLICY "Published events" ON public.events FOR SELECT TO anon, authenticated USING (status = 'show');
 
--- Storage writes and object listing use server-side service-role access.
--- Public bucket URLs can be read without granting access to storage.objects.
+ALTER TABLE public.configs ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON public.configs FROM anon, authenticated;
+GRANT ALL ON public.configs TO service_role;

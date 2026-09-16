@@ -25,3 +25,8 @@ CREATE TABLE public.events (
 );
 CREATE INDEX idx_events_published_at ON public.events(published_at DESC, id);
 CREATE INDEX idx_events_status ON public.events(status);
+
+CREATE TABLE IF NOT EXISTS public.configs (
+  key TEXT PRIMARY KEY CHECK (btrim(key) <> ''),
+  value JSONB NOT NULL
+);

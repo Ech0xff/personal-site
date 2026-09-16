@@ -73,9 +73,15 @@ export async function prepareMigration(sql: Sql) {
   const titleColumns = await sql(
     "SELECT count(*) FROM information_schema.columns WHERE table_schema='public' AND table_name IN ('posts','events') AND column_name='title';",
   );
-  const audioSchema = await Bun.file(
-    new URL("../supabase/schemas/06_audio.sql", import.meta.url),
-  ).text();
+  const schema = (
+    await Promise.all(
+      ["03_defaults.sql", "04_rpc.sql"].map((name) =>
+        Bun.file(
+          new URL(`../supabase/schemas/${name}`, import.meta.url),
+        ).text(),
+      ),
+    )
+  ).join("\n");
   return {
     snapshot,
     needed: hasAudio || titleColumns !== "0",
@@ -91,7 +97,7 @@ ${
 INSERT INTO migration_guard VALUES (NOT EXISTS (SELECT 1 FROM public.audio_assets a LEFT JOIN public.configs c ON c.key='audio.asset.' || a.id WHERE c.value IS DISTINCT FROM to_jsonb(a) - 'id'));`
     : ""
 }
-${audioSchema}
+${schema}
 ${hasAudio ? "DROP TABLE public.audio_assets;" : ""}
 ALTER TABLE public.posts DROP COLUMN IF EXISTS title;
 ALTER TABLE public.events DROP COLUMN IF EXISTS title;

@@ -1,5 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
-import { Eye, EyeOff, Redo2, RotateCcw, Shuffle, Undo2, X } from "lucide-react";
+import { Eye, EyeOff, RotateCcw, Shuffle, Save, X } from "lucide-react";
 import { createPortal } from "react-dom";
 
 import { color, font, shadow, shape } from "#design/tokens.stylex";
@@ -32,12 +32,6 @@ const styles = stylex.create({
     boxShadow: shadow.panel,
   },
   group: { display: "flex", gap: "2px", alignItems: "center" },
-  divider: {
-    width: "1px",
-    height: "20px",
-    backgroundColor: color.line,
-    marginInline: "3px",
-  },
   notice: {
     position: "absolute",
     bottom: "calc(100% + 12px)",
@@ -80,23 +74,6 @@ export function DeskEditorToolbar({
       aria-busy={editor.busy}
       {...stylex.props(styles.dock)}
     >
-      <div aria-label="History" {...stylex.props(styles.group)}>
-        <DeskAction
-          label={copy.undo}
-          disabled={!editor.canUndo || editor.busy || editor.preview}
-          onClick={editor.undo}
-        >
-          <Undo2 {...icon} />
-        </DeskAction>
-        <DeskAction
-          label={copy.redo}
-          disabled={!editor.canRedo || editor.busy || editor.preview}
-          onClick={editor.redo}
-        >
-          <Redo2 {...icon} />
-        </DeskAction>
-      </div>
-      <span aria-hidden {...stylex.props(styles.divider)} />
       <div aria-label="Desk actions" {...stylex.props(styles.group)}>
         <DeskAction
           label={copy.shuffle}
@@ -121,6 +98,13 @@ export function DeskEditorToolbar({
           {editor.preview ? <EyeOff {...icon} /> : <Eye {...icon} />}
         </DeskAction>
         <DeskAction
+          label={copy.save}
+          disabled={!editor.dirty || editor.busy || editor.preview}
+          onClick={() => void editor.save()}
+        >
+          <Save {...icon} />
+        </DeskAction>
+        <DeskAction
           label={copy.exit}
           disabled={editor.busy}
           onClick={editor.exit}
@@ -128,9 +112,9 @@ export function DeskEditorToolbar({
           <X {...icon} />
         </DeskAction>
       </div>
-      {editor.notice && (
+      {(editor.notice || editor.dirty) && (
         <div {...stylex.props(styles.notice)}>
-          <output>{editor.notice}</output>
+          <output>{editor.notice || copy.unsaved}</output>
         </div>
       )}
     </div>,

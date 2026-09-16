@@ -1,9 +1,9 @@
 "use client";
 import * as stylex from "@stylexjs/stylex";
+import { useAtomValue } from "jotai";
 import { LayoutDashboard, RotateCcw, Shuffle } from "lucide-react";
-import { useEffect, useState } from "react";
 
-import { readDeskAccess } from "#lib/server/desk/desk-configuration.actions";
+import { isAdminAtom } from "#lib/client/auth/admin-ui.atom";
 import { defaultDictionary } from "#lib/shared/dictionary/dictionary.const";
 
 import { DeskAction } from "../desk-action.component";
@@ -21,20 +21,7 @@ export function DisplaySettings({
   reset: () => void;
   shuffle: () => void;
 }>) {
-  const [allowed, setAllowed] = useState(false);
-  useEffect(() => {
-    let active = true;
-    void readDeskAccess()
-      .then((value) => {
-        if (active) setAllowed(value);
-      })
-      .catch(() => {
-        if (active) setAllowed(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, []);
+  const allowed = useAtomValue(isAdminAtom);
   return (
     <div>
       <DeskAction

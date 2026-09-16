@@ -1,13 +1,11 @@
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { useEffect, useEffectEvent, useState } from "react";
+import { useAtomValue, useSetAtom } from "jotai";
+import { useEffect, useState } from "react";
 
 import { createDeskEditorAtoms } from "#lib/client/desk/desk-editor.atom";
 import { updateDeskConfiguration } from "#lib/server/desk/desk-configuration.actions";
 import type { AudioAsset } from "#lib/shared/audio/audio.schema";
-import type {
-  DeskBreakpoint,
-  DeskConfiguration,
-} from "#lib/shared/desk/desk-layout.schema";
+import type { DeskConfiguration } from "#lib/shared/desk/desk-layout.schema";
+import { defaultDictionary } from "#lib/shared/dictionary/dictionary.const";
 
 export function useDeskEditor(
   initial: DeskConfiguration,
@@ -16,23 +14,21 @@ export function useDeskEditor(
   const [atoms] = useState(() =>
     createDeskEditorAtoms(initial, updateDeskConfiguration),
   );
-  const [configuration, setConfiguration] = useAtom(atoms.configuration);
-  const [history, setHistory] = useAtom(atoms.history);
+  const desk = useAtomValue(atoms.effectiveDesk);
   const saving = useAtomValue(atoms.saving);
   const save = useSetAtom(atoms.save);
+  const update = useSetAtom(atoms.change);
+  const syncServer = useSetAtom(atoms.syncServer);
+  const enter = useSetAtom(atoms.enter);
+  const exit = useSetAtom(atoms.exit);
+  const reset = useSetAtom(atoms.reset);
+  const togglePreview = useSetAtom(atoms.togglePreview);
+  const dirty = useAtomValue(atoms.dirty);
   const [audioAssets, setAudioAssets] = useState(initialAudio);
-  const [baseline, setBaseline] = useState<DeskConfiguration | null>(null);
-  const [preview, setPreview] = useState<DeskConfiguration | null>(null);
   const busy = saving.status === "saving";
-  const syncInitial = useEffectEvent((next: DeskConfiguration) => {
-    if (!baseline && !busy) {
-      setConfiguration(next);
-      setHistory({ entries: [next], index: 0 });
-    }
-  });
   useEffect(() => {
-    syncInitial(initial);
-  }, [initial]);
+    syncServer(initial);
+  }, [initial, syncServer]);
   useEffect(() => {
     setAudioAssets((current) => [
       ...new Map(
@@ -41,57 +37,28 @@ export function useDeskEditor(
     ]);
   }, [initialAudio]);
   useEffect(() => {
-    if (!busy) return;
+    if (!busy && !dirty) return;
     const prevent = (event: BeforeUnloadEvent) => event.preventDefault();
     window.addEventListener("beforeunload", prevent);
     return () => window.removeEventListener("beforeunload", prevent);
-  }, [busy]);
-  const change = async (next: DeskConfiguration) => {
-    if (preview) {
-      setPreview(next);
-      return true;
-    }
-    return save(next);
-  };
+  }, [busy, dirty]);
   return {
-    configuration: preview ?? configuration,
+    ...desk,
     audioAssets,
     setAudioAssets,
-    editing: baseline !== null,
-    preview: preview !== null,
     busy,
+    dirty,
+    save: () => save(),
     notice: saving.status === "error" ? saving.error : "",
-    enter: () => {
-      setBaseline(configuration);
-      setHistory({ entries: [configuration], index: 0 });
-    },
+    enter,
     exit: () => {
       if (busy) return;
-      setPreview(null);
-      setBaseline(null);
+      if (dirty && !window.confirm(defaultDictionary.desk.layout.discard))
+        return;
+      exit();
     },
-    change,
-    reset: (breakpoint: DeskBreakpoint) => {
-      if (!baseline || busy || preview) return;
-      void save({
-        ...configuration,
-        layouts: {
-          ...configuration.layouts,
-          [breakpoint]: baseline.layouts[breakpoint],
-        },
-      });
-    },
-    undo: () => {
-      if (history.index > 0)
-        void save(history.entries[history.index - 1], history.index - 1);
-    },
-    redo: () => {
-      if (history.index < history.entries.length - 1)
-        void save(history.entries[history.index + 1], history.index + 1);
-    },
-    canUndo: history.index > 0,
-    canRedo: history.index < history.entries.length - 1,
-    togglePreview: () =>
-      setPreview((current) => (current ? null : configuration)),
+    change: async (next: DeskConfiguration) => update(next),
+    reset,
+    togglePreview,
   };
 }

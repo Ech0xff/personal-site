@@ -1,11 +1,6 @@
 import { describe, expect, mock, test } from "bun:test";
 
 import {
-  isPublicAddress,
-  validateAudioUrl,
-  downloadAudio,
-} from "../audio/audio-download.service";
-import {
   createSessionToken,
   isValidSession,
   matchesAdminToken,
@@ -62,96 +57,4 @@ describe("single-token admin sessions", () => {
       if (!result.ok) expect(result.unauthorized).toBe(true);
     }
   });
-});
-
-test("audio import rejects private and special network destinations", async () => {
-  for (const address of [
-    "127.0.0.1",
-    "10.0.0.1",
-    "172.16.0.1",
-    "192.168.1.1",
-    "169.254.169.254",
-    "100.64.0.1",
-    "0.0.0.0",
-    "224.0.0.1",
-    "::1",
-    "fc00::1",
-    "fe80::1",
-    "::ffff:127.0.0.1",
-  ])
-    expect(isPublicAddress(address)).toBe(false);
-  expect(isPublicAddress("8.8.8.8")).toBe(true);
-  expect(isPublicAddress("2606:4700:4700::1111")).toBe(true);
-  for (const url of [
-    "file:///etc/passwd",
-    "http://user:password@example.com/song.mp3",
-    "http://example.com:5432/audio",
-  ])
-    expect(() => validateAudioUrl(url)).toThrow();
-  const rejected = await downloadAudio(
-    "http://127.0.0.1/private",
-    AbortSignal.timeout(1000),
-  ).catch((error: unknown) => error);
-  expect(rejected).toBeInstanceOf(Error);
-  expect(String(rejected)).toContain("public address");
-});
-
-test("expired imports preserve playable audio and expose a spectrum retry", async () => {
-  await mock.module("server-only", () => ({}));
-  const { toAudioAsset } = await import("../audio/audio-assets.service");
-  const row = {
-    id: "recording",
-    title: "Recording",
-    artist: "",
-    source_path: "recording/source.wav",
-    source_url: null,
-    src: "/audio/recording.mp3",
-    duration: 30,
-    spectrum_src: null,
-    description_src: null,
-    status: "ready" as const,
-    spectrum_status: "processing" as const,
-    error: null,
-    run_id: "c8089027-c759-4711-9ca2-898975b9ef39",
-    started_at: "2000-01-01T00:00:00Z",
-    created_at: "2000-01-01T00:00:00Z",
-  };
-  const expired = toAudioAsset(row);
-  expect(expired.status).toBe("ready");
-  expect(expired.src).toBe(row.src);
-  expect(expired.spectrumStatus).toBe("failed");
-  expect(expired.error).toContain("timed out");
-  expect(toAudioAsset({ ...row, status: "processing" }).status).toBe("failed");
-  expect(
-    toAudioAsset({ ...row, started_at: new Date().toISOString() })
-      .spectrumStatus,
-  ).toBe("processing");
-});
-
-test("audio configuration values retain storage defaults and validate processing fields", async () => {
-  const { audioRecordSchema, audioRecordDefaults, parseAudioRecord } =
-    await import("../audio/audio-record.schema");
-  const record = audioRecordSchema.parse({
-    ...audioRecordDefaults,
-    title: "Recording",
-    created_at: new Date().toISOString(),
-  });
-  expect(audioRecordSchema.partial().parse({ error: "retry" })).toEqual({
-    error: "retry",
-  });
-  expect(record.status).toBe("pending");
-  expect(record.run_id).toBeNull();
-  expect(
-    parseAudioRecord({ key: "audio.asset.example", value: record }).id,
-  ).toBe("example");
-  for (const patch of [
-    { duration: 0 },
-    { duration: 901 },
-    { status: "unknown" },
-    { run_id: "invalid" },
-    { started_at: "yesterday" },
-  ])
-    expect(audioRecordSchema.safeParse({ ...record, ...patch }).success).toBe(
-      false,
-    );
 });

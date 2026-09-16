@@ -118,9 +118,10 @@ fixes to affected files, then run relevant non-mutating checks.
 
 Use existing checks for simple lint, type, schema, or UI changes. Add tests for
 important behavior or regressions, preferably in existing suites; avoid tests
-that repeat implementation or library behavior. Keep the five focused suites for
-authentication, document validation/rendering, files, and theme initialization;
-verify presentation and desktop interactions through targeted browser scenarios.
+that repeat implementation or library behavior. Colocate tests with their owning
+domain and runtime; prioritize data integrity, authorization, compatibility, and
+nontrivial algorithms. Verify presentation and desktop interactions through
+targeted browser scenarios.
 
 Use focused Conventional Commits (`feat:`, `fix:`, `refactor:`, `chore:`,
 `docs:`) with imperative subjects. Include only task-related changes and report

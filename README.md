@@ -49,8 +49,8 @@ the IPv4 matcher is `*.*.*.*`, not a bare `*`.
 Format and lint affected files, review the diff, then run `bun run check`, relevant
 tests, and `git diff --check`. Runtime, routing, and caching changes also require
 `bun run build`. Verify changed UI flows in a browser, including authorization,
-saves, uploads, and narrow layouts. The five Bun suites cover authentication,
-documents, file safety, and theme initialization.
+saves, uploads, and narrow layouts. Bun tests live beside their owning modules
+and cover data integrity, authorization, compatibility, and domain logic.
 
 `bun scripts/verify-desk-rpc.ts` creates and removes an isolated temporary database
 inside the local Supabase container. It verifies RPC permissions, concurrent
@@ -97,9 +97,23 @@ Each `audio.asset.<id>` key holds one audio resource and its processing state.
 The desk playlist references asset IDs; saving the desk does not overwrite audio
 jobs. Guestbook notes are public immediately, including optional email addresses;
 moderation lives at `/dashboard/guestbook`. Visitor desk positions remain local to
-the browser; administrator changes persist to the saved configuration.
+the browser. Administrator edits, including Apply, shuffle, and drag,
+stay local until Save submits the complete desk configuration in one Server Action.
+Failed saves retain the draft; exiting with unsaved changes asks before discarding.
+Jotai retains the server snapshot separately from visitor-local layouts and the
+edit draft. The derived desk state uses local layouts only in view mode; edit and
+preview share a draft initialized from the server snapshot. Reset restores the
+current breakpoint from the latest snapshot. Entering edit mode and opening an
+item editor use data already loaded with the page. A persisted `isAdminAtom`
+controls the edit entry, set after dashboard authentication and cleared on the
+login page. It is only a UI hint: save and audio actions still authenticate on
+the server, and the public homepage does not read the admin session.
 
-Schema sources are in `supabase/schemas`; fixtures are in `supabase/seed.sql`.
+Schema sources are in `supabase/schemas`: `02_tables.sql` holds application
+tables and indexes, `03_defaults.sql` provisions required records and buckets,
+`04_rpc.sql` holds all RPC definitions and their execute grants, and
+`05_security.sql` holds table grants and RLS policies. Numbered files load in
+dependency order. Demo fixtures are in `supabase/seed.sql`.
 The CLI loads both through its seed configuration; this repository does not keep
 migration history. For a disposable local database only:
 

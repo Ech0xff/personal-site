@@ -38,11 +38,16 @@ await sql(`CREATE DATABASE ${database};`, "postgres");
 try {
   await sql(await Bun.file("supabase/schemas/01_extensions.sql").text());
   await sql(await Bun.file("supabase/schemas/02_tables.sql").text());
-  await sql(await Bun.file("supabase/schemas/05_desk.sql").text());
+  await sql(
+    "CREATE SCHEMA storage; CREATE TABLE storage.buckets(id text PRIMARY KEY, name text, public boolean, file_size_limit bigint); CREATE TABLE storage.objects(id uuid, name text, bucket_id text, metadata jsonb, user_metadata jsonb, created_at timestamptz);",
+  );
+  await sql(await Bun.file("supabase/schemas/03_defaults.sql").text());
+  await sql(await Bun.file("supabase/schemas/04_rpc.sql").text());
+  await sql(await Bun.file("supabase/schemas/05_security.sql").text());
   // Upgrade legacy workspaces without turning an unpublished edit into live content.
   await sql(`DELETE FROM public.configs WHERE key = 'desk.configuration';
     INSERT INTO public.configs(key,value) VALUES ('desk.workspace', '{"revision":3,"published":{"items":[],"layouts":{},"marker":"live"},"draft":{"items":[],"layouts":{},"marker":"draft"}}');`);
-  await sql(await Bun.file("supabase/schemas/05_desk.sql").text());
+  await sql(await Bun.file("supabase/schemas/03_defaults.sql").text());
   assert(
     (await sql(
       "SELECT value->>'marker' FROM public.configs WHERE key='desk.configuration';",
@@ -58,12 +63,6 @@ try {
   await sql(
     "UPDATE public.configs SET value = 'null' WHERE key='desk.configuration';",
   );
-  await sql(
-    "CREATE SCHEMA storage; CREATE TABLE storage.buckets(id text PRIMARY KEY, name text, public boolean, file_size_limit bigint); CREATE TABLE storage.objects(id uuid, name text, bucket_id text, metadata jsonb, user_metadata jsonb, created_at timestamptz);",
-  );
-  await sql(await Bun.file("supabase/schemas/03_storage.sql").text());
-  await sql(await Bun.file("supabase/schemas/04_security.sql").text());
-  await sql(await Bun.file("supabase/schemas/06_audio.sql").text());
   assert(
     (await sql(
       "SET ROLE anon; SELECT count(*) FROM public.read_desk_audio();",

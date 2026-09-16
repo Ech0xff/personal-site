@@ -10,8 +10,6 @@ INSERT INTO public.events (content, status, published_at) VALUES ( '[{"type": "h
 
 INSERT INTO public.events (content, status, published_at) VALUES ('[{"type": "paragraph", "content": "A small moment worth remembering. Events do not need a title."}]'::jsonb, 'hide', '2026-09-13 09:00:00+00');
 
-INSERT INTO storage.buckets (id, name, public, file_size_limit) VALUES ('files', 'files', true, 52428800) ON CONFLICT (id) DO UPDATE SET public = true, file_size_limit = EXCLUDED.file_size_limit;
-
 -- BEGIN DEMO CONTENT
 -- Stable fixtures: reapplying this block preserves existing edits.
 INSERT INTO public.posts (id, content, status, published_at)
@@ -108,12 +106,6 @@ VALUES ('ba64a7f4-990f-5b30-a1da-64fdf9643a32', '[{"type":"heading","props":{"le
 ON CONFLICT (id) DO NOTHING;
 
 -- END DEMO CONTENT
-
--- Desk configuration defaults are also provisioned by the additive RPC schema.
-INSERT INTO public.configs(key, value) VALUES
-  ('desk.likes', '0'), ('desk.visits', '0'),
-  ('desk.guestbook', '{"entries":[],"recent":[]}')
-ON CONFLICT (key) DO NOTHING;
 
 -- Hidden editor fixture: native columns and a saved metadata card, with no live parsing.
 INSERT INTO public.posts(id, content, status, published_at) VALUES (

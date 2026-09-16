@@ -21,8 +21,6 @@ export const defaultDictionary = {
     resetLayout: "Reset layout",
     layout: {
       label: "Desk layout editor",
-      undo: "Undo",
-      redo: "Redo",
       reset: "Reset current layout",
       shuffle: "Shuffle layout",
       preview: "Preview",

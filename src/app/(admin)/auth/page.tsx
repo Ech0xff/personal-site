@@ -4,6 +4,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
+import AdminUiState from "#components/shared/admin-ui-state.component";
 import ThemeToggle from "#components/shared/theme-toggle.component";
 import { Magnetic } from "#components/ui/magnetic.component";
 import { color, font, shape, space } from "#design/tokens.stylex";
@@ -48,7 +49,12 @@ const styles = stylex.create({
 });
 async function AuthContent() {
   if (await hasAdminSession()) redirect("/dashboard/posts");
-  return <TokenForm />;
+  return (
+    <>
+      <AdminUiState value={false} />
+      <TokenForm />
+    </>
+  );
 }
 export default function AuthPage() {
   return (
