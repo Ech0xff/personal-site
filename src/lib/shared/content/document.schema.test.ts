@@ -5,9 +5,11 @@ import {
   resizeColumnCount,
   setColumnPercentage,
 } from "./column-layout.helper";
+import { contentRecordSchema } from "./content-record.schema";
 import { contentInputSchema } from "./content.schema";
 import {
   documentText,
+  documentTitle,
   hasDocumentContent,
   migrateMediaRows,
 } from "./document.helper";
@@ -136,7 +138,10 @@ describe("BlockNote content boundaries", () => {
       [{ type: "paragraph", content: "A small moment" }],
       [{ type: "image", props: { url: "https://example.com/photo.webp" } }],
     ]) {
-      expect(contentInputSchema.parse({ ...base, content }).title).toBe("");
+      expect(contentInputSchema.parse({ ...base, content })).not.toHaveProperty(
+        "title",
+      );
+      expect(documentTitle(documentSchema.parse(content))).toBe("");
       expect(
         contentInputSchema.safeParse({ ...base, kind: "posts", content })
           .success,
@@ -146,10 +151,12 @@ describe("BlockNote content boundaries", () => {
       false,
     );
     expect(
-      contentInputSchema.parse({
-        ...base,
-        content: [{ type: "heading", content: "Optional event title" }],
-      }).title,
+      documentTitle(
+        contentInputSchema.parse({
+          ...base,
+          content: [{ type: "heading", content: "Optional event title" }],
+        }).content,
+      ),
     ).toBe("Optional event title");
   });
   test("validates content type metadata and preserves original-language text", () => {
@@ -160,7 +167,10 @@ describe("BlockNote content boundaries", () => {
       status: "hide",
       published_at: "2026-09-13T00:00:00Z",
     };
-    expect(contentInputSchema.parse(input).title).toBe("Hello 世界");
+    expect(contentInputSchema.parse(input)).not.toHaveProperty("title");
+    expect(documentTitle(contentInputSchema.parse(input).content)).toBe(
+      "Hello 世界",
+    );
     expect(
       contentInputSchema.safeParse({
         ...input,
@@ -393,4 +403,37 @@ describe("column layout settings", () => {
       ).toBe(false);
     }
   });
+});
+
+test("reads derive the first top-level heading, including formatted links, without mutating content", () => {
+  const content: BlockDocument = [
+    { type: "paragraph", children: [{ type: "heading", content: "Nested" }] },
+    {
+      type: "heading",
+      content: [
+        { type: "text", text: "  Hello ", styles: { bold: true } },
+        {
+          type: "link",
+          href: "https://example.com",
+          content: [{ type: "text", text: "世界", styles: {} }],
+        },
+        { type: "text", text: "  ", styles: {} },
+      ],
+    },
+    { type: "heading", content: "Later" },
+  ];
+  const original = JSON.stringify(content);
+  const record = contentRecordSchema.parse({
+    id: "f74b0061-fb0d-48dd-8ef2-fc76b576d5dc",
+    title: "Stale stored title",
+    content,
+    status: "show",
+    published_at: "2026-09-16T00:00:00Z",
+  });
+  expect(record.title).toBe("Hello 世界");
+  expect(JSON.stringify(content)).toBe(original);
+  expect(documentTitle([{ type: "heading", content: " " }, ...content])).toBe(
+    "",
+  );
+  expect(documentTitle([{ type: "paragraph", content: "Body only" }])).toBe("");
 });

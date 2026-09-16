@@ -1,4 +1,6 @@
 /** Verify RPC permissions and concurrent updates in an isolated temporary database. */
+import { prepareMigration } from "./simplify-database";
+
 const container =
   process.env.SUPABASE_DB_CONTAINER ?? "supabase_db_personal-site";
 const database = `desk_rpc_check_${Date.now()}`;
@@ -34,6 +36,7 @@ function assert(value: boolean, message: string) {
 }
 await sql(`CREATE DATABASE ${database};`, "postgres");
 try {
+  await sql(await Bun.file("supabase/schemas/01_extensions.sql").text());
   await sql(await Bun.file("supabase/schemas/02_tables.sql").text());
   await sql(await Bun.file("supabase/schemas/05_desk.sql").text());
   // Upgrade legacy workspaces without turning an unpublished edit into live content.
@@ -56,8 +59,10 @@ try {
     "UPDATE public.configs SET value = 'null' WHERE key='desk.configuration';",
   );
   await sql(
-    "CREATE SCHEMA storage; CREATE TABLE storage.buckets(id text PRIMARY KEY, name text, public boolean, file_size_limit bigint);",
+    "CREATE SCHEMA storage; CREATE TABLE storage.buckets(id text PRIMARY KEY, name text, public boolean, file_size_limit bigint); CREATE TABLE storage.objects(id uuid, name text, bucket_id text, metadata jsonb, user_metadata jsonb, created_at timestamptz);",
   );
+  await sql(await Bun.file("supabase/schemas/03_storage.sql").text());
+  await sql(await Bun.file("supabase/schemas/04_security.sql").text());
   await sql(await Bun.file("supabase/schemas/06_audio.sql").text());
   assert(
     (await sql(
@@ -67,12 +72,12 @@ try {
   );
   assert(
     (await sql(
-      "SELECT has_table_privilege('anon', 'public.audio_assets', 'SELECT');",
+      "SELECT has_table_privilege('anon', 'public.configs', 'SELECT');",
     )) === "f",
     "The import library must remain private",
   );
   await sql(
-    "INSERT INTO public.audio_assets(id,title,src,duration,status) VALUES('test-audio','Private import','/test.mp3',1,'ready');",
+    'INSERT INTO public.configs(key,value) VALUES(\'audio.asset.test-audio\',\'{"title":"Private import","src":"/test.mp3","duration":1,"status":"ready"}\');',
   );
   assert(
     (await sql(
@@ -210,11 +215,161 @@ try {
     )) === "1",
     "Old timestamps must be removed",
   );
+
+  // Resource updates are private, independent and guarded by the current task owner.
+  for (const role of ["anon", "authenticated"])
+    assert(
+      (await sql(
+        `SELECT has_function_privilege('${role}', 'public.update_audio_asset(text,uuid,jsonb)', 'EXECUTE');`,
+      )) === "f",
+      "Audio updates must be private",
+    );
+  const runIds = [
+    "11111111-1111-4111-8111-111111111111",
+    "22222222-2222-4222-8222-222222222222",
+  ];
+  const claims = await Promise.all(
+    runIds.map((runId) =>
+      sql(
+        `SET ROLE service_role; SELECT public.update_audio_asset('test-audio', NULL, '{"run_id":"${runId}"}') IS NOT NULL;`,
+      ),
+    ),
+  );
+  assert(
+    claims.filter((result) => result === "t").length === 1,
+    "Only one audio task may claim a resource",
+  );
+  const winningRun = runIds[claims.indexOf("t")];
+  const staleRun = runIds[claims.indexOf("f")];
+  assert(
+    (await sql(
+      `SET ROLE service_role; SELECT public.update_audio_asset('test-audio','${staleRun}','{"error":"stale"}') IS NULL;`,
+    )) === "t",
+    "A stale run must not overwrite the resource",
+  );
+  const configBefore = await sql(
+    "SELECT value FROM public.configs WHERE key='desk.configuration';",
+  );
+  await Promise.all([
+    sql(
+      `SET ROLE service_role; SELECT public.update_audio_asset('test-audio','${winningRun}','{"spectrum_status":"failed","run_id":null}');`,
+    ),
+    sql(
+      "SET ROLE service_role; SELECT public.update_audio_asset('miku',NULL,'{\"error\":null}');",
+    ),
+  ]);
+  assert(
+    (await sql(
+      "SELECT value FROM public.configs WHERE key='desk.configuration';",
+    )) === configBefore,
+    "Audio tasks must preserve the desk configuration",
+  );
+  assert(
+    (await sql("SELECT status FROM public.read_desk_audio();").catch(
+      () => "private",
+    )) === "private",
+    "Public audio must not expose task state",
+  );
+
+  // Exercise the real migration against a legacy fixture in this disposable database.
+  await sql(`ALTER TABLE public.posts ADD COLUMN title TEXT;
+    ALTER TABLE public.events ADD COLUMN title TEXT;
+    INSERT INTO public.posts(title,content,status,published_at) VALUES('Legacy title','[{"type":"heading","content":"Legacy title"}]','hide',now());
+    CREATE TABLE public.audio_assets AS SELECT 'legacy-audio'::text AS id,
+      'Legacy recording'::text AS title, ''::text AS artist,
+      NULL::text AS source_path, NULL::text AS source_url, '/legacy.mp3'::text AS src,
+      10::double precision AS duration, NULL::text AS spectrum_src, NULL::text AS description_src,
+      'ready'::text AS status, 'failed'::text AS spectrum_status, NULL::text AS error,
+      NULL::uuid AS run_id, NULL::timestamptz AS started_at, now() AS created_at;`);
+  await sql("UPDATE public.posts SET title='Mismatch';");
+  assert(
+    (
+      await prepareMigration(sql).then(
+        () => "accepted",
+        (error) => String(error),
+      )
+    ).includes("Title mismatch"),
+    "Conflicting titles must stop migration",
+  );
+  await sql(
+    "UPDATE public.posts SET title='Legacy title'; INSERT INTO public.configs(key,value) VALUES('audio.asset.legacy-audio','{}');",
+  );
+  assert(
+    (
+      await prepareMigration(sql).then(
+        () => "accepted",
+        (error) => String(error),
+      )
+    ).includes("Conflicting audio"),
+    "Conflicting assets must stop migration",
+  );
+  await sql("DELETE FROM public.configs WHERE key='audio.asset.legacy-audio';");
+  await sql(
+    "ALTER TABLE public.configs ALTER COLUMN value TYPE JSON USING value::json;",
+  );
+  const migration = await prepareMigration(sql);
+  await sql("UPDATE public.posts SET status='show';");
+  assert(
+    (
+      await sql(migration.source).then(
+        () => "accepted",
+        (error) => String(error),
+      )
+    ).includes("data_changed_since_preflight"),
+    "Concurrent writes must abort the transaction",
+  );
+  assert(
+    (await sql("SELECT to_regclass('public.audio_assets') IS NOT NULL;")) ===
+      "t",
+    "Rollback must preserve the old table",
+  );
+  await sql("UPDATE public.posts SET status='hide';");
+  const before = await sql("SELECT to_jsonb(p)-'title' FROM public.posts p;");
+  const audioBefore = await sql(
+    "SELECT to_jsonb(a)-'id' FROM public.audio_assets a;",
+  );
+  await sql(
+    "CREATE VIEW public.migration_dependency AS SELECT id FROM public.audio_assets;",
+  );
+  assert(
+    (
+      await sql((await prepareMigration(sql)).source).then(
+        () => "accepted",
+        (error) => String(error),
+      )
+    ).includes("cannot drop table"),
+    "Unmigrated dependencies must stop removal without CASCADE",
+  );
+  assert(
+    (await sql(
+      "SELECT count(*) FROM public.configs WHERE key='audio.asset.legacy-audio';",
+    )) === "0",
+    "Late failure must roll back copied audio records",
+  );
+  await sql("DROP VIEW public.migration_dependency;");
+  await sql((await prepareMigration(sql)).source);
+  assert(
+    (await sql("SELECT to_jsonb(p) FROM public.posts p;")) === before,
+    "Content must survive unchanged",
+  );
+  assert(
+    (await sql(
+      "SELECT value FROM public.configs WHERE key='audio.asset.legacy-audio';",
+    )) === audioBefore,
+    "Every audio field must survive unchanged",
+  );
+  assert(
+    !(await prepareMigration(sql)).needed,
+    "Repeated migration must be a no-op",
+  );
+  await sql(await Bun.file("supabase/seed.sql").text());
+  assert(
+    (await sql("SELECT count(*) > 10 FROM public.posts;")) === "t",
+    "Current seed must load after migration",
+  );
   console.log(
-    "PASS: RPC permissions, desk migration, direct configuration saves, input checks, concurrent likes/notes, moderation and rolling-window expiry.",
+    "PASS: RPC permissions, desk migration, direct configuration saves, input checks, concurrent likes/notes, moderation, audio task ownership, lossless schema migration and seed loading.",
   );
 } finally {
   await sql(`DROP DATABASE ${database} WITH (FORCE);`, "postgres");
 }
-
-export {};

@@ -2,7 +2,6 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 
 import { cacheLife, cacheTag } from "next/cache";
-import { z } from "zod";
 
 import {
   AUDIO_BUCKET,
@@ -11,13 +10,19 @@ import {
   builtinAudio,
   type AudioAsset,
 } from "#lib/shared/audio/audio.schema";
-import type { Database } from "#types/supabase";
 
 import { InputError } from "../actions/action.service";
 import { makeAdminClient, makePublicClient } from "../supabase.client";
+import {
+  audioAssetKey,
+  audioRecordSchema,
+  audioRecordDefaults,
+  parseAudioRecord,
+  type AudioRecord,
+} from "./audio-record.schema";
 
 export const audioCacheTag = "desk:audio";
-type AudioRow = Database["public"]["Tables"]["audio_assets"]["Row"];
+type AudioRow = AudioRecord & { readonly id: string };
 export function toAudioAsset(row: AudioRow): AudioAsset {
   const expired =
     row.run_id !== null &&
@@ -31,31 +36,23 @@ export function toAudioAsset(row: AudioRow): AudioAsset {
     duration: row.duration,
     spectrumSrc: row.spectrum_src,
     descriptionSrc: row.description_src,
-    status:
-      row.status === "ready"
-        ? "ready"
-        : expired
-          ? "failed"
-          : z
-              .enum(["uploading", "pending", "processing", "failed"])
-              .parse(row.status),
+    status: row.status === "ready" ? "ready" : expired ? "failed" : row.status,
     spectrumStatus:
       expired && row.spectrum_status !== "ready"
         ? "failed"
-        : z
-            .enum(["pending", "processing", "ready", "failed"])
-            .parse(row.spectrum_status),
+        : row.spectrum_status,
     error: expired ? "Processing timed out. Retry this recording." : row.error,
     startedAt: row.started_at,
   };
 }
 export async function listAudioAssets(): Promise<AudioAsset[]> {
   const { data, error } = await makeAdminClient()
-    .from("audio_assets")
-    .select("*")
-    .order("created_at", { ascending: false });
+    .from("configs")
+    .select("key,value")
+    .like("key", "audio.asset.%")
+    .order("value->>created_at", { ascending: false });
   if (error) throw error;
-  return data.map(toAudioAsset);
+  return data.map((row) => toAudioAsset(parseAudioRecord(row)));
 }
 export async function readPublicAudioAssets(): Promise<readonly AudioAsset[]> {
   "use cache";
@@ -87,13 +84,11 @@ export async function signAudioUpload(input: unknown) {
   const id = randomUUID();
   const path = `${id}/source.${file.name.split(".").at(-1)?.toLowerCase()}`;
   const client = makeAdminClient();
-  const { error } = await client.from("audio_assets").insert({
-    id,
+  await createAudioRecord(id, {
     title: file.name.replace(/\.[^.]+$/, ""),
     source_path: path,
     status: "uploading",
   });
-  if (error) throw error;
   const result = await client.storage
     .from(AUDIO_BUCKET)
     .createSignedUploadUrl(path, { upsert: false });
@@ -103,14 +98,15 @@ export async function signAudioUpload(input: unknown) {
 export async function validateAudioReferences(ids: readonly string[]) {
   if (!ids.length) return;
   const { data, error } = await makeAdminClient()
-    .from("audio_assets")
-    .select("id,src,duration,status")
-    .in("id", [...new Set(ids)]);
+    .from("configs")
+    .select("key,value")
+    .in("key", [...new Set(ids)].map(audioAssetKey));
   if (error) throw error;
+  const assets = data.map(parseAudioRecord);
   if (
     ids.some(
       (id) =>
-        !data.some(
+        !assets.some(
           (row) =>
             row.id === id && row.status === "ready" && row.src && row.duration,
         ),
@@ -119,4 +115,41 @@ export async function validateAudioReferences(ids: readonly string[]) {
     throw new InputError(
       "Wait until every selected recording is ready to play.",
     );
+}
+
+export async function createAudioRecord(
+  id: string,
+  input: Partial<AudioRecord>,
+) {
+  const value = audioRecordSchema.parse({
+    ...audioRecordDefaults,
+    created_at: new Date().toISOString(),
+    ...input,
+  });
+  const { error } = await makeAdminClient()
+    .from("configs")
+    .insert({ key: audioAssetKey(id), value });
+  if (error) throw error;
+}
+export async function readAudioRecord(id: string) {
+  const { data, error } = await makeAdminClient()
+    .from("configs")
+    .select("key,value")
+    .eq("key", audioAssetKey(id))
+    .single();
+  if (error) throw error;
+  return parseAudioRecord(data);
+}
+export async function updateAudioRecord(
+  id: string,
+  runId: string | null,
+  patch: Partial<AudioRecord>,
+) {
+  const { data, error } = await makeAdminClient().rpc("update_audio_asset", {
+    asset_id: id,
+    ...(runId === null ? {} : { expected_run_id: runId }),
+    patch: audioRecordSchema.partial().parse(patch),
+  });
+  if (error) throw error;
+  return data === null ? null : audioRecordSchema.parse(data);
 }

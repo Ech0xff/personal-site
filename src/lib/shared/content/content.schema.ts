@@ -21,15 +21,15 @@ export const contentInputSchema = z
       .regex(/^#[0-9a-fA-F]{6}$/, "Choose a valid event color.")
       .default("#3b82f6"),
   })
-  .transform((value) => ({ ...value, title: documentTitle(value.content) }))
   .superRefine((value, context) => {
-    if (value.kind === "posts" && !value.title)
+    const title = documentTitle(value.content);
+    if (value.kind === "posts" && !title)
       context.addIssue({
         code: "custom",
         path: ["content"],
         message: "Add a heading to your document for its title.",
       });
-    if (value.title.length > (value.kind === "events" ? 255 : 500))
+    if (title.length > (value.kind === "events" ? 255 : 500))
       context.addIssue({
         code: "custom",
         path: ["content"],
@@ -37,7 +37,10 @@ export const contentInputSchema = z
       });
   });
 export type ContentInput = z.infer<typeof contentInputSchema>;
-export type ContentRecord = ContentInput & { readonly id: string };
+export type ContentRecord = ContentInput & {
+  readonly id: string;
+  readonly title: string;
+};
 
 export type ContentSummary = Omit<ContentRecord, "content"> & {
   readonly excerpt: string;

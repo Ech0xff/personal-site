@@ -21,21 +21,25 @@ import {
   MAX_AUDIO_SECONDS,
   audioImportSchema,
 } from "#lib/shared/audio/audio.schema";
-import type { Database } from "#types/supabase";
 
 import { InputError } from "../actions/action.service";
 import { makeAdminClient } from "../supabase.client";
-import { audioCacheTag } from "./audio-assets.service";
+import {
+  audioCacheTag,
+  createAudioRecord,
+  readAudioRecord,
+  updateAudioRecord,
+} from "./audio-assets.service";
 import {
   AudioInputError,
   downloadAudio,
   validateAudioUrl,
 } from "./audio-download.service";
+import type { AudioRecord } from "./audio-record.schema";
 
 const execute = promisify(execFile);
 export async function prepareAudioImport(input: unknown) {
   const request = audioImportSchema.parse(input);
-  const client = makeAdminClient();
   const id = request.kind === "url" ? randomUUID() : request.id;
   if (request.kind === "url") {
     try {
@@ -45,17 +49,12 @@ export async function prepareAudioImport(input: unknown) {
         "Use a public HTTP or HTTPS audio URL on a standard port.",
       );
     }
-    const { error } = await client
-      .from("audio_assets")
-      .insert({ id, source_url: request.url, title: "Untitled recording" });
-    if (error) throw error;
+    await createAudioRecord(id, {
+      source_url: request.url,
+      title: "Untitled recording",
+    });
   }
-  const { data: asset, error } = await client
-    .from("audio_assets")
-    .select("*")
-    .eq("id", id)
-    .single();
-  if (error) throw error;
+  const asset = await readAudioRecord(id);
   if (
     asset.run_id &&
     asset.started_at &&
@@ -65,22 +64,14 @@ export async function prepareAudioImport(input: unknown) {
   if (asset.status === "ready" && asset.spectrum_status === "ready")
     throw new InputError("This recording is already ready.");
   const runId = randomUUID();
-  const query = client
-    .from("audio_assets")
-    .update({
-      run_id: runId,
-      started_at: new Date().toISOString(),
-      error: null,
-      status: asset.status === "ready" ? "ready" : "processing",
-      spectrum_status: asset.status === "ready" ? "processing" : "pending",
-    })
-    .eq("id", id);
-  const result = await (
-    asset.run_id ? query.eq("run_id", asset.run_id) : query.is("run_id", null)
-  ).select("id");
-  if (result.error) throw result.error;
-  if (!result.data.length)
-    throw new InputError("This recording is already processing.");
+  const claimed = await updateAudioRecord(id, asset.run_id, {
+    run_id: runId,
+    started_at: new Date().toISOString(),
+    error: null,
+    status: asset.status === "ready" ? "ready" : "processing",
+    spectrum_status: asset.status === "ready" ? "processing" : "pending",
+  });
+  if (!claimed) throw new InputError("This recording is already processing.");
   return { id, runId };
 }
 export async function processAudioImport(id: string, runId: string) {
@@ -95,17 +86,9 @@ export async function processAudioImport(id: string, runId: string) {
       ),
     AUDIO_JOB_MS - 15_000,
   );
-  const update = async (
-    values: Database["public"]["Tables"]["audio_assets"]["Update"],
-  ) => {
-    const { data, error } = await client
-      .from("audio_assets")
-      .update(values)
-      .eq("id", id)
-      .eq("run_id", runId)
-      .select("id");
-    if (error) throw error;
-    if (!data.length) throw new Error("A newer import replaced this attempt.");
+  const update = async (values: Partial<AudioRecord>) => {
+    if (!(await updateAudioRecord(id, runId, values)))
+      throw new Error("A newer import replaced this attempt.");
   };
   const upload = async (
     path: string,
@@ -124,13 +107,9 @@ export async function processAudioImport(id: string, runId: string) {
   };
   try {
     if (!ffmpeg) throw new Error("The audio decoder is not installed.");
-    const { data: asset, error } = await client
-      .from("audio_assets")
-      .select("*")
-      .eq("id", id)
-      .eq("run_id", runId)
-      .single();
-    if (error) throw error;
+    const asset = await readAudioRecord(id);
+    if (asset.run_id !== runId)
+      throw new Error("A newer import replaced this attempt.");
     const playable = join(temporary, "playback.mp3");
     if (asset.status === "ready" && asset.src) {
       // Only server-created storage URLs are accepted for retry input.
@@ -255,13 +234,8 @@ export async function processAudioImport(id: string, runId: string) {
     revalidateTag(audioCacheTag, { expire: 0 });
   } catch (error) {
     console.error("Audio import failed", { id, runId, error });
-    const { data: current } = await client
-      .from("audio_assets")
-      .select("status")
-      .eq("id", id)
-      .eq("run_id", runId)
-      .maybeSingle();
-    if (current)
+    const current = await readAudioRecord(id);
+    if (current.run_id === runId)
       await update({
         status: current.status === "ready" ? "ready" : "failed",
         spectrum_status: "failed",

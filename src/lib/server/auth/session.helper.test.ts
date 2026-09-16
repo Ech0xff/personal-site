@@ -109,8 +109,8 @@ test("expired imports preserve playable audio and expose a spectrum retry", asyn
     duration: 30,
     spectrum_src: null,
     description_src: null,
-    status: "ready",
-    spectrum_status: "processing",
+    status: "ready" as const,
+    spectrum_status: "processing" as const,
     error: null,
     run_id: "c8089027-c759-4711-9ca2-898975b9ef39",
     started_at: "2000-01-01T00:00:00Z",
@@ -126,4 +126,32 @@ test("expired imports preserve playable audio and expose a spectrum retry", asyn
     toAudioAsset({ ...row, started_at: new Date().toISOString() })
       .spectrumStatus,
   ).toBe("processing");
+});
+
+test("audio configuration values retain storage defaults and validate processing fields", async () => {
+  const { audioRecordSchema, audioRecordDefaults, parseAudioRecord } =
+    await import("../audio/audio-record.schema");
+  const record = audioRecordSchema.parse({
+    ...audioRecordDefaults,
+    title: "Recording",
+    created_at: new Date().toISOString(),
+  });
+  expect(audioRecordSchema.partial().parse({ error: "retry" })).toEqual({
+    error: "retry",
+  });
+  expect(record.status).toBe("pending");
+  expect(record.run_id).toBeNull();
+  expect(
+    parseAudioRecord({ key: "audio.asset.example", value: record }).id,
+  ).toBe("example");
+  for (const patch of [
+    { duration: 0 },
+    { duration: 901 },
+    { status: "unknown" },
+    { run_id: "invalid" },
+    { started_at: "yesterday" },
+  ])
+    expect(audioRecordSchema.safeParse({ ...record, ...patch }).success).toBe(
+      false,
+    );
 });

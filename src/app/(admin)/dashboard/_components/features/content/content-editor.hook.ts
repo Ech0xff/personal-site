@@ -32,7 +32,6 @@ export function useContentEditor(
           type: "ready",
           form: {
             kind,
-            title: "",
             content:
               kind !== "posts"
                 ? []

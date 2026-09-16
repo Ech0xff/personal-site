@@ -9,60 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      audio_assets: {
-        Row: {
-          artist: string
-          created_at: string
-          description_src: string | null
-          duration: number | null
-          error: string | null
-          id: string
-          run_id: string | null
-          source_path: string | null
-          source_url: string | null
-          spectrum_src: string | null
-          spectrum_status: string
-          src: string | null
-          started_at: string | null
-          status: string
-          title: string
-        }
-        Insert: {
-          artist?: string
-          created_at?: string
-          description_src?: string | null
-          duration?: number | null
-          error?: string | null
-          id: string
-          run_id?: string | null
-          source_path?: string | null
-          source_url?: string | null
-          spectrum_src?: string | null
-          spectrum_status?: string
-          src?: string | null
-          started_at?: string | null
-          status?: string
-          title?: string
-        }
-        Update: {
-          artist?: string
-          created_at?: string
-          description_src?: string | null
-          duration?: number | null
-          error?: string | null
-          id?: string
-          run_id?: string | null
-          source_path?: string | null
-          source_url?: string | null
-          spectrum_src?: string | null
-          spectrum_status?: string
-          src?: string | null
-          started_at?: string | null
-          status?: string
-          title?: string
-        }
-        Relationships: []
-      }
       configs: {
         Row: {
           key: string
@@ -85,7 +31,6 @@ export type Database = {
           id: string
           published_at: string
           status: string
-          title: string
         }
         Insert: {
           color?: string
@@ -93,7 +38,6 @@ export type Database = {
           id?: string
           published_at: string
           status?: string
-          title?: string
         }
         Update: {
           color?: string
@@ -101,7 +45,6 @@ export type Database = {
           id?: string
           published_at?: string
           status?: string
-          title?: string
         }
         Relationships: []
       }
@@ -111,21 +54,18 @@ export type Database = {
           id: string
           published_at: string
           status: string
-          title: string
         }
         Insert: {
           content: Json
           id?: string
           published_at: string
           status?: string
-          title: string
         }
         Update: {
           content?: Json
           id?: string
           published_at?: string
           status?: string
-          title?: string
         }
         Relationships: []
       }
@@ -200,6 +140,10 @@ export type Database = {
           github_username: string
           message_text: string
         }
+        Returns: Json
+      }
+      update_audio_asset: {
+        Args: { asset_id: string; expected_run_id?: string; patch?: Json }
         Returns: Json
       }
       visit_desk: { Args: { page_path: string }; Returns: number }

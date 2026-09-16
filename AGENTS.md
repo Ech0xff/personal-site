@@ -17,7 +17,7 @@ Supabase, StyleX, and Bun. Public and administration roots share design tokens.
   follow the [database workflow](./README.md#database).
 - Regenerate Supabase types and SVG icon components; do not edit generated files.
 - Write comments and documentation in English. Update affected docs with the
-  implementation and record deferred work in `DOCS/TODO.md`.
+  implementation. Keep project documentation in README.md and AGENTS.md.
 - Preserve unrelated changes; avoid destructive Git operations unless requested.
 
 ## Code Style
@@ -78,7 +78,6 @@ preserve route segments and framework conventions.
 - `scripts`: Maintenance and development utilities.
 - `supabase`: Database configuration, schemas, and seed data.
 - `public`: Static assets addressed by URL.
-- `DOCS`: Project guides and deferred work.
 
 Keep domain types, schemas, constants, helpers, tests, and styles with their owner.
 Editor-private hooks stay beside the editor; `_hooks` is for page-level or
@@ -110,7 +109,6 @@ utilities; import auth and image services from their owners.
 - The public root keeps its own shell, providers, scrolling behavior, and assets.
   Both roots reuse environment-neutral theme synchronization and controls,
   without importing administration features or providers into the public root.
-  See [the design guide](./DOCS/REDESIGN.md) for boundaries and conventions.
 
 ## Development and Documentation
 
@@ -128,10 +126,15 @@ Use focused Conventional Commits (`feat:`, `fix:`, `refactor:`, `chore:`,
 `docs:`) with imperative subjects. Include only task-related changes and report
 checks that could not run.
 
-Keep documentation responsibilities distinct: [README](./README.md) for setup
-and operations, [Architecture](./DOCS/ARCHITECTURE.md) for system behavior,
-[TODO](./DOCS/TODO.md) for actionable outstanding work. Link to the owning guide
-instead of repeating its content. Prefer concise paragraphs and lists over tables.
+Keep [README](./README.md) for setup and operations, and this file for development
+rules and ownership. Report deferred work in the task handoff rather than creating
+additional project guides. Prefer concise paragraphs and lists over tables.
+
+Content titles are derived from the first top-level document heading; persist only
+content, visibility, publish time, and event color. Audio resources use one private
+`audio.asset.<id>` config per recording. Keep their job state separate from the desk
+configuration, use the task-owner RPC for atomic updates, and expose only selected,
+ready recordings through the public audio RPC.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

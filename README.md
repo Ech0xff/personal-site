@@ -1,13 +1,14 @@
 # Personal Site
 
 An English-only personal site and single-owner CMS built with Next.js 16,
-React 19, BlockNote, Supabase, StyleX, and Bun. The public reading desk links to published Posts, Thoughts, and Events. The dashboard
-manages block-based content and a public file bucket.
+React 19, BlockNote, Supabase, StyleX, and Bun. The public reading desk and
+administration dashboard share design tokens and appearance preferences.
+Development conventions and module ownership live in [AGENTS.md](./AGENTS.md).
 
 ## Getting Started
 
-Requires Node.js 20.9+, Bun, and a running Docker-compatible runtime for local
-Supabase. For a hosted Supabase project, skip local setup and configure its keys.
+Use the Bun version declared in `package.json`, Node.js 20.9+, and a running
+Docker-compatible runtime for local Supabase.
 
 ```bash
 bun install
@@ -16,281 +17,193 @@ bun run supabase:setup
 
 Setup writes local Supabase credentials to `.env.development`, preserving other
 values. Add a non-empty `ADMIN_TOKEN`, then run `bun run dev`.
-Open [the site](http://localhost:3000) or [sign in](http://localhost:3000/auth).
-Development also accepts any IPv4 address (including loopback and LAN addresses)
-and IPv6 loopback through `allowedDevOrigins`. A bare `*` is not supported by
-Next.js's origin matcher; the IPv4 rule is `*.*.*.*`. This setting only applies to
-the development server. Without an allowed origin, development scripts are
-rejected and the opening curtain remains visible.
-The token has no length or complexity requirement. There are no user accounts,
-registration, OAuth providers, or Supabase Auth login flows.
-
-Local tools: [Supabase Studio](http://localhost:54323).
+Open [the site](http://localhost:3000), [sign in](http://localhost:3000/auth), or
+open [Supabase Studio](http://localhost:54323). For hosted Supabase, configure
+its keys instead of running local setup.
 
 ### Environment Variables
 
-- `ADMIN_TOKEN`: Server-only dashboard access token. An empty or missing value disables login.
+- `ADMIN_TOKEN`: Server-only dashboard access token; empty or missing disables login.
 - `NEXT_PUBLIC_SUPABASE_URL`: Supabase API URL.
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Public key used for signed browser uploads.
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Public Supabase key.
 - `SUPABASE_SERVICE_ROLE_KEY`: Server-only key for authorized content and storage operations.
 - `NEXT_PUBLIC_APP_TIMEZONE`: Optional display and editor timezone.
 
-Keep environment files out of Git. Restart after changing them. Rotating
-`ADMIN_TOKEN` invalidates existing dashboard sessions. Sessions expire after
-seven days; signing out removes the current browser's cookie.
+Keep environment files out of Git and restart after changes. Rotating `ADMIN_TOKEN`
+invalidates existing sessions; sessions expire after seven days. There are no user
+accounts, OAuth flows, webhook secrets, or Supabase Auth login requirements.
+Development accepts IPv4 origins and IPv6 loopback through `allowedDevOrigins`;
+the IPv4 matcher is `*.*.*.*`, not a bare `*`.
 
 ## Development
 
 - Develop: `bun run dev`
 - Build / serve production: `bun run build` / `bun run start`
-- Check formatting / lint: `bun run fmt` / `bun run lint`
-- Fix formatting / lint: `bun run fmt:fix` / `bun run lint:fix`
-- Check types / test: `bun run typecheck` / `bun run test`
 - Check formatting, lint, and types: `bun run check`
-- Regenerate icons from `public/svg-icons`: `bun run gen:icons`
+- Fix affected files: `bun run fmt:fix -- <paths>` / `bun run lint:fix -- <paths>`
+- Run tests: `bun run test`
+- Regenerate icons: `bun run gen:icons`
 
 ### Verification
 
-Apply formatting and lint fixes to affected files, review the diff, then run
-`bun run check` and relevant tests. Routing, caching, and runtime boundary
-changes also require `bun run build`. Verify UI flows in a browser, including
-session expiry, authorization, saves, uploads, and mobile/light/dark layouts.
-The five Bun suites cover sessions, document validation/rendering, file safety,
-and pre-paint themes; presentation and desk interactions use targeted browser
-verification rather than per-helper test files.
+Format and lint affected files, review the diff, then run `bun run check`, relevant
+tests, and `git diff --check`. Runtime, routing, and caching changes also require
+`bun run build`. Verify changed UI flows in a browser, including authorization,
+saves, uploads, and narrow layouts. The five Bun suites cover authentication,
+documents, file safety, and theme initialization.
 
-GitHub Actions runs formatting, lint, types, and tests; it does not build the
-app. Husky's pre-commit hook runs `bun run check` over the working tree without
-modifying or staging files. `bun install` installs hooks; `bun run prepare`
-reinstalls them.
+`bun scripts/verify-desk-rpc.ts` creates and removes an isolated temporary database
+inside the local Supabase container. It verifies RPC permissions, concurrent
+updates, audio task ownership, schema migration, and seed loading without resetting
+application data. Override the container with `SUPABASE_DB_CONTAINER` if needed.
 
-## Dashboard
+GitHub Actions runs formatting, lint, types, and tests. Husky's pre-commit hook runs
+`bun run check` without staging or rewriting files; `bun run prepare` reinstalls it.
 
-`/dashboard` opens Posts. Navigation contains Guestbook, Posts, Thoughts, Events, and Files.
-On narrow screens, navigation stays visible with icons only. Publish dates open
-the native date/time picker directly. Timeline years, dates, and color markers use
-the shared magnetic interaction. Files provides sorting and pagination without a
-search field; preview actions appear inside the image on hover or keyboard focus
-and remain available on touch devices.
-Content opens in a full-width BlockNote editor with manual saving. Publish time
-and visibility live in the top toolbar; there is no separate preview mode.
-New entries start hidden, with the current publish time. Posts and Events derive
-their titles from the first document heading. Posts require a heading; Events
-may contain only body text or media, with an empty stored title. Events also have a color. Images and attachments live in
-the content document. There are no author, location, tag, or configuration fields.
+## Content and Files
 
-The database stores native BlockNote JSON. The editor supports standard blocks,
-including headings, lists, tables, code, images, audio, video, and file links.
-Use `/Columns`, or drag blocks beside each other, to create a column layout.
-The Column layout button beside a block opens controls for column count, percentage
-widths, equal widths, and a 0–64 px gap. Removing columns moves their contents to
-the last remaining column. Images and videos fill their column width; choose
-original proportions, 1:1, 4:3, 16:9, or a shared media height, with crop/full-image
-fit controls. Equal card heights aligns corresponding content rows across columns.
-Dividers still support dragging. Reading areas at most 640 px wide stack columns
-in order, restore natural card heights, and use 4:3 for shared-height media.
-Previously saved custom media rows migrate to native columns when opened for editing.
-Use `/Link card`, or Turn into link card on a standalone URL, for a saved
-website preview. Enter only a URL: Microlink fills the preview automatically after
-a short typing pause. The refresh icon retries parsing; titles and descriptions
-have no manual fields. Reading pages use the saved preview.
-Old Markdown directives, PlantUML, and Markdown source/split modes are removed.
-There is no automatic runtime Markdown conversion. The one-time hosted database
-conversion and recovery procedure is documented in the
-[production migration guide](./DOCS/MIGRATION-2026-09-13.md).
+`/dashboard` opens Posts; navigation also includes Thoughts, Events, Guestbook, and
+Files. Content uses BlockNote with manual saving, publish time, and visibility.
+New entries start hidden. Show makes content public regardless of its publish time.
 
-The interface uses the shared English dictionary in source. Changing copy or
-metadata requires a code change; business content keeps its original language.
-There is no locale routing, dictionary override database, or translation service.
+Posts and Events derive their title from the first top-level heading in `content`;
+there is no separate title column. Posts require a title of at most 500 characters;
+Events allow no title and accept headings up to 255 characters. Articles render
+the title once and build a table of contents from the remaining headings.
+Content retains its original language; interface copy uses the shared English
+dictionary. There are no locale routes or translation storage.
 
-### Files
+The editor supports native columns, media, saved link cards, highlighted code, and
+PlantUML blocks. Reading pages use the saved document. Public lists, articles, and
+rendering use Cache Components; content mutations invalidate their cache tags.
+The public pages are `/`, `/posts`, `/posts/<uuid>`, `/thoughts`, `/events`, and `/system`.
 
-Files use the public Supabase Storage bucket `files`. Any file type can be
-uploaded, up to 50 MiB per file. JPEG, PNG, and WebP images are compressed in the
-browser to WebP (1920px maximum dimension, 2 MB target, initial quality 0.85).
-GIF, SVG, and other file types keep their original bytes. Compression failures
-are reported instead of silently uploading the original photo.
-
-Uploads receive unique object paths and never overwrite existing files. The
-original name is kept as metadata. The Files page supports name search,
-pagination, time/size sorting, image previews, copying links, downloads, and deletion. Browser
-uploads use server-issued signed credentials; the service-role key stays on the
-server. Copying a file's public URL grants access to its bytes, including files
-referenced only by hidden content.
-
-Canceling an editor or deleting a document leaves uploaded files in the bucket.
-Remove files explicitly from Files; deleting a referenced file breaks its link.
-The old `/dashboard/images` address redirects to `/dashboard/files`.
-
-## Public Site
-
-The reading-desk homepage is at `/`; its token guide is at `/system`. Public
-pages retain their own providers, scrolling, and assets. They
-share one neutral Light/Dark token system and a synchronized System/Light/Dark
-preference with the dashboard. `/posts` groups all public articles by year, with title/date rows, yearly counts,
-and total post and approximate non-whitespace character counts;
-`/posts/<uuid>` opens the article with a responsive table of contents.
-Thoughts and Events show all public documents in a feed and timeline. Public
-pages have no pagination; the dashboard retains its existing pagination.
-Show makes content public regardless of publish time, including future events.
-The homepage displays public Posts, Thoughts, and Events counts, site likes and
-page views through Supabase RPC. Likes are disabled after a successful click,
-using the existing browser-local marker. Guestbook notes are public immediately;
-optional email addresses remain public. Manage notes at `/dashboard/guestbook`.
-
-Content and counts require the public Supabase URL and anonymous key. Missing
-configuration or unavailable data produces a local unavailable state; the rest
-of the reading desk remains usable. Public lists, articles, and document rendering use Cache Components; dashboard
-mutations invalidate the affected content. The public shell prefetches Posts,
-Thoughts, and Events and renews those prefetches when Next.js marks them stale.
-See [Architecture](./DOCS/ARCHITECTURE.md#public-content-and-caching) for boundaries.
-See the [design guide](./DOCS/REDESIGN.md) for the public UI and audio sources.
+Files use the public `files` bucket, up to 50 MiB per file. Browser compression
+converts JPEG, PNG, and WebP images to WebP (1920px maximum, 2 MB target); other file
+types retain their bytes. Uploads use unique paths and server-issued signed tokens.
+The service-role key stays on the server. A public file URL exposes its bytes even
+when referenced only by hidden content. Deleting a document leaves its files intact;
+deleting a file breaks existing references. `/dashboard/images` redirects to Files.
 
 ## Database
 
-Schema sources live in `supabase/schemas`; fixtures live in `supabase/seed.sql`.
-The CLI loads schemas through its seed configuration. This repository does not
-use migration history. After schema changes, rebuild the local database and
-regenerate types:
+The application tables are `posts`, `thoughts`, `events`, and `configs`. Anonymous
+reads of content tables are restricted to published rows. Configs are private;
+constrained RPCs expose public desk data and interactions. Dashboard reads and
+writes require the admin session, with privileged database I/O on the server.
+
+`desk.*` keys hold counters, guestbook data, and the saved desk configuration.
+Each `audio.asset.<id>` key holds one audio resource and its processing state.
+The desk playlist references asset IDs; saving the desk does not overwrite audio
+jobs. Guestbook notes are public immediately, including optional email addresses;
+moderation lives at `/dashboard/guestbook`. Visitor desk positions remain local to
+the browser; administrator changes persist to the saved configuration.
+
+Schema sources are in `supabase/schemas`; fixtures are in `supabase/seed.sql`.
+The CLI loads both through its seed configuration; this repository does not keep
+migration history. For a disposable local database only:
 
 ```bash
 bunx supabase db reset --local
 bun run supabase:types
 ```
 
-Reset deletes local data. Do not point reset at a remote database as part of
-ordinary development. `--no-seed` skips both application schemas and fixtures.
+Reset deletes local data. `--no-seed` skips both application schemas and fixtures.
+`supabase:setup` starts services and refreshes environment variables but does not
+apply schema changes. Use `bunx supabase stop` to stop services while preserving data.
+Demo fixtures use stable IDs and `ON CONFLICT DO NOTHING`; reapplying their blocks
+preserves edited records. Generate committed Supabase types from the maintained
+schemas. If your database retains unrelated legacy objects, use an isolated database
+initialized from these schemas with `bunx supabase gen types --db-url <connection>
+--schema public`, rather than adding historical types to the application.
 
-The `BEGIN DEMO CONTENT` block in `supabase/seed.sql` adds 9 public Posts,
-6 Thoughts, and 5 Events, plus one hidden record per kind. It covers multiple
-years, a future publication date, a long article with nested/repeated headings,
-an 80-link directory stress case, inline images, and untitled/media-only Events. Demo content has explicit demo
-labels and stable UUIDs; its `ON CONFLICT DO NOTHING` inserts can be reapplied
-without replacing edited records. To add demos to an existing local database,
-apply only that block without resetting the database. Sample images use public
-HTTPS URLs so they also work when browsing the site from another LAN device.
+### Upgrade Existing Data
 
-- Start services and update local env: `bun run supabase:setup`
-- Start / stop while preserving data: `bunx supabase start` / `bunx supabase stop`
-- Inspect local service status: `bunx supabase status`
-- Refresh local environment: `bun run supabase:env`
-
-`supabase:setup` starts existing services and refreshes environment variables; it
-does not apply schema changes.
-
-The application tables are `posts`, `thoughts`, `events`, and `configs`. Anonymous table
-access can read only published content. Content and storage writes require
-service-role access from the authorized server layer. Desk interactions use
-the constrained RPCs described in [Architecture](./DOCS/ARCHITECTURE.md#desk-rpc). Seed creates the public file bucket with a 50 MiB
-limit. The `desk.*` configuration keys hold likes, visits, guestbook data, and one saved desktop configuration.
-Anonymous clients can execute specific public RPCs but cannot modify tables.
-There are no application auth, tag or webhook tables.
-
-To add desk RPCs to an existing local database without resetting data:
+To remove stored content titles and move the old audio table into configs without
+resetting data, first run the read-only check:
 
 ```bash
-docker exec -i supabase_db_personal-site psql -U postgres -d postgres -v ON_ERROR_STOP=1 < supabase/schemas/05_desk.sql
+bun scripts/simplify-database.ts
+```
+
+Pause the application and all content/audio writers; wait for active imports to
+finish. Then apply, regenerate types, and restart with the updated application:
+
+```bash
+bun scripts/simplify-database.ts --apply
 bun run supabase:types
-bun scripts/verify-desk-rpc.ts
 ```
 
-Desk administrators sign in at `/auth`, then open the homepage display's Settings
-and choose Edit desk. The server-loaded configuration opens immediately. Apply
-saves an item directly; completed layout gestures, reset, shuffle, undo, and redo
-also save. There is no separate Save button. Form inputs remain temporary until
-Apply succeeds, and undo/redo history stays in the current editor session.
-Visitors' personal positions remain browser-local. Item
-metadata defaults and the `items`/`layouts` injection contract are described in
-[Architecture](./DOCS/ARCHITECTURE.md#configurable-desk).
+The script defaults to Docker container `supabase_db_personal-site`, database
+`postgres`. Override with `SUPABASE_DB_CONTAINER` / `SUPABASE_DB_NAME`. For hosted
+PostgreSQL, set `DATABASE_URL` privately in the process environment and install
+`psql` and `pg_dump` compatible with the server version. The same commands then
+target that database. Coordinate the maintenance window with deployment: the old
+application cannot write after the title columns and audio table are removed.
 
-For a hosted database, apply `05_desk.sql` using its SQL editor before deploying.
-The script migrates the old workspace to one configuration, preferring its published
-content and falling back to its draft only when nothing was published. Existing saved
-configurations and unrelated config values are preserved. RPC verification
-creates and removes an isolated temporary database in the local Docker container;
-set `SUPABASE_DB_CONTAINER` when its name differs. It checks permissions, concurrent
-updates, moderation and the rolling limit of ten new notes per 60 seconds.
-The seed also includes a hidden native-column/link-card editor fixture.
+Apply writes a full `database.dump` and `before.json` outside Git, by default under
+`~/backups/personal-site/schema-simplification-<timestamp>/`; override with
+`MIGRATION_BACKUP_DIR`. It aborts on mismatched titles, conflicting config records,
+active audio jobs, or data changes after preflight. A locked transaction normalizes legacy config JSON to JSONB, copies and
+checks every audio field, replaces the RPC source, then removes the old table and
+columns. Repeating a completed migration is a no-op. It does not move or delete
+Storage objects or create migration history.
 
-Existing databases with the former mandatory event-title constraint can be
-updated without resetting data:
+Afterward verify record counts, titles, playlists, saves, and audio imports. For
+recovery, restore the dump into an isolated database with `pg_restore` and pair the
+recovered database with the previous application revision. Reconcile any newer
+writes before switching back. PostgreSQL dumps contain Storage metadata, not file
+bytes; preserve the existing buckets. Earlier CMS conversion backups remain under
+`~/backups/personal-site/2026-09-13-production-migration/`; keep those archives and
+Storage objects until explicitly retired.
 
-```sql
-ALTER TABLE public.events DROP CONSTRAINT IF EXISTS events_title_check;
-ALTER TABLE public.events ALTER COLUMN title SET DEFAULT '';
-```
+## Audio Imports
+
+Files and public HTTP(S) audio URLs are limited to 50 MiB and 15 minutes. Uploads
+use signed Storage credentials; processing continues after the editor closes.
+Reopen the audio library to select completed recordings or retry failures.
+Removing a playlist entry leaves the stored audio and spectrum files intact.
+
+Audio records retain source paths, metadata, playback URLs, spectrum state, and
+job ownership in configs. Only the service role may call `update_audio_asset`;
+it compares `run_id` and merges the patch atomically. `read_desk_audio` returns
+only selected, ready recordings and playback fields. Expired imports can be
+retried; a frequency-analysis failure does not discard playable audio.
+
+The built-in recordings are the original 16-second “A quiet morning” and
+“Miku feat. Hatsune Miku” by Anamanaguchi, obtained from the
+[artist's track page](https://anamanaguchi.bandcamp.com/track/miku-feat-hatsune-miku).
+Their audio, precomputed spectra, and non-lyrical VTT descriptions live in
+`public/redesign`. Regenerate the original recording with
+`bun scripts/generate-redesign-audio.ts`, and spectra with `bun run audio:analyze`.
+The latter requires FFmpeg or macOS `afconvert`. Playback uses local assets and
+precomputed spectra; no browser audio-analysis graph is required.
 
 ## Deployment
 
-Provide the environment variables above at build and runtime, provision the
-schema and `files` bucket in the target Supabase project, then build and serve.
-For a local production verification using local Supabase credentials:
+Provision the maintained database schema before building against a hosted project;
+homepage prerendering requires the desk configuration and audio RPCs. For an
+existing database, use the checked upgrade procedure above instead of reset.
+Configure the environment variables on the host, then build and deploy the matching
+application revision. Verify an article and a real audio import on the deployed host.
 
-```bash
-bun --env-file=.env.development run build
-bun --env-file=.env.development run start
-```
+Audio processing runs in a Node.js Vercel Function with Fluid compute and
+`maxDuration = 300`. Install dependencies on the target platform: `ffmpeg-static`
+must match its OS. Next.js traces the binary for `/api/admin/audio/import`.
+Confirm it is executable and within the deployment bundle limit. Processing is
+bounded background work, not a durable queue; interrupted jobs require manual
+retry. Verify file upload, URL import, and spectrum-only retry on the deployed
+Function, since a successful macOS decode does not validate the Linux artifact.
 
-The `jsdom` override in `package.json` keeps BlockNote's server renderer compatible
-with Lambda's disabled `require(esm)` support. The Bun patch for
-`@blocknote/server-util` gives its isolated DOM a non-opaque origin so storage
-access during rendering does not throw; this does not fetch the origin URL.
-The document rendering suite checks both in native Node with that restriction;
-Bun-only tests do not reproduce the module error. See [TODO](./DOCS/TODO.md)
-before removing these compatibility fixes.
-
-There are no OAuth callback URLs, webhook secrets, or webhook binding steps.
-See [Architecture](./DOCS/ARCHITECTURE.md) for authorization and data flow.
-
-## Documentation
-
-- [AGENTS.md](./AGENTS.md): development conventions and module ownership.
-- [Architecture](./DOCS/ARCHITECTURE.md): runtime boundaries and data flow.
-- [Design guide](./DOCS/REDESIGN.md): tokens, public UI, and audio.
-- [Project review](./DOCS/REVIEW-2026-09-13.md): architecture and quality findings,
-  measured performance, and follow-up decisions as of September 13, 2026.
-- [TODO](./DOCS/TODO.md): outstanding work.
+Keep the `jsdom` 26.1.0 override and the BlockNote server-renderer DOM-origin patch
+until upstream works with Lambda's disabled `require(esm)` support and a production
+article renders successfully. The document tests include the restricted native
+Node check; Bun-only tests cannot reproduce that module-loading failure.
 
 ## License
 
-Project code is available under [GPL-3.0-only](./LICENSE). The official
-`@blocknote/xl-multi-column` extension is used under its GPL-3.0 option;
-no commercial subscription is needed for this GPL release. Dependencies retain
-their own licenses. Blog posts, personal photographs, and other authored content
-are not covered by this software license. Corresponding project source is available
-at [muyu258/personal-site](https://github.com/muyu258/personal-site).
-
-### Audio imports
-
-Apply `supabase/schemas/06_audio.sql` after the desk schema to provision the protected
-asset table, public `audio` bucket and saved-desk audio RPC. This additive script also
-preserves the built-in track IDs without changing existing desk snapshots. Regenerate
-Supabase types after applying the schema. For local application without a reset:
-
-```bash
-docker exec -i supabase_db_personal-site psql -U postgres -d postgres -v ON_ERROR_STOP=1 < supabase/schemas/06_audio.sql
-bun run supabase:types
-```
-
-The recording editor supports files and public HTTP(S) audio URLs, up to 50 MiB and
-15 minutes. Upload completion starts background processing; keep the page open until
-the upload completes. Processing continues after the dialog closes. Reopen the audio
-library to add completed recordings or retry failures. Removing a recording from a
-playlist does not delete its audio or spectrum files.
-
-Production uses a Node.js Vercel Function with Fluid compute and `maxDuration = 300`.
-`ffmpeg-static` is a trusted install dependency; install dependencies on the target
-platform so its executable matches the deployment. Next's output tracing includes the
-binary only for `/api/admin/audio/import`. Do not reuse macOS `node_modules` for Linux
-production. Confirm the function bundle contains an executable FFmpeg and stays below
-the project's bundle limit. No additional service credentials are required beyond
-existing Supabase and admin settings. Runtime decoding is bounded background work,
-not a durable queue: failed or interrupted attempts require manual retry.
-
-Before deploying this feature, ensure the hosted desk schema (`05_desk.sql`) is current
-and apply the additive audio schema. Home-page prerendering requires both
-`read_desk_configuration` and `read_desk_audio` in the target database. Verify a
-real upload and URL import on the deployed Function, including spectrum-only retry;
-a local successful decode does not validate the Linux deployment artifact. See
-[Architecture](./DOCS/ARCHITECTURE.md#item-metadata-and-audio-imports) for permissions,
-saved configuration and task-state boundaries.
+Project code is [GPL-3.0-only](./LICENSE). The official BlockNote multi-column
+extension uses its GPL-3.0 option. Dependencies and media retain their own licenses;
+blog posts, photographs, and other authored content are not covered by the software
+license. Corresponding source is available at
+[muyu258/personal-site](https://github.com/muyu258/personal-site).

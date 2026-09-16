@@ -56,19 +56,13 @@ export async function readContent(
 }
 export async function writeContent(input: unknown) {
   await requireAdmin();
-  const { id, kind, title, color, content, ...rest } =
-    contentInputSchema.parse(input);
+  const { id, kind, color, content, ...rest } = contentInputSchema.parse(input);
   // JSON serialization removes undefined optional block fields without losing their structure.
   const body = {
     ...rest,
     content: z.json().parse(JSON.parse(JSON.stringify(content))),
   };
-  const payload =
-    kind === "thoughts"
-      ? body
-      : kind === "posts"
-        ? { ...body, title }
-        : { ...body, title, color };
+  const payload = kind === "events" ? { ...body, color } : body;
   const client = makeAdminClient();
   const query = id
     ? client.from(kind).update(payload).eq("id", id)
