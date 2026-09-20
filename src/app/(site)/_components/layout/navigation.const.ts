@@ -2,7 +2,6 @@ export const navigation = [
   { href: "/", label: "Home" },
   { href: "/posts", label: "Posts" },
   { href: "/thoughts", label: "Thoughts" },
-  { href: "/events", label: "Events" },
 ] as const;
 export const introGreetings = [
   "Hello",

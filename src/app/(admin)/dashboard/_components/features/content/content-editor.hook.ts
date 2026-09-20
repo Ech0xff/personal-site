@@ -40,7 +40,6 @@ export function useContentEditor(
                     { type: "paragraph", content: "" },
                   ],
             status: "hide",
-            color: "#3b82f6",
             published_at: new Date().toISOString(),
           },
         });

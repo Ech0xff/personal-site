@@ -132,7 +132,7 @@ rules and ownership. Report deferred work in the task handoff rather than creati
 additional project guides. Prefer concise paragraphs and lists over tables.
 
 Content titles are derived from the first top-level document heading; persist only
-content, visibility, publish time, and event color. Audio resources use one private
+content, visibility, and publish time. Audio resources use one private
 `audio.asset.<id>` config per recording. Keep their job state separate from the desk
 configuration, use the task-owner RPC for atomic updates, and expose only selected,
 ready recordings through the public audio RPC.

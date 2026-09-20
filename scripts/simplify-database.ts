@@ -22,7 +22,6 @@ const contentRows = z.array(
 );
 const snapshotSchema = z.object({
   posts: z.array(z.json()),
-  events: z.array(z.json()),
   audio: z.array(z.json()),
   configs: z.array(z.object({ key: z.string(), value: z.json() })),
 });
@@ -33,22 +32,19 @@ export async function prepareMigration(sql: Sql) {
     "t";
   const snapshotQuery = `SELECT jsonb_build_object(
     'posts', (SELECT COALESCE(jsonb_agg(to_jsonb(p) ORDER BY id), '[]') FROM public.posts p),
-    'events', (SELECT COALESCE(jsonb_agg(to_jsonb(e) ORDER BY id), '[]') FROM public.events e),
     'audio', ${hasAudio ? "(SELECT COALESCE(jsonb_agg(to_jsonb(a) ORDER BY id), '[]') FROM public.audio_assets a)" : "'[]'::jsonb"},
     'configs', (SELECT COALESCE(jsonb_agg(to_jsonb(c) ORDER BY key), '[]') FROM public.configs c))`;
   const snapshot = snapshotSchema.parse(JSON.parse(await sql(snapshotQuery)));
-  for (const kind of ["posts", "events"] as const) {
-    const mismatches = contentRows
-      .parse(snapshot[kind])
-      .filter(
-        (row) =>
-          row.title !== undefined && row.title !== documentTitle(row.content),
-      );
-    if (mismatches.length)
-      throw new Error(
-        `Title mismatch in ${kind}: ${mismatches.map((row) => row.id).join(", ")}`,
-      );
-  }
+  const mismatches = contentRows
+    .parse(snapshot.posts)
+    .filter(
+      (row) =>
+        row.title !== undefined && row.title !== documentTitle(row.content),
+    );
+  if (mismatches.length)
+    throw new Error(
+      `Title mismatch in posts: ${mismatches.map((row) => row.id).join(", ")}`,
+    );
   for (const raw of snapshot.audio) {
     const { id, ...record } = z
       .object({ id: z.string() })
@@ -71,7 +67,7 @@ export async function prepareMigration(sql: Sql) {
       throw new Error(`Conflicting audio configuration: ${id}`);
   }
   const titleColumns = await sql(
-    "SELECT count(*) FROM information_schema.columns WHERE table_schema='public' AND table_name IN ('posts','events') AND column_name='title';",
+    "SELECT count(*) FROM information_schema.columns WHERE table_schema='public' AND table_name='posts' AND column_name='title';",
   );
   const schema = (
     await Promise.all(
@@ -87,7 +83,7 @@ export async function prepareMigration(sql: Sql) {
     needed: hasAudio || titleColumns !== "0",
     source: `BEGIN;
 SET LOCAL lock_timeout = '10s';
-LOCK TABLE public.posts, public.events, public.configs${hasAudio ? ", public.audio_assets" : ""} IN ACCESS EXCLUSIVE MODE;
+LOCK TABLE public.posts, public.configs${hasAudio ? ", public.audio_assets" : ""} IN ACCESS EXCLUSIVE MODE;
 CREATE TEMP TABLE migration_guard (unchanged BOOLEAN NOT NULL CONSTRAINT data_changed_since_preflight CHECK (unchanged)) ON COMMIT DROP;
 INSERT INTO migration_guard VALUES ((${snapshotQuery}) = ${json(snapshot)});
 ALTER TABLE public.configs ALTER COLUMN value TYPE JSONB USING value::jsonb;
@@ -100,7 +96,6 @@ INSERT INTO migration_guard VALUES (NOT EXISTS (SELECT 1 FROM public.audio_asset
 ${schema}
 ${hasAudio ? "DROP TABLE public.audio_assets;" : ""}
 ALTER TABLE public.posts DROP COLUMN IF EXISTS title;
-ALTER TABLE public.events DROP COLUMN IF EXISTS title;
 NOTIFY pgrst, 'reload schema';
 COMMIT;`,
   };
@@ -153,7 +148,7 @@ if (import.meta.main) {
     console.log("Already migrated; no changes needed.");
   } else if (!process.argv.includes("--apply")) {
     console.log(
-      `Preflight passed: ${migration.snapshot.posts.length} posts, ${migration.snapshot.events.length} events, ${migration.snapshot.audio.length} audio assets. Stop writers, then run with --apply.`,
+      `Preflight passed: ${migration.snapshot.posts.length} posts, ${migration.snapshot.audio.length} audio assets. Stop writers, then run with --apply.`,
     );
   } else {
     const directory = resolve(

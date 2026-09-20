@@ -6,10 +6,6 @@ INSERT INTO public.thoughts (content, status, published_at) VALUES ('[{"type": "
 
 INSERT INTO public.thoughts (content, status, published_at) VALUES ('[{"type": "heading", "props": {"level": 2}, "content": "A new space to write"}, {"type": "paragraph", "content": "Write in blocks, keep the original language, and share when ready."}, {"type": "bulletListItem", "content": "Keep things simple."}]'::jsonb, 'hide', '2026-09-13 09:00:00+00');
 
-INSERT INTO public.events (content, status, published_at) VALUES ( '[{"type": "heading", "props": {"level": 1}, "content": "Welcome to the new editor"}, {"type": "paragraph", "content": "Write in blocks, keep the original language, and share when ready."}, {"type": "bulletListItem", "content": "Keep things simple."}]'::jsonb, 'show', '2026-09-13 09:00:00+00');
-
-INSERT INTO public.events (content, status, published_at) VALUES ('[{"type": "paragraph", "content": "A small moment worth remembering. Events do not need a title."}]'::jsonb, 'hide', '2026-09-13 09:00:00+00');
-
 -- BEGIN DEMO CONTENT
 -- Stable fixtures: reapplying this block preserves existing edits.
 INSERT INTO public.posts (id, content, status, published_at)
@@ -68,36 +64,12 @@ INSERT INTO public.thoughts (id, content, status, published_at)
 VALUES ('806a9125-94e4-5ab8-af6b-8234a4c68124', '[{"type":"paragraph","content":"[Demo] A thought for a rainy evening: progress can be easier to see in a notebook than in a busy day."}]'::jsonb, 'show', '2026-09-08T10:30:00Z')
 ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO public.events (id, content, status, published_at, color)
-VALUES ('4bd483f5-e30c-56d7-95d9-394af6875bc3', '[{"type":"heading","props":{"level":1},"content":"[Demo] A new chapter begins"},{"type":"paragraph","content":"Demo milestone: the public reading pages are ready for a first look."}]'::jsonb, 'show', '2026-09-13T09:00:00Z', '#3b82f6')
-ON CONFLICT (id) DO NOTHING;
-
-INSERT INTO public.events (id, content, status, published_at, color)
-VALUES ('2b2ec071-904b-5257-8a63-b35e73753288', '[{"type":"paragraph","content":"[Demo] A small moment without a title. Went outside, slowed down, and took a photograph."},{"type":"image","props":{"url":"https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1200&q=80","name":"demo-lakeside.jpg","caption":"Demo image — a quiet place by the water","previewWidth":720}}]'::jsonb, 'show', '2026-07-18T15:20:00Z', '#10b981')
-ON CONFLICT (id) DO NOTHING;
-
-INSERT INTO public.events (id, content, status, published_at, color)
-VALUES ('18d5aa80-1a62-5641-8500-ce46448d253c', '[{"type":"heading","props":{"level":1},"content":"[Demo] The first working prototype"},{"type":"paragraph","content":"Demo milestone: an idea became something we could open, click, and improve."}]'::jsonb, 'show', '2026-02-10T08:00:00Z', '#f59e0b')
-ON CONFLICT (id) DO NOTHING;
-
-INSERT INTO public.events (id, content, status, published_at, color)
-VALUES ('653b73db-3329-59e4-8f04-1f2375f16a9a', '[{"type":"image","props":{"url":"https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1200&q=80","name":"demo-lakeside.jpg","caption":"[Demo] A memorable afternoon — an image-only event.","previewWidth":720}}]'::jsonb, 'show', '2025-08-16T16:00:00Z', '#8b5cf6')
-ON CONFLICT (id) DO NOTHING;
-
-INSERT INTO public.events (id, content, status, published_at, color)
-VALUES ('929fc394-abf7-58cf-9e44-2b53911582c6', '[{"type":"heading","props":{"level":1},"content":"[Demo] The beginning of the journey"},{"type":"paragraph","content":"Demo milestone: a blank page, a rough sketch, and a place to begin."}]'::jsonb, 'show', '2024-11-04T09:00:00Z', '#ec4899')
-ON CONFLICT (id) DO NOTHING;
-
 INSERT INTO public.posts (id, content, status, published_at)
 VALUES ('d84f8eae-8606-5df0-9615-73de752053a1', '[{"type":"heading","props":{"level":1},"content":"[Demo hidden] Visibility check"},{"type":"paragraph","content":"[Demo hidden] This record should only appear in the dashboard. It must not appear on public pages or in public totals."}]'::jsonb, 'hide', '2026-09-13T12:00:00Z')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.thoughts (id, content, status, published_at)
 VALUES ('6ba350c6-2886-5fbb-aa79-b52c36c1205d', '[{"type":"paragraph","content":"[Demo hidden] This record should only appear in the dashboard. It must not appear on public pages or in public totals."}]'::jsonb, 'hide', '2026-09-13T12:00:00Z')
-ON CONFLICT (id) DO NOTHING;
-
-INSERT INTO public.events (id, content, status, published_at, color)
-VALUES ('57dff885-3ec5-5f36-b7a3-e737eaf2e212', '[{"type":"heading","props":{"level":1},"content":"[Demo hidden] Visibility check"},{"type":"paragraph","content":"[Demo hidden] This record should only appear in the dashboard. It must not appear on public pages or in public totals."}]'::jsonb, 'hide', '2026-09-13T12:00:00Z', '#3b82f6')
 ON CONFLICT (id) DO NOTHING;
 
 -- Long-directory fixture: 16 chapters and 64 nested sections.

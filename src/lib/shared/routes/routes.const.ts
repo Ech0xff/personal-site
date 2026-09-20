@@ -5,7 +5,6 @@ export const ROUTES = {
   POSTS: "/posts",
   POST: (id: string) => `/posts/${id}`,
   THOUGHTS: "/thoughts",
-  EVENTS: "/events",
 
   // Auth routes
   AUTH: "/auth",
@@ -16,6 +15,5 @@ export const ROUTES = {
     FILES: "/dashboard/files",
     POSTS: "/dashboard/posts",
     THOUGHTS: "/dashboard/thoughts",
-    EVENT: "/dashboard/event",
   },
 } as const;

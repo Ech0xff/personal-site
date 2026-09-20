@@ -8,7 +8,6 @@ export const contentRecordSchema = z
   .object({
     id: z.uuid(),
     content: documentSchema,
-    color: z.string().default("#3b82f6"),
     status: statusSchema,
     published_at: z.string(),
   })

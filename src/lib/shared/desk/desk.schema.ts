@@ -46,7 +46,6 @@ export const emptyGuestbookDraft: GuestbookDraft = {
 export const deskStatsSchema = z.object({
   posts: z.number().int().nonnegative(),
   thoughts: z.number().int().nonnegative(),
-  events: z.number().int().nonnegative(),
   likes: z.number().int().nonnegative(),
   visits: z.number().int().nonnegative(),
 });

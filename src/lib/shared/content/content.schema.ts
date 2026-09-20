@@ -4,7 +4,7 @@ import { hasDocumentContent, documentTitle } from "./document.helper";
 import { documentSchema } from "./document.schema";
 import { statusSchema } from "./status.schema";
 
-export const contentKindSchema = z.enum(["posts", "thoughts", "events"]);
+export const contentKindSchema = z.enum(["posts", "thoughts"]);
 export type ContentKind = z.infer<typeof contentKindSchema>;
 export const contentInputSchema = z
   .object({
@@ -16,10 +16,6 @@ export const contentInputSchema = z
     ),
     status: statusSchema,
     published_at: z.iso.datetime({ offset: true }),
-    color: z
-      .string()
-      .regex(/^#[0-9a-fA-F]{6}$/, "Choose a valid event color.")
-      .default("#3b82f6"),
   })
   .superRefine((value, context) => {
     const title = documentTitle(value.content);
@@ -29,7 +25,7 @@ export const contentInputSchema = z
         path: ["content"],
         message: "Add a heading to your document for its title.",
       });
-    if (title.length > (value.kind === "events" ? 255 : 500))
+    if (title.length > 500)
       context.addIssue({
         code: "custom",
         path: ["content"],

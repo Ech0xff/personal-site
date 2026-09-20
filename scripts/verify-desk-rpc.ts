@@ -145,6 +145,16 @@ try {
       "0",
     "Public stats must load",
   );
+  assert(
+    (await sql("SELECT to_regclass('public.events') IS NULL;")) === "t",
+    "Fresh schemas must not create the retired content table",
+  );
+  assert(
+    (await sql(
+      "SET ROLE anon; SELECT public.read_desk_stats() ? 'events';",
+    )) === "f",
+    "Public stats must omit the retired content kind",
+  );
   const likes = await Promise.all(
     Array.from({ length: 20 }, () =>
       sql("SET ROLE anon; SELECT public.like_desk();"),
@@ -157,11 +167,13 @@ try {
       )) === "20",
     "Concurrent likes must be atomic",
   );
-  try {
-    await sql("SET ROLE anon; SELECT public.visit_desk('/dashboard');");
-    throw new Error("Invalid page accepted");
-  } catch (error) {
-    assert(String(error).includes("Invalid page."), "Invalid page must fail");
+  for (const path of ["/dashboard", "/events"]) {
+    try {
+      await sql(`SET ROLE anon; SELECT public.visit_desk('${path}');`);
+      throw new Error("Invalid page accepted");
+    } catch (error) {
+      assert(String(error).includes("Invalid page."), "Invalid page must fail");
+    }
   }
   try {
     await sql(
@@ -272,7 +284,6 @@ try {
 
   // Exercise the real migration against a legacy fixture in this disposable database.
   await sql(`ALTER TABLE public.posts ADD COLUMN title TEXT;
-    ALTER TABLE public.events ADD COLUMN title TEXT;
     INSERT INTO public.posts(title,content,status,published_at) VALUES('Legacy title','[{"type":"heading","content":"Legacy title"}]','hide',now());
     CREATE TABLE public.audio_assets AS SELECT 'legacy-audio'::text AS id,
       'Legacy recording'::text AS title, ''::text AS artist,

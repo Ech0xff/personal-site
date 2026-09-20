@@ -128,9 +128,9 @@ describe("BlockNote content boundaries", () => {
       ]).success,
     ).toBe(false);
   });
-  test("events accept body-only and media-only documents while posts still require a heading", () => {
+  test("thoughts accept body-only and media-only documents while posts still require a heading", () => {
     const base = {
-      kind: "events",
+      kind: "thoughts",
       status: "show",
       published_at: "2026-09-13T00:00:00Z",
     };
@@ -154,10 +154,10 @@ describe("BlockNote content boundaries", () => {
       documentTitle(
         contentInputSchema.parse({
           ...base,
-          content: [{ type: "heading", content: "Optional event title" }],
+          content: [{ type: "heading", content: "Optional thought title" }],
         }).content,
       ),
-    ).toBe("Optional event title");
+    ).toBe("Optional thought title");
   });
   test("validates content type metadata and preserves original-language text", () => {
     const input = {
@@ -167,6 +167,9 @@ describe("BlockNote content boundaries", () => {
       status: "hide",
       published_at: "2026-09-13T00:00:00Z",
     };
+    expect(
+      contentInputSchema.safeParse({ ...input, kind: "events" }).success,
+    ).toBe(false);
     expect(contentInputSchema.parse(input)).not.toHaveProperty("title");
     expect(documentTitle(contentInputSchema.parse(input).content)).toBe(
       "Hello 世界",
@@ -184,8 +187,8 @@ describe("BlockNote content boundaries", () => {
     expect(
       contentInputSchema.safeParse({
         ...input,
-        kind: "events",
-        content: [{ type: "heading", content: "x".repeat(256) }],
+        kind: "thoughts",
+        content: [{ type: "heading", content: "x".repeat(501) }],
       }).success,
     ).toBe(false);
     expect(

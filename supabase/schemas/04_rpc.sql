@@ -33,7 +33,6 @@ RETURNS JSONB LANGUAGE sql STABLE SECURITY DEFINER SET search_path = '' AS $$
   SELECT jsonb_build_object(
     'posts', (SELECT count(*) FROM public.posts WHERE status = 'show'),
     'thoughts', (SELECT count(*) FROM public.thoughts WHERE status = 'show'),
-    'events', (SELECT count(*) FROM public.events WHERE status = 'show'),
     'likes', (SELECT value FROM public.configs WHERE key = 'desk.likes'),
     'visits', (SELECT value FROM public.configs WHERE key = 'desk.visits')
   );
@@ -47,7 +46,7 @@ CREATE OR REPLACE FUNCTION public.visit_desk(page_path TEXT)
 RETURNS BIGINT LANGUAGE plpgsql SECURITY DEFINER SET search_path = '' AS $$
 DECLARE total BIGINT;
 BEGIN
-  IF page_path IS NULL OR NOT (page_path IN ('/', '/posts', '/thoughts', '/events')
+  IF page_path IS NULL OR NOT (page_path IN ('/', '/posts', '/thoughts')
     OR page_path ~ '^/posts/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$') THEN
     RAISE EXCEPTION 'Invalid page.' USING ERRCODE = '22023';
   END IF;

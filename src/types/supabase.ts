@@ -24,30 +24,6 @@ export type Database = {
         }
         Relationships: []
       }
-      events: {
-        Row: {
-          color: string
-          content: Json
-          id: string
-          published_at: string
-          status: string
-        }
-        Insert: {
-          color?: string
-          content: Json
-          id?: string
-          published_at: string
-          status?: string
-        }
-        Update: {
-          color?: string
-          content?: Json
-          id?: string
-          published_at?: string
-          status?: string
-        }
-        Relationships: []
-      }
       posts: {
         Row: {
           content: Json

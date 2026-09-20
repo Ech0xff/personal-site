@@ -195,7 +195,7 @@ export const deskItemDefinitions = {
       hoverY: 0,
       hoverScale: 1,
     },
-    name: "Events",
+    name: "Calendar",
     configSchema: calendarConfigSchema,
     defaultConfig: {
       heading: "LIFE LATELY",

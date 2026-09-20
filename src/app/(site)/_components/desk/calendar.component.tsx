@@ -4,7 +4,6 @@ import type { DeskItem } from "#lib/shared/desk/desk-item.schema";
 
 import { foundation } from "../../_design/foundation.style";
 import { objectMarker } from "../../_design/object-feedback.stylex";
-import { DeskLink } from "../layout/desk-navigation.component";
 import { ObjectFeedback } from "../object-feedback.component";
 import { useCalendarDate } from "./calendar-date.hook";
 import { styles } from "./calendar.style";
@@ -15,11 +14,7 @@ export function Calendar({
   const today = useCalendarDate();
   return (
     <div {...stylex.props(styles.calendar, objectMarker)}>
-      <DeskLink
-        href="/events"
-        aria-label="Explore events"
-        {...stylex.props(foundation.objectLink)}
-      >
+      <div {...stylex.props(foundation.objectLink)}>
         <span {...stylex.props(styles.rings)} aria-hidden="true">
           <i {...stylex.props(styles.ring)} />
           <i {...stylex.props(styles.ring)} />
@@ -38,8 +33,8 @@ export function Calendar({
           </span>
           <span {...stylex.props(styles.calendarBottom)}>{config.caption}</span>
         </span>
-      </DeskLink>
-      <ObjectFeedback navigable label={name} />
+      </div>
+      <ObjectFeedback label={name} />
     </div>
   );
 }

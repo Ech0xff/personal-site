@@ -21,7 +21,7 @@ const identity = z.object({ kind: contentKindSchema, id: z.uuid() });
 const refreshContent = (kind: ContentKind, id: string) => {
   updateTag(contentListTag(kind));
   if (kind === "posts") updateTag(publicPostTag(id.toLowerCase()));
-  revalidatePath(`/dashboard/${kind === "events" ? "event" : kind}`);
+  revalidatePath(`/dashboard/${kind}`);
   revalidatePath(`/${kind}`);
   if (kind === "posts") revalidatePath(`/posts/${id}`);
   revalidatePath("/");

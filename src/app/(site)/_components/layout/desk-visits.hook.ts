@@ -7,7 +7,7 @@ export function useDeskVisits(pathname: string) {
     if (lastPath.current === pathname) return;
     lastPath.current = pathname;
     if (
-      !["/", "/posts", "/thoughts", "/events"].includes(pathname) &&
+      !["/", "/posts", "/thoughts"].includes(pathname) &&
       !/^\/posts\/[0-9a-f-]{36}$/i.test(pathname)
     )
       return;

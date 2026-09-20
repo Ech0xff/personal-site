@@ -42,24 +42,6 @@ export default function ContentEditor({
                 value={editor.state.form.status}
                 onChange={(status) => editor.update({ status })}
               />
-              {kind === "events" && (
-                <label title="Event color" {...stylex.props(styles.colorField)}>
-                  <span
-                    aria-hidden
-                    {...stylex.props(styles.colorSwatch)}
-                    style={{ backgroundColor: editor.state.form.color }}
-                  />
-                  <input
-                    aria-label="Event color"
-                    type="color"
-                    value={editor.state.form.color}
-                    onChange={(event) =>
-                      editor.update({ color: event.target.value })
-                    }
-                    {...stylex.props(styles.colorInput)}
-                  />
-                </label>
-              )}
             </div>
           )}
 

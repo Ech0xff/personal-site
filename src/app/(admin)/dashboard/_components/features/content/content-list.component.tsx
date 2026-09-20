@@ -6,7 +6,6 @@ import { type ReactNode } from "react";
 
 import Button from "#components/ui/button.component";
 import { feedStyles } from "#components/ui/content/content-feed.style";
-import { EventsTimeline } from "#components/ui/content/events-timeline.component";
 import { ThoughtsFeed } from "#components/ui/content/thoughts-feed.component";
 import type {
   ContentKind,
@@ -82,15 +81,6 @@ export default function ContentList({
         )}
         {kind === "thoughts" && (
           <ThoughtsFeed
-            items={items}
-            page={page}
-            visibility={visibility}
-            actions={actions}
-            body={body}
-          />
-        )}
-        {kind === "events" && items.length > 0 && (
-          <EventsTimeline
             items={items}
             page={page}
             visibility={visibility}

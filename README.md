@@ -62,13 +62,13 @@ GitHub Actions runs formatting, lint, types, and tests. Husky's pre-commit hook 
 
 ## Content and Files
 
-`/dashboard` opens Posts; navigation also includes Thoughts, Events, Guestbook, and
+`/dashboard` opens Posts; navigation also includes Thoughts, Guestbook, and
 Files. Content uses BlockNote with manual saving, publish time, and visibility.
 New entries start hidden. Show makes content public regardless of its publish time.
 
-Posts and Events derive their title from the first top-level heading in `content`;
-there is no separate title column. Posts require a title of at most 500 characters;
-Events allow no title and accept headings up to 255 characters. Articles render
+Posts derive their title from the first top-level heading in `content`;
+there is no separate title column. Posts require a title of at most 500 characters.
+Thoughts can contain text or media without a title. Articles render
 the title once and build a table of contents from the remaining headings.
 Content retains its original language; interface copy uses the shared English
 dictionary. There are no locale routes or translation storage.
@@ -76,7 +76,7 @@ dictionary. There are no locale routes or translation storage.
 The editor supports native columns, media, saved link cards, highlighted code, and
 PlantUML blocks. Reading pages use the saved document. Public lists, articles, and
 rendering use Cache Components; content mutations invalidate their cache tags.
-The public pages are `/`, `/posts`, `/posts/<uuid>`, `/thoughts`, `/events`, and `/system`.
+The public pages are `/`, `/posts`, `/posts/<uuid>`, `/thoughts`, and `/system`.
 
 Files use the public `files` bucket, up to 50 MiB per file. Browser compression
 converts JPEG, PNG, and WebP images to WebP (1920px maximum, 2 MB target); other file
@@ -87,7 +87,7 @@ deleting a file breaks existing references. `/dashboard/images` redirects to Fil
 
 ## Database
 
-The application tables are `posts`, `thoughts`, `events`, and `configs`. Anonymous
+The application tables are `posts`, `thoughts`, and `configs`. Anonymous
 reads of content tables are restricted to published rows. Configs are private;
 constrained RPCs expose public desk data and interactions. Dashboard reads and
 writes require the admin session, with privileged database I/O on the server.
@@ -130,6 +130,11 @@ preserves edited records. Generate committed Supabase types from the maintained
 schemas. If your database retains unrelated legacy objects, use an isolated database
 initialized from these schemas with `bunx supabase gen types --db-url <connection>
 --schema public`, rather than adding historical types to the application.
+
+The Events feature is retired. Existing databases may retain their unused
+`events` table and records; this source change does not delete them. Apply the
+updated `04_rpc.sql` definitions to remove the old count and visit path from
+public RPCs. The desktop calendar remains a date display without a content link.
 
 ### Upgrade Existing Data
 

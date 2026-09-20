@@ -4,7 +4,6 @@ import * as stylex from "@stylexjs/stylex";
 import {
   ArrowLeft,
   BookOpen,
-  Calendar,
   FileText,
   FolderOpen,
   MessageCircle,
@@ -23,7 +22,6 @@ const navItems = [
   { name: "Guestbook", path: ROUTES.DASHBOARD.GUESTBOOK, icon: BookOpen },
   { name: "Posts", path: ROUTES.DASHBOARD.POSTS, icon: FileText },
   { name: "Thoughts", path: ROUTES.DASHBOARD.THOUGHTS, icon: MessageCircle },
-  { name: "Events", path: ROUTES.DASHBOARD.EVENT, icon: Calendar },
   { name: "Files", path: ROUTES.DASHBOARD.FILES, icon: FolderOpen },
 ];
 

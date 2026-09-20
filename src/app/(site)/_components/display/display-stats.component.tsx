@@ -29,7 +29,7 @@ export function DisplayStats() {
         </output>
       )}
       <dl {...stylex.props(panel.rows)}>
-        {(["posts", "thoughts", "events"] as const).map((kind) => (
+        {(["posts", "thoughts"] as const).map((kind) => (
           <div key={kind} {...stylex.props(panel.row)}>
             <dt>
               <DeskLink
