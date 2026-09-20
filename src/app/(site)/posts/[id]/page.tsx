@@ -34,7 +34,10 @@ async function Article({ params }: Props) {
     <RouteReady href={`/posts/${id}`}>
       <ContentShell as="article" id="post-article">
         <header>
-          <h1 tabIndex={-1} {...stylex.props(styles.title)}>
+          <h1
+            tabIndex={-1}
+            {...stylex.props(styles.title, styles.articleTitle)}
+          >
             {post.title}
           </h1>
           <time dateTime={post.published_at} {...stylex.props(styles.date)}>

@@ -1,6 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { color, font, space } from "#design/tokens.stylex";
+import { color, font, media, space } from "#design/tokens.stylex";
 export const contentStyles = stylex.create({
   title: {
     fontFamily: font.display,
@@ -10,6 +10,10 @@ export const contentStyles = stylex.create({
     marginBottom: space.lg,
     overflowWrap: "anywhere",
     outline: "none",
+  },
+  articleTitle: {
+    fontSize: { default: "clamp(44px, 4vw, 46px)", [media.phone]: "32px" },
+    lineHeight: 1.15,
   },
   total: { color: color.text, fontWeight: font.semibold },
   description: { color: color.muted, lineHeight: 1.7, marginBottom: space.xl },
