@@ -35,10 +35,6 @@ const letterConfigSchema = z.object({
   body: text,
   signature: text,
 });
-const calendarConfigSchema = z.object({
-  heading: text,
-  caption: text,
-});
 const emptyConfigSchema = z.object({}).strict();
 const movable = { draggable: true, resizable: true } as const;
 const fixed = { draggable: false, resizable: false } as const;
@@ -64,8 +60,8 @@ export const deskItemDefinitions = {
       ],
     },
     capabilities: movable,
-    width: 300,
-    height: 386,
+    width: 420,
+    height: 306,
     padding: 18,
     minScale: 0.8,
     maxScale: 1.3,
@@ -185,29 +181,6 @@ export const deskItemDefinitions = {
     minScale: 0.8,
     maxScale: 1.4,
   },
-  calendar: {
-    appearance: {
-      rotation: -7,
-      offsetX: 0,
-      offsetY: 0,
-      hoverRotation: -2,
-      hoverX: 0,
-      hoverY: 0,
-      hoverScale: 1,
-    },
-    name: "Calendar",
-    configSchema: calendarConfigSchema,
-    defaultConfig: {
-      heading: "LIFE LATELY",
-      caption: "one day at a time.",
-    },
-    capabilities: movable,
-    width: 125,
-    height: 170,
-    padding: 20,
-    minScale: 0.8,
-    maxScale: 1.4,
-  },
   coffee: {
     appearance: {
       rotation: 13,
@@ -321,11 +294,6 @@ export const deskItemSchema = z.discriminatedUnion("type", [
     ...identity("letter"),
     type: z.literal("letter"),
     config: letterConfigSchema,
-  }),
-  z.object({
-    ...identity("calendar"),
-    type: z.literal("calendar"),
-    config: calendarConfigSchema,
   }),
   z.object({
     ...identity("coffee"),

@@ -131,10 +131,18 @@ schemas. If your database retains unrelated legacy objects, use an isolated data
 initialized from these schemas with `bunx supabase gen types --db-url <connection>
 --schema public`, rather than adding historical types to the application.
 
-The Events feature is retired. Existing databases may retain their unused
-`events` table and records; this source change does not delete them. Apply the
-updated `04_rpc.sql` definitions to remove the old count and visit path from
-public RPCs. The desktop calendar remains a date display without a content link.
+The Events feature and its desktop calendar are retired. Existing databases may
+retain their unused `events` table and records; this source change does not delete
+them. Apply the updated `04_rpc.sql` definitions to remove the old count and visit
+path from public RPCs. Before deploying this version to an existing database,
+remove items with type `calendar` and their placement entries from all three
+layouts in `desk.configuration`.
+
+The desktop scene fits within the viewport without page or canvas scrolling;
+tablet and phone layouts remain vertically scrollable. The display is landscape,
+with guestbook identity fields beside the message area. Its default scale is 0.85;
+when updating an existing saved layout, apply that scale to its display placement
+at each breakpoint.
 
 ### Upgrade Existing Data
 

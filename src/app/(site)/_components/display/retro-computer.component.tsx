@@ -45,7 +45,7 @@ const styles = stylex.create({
   },
   screen: {
     position: "relative",
-    height: "360px",
+    height: "280px",
     borderRadius: "5px",
     paddingInline: space.md,
     paddingTop: space.md,

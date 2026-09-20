@@ -10,7 +10,6 @@ import {
   RecordPlayerPreview,
 } from "../record-player/record-player.component";
 import { BookStack } from "./book-stack.component";
-import { Calendar } from "./calendar.component";
 import { Coffee } from "./coffee.component";
 import { DeskLamp } from "./desk-lamp.component";
 import { Intro } from "./intro.component";
@@ -66,8 +65,6 @@ export function renderDeskItem(
     }
     case "books":
       return <BookStack name={item.name} config={item.config} />;
-    case "calendar":
-      return <Calendar name={item.name} config={item.config} />;
     case "letter":
       return <Letter name={item.name} config={item.config} />;
     case "coffee":

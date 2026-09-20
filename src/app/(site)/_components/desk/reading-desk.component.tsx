@@ -4,7 +4,7 @@ import { MotionConfig } from "framer-motion";
 import { useAtom, useSetAtom } from "jotai";
 import { useCallback, useMemo, useRef, useState, type ReactNode } from "react";
 
-import { lampOff, shape } from "#design/tokens.stylex";
+import { lampOff } from "#design/tokens.stylex";
 import { personalDeskLayoutsAtom } from "#lib/client/desk/desk-layout.atom";
 import type { AudioAsset } from "#lib/shared/audio/audio.schema";
 import {
@@ -78,9 +78,10 @@ export function ReadingDesk({
         entry.box.y + entry.box.height + (breakpoint === "desktop" ? 0 : 48),
     ),
   );
-  const overflowing = breakpoint === "desktop" && height > viewport.height;
   const canvasScale =
-    breakpoint === "desktop" ? deskCanvasScale(viewport, available) : 1;
+    breakpoint === "desktop"
+      ? deskCanvasScale({ width: viewport.width, height }, available)
+      : 1;
   const measure = useCallback(
     (id: string, size: Size) =>
       setMeasured((previous) =>
@@ -244,20 +245,16 @@ export function ReadingDesk({
       )}
       <div
         data-lenis-prevent={breakpoint === "desktop" ? true : undefined}
-        {...stylex.props(desk.viewport, overflowing && desk.scrollViewport)}
+        {...stylex.props(
+          desk.viewport,
+          breakpoint === "desktop" && desk.fixedViewport,
+        )}
         style={{
-          height: overflowing
-            ? `calc(${available.height}px + ${shape.header})`
-            : breakpoint === "desktop"
-              ? available.height
-              : height,
+          height: breakpoint === "desktop" ? available.height : height,
         }}
       >
         <div
-          {...stylex.props(
-            desk.scaledCanvas,
-            overflowing && desk.clippedCanvas,
-          )}
+          {...stylex.props(desk.scaledCanvas)}
           style={{ height: height * canvasScale }}
         >
           <MotionConfig

@@ -110,21 +110,6 @@ export function ItemFields({ item, change, errors }: Props) {
           )}
         </>
       );
-    case "calendar":
-      return (
-        <>
-          {(
-            [
-              ["heading", "Heading"],
-              ["caption", "Caption"],
-            ] as const
-          ).map(([key, label]) =>
-            field(`config.${key}`, label, item.config[key], (value) =>
-              change({ ...item, config: { ...item.config, [key]: value } }),
-            ),
-          )}
-        </>
-      );
     case "display":
       return (
         <PassageEditor

@@ -19,13 +19,8 @@ const wave = stylex.keyframes({
 });
 export const desk = stylex.create({
   viewport: { position: "relative", overflowX: "clip" },
-  scrollViewport: {
-    overflowY: "auto",
-    marginTop: `calc(0px - ${shape.header})`,
-    paddingTop: shape.header,
-  },
+  fixedViewport: { overflow: "clip", overflowClipMargin: shape.header },
   scaledCanvas: { position: "relative" },
-  clippedCanvas: { overflow: "clip", overflowClipMargin: shape.header },
   scene: {
     position: "relative",
     width: "100%",

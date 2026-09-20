@@ -112,8 +112,9 @@ export const panel = stylex.create({
   },
   form: {
     height: "100%",
-    display: "flex",
-    flexDirection: "column",
+    display: "grid",
+    gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+    gridTemplateRows: "repeat(3, 36px) minmax(0, 1fr)",
     gap: space.xxs,
   },
   identity: {
@@ -136,6 +137,9 @@ export const panel = stylex.create({
   },
   messageIcon: { marginTop: space.xxs },
   messageField: {
+    gridColumn: "2",
+    gridRowEnd: "4",
+    gridRowStart: "1",
     alignItems: "start",
     gridTemplateRows: "minmax(0, 1fr)",
     flexGrow: 1,
@@ -163,6 +167,8 @@ export const panel = stylex.create({
   },
   textarea: { height: "100%", minHeight: 0, resize: "none", overflowY: "auto" },
   submitRow: {
+    gridColumnEnd: "-1",
+    gridColumnStart: "1",
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",

@@ -294,7 +294,7 @@ export function replaceDeskItem(
   };
 }
 
-/** Scene fitting must not depend on movable content, otherwise fixed objects shift. */
+/** Fit the full scene inside the available viewport without scrolling. */
 export function deskCanvasScale(viewport: Size, available: Size): number {
   return Math.min(
     1,

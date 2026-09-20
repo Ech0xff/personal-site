@@ -62,7 +62,7 @@ export function GuestbookForm({
           name="githubUsername"
           autoCapitalize="none"
           spellCheck={false}
-          placeholder="GitHub username (optional)"
+          placeholder="GitHub (optional)"
           maxLength={39}
           value={draft.githubUsername ?? ""}
           onChange={(event) =>
