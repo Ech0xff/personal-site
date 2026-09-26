@@ -2,9 +2,9 @@ import { useMotionValue } from "framer-motion";
 import Lenis from "lenis";
 import { useEffect, useRef, useState } from "react";
 
-import { motionToken } from "#design/tokens.stylex";
+import { media, motionToken } from "#design/tokens.stylex";
 
-export function useDeskScroll(locked: boolean) {
+export function useDeskScroll(locked: boolean, homepage: boolean) {
   const instance = useRef<Lenis | null>(null);
   const lock = useRef(locked);
   const progress = useMotionValue(0);
@@ -13,10 +13,11 @@ export function useDeskScroll(locked: boolean) {
 
   useEffect(() => {
     const preference = matchMedia("(prefers-reduced-motion: reduce)");
+    const wide = matchMedia(media.deskWide.replace("@media ", ""));
     const configure = () => {
       instance.current?.destroy();
       instance.current = null;
-      if (preference.matches) return;
+      if (preference.matches || (homepage && wide.matches)) return;
       const lenis = new Lenis({
         autoRaf: true,
         lerp: motionToken.scrollLerp,
@@ -30,12 +31,14 @@ export function useDeskScroll(locked: boolean) {
     };
     configure();
     preference.addEventListener("change", configure);
+    if (homepage) wide.addEventListener("change", configure);
     return () => {
       preference.removeEventListener("change", configure);
+      if (homepage) wide.removeEventListener("change", configure);
       instance.current?.destroy();
       instance.current = null;
     };
-  }, []);
+  }, [homepage]);
 
   useEffect(() => {
     lock.current = locked;

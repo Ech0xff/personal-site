@@ -23,6 +23,8 @@ const styles = stylex.create({
     paddingBottom: "20px",
     paddingLeft: "20px",
     alignItems: "center",
+    flexWrap: "wrap",
+    gap: "12px",
     justifyContent: "space-between",
   },
   heading: {

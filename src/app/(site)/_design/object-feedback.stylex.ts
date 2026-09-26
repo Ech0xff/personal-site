@@ -16,21 +16,10 @@ export const feedback = stylex.create({
   frame: {
     position: "absolute",
     inset: "-14px",
-    borderRadius: shape.panel,
-    "::before": {
-      content: '""',
-      position: "absolute",
-      inset: 0,
-      borderWidth: shape.feedback,
-      borderStyle: "solid",
-      borderColor: color.accent,
-      borderRadius: "inherit",
-      display: { default: "block", [media.phone]: "none" },
-    },
     pointerEvents: "none",
     opacity: {
       default: 0,
-      [media.phone]: 1,
+      [media.touch]: 1,
       [stylex.when.ancestor(":hover", objectMarker)]: 1,
       [stylex.when.ancestor(
         ":is(:focus-visible, :has(:focus-visible))",
@@ -40,7 +29,6 @@ export const feedback = stylex.create({
     transition: `opacity ${motionToken.normal} ease`,
     zIndex: motionToken.tooltip,
   },
-  visible: { opacity: 1 },
   label: {
     display: "inline-flex",
     alignItems: "center",
@@ -50,7 +38,7 @@ export const feedback = stylex.create({
     top: 0,
     transform: {
       default: "translate(-50%, calc(-50% + 7px))",
-      [media.phone]: "translate(-50%, -50%)",
+      [media.touch]: "translate(-50%, -50%)",
       [stylex.when.ancestor(":hover", objectMarker)]: "translate(-50%, -50%)",
       [stylex.when.ancestor(
         ":is(:focus-visible, :has(:focus-visible))",
@@ -75,11 +63,5 @@ export const feedback = stylex.create({
     textAlign: "center",
     textShadow: "none",
     letterSpacing: "0.02em",
-    pointerEvents: "auto",
-    touchAction: "none",
-    userSelect: "none",
-    borderWidth: 0,
-    cursor: "grab",
   },
-  round: { borderRadius: shape.round },
 });

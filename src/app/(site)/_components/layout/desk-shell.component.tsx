@@ -40,12 +40,12 @@ function DeskShellContent({ children }: Readonly<{ children: ReactNode }>) {
   useDeskVisits(pathname);
   const menu = useDeskMenu(pathname);
   const [overlayRoot, setOverlayRoot] = useState<HTMLDivElement | null>(null);
-  const scroll = useDeskScroll(active);
+  const scroll = useDeskScroll(active, pathname === "/");
   return (
     <RouteReadinessContext value={navigation.readiness}>
       <NavigationContext value={navigate}>
         <ViewportOverlayContext value={overlayRoot}>
-          <div {...stylex.props(shell.root)}>
+          <div {...stylex.props(shell.root, pathname === "/" && shell.home)}>
             <motion.div
               data-scroll-progress=""
               aria-hidden="true"

@@ -1,6 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 
-import type { DeskItem } from "#lib/shared/desk/desk-item.schema";
+import type { DeskItem } from "#lib/shared/desk/desk-configuration.schema";
 
 import { foundation } from "../../_design/foundation.style";
 import { objectMarker } from "../../_design/object-feedback.stylex";
@@ -13,19 +13,17 @@ export function Letter({
 }: Readonly<Pick<Extract<DeskItem, { type: "letter" }>, "name" | "config">>) {
   return (
     <div {...stylex.props(styles.letter, objectMarker)}>
+      <span {...stylex.props(styles.letterUnder)} />
       <DeskLink
         href="/thoughts"
         aria-label="Read thoughts"
-        {...stylex.props(foundation.objectLink)}
+        {...stylex.props(foundation.objectLink, styles.letterSheet)}
       >
-        <span {...stylex.props(styles.letterUnder)} />
-        <span {...stylex.props(styles.letterSheet)}>
-          <span {...stylex.props(styles.letterHeader)}>{config.heading}</span>
-          <span {...stylex.props(styles.letterCopy)}>{config.body}</span>
-          <span {...stylex.props(styles.signature)}>{config.signature}</span>
-        </span>
-        <span {...stylex.props(styles.clip)} aria-hidden="true" />
+        <span {...stylex.props(styles.letterHeader)}>{config.heading}</span>
+        <span {...stylex.props(styles.letterCopy)}>{config.body}</span>
+        <span {...stylex.props(styles.signature)}>{config.signature}</span>
       </DeskLink>
+      <span {...stylex.props(styles.clip)} aria-hidden="true" />
       <ObjectFeedback navigable label={name} xstyle={styles.letterFrame} />
     </div>
   );

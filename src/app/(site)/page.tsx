@@ -21,7 +21,6 @@ async function HomeDesk() {
       <ReadingDesk
         audioAssets={audioAssets}
         items={configuration.items}
-        layouts={configuration.layouts}
         programs={{
           stats: <DisplayStats />,
           guestbook: <DisplayGuestbook />,

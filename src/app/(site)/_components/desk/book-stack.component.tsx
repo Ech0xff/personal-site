@@ -1,6 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 
-import type { DeskItem } from "#lib/shared/desk/desk-item.schema";
+import type { DeskItem } from "#lib/shared/desk/desk-configuration.schema";
 
 import { foundation } from "../../_design/foundation.style";
 import { objectMarker } from "../../_design/object-feedback.stylex";

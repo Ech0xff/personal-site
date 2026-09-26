@@ -4,6 +4,7 @@ import * as stylex from "@stylexjs/stylex";
 import type { ReactNode } from "react";
 
 import {
+  font,
   media,
   motionToken,
   shadow,
@@ -31,6 +32,12 @@ const styles = stylex.create({
     width: "100%",
     maxWidth: "100%",
     textAlign: "center",
+  },
+  empty: {
+    marginTop: "24px",
+    color: material.playerText,
+    fontFamily: font.mono,
+    fontSize: font.small,
   },
   deck: { position: "relative", paddingRight: "60px" },
   platter: { position: "relative" },
@@ -152,14 +159,21 @@ function RecordDeck({
   return (
     <div {...stylex.props(styles.deck)}>
       <div {...stylex.props(styles.platter, objectMarker)}>
-        <ObjectFeedback label={name} round />
+        <ObjectFeedback label={name} />
         {spectrum}
         <button
           type="button"
           {...stylex.props(styles.button)}
-          aria-label={active ? "Pause music" : "Play music"}
+          aria-label={
+            toggle
+              ? active
+                ? "Pause music"
+                : "Play music"
+              : "No recordings yet"
+          }
           aria-pressed={active}
           aria-describedby={statusId}
+          disabled={!toggle}
           onClick={toggle}
         >
           <span
@@ -182,38 +196,16 @@ function RecordDeck({
     </div>
   );
 }
-const noop = () => {};
-export function RecordPlayerPreview({ name, tracks }: RecordProps) {
-  const track = tracks.at(0);
-  return (
-    <section {...stylex.props(styles.root, recordMarker)}>
-      {track ? (
-        <RecordDeck name={name}>
-          <RecordControls
-            title={track.title}
-            active={false}
-            toggle={noop}
-            position={0}
-            duration={track.duration}
-            previous={noop}
-            next={noop}
-            seek={noop}
-          />
-        </RecordDeck>
-      ) : (
-        <p>No recordings yet.</p>
-      )}
-    </section>
-  );
-}
-
 type RecordProps = Readonly<{ name: string; tracks: readonly AudioTrack[] }>;
 export function RecordPlayer(props: RecordProps) {
   if (!props.tracks.length)
     return (
-      <section {...stylex.props(styles.root)} aria-label={props.name}>
-        <ObjectFeedback label={props.name} />
-        <p>No recordings yet.</p>
+      <section
+        {...stylex.props(styles.root, recordMarker)}
+        aria-label={props.name}
+      >
+        <RecordDeck name={props.name} />
+        <p {...stylex.props(styles.empty)}>No recordings yet.</p>
       </section>
     );
   return <PlayableRecordPlayer {...props} />;

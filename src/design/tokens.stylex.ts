@@ -156,7 +156,6 @@ export const space = stylex.defineVars({
 });
 export const shape = stylex.defineVars({
   fine: "1px",
-  feedback: "2px",
   small: "4px",
   control: "8px",
   panel: "18px",
@@ -185,9 +184,12 @@ const lightShadows = {
 export const shadow = stylex.defineVars(lightShadows);
 export const lightShadowTheme = stylex.createTheme(shadow, lightShadows);
 export const media = stylex.defineConsts({
-  deskPhone: "@container desk (max-width: 600px)",
-  deskTablet: "@container desk (min-width: 601px) and (max-width: 1023px)",
-  deskCompact: "@container desk (max-width: 1023px)",
+  deskWide: "@media (min-width: 1200px)",
+  deskShort: "@media (min-width: 1200px) and (max-height: 700px)",
+  deskPhone: "@container desk (max-width: 767px)",
+  deskTablet: "@container desk (min-width: 768px) and (max-width: 1199px)",
+  deskCompact: "@container desk (max-width: 1199px)",
+  displayNarrow: "@container desk-display (max-width: 359px)",
   tocWide: "@media (min-width: 1280px)",
   touch: "@media (hover: none)",
   phone: "@media (max-width: 600px)",

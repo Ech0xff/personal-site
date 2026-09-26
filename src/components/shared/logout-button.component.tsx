@@ -11,12 +11,19 @@ const styles = stylex.create({
 export default function LogoutButton({
   xstyle,
   labelStyle,
+  onBeforeLogout,
 }: {
   xstyle?: StyleInput;
   labelStyle?: StyleInput;
+  onBeforeLogout?: () => boolean;
 }) {
   return (
-    <form action={logout}>
+    <form
+      action={logout}
+      onSubmit={(event) => {
+        if (onBeforeLogout && !onBeforeLogout()) event.preventDefault();
+      }}
+    >
       <Button
         type="submit"
         variant="ghost"

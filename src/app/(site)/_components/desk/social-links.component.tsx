@@ -2,7 +2,7 @@ import * as stylex from "@stylexjs/stylex";
 
 import { Magnetic } from "#components/ui/magnetic.component";
 import { color, motionToken, shape, space } from "#design/tokens.stylex";
-import type { IntroConfig } from "#lib/shared/desk/desk-item.schema";
+import type { IntroConfig } from "#lib/shared/desk/desk-configuration.schema";
 
 import { foundation } from "../../_design/foundation.style";
 

@@ -85,6 +85,13 @@ route-shared hooks. Keep layout-specific content beside its layout. Share code
 when actual reuse warrants it; split modules for independent responsibilities
 or runtime dependencies, not for every private declaration.
 
+Homepage content editors and audio-library UI belong to the dashboard `home`
+feature. The public desk owns only its fixed responsive composition and visitor
+interactions. Keep item positions, geometry, and appearance in public components;
+persist only item IDs, types, names, and content config. Do not add visitor layout
+storage, public administration state, or imports between public and dashboard
+route components.
+
 Browser image compression belongs in `lib/client/images`; general file uploads
 belong in `lib/client/files`. Auth, content, and storage I/O belong in their
 `lib/server` domains. Server Actions authenticate before invoking services. The shared utility barrel exports only environment-neutral

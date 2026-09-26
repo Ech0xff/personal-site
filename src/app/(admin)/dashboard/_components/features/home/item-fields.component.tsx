@@ -3,7 +3,7 @@ import * as stylex from "@stylexjs/stylex";
 import { PaperField } from "#components/ui/paper-field.component";
 import type { DeskItem } from "#lib/shared/desk/desk-item.schema";
 
-import { editorStyles as styles } from "./item-editor.style";
+import { editorStyles as styles } from "./home-editor.style";
 import { PassageEditor } from "./passage-editor.component";
 type Props = Readonly<{
   item: DeskItem;

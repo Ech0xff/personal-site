@@ -1,6 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { font, shape, space, material } from "#design/tokens.stylex";
+import { font, shape, space, material, media } from "#design/tokens.stylex";
 
 export const panel = stylex.create({
   statLink: {
@@ -113,8 +113,14 @@ export const panel = stylex.create({
   form: {
     height: "100%",
     display: "grid",
-    gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
-    gridTemplateRows: "repeat(3, 36px) minmax(0, 1fr)",
+    gridTemplateColumns: {
+      default: "minmax(0, 1fr) minmax(0, 1fr)",
+      [media.displayNarrow]: "minmax(0, 1fr)",
+    },
+    gridTemplateRows: {
+      default: "repeat(3, 36px) minmax(0, 1fr)",
+      [media.displayNarrow]: "repeat(3, 44px) minmax(72px, 1fr) 44px",
+    },
     gap: space.xxs,
   },
   identity: {
@@ -137,9 +143,10 @@ export const panel = stylex.create({
   },
   messageIcon: { marginTop: space.xxs },
   messageField: {
-    gridColumn: "2",
-    gridRowEnd: "4",
-    gridRowStart: "1",
+    gridColumnEnd: { default: "3", [media.displayNarrow]: "2" },
+    gridColumnStart: { default: "2", [media.displayNarrow]: "1" },
+    gridRowEnd: { default: "4", [media.displayNarrow]: "5" },
+    gridRowStart: { default: "1", [media.displayNarrow]: "4" },
     alignItems: "start",
     gridTemplateRows: "minmax(0, 1fr)",
     flexGrow: 1,
@@ -156,7 +163,7 @@ export const panel = stylex.create({
     backgroundColor: "transparent",
     color: material.phosphor,
     fontFamily: font.mono,
-    fontSize: font.small,
+    fontSize: { default: font.small, [media.displayNarrow]: "16px" },
     lineHeight: 1.6,
     caretColor: material.phosphor,
     // oxlint-disable-next-line @stylexjs/valid-styles -- Progressive CSS caret-shape is not yet in StyleX's property list.

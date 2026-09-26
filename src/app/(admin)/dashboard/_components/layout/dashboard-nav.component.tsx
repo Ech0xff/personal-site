@@ -6,6 +6,7 @@ import {
   BookOpen,
   FileText,
   FolderOpen,
+  House,
   MessageCircle,
 } from "lucide-react";
 import Link from "next/link";
@@ -17,8 +18,10 @@ import { Magnetic } from "#components/ui/magnetic.component";
 import { ROUTES } from "#lib/shared/routes/routes.const";
 
 import { styles } from "./dashboard-nav.style";
+import { useDashboardNavigation } from "./dashboard-navigation.component";
 
 const navItems = [
+  { name: "Homepage", path: ROUTES.DASHBOARD.HOME, icon: House },
   { name: "Guestbook", path: ROUTES.DASHBOARD.GUESTBOOK, icon: BookOpen },
   { name: "Posts", path: ROUTES.DASHBOARD.POSTS, icon: FileText },
   { name: "Thoughts", path: ROUTES.DASHBOARD.THOUGHTS, icon: MessageCircle },
@@ -27,11 +30,15 @@ const navItems = [
 
 export default function DashboardNav() {
   const pathname = usePathname();
+  const { allowNavigation } = useDashboardNavigation();
   return (
     <aside {...stylex.props(styles.sidebar)}>
       <div {...stylex.props(styles.header)}>
         <Link
           href={ROUTES.HOME}
+          onNavigate={(event) => {
+            if (!allowNavigation()) event.preventDefault();
+          }}
           aria-label="Back"
           title="Back"
           {...stylex.props(styles.back)}
@@ -48,6 +55,10 @@ export default function DashboardNav() {
           <Link
             key={path}
             href={path}
+            onNavigate={(event) => {
+              if (pathname !== path && !allowNavigation())
+                event.preventDefault();
+            }}
             aria-label={name}
             title={name}
             aria-current={pathname === path ? "page" : undefined}
@@ -61,7 +72,10 @@ export default function DashboardNav() {
         ))}
       </nav>
       <div {...stylex.props(styles.logout)}>
-        <LogoutButton labelStyle={styles.label} />
+        <LogoutButton
+          labelStyle={styles.label}
+          onBeforeLogout={allowNavigation}
+        />
       </div>
     </aside>
   );

@@ -27,8 +27,14 @@ export const styles = stylex.create({
     position: "absolute",
     left: "-15px",
     top: "24px",
-    width: "175px",
-    height: "217px",
+    width: {
+      default: "175px",
+      [media.deskWide]: "clamp(122px, 19.5dvh, 175px)",
+    },
+    height: {
+      default: "217px",
+      [media.deskWide]: "clamp(151px, 24.2dvh, 217px)",
+    },
     borderTopLeftRadius: "3px",
     borderTopRightRadius: "6px",
     borderBottomRightRadius: "6px",
@@ -42,8 +48,14 @@ export const styles = stylex.create({
   },
   book: {
     position: "relative",
-    width: "175px",
-    height: "224px",
+    width: {
+      default: "175px",
+      [media.deskWide]: "clamp(122px, 19.5dvh, 175px)",
+    },
+    height: {
+      default: "224px",
+      [media.deskWide]: "clamp(156px, 25dvh, 224px)",
+    },
     backgroundColor: material.book,
     backgroundImage: material.cloth,
     color: material.bookInk,
@@ -52,10 +64,10 @@ export const styles = stylex.create({
     borderTopRightRadius: "6px",
     borderBottomRightRadius: "6px",
     borderBottomLeftRadius: "3px",
-    paddingTop: "24px",
-    paddingRight: "24px",
-    paddingBottom: "20px",
-    paddingLeft: "28px",
+    paddingTop: { default: "24px", [media.deskShort]: "16px" },
+    paddingRight: { default: "24px", [media.deskShort]: "16px" },
+    paddingBottom: { default: "20px", [media.deskShort]: "14px" },
+    paddingLeft: { default: "28px", [media.deskShort]: "20px" },
     transform: {
       default: "rotate(-3deg)",
       [stylex.when.ancestor(":hover", objectMarker)]:
@@ -83,7 +95,11 @@ export const styles = stylex.create({
   bookTitle: {
     whiteSpace: "pre-line",
     fontFamily: font.display,
-    fontSize: "32px",
+    fontSize: {
+      default: "clamp(22px, 3.56dvh, 32px)",
+      [media.deskShort]: "22px",
+      [media.deskCompact]: "32px",
+    },
     fontWeight: font.regular,
     lineHeight: 1.05,
     letterSpacing: "-0.03em",

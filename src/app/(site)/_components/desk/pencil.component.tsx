@@ -2,8 +2,6 @@ import * as stylex from "@stylexjs/stylex";
 
 import { material, shadow } from "#design/tokens.stylex";
 
-import { objectMarker } from "../../_design/object-feedback.stylex";
-import { ObjectFeedback } from "../object-feedback.component";
 const styles = stylex.create({
   root: { position: "relative", width: "118px", height: "35px" },
   pencil: {
@@ -26,13 +24,12 @@ const styles = stylex.create({
     clipPath: "polygon(0 0,100% 0,50% 100%)",
   },
 });
-export function Pencil({ name }: Readonly<{ name: string }>) {
+export function Pencil() {
   return (
-    <div {...stylex.props(styles.root, objectMarker)}>
+    <div {...stylex.props(styles.root)}>
       <span {...stylex.props(styles.pencil)}>
         <i {...stylex.props(styles.tip)} />
       </span>
-      <ObjectFeedback label={name} />
     </div>
   );
 }

@@ -45,7 +45,11 @@ const styles = stylex.create({
   },
   screen: {
     position: "relative",
-    height: "280px",
+    height: {
+      default: "280px",
+      [media.displayNarrow]: "430px",
+      [media.deskWide]: "clamp(200px, 30dvh, 280px)",
+    },
     borderRadius: "5px",
     paddingInline: space.md,
     paddingTop: space.md,
@@ -73,7 +77,7 @@ const styles = stylex.create({
   button: {
     display: "grid",
     placeItems: "center",
-    width: "32px",
+    width: shape.touch,
     minWidth: 0,
     height: shape.touch,
     fontFamily: font.mono,
@@ -92,7 +96,8 @@ const styles = stylex.create({
   viewport: { position: "relative", height: "100%", overflow: "hidden" },
   panel: {
     height: "100%",
-    overflow: "hidden",
+    overflowY: { default: "hidden", [media.deskWide]: "auto" },
+    scrollbarWidth: "thin",
     paddingRight: "2px",
   },
   program: {
@@ -100,6 +105,7 @@ const styles = stylex.create({
     animationName: { default: enter, [media.reduce]: "none" },
     animationDuration: motionToken.displaySwitch,
   },
+  guestbookProgram: { minHeight: { default: 0, [media.deskWide]: "220px" } },
   scan: {
     position: "absolute",
     top: 0,
@@ -117,14 +123,11 @@ const styles = stylex.create({
 export function RetroComputer({
   programs,
   name,
-  preview = false,
 }: Readonly<{
   programs: Readonly<Record<DisplayProgram, ReactNode>>;
   name: string;
-  preview?: boolean;
 }>) {
-  const [selectedProgram, setProgram] = useAtom(displayProgramAtom);
-  const program = preview ? "terminal" : selectedProgram;
+  const [program, setProgram] = useAtom(displayProgramAtom);
   const panelId = useId();
   return (
     <section
@@ -141,7 +144,14 @@ export function RetroComputer({
           >
             {displayPrograms.map(({ id }) => (
               <Activity key={id} mode={id === program ? "visible" : "hidden"}>
-                <div {...stylex.props(styles.program)}>{programs[id]}</div>
+                <div
+                  {...stylex.props(
+                    styles.program,
+                    id === "guestbook" && styles.guestbookProgram,
+                  )}
+                >
+                  {programs[id]}
+                </div>
               </Activity>
             ))}
           </section>

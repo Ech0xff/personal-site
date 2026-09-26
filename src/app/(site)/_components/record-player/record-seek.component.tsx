@@ -26,14 +26,12 @@ export function RecordSeek({
     duration > 0 ? Math.min(1, Math.max(0, position / duration)) : 0;
   const dot = arcPoint(progress);
   const seekAtPointer = (event: PointerEvent<SVGPathElement>) => {
-    const bounds = event.currentTarget.ownerSVGElement?.getBoundingClientRect();
-    if (!bounds) return;
-    seek(
-      arcProgress(
-        ((event.clientX - bounds.left) / bounds.width) * 240,
-        ((event.clientY - bounds.top) / bounds.height) * 240,
-      ) * duration,
+    const matrix = event.currentTarget.ownerSVGElement?.getScreenCTM();
+    if (!matrix) return;
+    const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(
+      matrix.inverse(),
     );
+    seek(arcProgress(point.x, point.y) * duration);
   };
   return (
     <svg viewBox="0 0 240 240" {...stylex.props(styles.ring)}>

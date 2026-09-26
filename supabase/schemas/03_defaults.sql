@@ -17,6 +17,19 @@ INSERT INTO public.configs(key, value) VALUES ('desk.configuration', 'null')
 ON CONFLICT (key) DO NOTHING;
 DELETE FROM public.configs WHERE key = 'desk.workspace';
 
+-- Scene geometry now lives in source; preserve saved content and item order.
+WITH desk_content AS (
+  SELECT key, jsonb_set(value::jsonb - 'layouts', '{items}', (
+    SELECT COALESCE(jsonb_agg(item - 'appearance' ORDER BY ordinal), '[]'::jsonb)
+    FROM jsonb_array_elements(value::jsonb->'items') WITH ORDINALITY AS items(item, ordinal)
+  )) AS value
+  FROM public.configs
+  WHERE key = 'desk.configuration' AND jsonb_typeof(value::jsonb->'items') = 'array'
+)
+UPDATE public.configs AS configs SET value = desk_content.value
+FROM desk_content
+WHERE configs.key = desk_content.key AND configs.value::jsonb IS DISTINCT FROM desk_content.value;
+
 INSERT INTO storage.buckets (id, name, public, file_size_limit) VALUES ('files', 'files', true, 52428800) ON CONFLICT (id) DO UPDATE SET public = true, file_size_limit = EXCLUDED.file_size_limit;
 
 INSERT INTO storage.buckets (id, name, public, file_size_limit)

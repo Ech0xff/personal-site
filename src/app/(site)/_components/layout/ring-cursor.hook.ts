@@ -3,20 +3,17 @@ import { useEffect, type RefObject } from "react";
 
 import { color } from "#design/tokens.stylex";
 
-type Mode = "idle" | "hover" | "handle" | "pressed" | "dragging";
+type Mode = "idle" | "hover" | "pressed";
 const scales: Record<Mode, number> = {
   idle: 1,
   hover: 1.45,
-  handle: 1.6,
   pressed: 0.78,
-  dragging: 1.25,
 };
 
 export function useRingCursor(ref: RefObject<HTMLDivElement | null>) {
   const x = useMotionValue(-100);
   const y = useMotionValue(-100);
   const scale = useMotionValue(1);
-  const rotate = useMotionValue(0);
   const rippleScale = useMotionValue(1);
   const rippleOpacity = useMotionValue(0);
   useEffect(() => {
@@ -29,14 +26,11 @@ export function useRingCursor(ref: RefObject<HTMLDivElement | null>) {
     let pressed = false;
     let mode: Mode = "idle";
     let pointer = { x: 0, y: 0 };
-    let heldItem: Element | null = null;
     const setMode = (next: Mode, refresh = false) => {
       if (mode === next && !refresh) return;
       mode = next;
       layer.dataset.ringState = next;
       scale.stop();
-      rotate.stop();
-      visual.style.borderStyle = next === "dragging" ? "dashed" : "solid";
       visual.style.borderColor = next === "idle" ? color.text : color.accent;
       if (reduced) scale.set(scales[next]);
       else
@@ -46,42 +40,22 @@ export function useRingCursor(ref: RefObject<HTMLDivElement | null>) {
           damping: 24,
           mass: 0.55,
         });
-      rotate.set(0);
-      if (next === "dragging" && !reduced)
-        void animate(rotate, 360, {
-          duration: 2.4,
-          ease: "linear",
-          repeat: Infinity,
-        });
     };
     const appearance = (target: EventTarget | null) => {
       if (pressed) {
-        setMode(
-          heldItem?.getAttribute("data-item-state") === "dragging"
-            ? "dragging"
-            : "pressed",
-        );
+        setMode("pressed");
         return;
       }
       const element = target instanceof Element ? target : null;
       const control = element?.closest(
-        "a[href],button,input,textarea,select,[role=button],[role=slider],[data-item-drag-handle],[data-item-draggable=true]",
+        "a[href],button,input,textarea,select,[role=button],[role=slider]",
       );
       const enabled =
         control &&
         !control.matches(":disabled,[aria-disabled=true]") &&
         !control.closest("[inert]");
-      setMode(
-        enabled
-          ? control.matches(
-              "[data-item-drag-handle],[data-item-draggable=true]",
-            )
-            ? "handle"
-            : "hover"
-          : "idle",
-      );
+      setMode(enabled ? "hover" : "idle");
     };
-    const observer = new MutationObserver(() => appearance(heldItem));
     const show = () => {
       if (!layer.matches(":popover-open")) layer.showPopover();
       layer.style.opacity = "1";
@@ -92,8 +66,6 @@ export function useRingCursor(ref: RefObject<HTMLDivElement | null>) {
       layer.style.opacity = "0";
       visible = false;
       pressed = false;
-      heldItem = null;
-      observer.disconnect();
       setMode("idle");
       rippleOpacity.stop();
       rippleScale.stop();
@@ -116,24 +88,12 @@ export function useRingCursor(ref: RefObject<HTMLDivElement | null>) {
     const down = (event: PointerEvent) => {
       if (!mouse(event)) return;
       pressed = true;
-      heldItem =
-        event.target instanceof Element
-          ? event.target.closest("[data-desk-item]")
-          : null;
-      observer.disconnect();
-      if (heldItem)
-        observer.observe(heldItem, {
-          attributes: true,
-          attributeFilter: ["data-item-state"],
-        });
       appearance(event.target);
     };
     const up = (event: PointerEvent) => {
       if (!mouse(event)) return;
       const released = pressed;
       pressed = false;
-      heldItem = null;
-      observer.disconnect();
       appearance(document.elementFromPoint(event.clientX, event.clientY));
       if (released && visible && !reduced) {
         rippleScale.stop();
@@ -146,8 +106,6 @@ export function useRingCursor(ref: RefObject<HTMLDivElement | null>) {
     };
     const cancel = () => {
       pressed = false;
-      heldItem = null;
-      observer.disconnect();
       appearance(document.elementFromPoint(pointer.x, pointer.y));
     };
     const escape = (event: KeyboardEvent) => {
@@ -207,7 +165,6 @@ export function useRingCursor(ref: RefObject<HTMLDivElement | null>) {
       preference.removeEventListener("change", motionPreference);
       hide();
       scale.stop();
-      rotate.stop();
       document.documentElement.removeAttribute("data-ring-cursor");
       document.removeEventListener("pointermove", move, true);
       document.removeEventListener("pointerdown", down, true);
@@ -219,6 +176,6 @@ export function useRingCursor(ref: RefObject<HTMLDivElement | null>) {
       window.removeEventListener("scroll", scroll, true);
       window.removeEventListener("blur", hide);
     };
-  }, [ref, x, y, scale, rotate, rippleScale, rippleOpacity]);
-  return { x, y, scale, rotate, rippleScale, rippleOpacity };
+  }, [ref, x, y, scale, rippleScale, rippleOpacity]);
+  return { x, y, scale, rippleScale, rippleOpacity };
 }

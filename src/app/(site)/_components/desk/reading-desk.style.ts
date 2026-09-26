@@ -9,7 +9,6 @@ import {
   lighting,
   lampIntensity,
   material,
-  shape,
 } from "#design/tokens.stylex";
 
 const wave = stylex.keyframes({
@@ -18,27 +17,35 @@ const wave = stylex.keyframes({
   "14%, 28%": { transform: "rotate(-10deg)" },
 });
 export const desk = stylex.create({
-  viewport: { position: "relative", overflowX: "clip" },
-  fixedViewport: { overflow: "clip", overflowClipMargin: shape.header },
-  scaledCanvas: { position: "relative" },
   scene: {
     position: "relative",
     width: "100%",
-    maxWidth: "1600px",
+    maxWidth: "1440px",
     marginInline: "auto",
-  },
-  frame: {
-    position: "relative",
     containerType: "inline-size",
     containerName: "desk",
-    transformOrigin: "top left",
+    height: { default: "auto", [media.deskWide]: "100%" },
   },
-  canvas: { position: "relative", width: "100%" },
+  grid: {
+    position: "relative",
+    height: { default: "100%", [media.deskCompact]: "auto" },
+    display: { default: "block", [media.deskCompact]: "grid" },
+    gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
+    columnGap: 0,
+    rowGap: { default: "48px", [media.deskPhone]: "40px" },
+    paddingInline: { default: 0, [media.deskCompact]: "24px" },
+    paddingBottom: { default: 0, [media.deskCompact]: "64px" },
+    alignItems: "center",
+  },
   glow: {
     position: "absolute",
-    width: { default: "1150px", [media.deskCompact]: "140%" },
-    height: "min(820px, 100%)",
-    top: "0px",
+    width: "min(1150px, 100%)",
+    height: {
+      default: "100%",
+      [media.deskCompact]: "900px",
+      [media.deskPhone]: "760px",
+    },
+    top: { default: "-6%", [media.deskCompact]: "0px" },
     left: "50%",
     transform: "translateX(-50%)",
     backgroundImage: `radial-gradient(ellipse, ${material.glow} 0%, ${lighting.warmth} 40%, transparent 70%)`,
@@ -48,17 +55,21 @@ export const desk = stylex.create({
     transitionTimingFunction: "ease",
     pointerEvents: "none",
   },
-  intro: { width: "100%", textAlign: "center" },
+  intro: {
+    width: "100%",
+    textAlign: "center",
+    overflowWrap: "anywhere",
+  },
   eyebrow: {
     fontFamily: font.mono,
-    fontSize: font.large,
+    fontSize: { default: "18px", [media.deskCompact]: font.large },
     letterSpacing: "0.05em",
     color: color.muted,
-    marginBottom: space.md,
+    marginBottom: { default: "10px", [media.deskCompact]: space.md },
   },
   wave: {
     display: "inline-block",
-    fontSize: "28px",
+    fontSize: { default: "23px", [media.deskCompact]: "28px" },
     marginRight: space.xs,
     transformOrigin: "70% 75%",
     animationName: { default: wave, [media.reduce]: "none" },
@@ -69,8 +80,9 @@ export const desk = stylex.create({
   title: {
     fontFamily: font.handwritten,
     fontSize: {
-      default: "clamp(60px, 6cqw, 90px)",
-      [media.deskTablet]: "80px",
+      default: "clamp(58px, 5cqw, 72px)",
+      [media.deskShort]: "58px",
+      [media.deskTablet]: "72px",
       [media.deskPhone]: "clamp(46px, 13cqw, 72px)",
     },
     letterSpacing: "-0.035em",
@@ -80,19 +92,20 @@ export const desk = stylex.create({
   },
   name: {
     display: "inline-block",
+    maxWidth: "100%",
     fontWeight: font.regular,
     fontFeatureSettings: '"liga" 1, "dlig" 1',
   },
   role: {
     fontFamily: font.display,
-    fontSize: { default: "19px", [media.deskPhone]: "18px" },
-    marginTop: space.md,
-    marginBottom: space.md,
+    fontSize: { default: "17px", [media.deskCompact]: "18px" },
+    marginTop: { default: "10px", [media.deskCompact]: space.md },
+    marginBottom: { default: "12px", [media.deskCompact]: space.md },
   },
   body: {
     fontFamily: font.mono,
     fontSize: { default: "13px", [media.deskPhone]: "13px" },
-    lineHeight: 1.95,
+    lineHeight: { default: 1.8, [media.deskCompact]: 1.95 },
     color: color.muted,
     maxWidth: "400px",
     marginInline: "auto",

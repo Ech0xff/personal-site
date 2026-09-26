@@ -6,23 +6,12 @@ export function storedPreference<Value>(
   key: string,
   initialValue: Value,
   schema: z.ZodType<Value>,
-  migrate?: (raw: string) => string,
 ) {
   const storage = createJSONStorage<Value>(
     () => ({
       getItem: (name) => {
         try {
-          const raw = globalThis.localStorage.getItem(name);
-          if (raw === null || !migrate) return raw;
-          const migrated = migrate(raw);
-          if (migrated !== raw) {
-            try {
-              globalThis.localStorage.setItem(name, migrated);
-            } catch {
-              /* Restore readable preferences even when writes are unavailable. */
-            }
-          }
-          return migrated;
+          return globalThis.localStorage.getItem(name);
         } catch {
           return null;
         }

@@ -36,6 +36,15 @@ export const shell = stylex.create({
     pointerEvents: "none",
     zIndex: 90,
   },
+  home: {
+    height: { default: null, [media.deskWide]: "100dvh" },
+    minHeight: { default: null, [media.deskWide]: 0 },
+    overflow: { default: null, [media.deskWide]: "clip" },
+  },
+  homeContent: {
+    height: { default: null, [media.deskWide]: "100%" },
+    minHeight: { default: null, [media.deskWide]: 0 },
+  },
   header: {
     width: "100%",
     display: "flex",
@@ -121,10 +130,6 @@ export const shell = stylex.create({
   },
   currentDot: { opacity: 1 },
   content: { display: "flex", flexDirection: "column", minHeight: "100svh" },
-  homeContent: {
-    height: { default: "100svh", [media.compact]: "auto" },
-    overflowY: { default: "clip", [media.compact]: "visible" },
-  },
   main: { flexGrow: 1, minHeight: 0 },
   skip: {
     position: "fixed",

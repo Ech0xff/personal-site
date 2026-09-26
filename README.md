@@ -62,8 +62,8 @@ GitHub Actions runs formatting, lint, types, and tests. Husky's pre-commit hook 
 
 ## Content and Files
 
-`/dashboard` opens Posts; navigation also includes Thoughts, Guestbook, and
-Files. Content uses BlockNote with manual saving, publish time, and visibility.
+`/dashboard` opens Posts; navigation also includes Homepage, Thoughts, Guestbook,
+and Files. Content uses BlockNote with manual saving, publish time, and visibility.
 New entries start hidden. Show makes content public regardless of its publish time.
 
 Posts derive their title from the first top-level heading in `content`;
@@ -77,6 +77,19 @@ The editor supports native columns, media, saved link cards, highlighted code, a
 PlantUML blocks. Reading pages use the saved document. Public lists, articles, and
 rendering use Cache Components; content mutations invalidate their cache tags.
 The public pages are `/`, `/posts`, `/posts/<uuid>`, `/thoughts`, and `/system`.
+
+`/dashboard/home` manages the homepage introduction, social links, book and note
+copy, display terminal passages, and music playlist. Save changes publishes the
+whole content form; Discard changes restores its last saved state. Failed saves
+and expired sessions retain the current inputs. View homepage opens the published
+page in a new tab. Unsaved changes prompt before dashboard links, logout, refresh,
+or closing the page; drafts are kept only in page memory, without browser-history
+interception or recovery after leaving the page.
+
+Audio uploads, imports, and retries run independently of the content draft.
+Browser uploads must finish before leaving; server-side processing continues
+afterward. Playlist changes publish only when saved. Removing a playlist entry
+does not delete the recording. Passage and playlist order use move up/down buttons.
 
 Files use the public `files` bucket, up to 50 MiB per file. Browser compression
 converts JPEG, PNG, and WebP images to WebP (1920px maximum, 2 MB target); other file
@@ -92,22 +105,18 @@ reads of content tables are restricted to published rows. Configs are private;
 constrained RPCs expose public desk data and interactions. Dashboard reads and
 writes require the admin session, with privileged database I/O on the server.
 
-`desk.*` keys hold counters, guestbook data, and the saved desk configuration.
+`desk.*` keys hold counters, guestbook data, and the saved homepage content.
 Each `audio.asset.<id>` key holds one audio resource and its processing state.
 The desk playlist references asset IDs; saving the desk does not overwrite audio
 jobs. Guestbook notes are public immediately, including optional email addresses;
-moderation lives at `/dashboard/guestbook`. Visitor desk positions remain local to
-the browser. Administrator edits, including Apply, shuffle, and drag,
-stay local until Save submits the complete desk configuration in one Server Action.
-Failed saves retain the draft; exiting with unsaved changes asks before discarding.
-Jotai retains the server snapshot separately from visitor-local layouts and the
-edit draft. The derived desk state uses local layouts only in view mode; edit and
-preview share a draft initialized from the server snapshot. Reset restores the
-current breakpoint from the latest snapshot. Entering edit mode and opening an
-item editor use data already loaded with the page. A persisted `isAdminAtom`
-controls the edit entry, set after dashboard authentication and cleared on the
-login page. It is only a UI hint: save and audio actions still authenticate on
-the server, and the public homepage does not read the admin session.
+moderation lives at `/dashboard/guestbook`. `desk.configuration` contains only
+`items` with `id`, `type`, `name`, and content `config`. IDs and item types are
+unique; missing items and empty playlists remain absent. A null configuration
+uses the source-controlled defaults. Layout and appearance belong to the public
+components, not the database or browser storage. The public homepage has no
+administration mode; dashboard reads and content/audio actions authenticate with
+the admin token session. Saving homepage content also invalidates public audio
+selection through the shared desk configuration cache tag.
 
 Schema sources are in `supabase/schemas`: `02_tables.sql` holds application
 tables and indexes, `03_defaults.sql` provisions required records and buckets,
@@ -135,26 +144,37 @@ The Events feature and its desktop calendar are retired. Existing databases may
 retain their unused `events` table and records; this source change does not delete
 them. Apply the updated `04_rpc.sql` definitions to remove the old count and visit
 path from public RPCs. Before deploying this version to an existing database,
-remove items with type `calendar` and their placement entries from all three
-layouts in `desk.configuration`.
+remove items with type `calendar` from `desk.configuration`.
 
-The desktop scene fits within the viewport without page or canvas scrolling;
-tablet and phone layouts remain vertically scrollable. The display is landscape,
-with guestbook identity fields beside the message area. Its default scale is 0.85;
-when updating an existing saved layout, apply that scale to its display placement
-at each breakpoint.
+The homepage uses a scattered composition at every breakpoint. Smaller screens
+reflow objects into staggered groups with different horizontal offsets, spacing,
+and angles rather than equal columns or centered rows. Paper layers use rigid
+rotation, without shearing their shapes or text. Every breakpoint keeps
+all configured objects, including the coffee and pencil. The wide desktop
+homepage does not scroll; object sizes respond to the window height. The lamp
+and introduction share a centered axis, and introduction and note text have no
+internal scroll containers. Tablet and phone layouts scroll vertically.
+Article routes retain their own scrolling behavior. The display uses a real
+responsive width and stacks guestbook fields on narrow screens. Visitors cannot
+drag, resize, shuffle, or save object positions; legacy browser positions are
+ignored. Existing typography, lighting, and light/dark themes remain shared tokens.
 
 ### Upgrade Existing Data
 
-To remove stored content titles and move the old audio table into configs without
-resetting data, first run the read-only check:
+To remove obsolete homepage layout/appearance fields, stored content titles, and
+move the old audio table into configs without resetting data, first run the
+read-only check:
 
 ```bash
 bun scripts/simplify-database.ts
 ```
 
-Pause the application and all content/audio writers; wait for active imports to
-finish. Then apply, regenerate types, and restart with the updated application:
+For the homepage content cutover, pause management writes and wait for active
+imports to finish. Deploy the updated application before removing stored layout
+fields: it accepts both old objects and the new content-only objects. Then apply
+the cleanup and reopen management pages with the new application. For installations
+that also require the older title/audio migration, keep the application paused
+through the entire migration and restart only after the matching schema is ready:
 
 ```bash
 bun scripts/simplify-database.ts --apply
@@ -173,10 +193,15 @@ Apply writes a full `database.dump` and `before.json` outside Git, by default un
 `MIGRATION_BACKUP_DIR`. It aborts on mismatched titles, conflicting config records,
 active audio jobs, or data changes after preflight. A locked transaction normalizes legacy config JSON to JSONB, copies and
 checks every audio field, replaces the RPC source, then removes the old table and
-columns. Repeating a completed migration is a no-op. It does not move or delete
+columns. The homepage cleanup removes only `layouts` and item `appearance`,
+preserving item IDs, types, names, content, playlist order, empty playlists, and
+null defaults. Invalid content or duplicate item types abort preflight rather than
+discarding data. Repeating a completed migration is a no-op. It does not move or delete
 Storage objects or create migration history.
 
-Afterward verify record counts, titles, playlists, saves, and audio imports. For
+Afterward verify record counts, titles, Homepage saves, playlists, and audio imports.
+Rolling back to an application that requires layouts also requires restoring the
+matching configuration snapshot. For
 recovery, restore the dump into an isolated database with `pg_restore` and pair the
 recovered database with the previous application revision. Reconcile any newer
 writes before switching back. PostgreSQL dumps contain Storage metadata, not file

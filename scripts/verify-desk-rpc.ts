@@ -4,6 +4,8 @@ import { prepareMigration } from "./simplify-database";
 const container =
   process.env.SUPABASE_DB_CONTAINER ?? "supabase_db_personal-site";
 const database = `desk_rpc_check_${Date.now()}`;
+const json = (value: unknown) =>
+  `'${JSON.stringify(value).replaceAll("'", "''")}'::jsonb`;
 async function sql(source: string, db = database): Promise<string> {
   const child = Bun.spawn(
     [
@@ -69,6 +71,83 @@ try {
     )) === "2",
     "Legacy defaults keep both built-in recordings",
   );
+  const deskContent = {
+    items: [
+      {
+        id: "custom-books",
+        type: "books",
+        name: "Reading notes",
+        config: { eyebrow: "Notes", title: "随手记", author: "Ech0xff" },
+      },
+      {
+        id: "custom-record",
+        type: "record",
+        name: "Music",
+        config: { tracks: [] },
+      },
+    ],
+  };
+  const deskWithLayout = {
+    ...deskContent,
+    items: deskContent.items.map((item) => ({
+      ...item,
+      appearance: { rotation: -4, draggable: true },
+    })),
+    layouts: { desktop: { width: 1440, height: 900, placements: {} } },
+  };
+  await sql(
+    `UPDATE public.configs SET value = ${json(deskWithLayout)} WHERE key = 'desk.configuration';`,
+  );
+  const deskMigration = await prepareMigration(sql);
+  assert(
+    deskMigration.needed,
+    "Layout-only configurations must need migration",
+  );
+  await sql(deskMigration.source);
+  assert(
+    (await sql(
+      `SELECT value = ${json(deskContent)} FROM public.configs WHERE key = 'desk.configuration';`,
+    )) === "t",
+    "Removing layout must preserve content, item order, identity, and empty playlists",
+  );
+  assert(
+    (await sql(
+      "SET ROLE anon; SELECT count(*) FROM public.read_desk_audio();",
+    )) === "0",
+    "Migrating an empty playlist must not publish default recordings",
+  );
+  await sql(await Bun.file("supabase/schemas/03_defaults.sql").text());
+  assert(
+    !(await prepareMigration(sql)).needed,
+    "Repeating the content migration must be a no-op",
+  );
+  await sql(
+    `UPDATE public.configs SET value = ${json({
+      items: [
+        deskContent.items[0],
+        { ...deskContent.items[0], id: "duplicate-slot" },
+      ],
+    })} WHERE key = 'desk.configuration';`,
+  );
+  assert(
+    (
+      await prepareMigration(sql).then(
+        () => "accepted",
+        (error) => String(error),
+      )
+    ).includes("Each desk item type can only appear once."),
+    "Conflicting fixed slots must fail preflight instead of dropping content",
+  );
+  await sql(
+    "UPDATE public.configs SET value = 'null' WHERE key = 'desk.configuration';",
+  );
+  await sql(await Bun.file("supabase/schemas/03_defaults.sql").text());
+  assert(
+    (await sql(
+      "SELECT value = 'null'::jsonb FROM public.configs WHERE key = 'desk.configuration';",
+    )) === "t",
+    "Content migration must preserve the null configuration default",
+  );
   assert(
     (await sql(
       "SELECT has_table_privilege('anon', 'public.configs', 'SELECT');",
@@ -106,7 +185,7 @@ try {
     );
   }
   await sql(
-    `SET ROLE service_role; UPDATE public.configs SET value = '{"items":[],"layouts":{}}' WHERE key = 'desk.configuration';`,
+    `SET ROLE service_role; UPDATE public.configs SET value = '{"items":[]}' WHERE key = 'desk.configuration';`,
   );
   assert(
     (await sql(
@@ -133,7 +212,7 @@ try {
     "A saved desk without recordings must not leak default assets",
   );
   await sql(
-    `UPDATE public.configs SET value = '{"items":[{"type":"record","config":{"tracks":[{"assetId":"test-audio"}]}}],"layouts":{}}' WHERE key = 'desk.configuration';`,
+    `UPDATE public.configs SET value = '{"items":[{"id":"record","type":"record","name":"Music","config":{"tracks":[{"assetId":"test-audio","title":"Private import","artist":""}]}}]}' WHERE key = 'desk.configuration';`,
   );
   assert(
     (await sql("SET ROLE anon; SELECT id FROM public.read_desk_audio();")) ===

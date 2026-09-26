@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import Button from "#components/ui/button.component";
 import type { AudioAsset } from "#lib/shared/audio/audio.schema";
 
-import { editorStyles as styles } from "./item-editor.style";
+import { editorStyles as styles } from "./home-editor.style";
 
 export function recordingTime(seconds: number) {
   return `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;

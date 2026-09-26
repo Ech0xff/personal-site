@@ -46,8 +46,7 @@ const styles = stylex.create({
 /** A manual popover keeps the cursor above native dialogs without intercepting input. */
 export function RingCursor() {
   const ref = useRef<HTMLDivElement>(null);
-  const { x, y, scale, rotate, rippleScale, rippleOpacity } =
-    useRingCursor(ref);
+  const { x, y, scale, rippleScale, rippleOpacity } = useRingCursor(ref);
   return (
     <motion.div
       ref={ref}
@@ -65,7 +64,7 @@ export function RingCursor() {
       <motion.span
         data-ring-visual
         {...stylex.props(styles.ring)}
-        style={{ scale, rotate }}
+        style={{ scale }}
       />
     </motion.div>
   );

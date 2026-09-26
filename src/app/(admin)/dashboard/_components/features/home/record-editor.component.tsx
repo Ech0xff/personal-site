@@ -1,10 +1,8 @@
 import * as stylex from "@stylexjs/stylex";
-import { Reorder, useDragControls } from "framer-motion";
 import {
   ArrowDown,
   ArrowUp,
   Check,
-  GripVertical,
   Link,
   Plus,
   RefreshCw,
@@ -19,7 +17,7 @@ import { PaperField } from "#components/ui/paper-field.component";
 import type { AudioAsset, TrackEntry } from "#lib/shared/audio/audio.schema";
 
 import { useAudioLibrary } from "./audio-library.hook";
-import { editorStyles as styles } from "./item-editor.style";
+import { editorStyles as styles } from "./home-editor.style";
 import { recordingTime, RecordPreview } from "./record-preview.component";
 
 type Props = Readonly<{
@@ -28,6 +26,7 @@ type Props = Readonly<{
   assets: readonly AudioAsset[];
   onAssets: (assets: readonly AudioAsset[]) => void;
   errors: Readonly<Record<string, string>>;
+  onBusy: (busy: boolean) => void;
 }>;
 
 function RecordingRow({
@@ -43,22 +42,10 @@ function RecordingRow({
   selected: boolean;
   select: () => void;
 }>) {
-  const controls = useDragControls();
   return (
-    <Reorder.Item
-      value={track}
-      dragListener={false}
-      dragControls={controls}
+    <li
       {...stylex.props(styles.passageRow, selected && styles.selectedPassage)}
     >
-      <button
-        type="button"
-        aria-label={`Drag recording ${index + 1}`}
-        onPointerDown={(event) => controls.start(event)}
-        {...stylex.props(styles.dragHandle)}
-      >
-        <GripVertical size={14} aria-hidden />
-      </button>
       <button
         type="button"
         aria-pressed={selected}
@@ -77,7 +64,7 @@ function RecordingRow({
           </span>
         </span>
       </button>
-    </Reorder.Item>
+    </li>
   );
 }
 
@@ -87,12 +74,13 @@ export function RecordEditor({
   assets,
   onAssets,
   errors,
+  onBusy,
 }: Props) {
   const [url, setUrl] = useState("");
   const [selected, setSelected] = useState(tracks[0]?.assetId ?? "");
   const [adding, setAdding] = useState(tracks.length === 0);
   const upload = useRef<HTMLInputElement>(null);
-  const library = useAudioLibrary(onAssets);
+  const library = useAudioLibrary(assets, onAssets, onBusy);
   const index = Math.max(
     0,
     tracks.findIndex((track) => track.assetId === selected),
@@ -112,12 +100,7 @@ export function RecordEditor({
               Recordings{" "}
               <span {...stylex.props(styles.muted)}>{tracks.length}</span>
             </h3>
-            <Reorder.Group
-              axis="y"
-              values={[...tracks]}
-              onReorder={change}
-              {...stylex.props(styles.passageList)}
-            >
+            <ul {...stylex.props(styles.passageList)}>
               {tracks.map((track, i) => (
                 <RecordingRow
                   key={track.assetId}
@@ -131,7 +114,7 @@ export function RecordEditor({
                   select={() => setSelected(track.assetId)}
                 />
               ))}
-            </Reorder.Group>
+            </ul>
           </div>
           <div {...stylex.props(styles.group)}>
             <PaperField
@@ -223,6 +206,11 @@ export function RecordEditor({
           Check the title and artist for each recording.
         </p>
       )}
+      <p {...stylex.props(styles.muted)}>
+        Imports are saved to the audio library immediately. Playlist changes go
+        live when you save the homepage. Removing a track keeps its audio in the
+        library.
+      </p>
       <details
         open={adding}
         onToggle={(event) => setAdding(event.currentTarget.open)}
@@ -279,8 +267,17 @@ export function RecordEditor({
           {library.notice && (
             <output {...stylex.props(styles.muted)}>{library.notice}</output>
           )}
+          {library.unauthorized && (
+            <a
+              href="/auth"
+              target="_blank"
+              rel="noreferrer"
+              {...stylex.props(styles.link)}
+            >
+              Sign in in a new tab
+            </a>
+          )}
           <h3 {...stylex.props(styles.sectionTitle)}>Audio library</h3>
-          {library.loading && <Loading compact />}
           <ul {...stylex.props(styles.libraryList)}>
             {assets.map((recording) => {
               const included = tracks.some(

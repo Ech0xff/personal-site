@@ -1,12 +1,12 @@
 import * as stylex from "@stylexjs/stylex";
 
-import type { IntroConfig } from "#lib/shared/desk/desk-item.schema";
+import type { IntroConfig } from "#lib/shared/desk/desk-configuration.schema";
 
 import { desk } from "./reading-desk.style";
 import { SocialLinks } from "./social-links.component";
 export function Intro({ config }: Readonly<{ config: IntroConfig }>) {
   return (
-    <section {...stylex.props(desk.intro)}>
+    <section aria-label="Introduction" {...stylex.props(desk.intro)}>
       <p {...stylex.props(desk.eyebrow)}>
         <span {...stylex.props(desk.wave)} aria-hidden="true">
           👋

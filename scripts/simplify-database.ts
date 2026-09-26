@@ -3,12 +3,14 @@ import { mkdir, realpath, chmod } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join, resolve, relative } from "node:path";
 
+import { isEqual, omit } from "es-toolkit";
 import { z } from "zod";
 
 import { audioRecordSchema } from "../src/lib/server/audio/audio-record.schema";
 import { AUDIO_JOB_MS } from "../src/lib/shared/audio/audio.schema";
 import { documentTitle } from "../src/lib/shared/content/document.helper";
 import { documentSchema } from "../src/lib/shared/content/document.schema";
+import { deskConfigurationSchema } from "../src/lib/shared/desk/desk-configuration.schema";
 
 export type Sql = (source: string) => Promise<string>;
 const json = (value: unknown) =>
@@ -25,6 +27,23 @@ const snapshotSchema = z.object({
   audio: z.array(z.json()),
   configs: z.array(z.object({ key: z.string(), value: z.json() })),
 });
+const savedDeskSchema = z
+  .object({ items: z.array(z.record(z.string(), z.json())) })
+  .catchall(z.json());
+const workspaceSchema = z.object({
+  published: z.json().nullish(),
+  draft: z.json().nullish(),
+});
+
+function removeDeskLayout(value: unknown) {
+  if (value === null) return null;
+  deskConfigurationSchema.parse(value);
+  const configuration = savedDeskSchema.parse(value);
+  return {
+    ...omit(configuration, ["layouts"]),
+    items: configuration.items.map((item) => omit(item, ["appearance"])),
+  };
+}
 
 export async function prepareMigration(sql: Sql) {
   const hasAudio =
@@ -35,6 +54,21 @@ export async function prepareMigration(sql: Sql) {
     'audio', ${hasAudio ? "(SELECT COALESCE(jsonb_agg(to_jsonb(a) ORDER BY id), '[]') FROM public.audio_assets a)" : "'[]'::jsonb"},
     'configs', (SELECT COALESCE(jsonb_agg(to_jsonb(c) ORDER BY key), '[]') FROM public.configs c))`;
   const snapshot = snapshotSchema.parse(JSON.parse(await sql(snapshotQuery)));
+  const savedDesk = snapshot.configs.find(
+    (row) => row.key === "desk.configuration",
+  );
+  const workspace = snapshot.configs.find(
+    (row) => row.key === "desk.workspace",
+  );
+  const oldWorkspace = workspaceSchema.parse(
+    !savedDesk && workspace ? workspace.value : {},
+  );
+  const deskValue = savedDesk
+    ? savedDesk.value
+    : (oldWorkspace.published ?? oldWorkspace.draft ?? null);
+  const deskContent = removeDeskLayout(deskValue);
+  const deskNeedsMigration =
+    Boolean(workspace) || !isEqual(deskValue, deskContent);
   const mismatches = contentRows
     .parse(snapshot.posts)
     .filter(
@@ -80,7 +114,7 @@ export async function prepareMigration(sql: Sql) {
   ).join("\n");
   return {
     snapshot,
-    needed: hasAudio || titleColumns !== "0",
+    needed: hasAudio || titleColumns !== "0" || deskNeedsMigration,
     source: `BEGIN;
 SET LOCAL lock_timeout = '10s';
 LOCK TABLE public.posts, public.configs${hasAudio ? ", public.audio_assets" : ""} IN ACCESS EXCLUSIVE MODE;
@@ -94,6 +128,7 @@ INSERT INTO migration_guard VALUES (NOT EXISTS (SELECT 1 FROM public.audio_asset
     : ""
 }
 ${schema}
+INSERT INTO migration_guard VALUES ((SELECT value::jsonb FROM public.configs WHERE key = 'desk.configuration') IS NOT DISTINCT FROM ${json(deskContent)});
 ${hasAudio ? "DROP TABLE public.audio_assets;" : ""}
 ALTER TABLE public.posts DROP COLUMN IF EXISTS title;
 NOTIFY pgrst, 'reload schema';

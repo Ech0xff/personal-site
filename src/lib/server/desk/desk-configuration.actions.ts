@@ -1,7 +1,7 @@
 "use server";
 import { updateTag } from "next/cache";
 
-import { deskConfigurationSchema } from "#lib/shared/desk/desk-layout.schema";
+import { deskConfigurationSchema } from "#lib/shared/desk/desk-configuration.schema";
 
 import { adminAction } from "../actions/action.service";
 import { validateAudioReferences } from "../audio/audio-assets.service";
