@@ -1,7 +1,11 @@
 "use client";
 import { useAnimationControls } from "framer-motion";
 import { PrefetchKind } from "next/dist/client/components/router-reducer/router-reducer-types";
-import { usePathname, useRouter } from "next/navigation";
+import {
+  usePathname,
+  useRouter,
+  useSelectedLayoutSegment,
+} from "next/navigation";
 import {
   useCallback,
   useEffect,
@@ -34,7 +38,10 @@ const routeLabel = (href: string) =>
   )?.label ?? "Design system";
 
 export function useDeskNavigation() {
-  const pathname = usePathname();
+  const urlPathname = usePathname();
+  const segment = useSelectedLayoutSegment();
+  // Prerendered home HTML can use /index; the matched route stays stable at hydration.
+  const pathname = segment === null ? "/" : urlPathname;
   const router = useRouter();
   const controls = useAnimationControls();
   const entryControls = useAnimationControls();
