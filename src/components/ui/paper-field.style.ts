@@ -1,6 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { color, font, motionToken, media } from "#design/tokens.stylex";
+import { color, font, motionToken, media, space } from "#design/tokens.stylex";
 
 export const paperFieldStyles = stylex.create({
   field: { minWidth: 0, width: "100%" },
@@ -57,6 +57,13 @@ export const paperFieldStyles = stylex.create({
     transitionDuration: { default: motionToken.fast, [media.reduce]: "0s" },
   },
   raised: { transform: "translateY(-23px) scale(0.75)" },
+  captionWithIcon: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: space.xs,
+    fontSize: { default: "16px", [media.phone]: font.control },
+  },
+  captionIcon: { display: "inline-flex", flexShrink: 0 },
   error: {
     color: color.dangerText,
     fontSize: font.small,

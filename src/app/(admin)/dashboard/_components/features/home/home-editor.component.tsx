@@ -5,7 +5,6 @@ import { ExternalLink, RotateCcw, Save } from "lucide-react";
 import { useState } from "react";
 
 import Button from "#components/ui/button.component";
-import { PaperField } from "#components/ui/paper-field.component";
 import type { AudioAsset } from "#lib/shared/audio/audio.schema";
 import type { DeskConfiguration } from "#lib/shared/desk/desk-configuration.schema";
 import { ROUTES } from "#lib/shared/routes/routes.const";
@@ -33,6 +32,11 @@ export default function HomepageEditor({
 }>) {
   const editor = useHomepageEditor(initial);
   const [assets, setAssets] = useState(initialAudio);
+  const status = editor.audioBusy
+    ? "Uploading or starting an audio import. Keep this page open until it finishes."
+    : editor.pending
+      ? "Saving homepage…"
+      : null;
   return (
     <DashboardShell
       title="Homepage"
@@ -75,18 +79,11 @@ export default function HomepageEditor({
         }}
         {...stylex.props(styles.form)}
       >
-        <p {...stylex.props(styles.muted)}>
-          Edit homepage text and music. Changes go live when you save.
-        </p>
-        <output aria-live="polite" {...stylex.props(styles.muted)}>
-          {editor.audioBusy
-            ? "Uploading or starting an audio import. Keep this page open until it finishes."
-            : editor.pending
-              ? "Saving homepage…"
-              : editor.dirty
-                ? "Unsaved changes"
-                : "All changes saved"}
-        </output>
+        {status && (
+          <output aria-live="polite" {...stylex.props(styles.muted)}>
+            {status}
+          </output>
+        )}
         {editor.error && (
           <p role="alert" {...stylex.props(styles.error)}>
             {editor.error}{" "}
@@ -121,13 +118,6 @@ export default function HomepageEditor({
               {...stylex.props(styles.section)}
             >
               <legend {...stylex.props(styles.heading)}>{section.title}</legend>
-              <PaperField
-                label="Item name"
-                value={item.name}
-                maxLength={80}
-                error={errors.name}
-                onValueChange={(name) => editor.update({ ...item, name })}
-              />
               {item.type === "record" ? (
                 <RecordEditor
                   tracks={item.config.tracks}

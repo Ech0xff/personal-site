@@ -118,7 +118,7 @@ export function RecordEditor({
           </div>
           <div {...stylex.props(styles.group)}>
             <PaperField
-              label="Track title"
+              label="Song title"
               value={current.title}
               maxLength={200}
               error={errors[`config.tracks.${index}.title`]}
@@ -127,21 +127,6 @@ export function RecordEditor({
                   tracks.map((track) =>
                     track.assetId === current.assetId
                       ? { ...track, title }
-                      : track,
-                  ),
-                )
-              }
-            />
-            <PaperField
-              label="Artist"
-              value={current.artist}
-              maxLength={200}
-              error={errors[`config.tracks.${index}.artist`]}
-              onValueChange={(artist) =>
-                change(
-                  tracks.map((track) =>
-                    track.assetId === current.assetId
-                      ? { ...track, artist }
                       : track,
                   ),
                 )
@@ -203,14 +188,9 @@ export function RecordEditor({
       {Object.entries(errors).filter(([key]) => key.startsWith("config.tracks"))
         .length > 0 && (
         <p role="alert" {...stylex.props(styles.error)}>
-          Check the title and artist for each recording.
+          Check the song title for each recording.
         </p>
       )}
-      <p {...stylex.props(styles.muted)}>
-        Imports are saved to the audio library immediately. Playlist changes go
-        live when you save the homepage. Removing a track keeps its audio in the
-        library.
-      </p>
       <details
         open={adding}
         onToggle={(event) => setAdding(event.currentTarget.open)}

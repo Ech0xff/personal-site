@@ -57,4 +57,47 @@ describe("single-token admin sessions", () => {
       if (!result.ok) expect(result.unauthorized).toBe(true);
     }
   });
+
+  test("content and file actions deny anonymous requests before validating input", async () => {
+    await mock.module("server-only", () => ({}));
+    await mock.module("next/headers", () => ({
+      cookies: async () => ({ get: () => undefined }),
+    }));
+    const { loadContent, saveContent, deleteContent, setContentStatus } =
+      await import("../content/content.actions");
+    const { createFileUpload, deleteFile } =
+      await import("../files/files.actions");
+    for (const result of [
+      await loadContent({}),
+      await saveContent({}),
+      await deleteContent({}),
+      await setContentStatus({}),
+      await createFileUpload({}),
+      await deleteFile("../private"),
+    ]) {
+      expect(result.ok).toBe(false);
+      if (!result.ok) expect(result.unauthorized).toBe(true);
+    }
+  });
+
+  test("direct dashboard reads require an admin session", async () => {
+    await mock.module("server-only", () => ({}));
+    await mock.module("next/headers", () => ({
+      cookies: async () => ({ get: () => undefined }),
+    }));
+    const { listContent, readContent } =
+      await import("../content/content.service");
+    const { listFiles } = await import("../files/files.service");
+    const { AdminAccessError } = await import("./session.service");
+    const results = await Promise.allSettled([
+      listContent("posts"),
+      readContent("posts", "a2463c5a-e290-42c0-9856-66eb31b8aafe"),
+      listFiles({ page: 0, sort: "time", direction: "desc", search: "" }),
+    ]);
+    for (const result of results) {
+      expect(result.status).toBe("rejected");
+      if (result.status === "rejected")
+        expect(result.reason).toBeInstanceOf(AdminAccessError);
+    }
+  });
 });

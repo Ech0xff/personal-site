@@ -37,7 +37,18 @@ test("loads the document renderer with Lambda's native Node module restrictions"
          }
        });
        console.log(await editor.blocksToFullHTML([
-         { type: "paragraph", content: "Native Node rendering" }
+         { type: "paragraph", content: "Native Node rendering" },
+         {
+           type: "heading",
+           props: { level: 2, isToggleable: true },
+           content: "Toggle heading",
+           children: [{ type: "paragraph", content: "Heading child" }]
+         },
+         {
+           type: "toggleListItem",
+           content: "Toggle list",
+           children: [{ type: "paragraph", content: "List child" }]
+         }
        ]));`,
     ],
     { stdout: "pipe", stderr: "pipe" },
@@ -49,6 +60,12 @@ test("loads the document renderer with Lambda's native Node module restrictions"
   ]);
   expect(exitCode, error).toBe(0);
   expect(html).toContain("Native Node rendering");
+  expect(html).toContain("Toggle heading");
+  expect(html).toContain("Heading child");
+  expect(html).toContain("Toggle list");
+  expect(html).toContain("List child");
+  expect(html).toContain('data-is-toggleable="true"');
+  expect(html).toContain('data-content-type="toggleListItem"');
 });
 
 describe("dashboard static documents", () => {

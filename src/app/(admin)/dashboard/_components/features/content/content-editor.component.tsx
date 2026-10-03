@@ -27,7 +27,9 @@ export default function ContentEditor({
   const editor = useContentEditor(kind, id, onSaved);
   return (
     <section {...stylex.props(styles.editor)} aria-label="Content editor">
-      <header {...stylex.props(styles.header)}>
+      <header
+        {...stylex.props(styles.header, kind === "posts" && styles.fixed)}
+      >
         <h2 {...stylex.props(styles.title)}>
           {id ? "Edit" : "New"} {contentLabels[kind].singular}
         </h2>
@@ -62,8 +64,12 @@ export default function ContentEditor({
           />
         </div>
       </header>
-      <div {...stylex.props(styles.scroll)}>
-        {editor.state.type === "loading" && <Loading />}
+      <div
+        {...stylex.props(styles.scroll, kind === "posts" && styles.postScroll)}
+      >
+        {editor.state.type === "loading" && (
+          <Loading xstyle={kind === "posts" && styles.loading} />
+        )}
         {editor.state.type === "error" && (
           <div role="alert">
             <p>{editor.state.message}</p>
@@ -71,7 +77,9 @@ export default function ContentEditor({
           </div>
         )}
         {editor.state.type === "ready" && (
-          <div {...stylex.props(styles.fields)}>
+          <div
+            {...stylex.props(styles.fields, kind === "posts" && styles.fixed)}
+          >
             {editor.error && (
               <p role="alert" {...stylex.props(styles.error)}>
                 {editor.error}{" "}

@@ -3,12 +3,6 @@ import * as stylex from "@stylexjs/stylex";
 import { color, font, shadow, space } from "#design/tokens.stylex";
 export const styles = stylex.create({
   list: { display: "flex", flexDirection: "column", gap: "20px" },
-  row: {
-    display: "flex",
-    alignItems: "center",
-    flexWrap: "wrap",
-    gap: space.sm,
-  },
   toolbar: {
     display: "flex",
     alignItems: "center",
@@ -59,15 +53,20 @@ export const styles = stylex.create({
     boxShadow: shadow.subtle,
   },
   grid: {
-    display: "grid",
-    gridTemplateColumns: {
-      default: "repeat(auto-fill, minmax(200px, 260px))",
-      "@media (max-width: 600px)": "repeat(2, minmax(0, 1fr))",
-    },
+    display: "flex",
+    flexWrap: "wrap",
     gap: "20px",
-    alignItems: "start",
+    alignItems: "flex-start",
   },
-  card: { minWidth: 0 },
+  card: {
+    minWidth: 0,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: {
+      default: "200px",
+      "@media (max-width: 600px)": "calc((100% - 20px) / 2)",
+    },
+  },
   previewFrame: { position: "relative" },
   preview: {
     display: "flex",

@@ -45,7 +45,7 @@ SELECT 'audio.asset.' || id, jsonb_build_object(
   'started_at', NULL, 'created_at', '2026-09-13T00:00:00+00:00'
 )
 FROM (VALUES
-  ('quiet-morning','A quiet morning','A little melody for this desk','/redesign/quiet-morning.wav',16,'/redesign/quiet-morning.spectrum.bin','/redesign/quiet-morning.vtt'),
-  ('miku','Miku feat. Hatsune Miku','Anamanaguchi','/redesign/miku.mp3',223.125,'/redesign/miku.spectrum.bin','/redesign/miku.vtt')
+  ('quiet-morning','A quiet morning','A little melody for this desk','/audio/quiet-morning.wav',16,'/audio/quiet-morning.spectrum.bin','/audio/quiet-morning.vtt'),
+  ('miku','Miku feat. Hatsune Miku','Anamanaguchi','/audio/miku.mp3',223.125,'/audio/miku.spectrum.bin','/audio/miku.vtt')
 ) AS assets(id, title, artist, src, duration, spectrum_src, description_src)
 ON CONFLICT (key) DO NOTHING;

@@ -1,10 +1,19 @@
 import * as stylex from "@stylexjs/stylex";
 
+import { SocialIcon } from "#components/shared/social-icon.component";
 import { PaperField } from "#components/ui/paper-field.component";
 import type { DeskItem } from "#lib/shared/desk/desk-item.schema";
 
 import { editorStyles as styles } from "./home-editor.style";
 import { PassageEditor } from "./passage-editor.component";
+
+const socialFields = [
+  { kind: "github", label: "GitHub URL" },
+  { kind: "email", label: "Email link (mailto:you@example.com)" },
+  { kind: "x", label: "X URL" },
+  { kind: "bilibili", label: "Bilibili URL" },
+] as const;
+
 type Props = Readonly<{
   item: DeskItem;
   change: (item: DeskItem) => void;
@@ -49,23 +58,25 @@ export function ItemFields({ item, change, errors }: Props) {
               key === "introduction",
             ),
           )}
-          {(["github", "email", "x", "bilibili"] as const).map((key) =>
-            field(
-              `config.links.${key}`,
-              key === "email"
-                ? "Email link (mailto:you@example.com)"
-                : `${key === "github" ? "GitHub" : key === "x" ? "X" : "Bilibili"} URL`,
-              item.config.links[key] ?? "",
-              (value) =>
+          {socialFields.map(({ kind, label }) => (
+            <PaperField
+              key={kind}
+              label={label}
+              icon={<SocialIcon kind={kind} size={16} />}
+              value={item.config.links[kind] ?? ""}
+              maxLength={2048}
+              error={errors[`config.links.${kind}`]}
+              onValueChange={(value) =>
                 change({
                   ...item,
                   config: {
                     ...item.config,
-                    links: { ...item.config.links, [key]: value || null },
+                    links: { ...item.config.links, [kind]: value || null },
                   },
-                }),
-            ),
-          )}
+                })
+              }
+            />
+          ))}
         </>
       );
     case "books":

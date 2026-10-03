@@ -3,6 +3,7 @@ import { revalidatePath, updateTag } from "next/cache";
 import { z } from "zod";
 
 import {
+  contentInputSchema,
   contentKindSchema,
   type ContentKind,
 } from "#lib/shared/content/content.schema";
@@ -34,9 +35,9 @@ export async function loadContent(input: unknown) {
 }
 export async function saveContent(input: unknown) {
   return adminAction(async () => {
-    const id = await writeContent(input);
-    const { kind } = z.object({ kind: contentKindSchema }).parse(input);
-    refreshContent(kind, id);
+    const content = contentInputSchema.parse(input);
+    const id = await writeContent(content);
+    refreshContent(content.kind, id);
     return id;
   });
 }

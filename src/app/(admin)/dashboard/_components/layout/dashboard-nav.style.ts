@@ -36,7 +36,7 @@ export const styles = stylex.create({
     display: "flex",
     flexDirection: { default: "column", "@media (max-width: 767px)": "row" },
     gap: space.xs,
-    marginTop: { default: space.xl, "@media (max-width: 767px)": 0 },
+    marginTop: { default: space.xs, "@media (max-width: 767px)": 0 },
   },
   link: {
     display: "flex",

@@ -40,6 +40,14 @@ export const styles = stylex.create({
     flexGrow: 1,
     padding: "4px",
   },
+  postScroll: {
+    display: "flex",
+    flexDirection: "column",
+    minHeight: 0,
+    flexBasis: "0%",
+  },
+  fixed: { flexShrink: 0 },
+  loading: { minHeight: 0 },
   fields: {
     display: "flex",
     flexDirection: "column",

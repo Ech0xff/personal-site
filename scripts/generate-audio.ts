@@ -46,7 +46,7 @@ wav.write("data", 36);
 wav.writeUInt32LE(samples.length * 2, 40);
 for (const [index, value] of samples.entries())
   wav.writeInt16LE(Math.round(Math.tanh(value) * 24000), 44 + index * 2);
-const output = new URL("../public/redesign/quiet-morning.wav", import.meta.url);
+const output = new URL("../public/audio/quiet-morning.wav", import.meta.url);
 await mkdir(new URL(".", output), { recursive: true });
 await writeFile(output, wav);
 console.log(

@@ -156,6 +156,7 @@ export const space = stylex.defineVars({
 });
 export const shape = stylex.defineVars({
   fine: "1px",
+  rule: "2px",
   small: "4px",
   control: "8px",
   panel: "18px",

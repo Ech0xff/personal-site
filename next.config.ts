@@ -16,6 +16,19 @@ const nextConfig: NextConfig = {
   ],
   reactCompiler: true,
   reactStrictMode: false,
+  async rewrites() {
+    return [
+      "quiet-morning.wav",
+      "quiet-morning.spectrum.bin",
+      "quiet-morning.vtt",
+      "miku.mp3",
+      "miku.spectrum.bin",
+      "miku.vtt",
+    ].map((file) => ({
+      source: `/redesign/${file}`,
+      destination: `/audio/${file}`,
+    }));
+  },
   async redirects() {
     return [
       ...["", "/posts", "/thoughts", "/system"].map((path) => ({

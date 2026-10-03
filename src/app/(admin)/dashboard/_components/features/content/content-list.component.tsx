@@ -17,7 +17,7 @@ import { ContentActions } from "./content-actions.component";
 import { useContentList } from "./content-list.hook";
 import { listStyles as styles } from "./content-list.style";
 import { contentLabels } from "./content.const";
-import { PostsTable } from "./posts-table.component";
+import { PostsList } from "./posts-list.component";
 import { VisibilityControl } from "./visibility-control.component";
 
 export default function ContentList({
@@ -70,13 +70,12 @@ export default function ContentList({
           <p {...stylex.props(styles.meta)}>No content here yet.</p>
         )}
         {kind === "posts" && items.length > 0 && (
-          <PostsTable
+          <PostsList
             onEdit={edit}
             items={items}
-            page={page}
-            visibility={visibility}
+            pending={pending}
+            onVisibilityChange={(item) => mutate(item, false)}
             actions={actions}
-            body={body}
           />
         )}
         {kind === "thoughts" && (

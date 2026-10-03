@@ -1,148 +1,102 @@
 # AGENTS.md
 
-English-only personal site and lightweight CMS built with Next.js 16, React 19,
-Supabase, StyleX, and Bun. Public and administration roots share design tokens.
+English-only personal site and CMS using Next.js 16, React 19, Supabase, StyleX,
+and Bun. Public and administration roots share design tokens.
 
-## Project Constraints
+## Constraints
 
-- Use Bun and the scripts in `package.json`.
-- Keep signed browser uploads and service-role Supabase operations within their
-  runtime boundaries. Authenticate dashboard reads and Server Actions with the
-  admin token session. Never expose the service-role key to clients.
-- Keep English defaults in the source-controlled shared dictionary, routes
-  without language prefixes, and business content in its original language.
-  Do not add locale routing or AI translation.
-- Update cache tags, consumers, and invalidation paths together.
-- Maintain schemas in `supabase/schemas` and fixtures in `supabase/seed.sql`;
-  follow the [database workflow](./README.md#database).
-- Regenerate Supabase types and SVG icon components; do not edit generated files.
-- Write comments and documentation in English. Update affected docs with the
-  implementation. Keep project documentation in README.md and AGENTS.md.
-- Preserve unrelated changes; avoid destructive Git operations unless requested.
+- Use Bun and `package.json` scripts. Preserve unrelated changes; avoid destructive
+  Git operations unless requested.
+- Authenticate dashboard reads and Server Actions with the admin token session.
+  Keep signed browser uploads and server-only service-role operations separate;
+  never expose the service-role key to clients.
+- Keep English defaults in the shared dictionary, routes without locale prefixes,
+  and business content in its original language. No AI translation.
+- Update cache tags, consumers, and invalidation together. Maintain schemas in
+  `supabase/schemas`, fixtures in `supabase/seed.sql`, and regenerate Supabase types.
+  Follow the [database workflow](./README.md#database).
+- Write English comments and documentation. Keep setup/operations in README.md,
+  development rules here, and deferred work in handoffs; update docs with changes.
 
 ## Code Style
 
-- Use small, composable functions with explicit inputs and return values.
-  Keep transformations pure, I/O in services, and React effects in hooks.
-- Treat inputs, props, and state as immutable; prefer `const` and readonly types
-  at shared boundaries. Contained local mutation is fine when clearer.
-- Prefer `map`, `filter`, and named transformations. Use `es-toolkit/fp`
-  composition when helpful; simple branches and loops are fine.
-- Derive UI values from existing data. Use functional state updates when the
-  next value depends on the previous one.
-- Model distinct states with discriminated unions; use `ts-pattern` for complex
-  exhaustive matching. Validate external inputs with Zod and prefer inferred
-  types over assertions.
-- Reuse `es-toolkit` and `ts-pattern`; add abstractions or dependencies only
-  for concrete needs.
+- Use small functions with explicit inputs/returns; pure transformations, service
+  I/O, and hook effects. Prefer `const`, immutable inputs/state, and readonly shared
+  boundaries; contained mutation is fine when clearer.
+- Prefer named transformations, `map`/`filter`, and existing `es-toolkit` helpers;
+  simple branches/loops are fine. Derive UI values and use functional state updates.
+- Model distinct states with discriminated unions and complex exhaustive matching
+  with `ts-pattern`. Validate external inputs with Zod; prefer inferred types to
+  assertions. Add abstractions/dependencies only for concrete needs.
 
-## File Naming
+## Naming and Placement
 
-Use lowercase kebab-case `<subject>.<role>.ts(x)`, e.g.
-`post-editor.component.tsx`. Components use PascalCase; hooks use `useXxx`.
-Apply these conventions to new work; some legacy files differ.
+New files use lowercase kebab-case `<subject>.<role>.ts(x)`; components use
+PascalCase and hooks `useXxx`. Roles: `.type` (types), `.const` (defaults), `.schema`
+(validation), `.helper` (pure transformations), `.service` (I/O), `.component` (UI),
+and `.hook` (state/effects). Use `.helper`, not `.utils`/`.util`; `.type`, not `.types`.
+Specialized `.extension`, `.registry`, and `.atom` suffixes are valid.
 
-- `.type`: Types and interfaces.
-- `.const`: Shared constants and defaults.
-- `.schema`: Runtime validation and parsing.
-- `.helper`: Pure transformations without state or I/O.
-- `.service`: Domain operations and external I/O.
-- `.component`: React UI, editors, and providers.
-- `.hook`: React state, effects, and UI behavior.
+Supabase factories use `supabase.client.ts`; add `.client`/`.server` only for runtime
+boundaries and `.test` for tests. Preserve framework/tool/generated/declaration and
+`index` filenames; never edit generated files. `page.client.tsx` is not a framework
+filename: put named UI in `_components`. Styles share the component basename:
+`.style.ts` for StyleX, `.css` for adapters. Directories use lowercase kebab-case,
+except route/framework conventions.
 
-Use `.helper`, not `.utils`/`.util`; use `.type`, not `.types`. Specialized
-suffixes such as `.extension`, `.registry`, and `.atom` are valid.
+- `src/app`: Routes/layouts/handlers; local UI in `_components`, page-level or
+  route-shared hooks in `_hooks`. Editor-private hooks stay beside the editor.
+- `src/components/ui` and `shared`: Reusable primitives/editors and site-wide UI.
+- `src/app/(admin)/dashboard/_components/features/<feature>`: Dashboard feature UI
+  and private modules, including Homepage editors/audio library in `home`.
+- `src/lib/client`, `server`, `shared`: Browser adapters, server services/caches,
+  and environment-neutral domains. Auth/content/storage I/O stays server-side;
+  browser image compression belongs in `client/images`, uploads in `client/files`,
+  and appearance state in `client/theme`.
+- `src/types`: Cross-domain/generated types and declarations; `src/design`: tokens,
+  themes, and style input types. `scripts`, `supabase`, and `public` hold maintenance
+  tools, database sources, and URL-addressed assets.
 
-Supabase factories use `supabase.client.ts`; their data layer identifies the
-runtime. Add `.client`/`.server` only to clarify an environment boundary, and
-`.test` for tests, e.g. `meta.component.client.tsx`, `payload.schema.test.ts`.
+Colocate domain types, schemas, helpers, tests, and styles with their owner; keep
+layout content beside its layout. Share for actual reuse and split independent
+responsibilities/runtime dependencies, not every private declaration. Shared
+utility barrels export only environment-neutral utilities; import auth/image
+services from their owners. Server Actions authenticate before services.
 
-Preserve framework, tool, generated, declaration, and `index` filenames.
-`page.client.tsx` is not a framework filename: use a subject name inside
-`_components`. Colocated styles share the component basename, using `.style.ts` for StyleX declarations or `.css` for third-party adapters. Ordinary directories use lowercase kebab-case;
-preserve route segments and framework conventions.
-
-## File Placement
-
-- `src/app`: Routes, layouts, handlers; local UI in `_components`, page-level
-  hooks in `_hooks`.
-- `src/components/ui`: Reusable presentation primitives and editor integrations.
-- `src/components/shared`: Site-wide UI and providers.
-- `src/app/(admin)/dashboard/_components/features/<feature>`: Dashboard feature UI and private supporting modules.
-- `src/lib/client`: Browser clients and service adapters.
-- `src/lib/server`: Server clients, services, and caches.
-- `src/lib/shared`: Environment-neutral domain modules and services.
-- `src/types`: Cross-domain types, declarations, and generated database types.
-- `src/design`: Shared StyleX tokens, light/dark themes, and style input types.
-- `src/lib/client/theme`: Browser appearance preference state.
-- `scripts`: Maintenance and development utilities.
-- `supabase`: Database configuration, schemas, and seed data.
-- `public`: Static assets addressed by URL.
-
-Keep domain types, schemas, constants, helpers, tests, and styles with their owner.
-Editor-private hooks stay beside the editor; `_hooks` is for page-level or
-route-shared hooks. Keep layout-specific content beside its layout. Share code
-when actual reuse warrants it; split modules for independent responsibilities
-or runtime dependencies, not for every private declaration.
-
-Homepage content editors and audio-library UI belong to the dashboard `home`
-feature. The public desk owns only its fixed responsive composition and visitor
-interactions. Keep item positions, geometry, and appearance in public components;
-persist only item IDs, types, names, and content config. Do not add visitor layout
-storage, public administration state, or imports between public and dashboard
-route components.
-
-Browser image compression belongs in `lib/client/images`; general file uploads
-belong in `lib/client/files`. Auth, content, and storage I/O belong in their
-`lib/server` domains. Server Actions authenticate before invoking services. The shared utility barrel exports only environment-neutral
-utilities; import auth and image services from their owners.
+The public desk owns fixed responsive composition and visitor interactions.
+Persist only item IDs, types, names, and content config; geometry/appearance stay
+in public components. No visitor layout storage, public admin state, or imports
+between public and dashboard route components. Derive content titles from the
+first top-level heading; persist only content, visibility, and publish time.
+Store each recording in private `audio.asset.<id>` config, separate from desk
+state; use the task-owner RPC for atomic updates and expose only selected, ready
+recordings through the public audio RPC.
 
 ## Imports and Styling
 
-- Use `#components/*`, `#design/*`, `#lib/*`, and `#types`/`#types/*`
-  across source areas; use relative imports within a feature.
-  Aliases live in `tsconfig.json`; `#dictionary` uses conditional imports in
-  `package.json` for server reads and the client provider.
-- Use StyleX for owned component styles. All token definitions, including scene materials, lighting, and light/dark
-  overrides, belong in `src/design/tokens.stylex.ts`. Public scene composition
-  styles and interaction markers remain in `(site)/_design`.
-- Compose component overrides with typed `xstyle` inputs, explicit variants, and
-  sizes. Keep geometry with its component and rendered colors in tokens.
-- Plain CSS is reserved for root resets and scoped third-party adapters. Adapters
-  consume variables supplied by StyleX; do not add Tailwind or Sass.
-- Group public feature UI under `layout`, `desk`, `record-player`, and `display`;
-  keep the system guide local to its route. Do not import route modules from
-  shared modules or maintenance scripts.
-- The public root keeps its own shell, providers, scrolling behavior, and assets.
-  Both roots reuse environment-neutral theme synchronization and controls,
-  without importing administration features or providers into the public root.
+- Use `#components/*`, `#design/*`, `#lib/*`, and `#types` aliases across areas;
+  relative imports within features. `#dictionary` uses conditional package imports.
+- Use StyleX; all tokens, scene materials, lighting, and light/dark overrides live
+  in `src/design/tokens.stylex.ts`. Scene composition and interaction markers stay
+  in `(site)/_design`; geometry stays with components, rendered colors in tokens.
+- Compose typed `xstyle`, explicit variants, and sizes. Plain CSS is only for root
+  resets/scoped third-party adapters consuming StyleX variables. No Tailwind/Sass.
+- Group public UI under `layout`, `desk`, `record-player`, and `display`; keep the
+  system guide local. Shared modules/scripts must not import route modules.
+- Public and admin roots own their shells, providers, scrolling, and assets; reuse
+  environment-neutral theme controls without importing admin providers publicly.
 
-## Development and Documentation
+## Verification
 
-Follow the [README commands](./README.md#development) and
-[verification workflow](./README.md#verification): apply formatting and lint
-fixes to affected files, then run relevant non-mutating checks.
+Follow [README commands](./README.md#development) and
+[verification](./README.md#verification): fix formatting/lint on affected files,
+then run relevant non-mutating checks. Use existing checks for simple changes;
+add meaningful behavior/regression tests near their domain/runtime, prioritizing
+integrity, authorization, compatibility, and algorithms. Verify UI and desktop
+interactions through targeted browser scenarios.
 
-Use existing checks for simple lint, type, schema, or UI changes. Add tests for
-important behavior or regressions, preferably in existing suites; avoid tests
-that repeat implementation or library behavior. Colocate tests with their owning
-domain and runtime; prioritize data integrity, authorization, compatibility, and
-nontrivial algorithms. Verify presentation and desktop interactions through
-targeted browser scenarios.
-
-Use focused Conventional Commits (`feat:`, `fix:`, `refactor:`, `chore:`,
-`docs:`) with imperative subjects. Include only task-related changes and report
-checks that could not run.
-
-Keep [README](./README.md) for setup and operations, and this file for development
-rules and ownership. Report deferred work in the task handoff rather than creating
-additional project guides. Prefer concise paragraphs and lists over tables.
-
-Content titles are derived from the first top-level document heading; persist only
-content, visibility, and publish time. Audio resources use one private
-`audio.asset.<id>` config per recording. Keep their job state separate from the desk
-configuration, use the task-owner RPC for atomic updates, and expose only selected,
-ready recordings through the public audio RPC.
+Use focused Conventional Commits (`feat:`, `fix:`, `refactor:`, `chore:`, `docs:`)
+with imperative subjects. Include task-related changes only and report unrun checks.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

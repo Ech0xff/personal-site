@@ -10,7 +10,7 @@ import {
 } from "#lib/shared/audio/audio-analysis.helper";
 import { playlist } from "#lib/shared/audio/playlist.const";
 
-const temporary = await mkdtemp(join(tmpdir(), "redesign-spectrum-"));
+const temporary = await mkdtemp(join(tmpdir(), "audio-spectrum-"));
 try {
   for (const track of playlist) {
     const input = `public${track.src}`;

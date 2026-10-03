@@ -1,10 +1,11 @@
 import * as stylex from "@stylexjs/stylex";
-import { useId, type HTMLInputTypeAttribute } from "react";
+import { useId, type HTMLInputTypeAttribute, type ReactNode } from "react";
 
 import { paperFieldStyles as styles } from "./paper-field.style";
 
 type Props = Readonly<{
   label: string;
+  icon?: ReactNode;
   value: string;
   onValueChange: (value: string) => void;
   multiline?: boolean;
@@ -20,6 +21,7 @@ type Props = Readonly<{
 
 export function PaperField({
   label,
+  icon,
   value,
   onValueChange,
   multiline = false,
@@ -27,6 +29,7 @@ export function PaperField({
   ...props
 }: Props) {
   const id = useId();
+  const hasIcon = Boolean(icon);
   const shared = {
     id,
     value,
@@ -57,9 +60,15 @@ export function PaperField({
         <span
           {...stylex.props(
             styles.caption,
+            hasIcon && styles.captionWithIcon,
             props.type === "number" && styles.raised,
           )}
         >
+          {hasIcon && (
+            <span aria-hidden="true" {...stylex.props(styles.captionIcon)}>
+              {icon}
+            </span>
+          )}
           {label}
         </span>
       </label>

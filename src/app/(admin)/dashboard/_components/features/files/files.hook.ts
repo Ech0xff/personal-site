@@ -60,7 +60,7 @@ export function useFiles() {
       }
     }
     setUploading(false);
-    if (completed && navigator.onLine) router.refresh();
+    if (completed) router.refresh();
   };
   const remove = (file: StoredFile) => {
     if (

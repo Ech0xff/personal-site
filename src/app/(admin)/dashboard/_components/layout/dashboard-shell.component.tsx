@@ -18,6 +18,7 @@ const styles = stylex.create({
     overflow: "hidden",
   },
   header: {
+    flexShrink: 0,
     paddingTop: "20px",
     paddingRight: "20px",
     paddingBottom: "20px",
@@ -34,6 +35,8 @@ const styles = stylex.create({
     color: color.text,
   },
   content: {
+    minWidth: 0,
+    minHeight: 0,
     paddingTop: "20px",
     paddingRight: "20px",
     paddingBottom: "20px",

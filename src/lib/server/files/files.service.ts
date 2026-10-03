@@ -1,22 +1,20 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
 
-import { z } from "zod";
-
 import { makeFilePath } from "#lib/shared/files/file.helper";
 import {
   FILE_BUCKET,
-  fileUploadSchema,
-  fileQuerySchema,
   type FilePage,
+  type FileQuery,
+  type FileUpload,
 } from "#lib/shared/files/file.schema";
 
 import { requireAdmin } from "../auth/session.service";
 import { makeAdminClient } from "../supabase.client";
 
-export async function listFiles(input: unknown): Promise<FilePage> {
+export async function listFiles(input: FileQuery): Promise<FilePage> {
   await requireAdmin();
-  const { search, page, sort, direction } = fileQuerySchema.parse(input);
+  const { search, page, sort, direction } = input;
   const client = makeAdminClient();
   const { data, error } = await client.rpc("list_files", {
     search_query: search,
@@ -41,9 +39,7 @@ export async function listFiles(input: unknown): Promise<FilePage> {
     })),
   };
 }
-export async function signFileUpload(input: unknown) {
-  await requireAdmin();
-  const file = fileUploadSchema.parse(input);
+export async function signFileUpload(file: FileUpload) {
   const path = makeFilePath(randomUUID(), file.name);
   const bucket = makeAdminClient().storage.from(FILE_BUCKET);
   const { data, error } = await bucket.createSignedUploadUrl(path, {
@@ -56,12 +52,7 @@ export async function signFileUpload(input: unknown) {
     url: bucket.getPublicUrl(data.path).data.publicUrl,
   };
 }
-export async function removeFile(input: unknown) {
-  await requireAdmin();
-  const path = z
-    .string()
-    .regex(/^[0-9a-f-]{36}-[a-zA-Z0-9._-]+$/, "Invalid file path.")
-    .parse(input);
+export async function removeFile(path: string) {
   const { error } = await makeAdminClient()
     .storage.from(FILE_BUCKET)
     .remove([path]);

@@ -10,12 +10,17 @@ export const fileUploadSchema = z.object({
     .max(MAX_FILE_SIZE, "Files must be 50 MiB or smaller."),
   type: z.string().max(255),
 });
+export type FileUpload = Readonly<z.infer<typeof fileUploadSchema>>;
+export const filePathSchema = z
+  .string()
+  .regex(/^[0-9a-f-]{36}-[a-zA-Z0-9._-]+$/, "Invalid file path.");
 export const fileQuerySchema = z.object({
-  sort: z.enum(["time", "size"]).default("time"),
-  direction: z.enum(["asc", "desc"]).default("desc"),
+  sort: z.enum(["time", "size"]).catch("time"),
+  direction: z.enum(["asc", "desc"]).catch("desc"),
   search: z.string().max(255).default(""),
-  page: z.number().int().nonnegative().max(100000).default(0),
+  page: z.coerce.number().int().nonnegative().max(100000).catch(0),
 });
+export type FileQuery = Readonly<z.infer<typeof fileQuerySchema>>;
 export type StoredFile = Readonly<{
   id: string;
   name: string;

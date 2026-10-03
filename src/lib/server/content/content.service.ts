@@ -2,11 +2,11 @@ import "server-only";
 import { z } from "zod";
 
 import { contentRecordSchema } from "#lib/shared/content/content-record.schema";
-import {
-  contentInputSchema,
-  type ContentKind,
-  type ContentRecord,
-  type ContentSummary,
+import type {
+  ContentInput,
+  ContentKind,
+  ContentRecord,
+  ContentSummary,
 } from "#lib/shared/content/content.schema";
 import { documentText } from "#lib/shared/content/document.helper";
 import type { statusSchema } from "#lib/shared/content/status.schema";
@@ -54,9 +54,8 @@ export async function readContent(
   if (!data) throw new InputError("This content no longer exists.");
   return { ...contentRecordSchema.parse(data), kind };
 }
-export async function writeContent(input: unknown) {
-  await requireAdmin();
-  const { id, kind, content, ...rest } = contentInputSchema.parse(input);
+export async function writeContent(input: Readonly<ContentInput>) {
+  const { id, kind, content, ...rest } = input;
   // JSON serialization removes undefined optional block fields without losing their structure.
   const body = {
     ...rest,
@@ -71,7 +70,6 @@ export async function writeContent(input: unknown) {
   return data.id;
 }
 export async function removeContent(kind: ContentKind, id: string) {
-  await requireAdmin();
   const { error } = await makeAdminClient().from(kind).delete().eq("id", id);
   if (error) throw error;
 }
@@ -80,7 +78,6 @@ export async function changeContentStatus(
   id: string,
   status: z.infer<typeof statusSchema>,
 ) {
-  await requireAdmin();
   const { error } = await makeAdminClient()
     .from(kind)
     .update({ status })
